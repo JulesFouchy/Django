@@ -1,6 +1,6 @@
 # Django
 
-Here is a little video showcase of the app :
+Here is a little video showcasing the app :
 
 [![demo video](http://img.youtube.com/vi/nf-CoQOdo_w/0.jpg)](https://www.youtube.com/watch?v=nf-CoQOdo_w "Django Demo")
 
