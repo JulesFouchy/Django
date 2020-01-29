@@ -1,5 +1,6 @@
-#include <glm.hpp>
+#include "OpenGL/ShaderPipeline.h"
 
+#include <glm.hpp>
 #include <vector>
 
 class ParticlesSystem {
@@ -26,6 +27,8 @@ private:
 
 	unsigned int m_restPosSSBOid;
 	unsigned int m_actualPosSSBOid;
+
+	ShaderPipeline m_computeShader;
 
 	unsigned int m_vaoID;
 	unsigned int m_vboID;

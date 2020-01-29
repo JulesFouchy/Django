@@ -7,21 +7,27 @@
 #include "Helper/DisplayInfos.h"
 #include "Helper/Random.h"
 
+#define WORK_GROUP_SIZE 256
+
 ParticlesSystem::ParticlesSystem(unsigned int nbParticles)
     : m_nbParticles(nbParticles)
 {
+    // Compute shader
+    m_computeShader.addShader(ShaderType::Compute, "res/shaders/updatePositions.comp");
+    m_computeShader.createProgram();
+    //
     for (size_t i = 0; i < nbParticles; ++i)
         m_restPositions.emplace_back(MyRand::_m1to1(), MyRand::_m1to1());
-    // Rest positions buffer
-    GLCall(glGenBuffers(1, &m_restPosSSBOid));
-    GLCall(glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_restPosSSBOid));
-    GLCall(glBufferData(GL_SHADER_STORAGE_BUFFER, nbParticles * 2 * sizeof(float), m_restPositions.data(), GL_STATIC_DRAW));
-    GLCall(glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, m_restPosSSBOid));
     // Actual positions buffer
     GLCall(glGenBuffers(1, &m_actualPosSSBOid));
     GLCall(glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_actualPosSSBOid));
     GLCall(glBufferData(GL_SHADER_STORAGE_BUFFER, nbParticles * 2 * sizeof(float), m_restPositions.data(), GL_DYNAMIC_DRAW)); // TODO check which hint is best
-    GLCall(glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, m_actualPosSSBOid));
+    GLCall(glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_actualPosSSBOid));
+    // Rest positions buffer
+    GLCall(glGenBuffers(1, &m_restPosSSBOid));
+    GLCall(glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_restPosSSBOid));
+    GLCall(glBufferData(GL_SHADER_STORAGE_BUFFER, nbParticles * 2 * sizeof(float), m_restPositions.data(), GL_STATIC_DRAW));
+    GLCall(glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, m_restPosSSBOid));
     // Vertex buffer
     GLCall(glGenBuffers(1, &m_vboID));
     // Vertex array
@@ -35,11 +41,6 @@ ParticlesSystem::ParticlesSystem(unsigned int nbParticles)
     GLCall(glEnableVertexAttribArray(1));
     GLCall(glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float))));
     GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
-        // Actual positions
-    //GLCall(glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_actualPosSSBOid));
-    //GLCall(glEnableVertexAttribArray(2));
-    //GLCall(glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0));
-    //GLCall(glVertexAttribDivisor(2, 1));
 }
 
 void ParticlesSystem::recomputeVBO() {
@@ -72,22 +73,14 @@ void ParticlesSystem::draw() {
 
 void ParticlesSystem::updatePositions() {
     // TODO Compute Shadeeeeeer
-    GLCall(glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_actualPosSSBOid));
-    GLCall(glBufferData(GL_SHADER_STORAGE_BUFFER, m_nbParticles * 2 * sizeof(float), m_restPositions.data(), GL_DYNAMIC_DRAW)); // TODO check which hint is best
-    GLCall(glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, m_actualPosSSBOid));
+    //GLCall(glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_actualPosSSBOid));
+    //GLCall(glBufferData(GL_SHADER_STORAGE_BUFFER, m_nbParticles * 2 * sizeof(float), m_restPositions.data(), GL_DYNAMIC_DRAW)); // TODO check which hint is best
+    //GLCall(glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, m_actualPosSSBOid));
 
-    //m_shaderManager.useProgram(m_computeProgID);
-    //
-    //m_shaderManager.loadUniform(m_csLocations.dt, static_cast<GLfloat>(dt));
-    //
-    //m_shaderManager.loadUniform(m_csLocations.attPos,
-    //    m_attractor.pos().x,
-    //    m_attractor.pos().y,
-    //    m_attractor.pos().z,
-    //    m_attractor.active() ? 1.0f : -1.0f); //Uses the last vector-entry to determine whether attractor or gravity is used
-    //
-    //glDispatchCompute((m_particleBuffer.getNumParticles() / WORK_GROUP_SIZE) + 1, 1, 1);
-    //glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT | GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT);
+    m_computeShader.bind();
+    glDispatchCompute(m_nbParticles / WORK_GROUP_SIZE + 1, 1, 1);
+    glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT | GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT);
+    m_computeShader.unbind();
 }
 
 
