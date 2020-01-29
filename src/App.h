@@ -4,7 +4,7 @@ struct SDL_Window;
 union SDL_Event;
 
 #include "Particles/ParticlesSystem.h"
-#include "OpenGL/Shader.h"
+#include "OpenGL/ShaderPipeline.h"
 
 #include "Configurations/Config_FillScreen.h"
 
@@ -26,7 +26,7 @@ private:
 	bool m_bShowImGUIDemoWindow;
 	bool m_bFullScreen;
 
-	Shader m_shader;
+	ShaderPipeline m_pipeline;
 	ParticlesSystem m_particlesSystem;
 	Config_FillScreen m_configFillScreen;
 

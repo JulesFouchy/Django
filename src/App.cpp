@@ -15,11 +15,15 @@
 App::App(SDL_Window* window)
 	: m_bShowImGUIDemoWindow(false),
 	  m_bFullScreen(false),
-	  m_shader("res/shaders/default.vert", "res/shaders/default.frag"),
 	  m_particlesSystem(20),
 	  m_configFillScreen(m_particlesSystem),
 	  m_window(window), m_running(true)
 {
+	// Create graphics pipeline
+	m_pipeline.addShader(ShaderType::Vertex,   "res/shaders/default.vert");
+	m_pipeline.addShader(ShaderType::Fragment, "res/shaders/default.frag");
+	m_pipeline.createProgram();
+	//
 	onWindowResize();
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -47,7 +51,7 @@ void App::onLoopIteration() {
 #endif
 	//
 	glClear(GL_COLOR_BUFFER_BIT);
-	m_shader.bind();
+	m_pipeline.bind();
 	m_particlesSystem.draw();
 	m_particlesSystem.updatePositions();
 }

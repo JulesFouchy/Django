@@ -74,7 +74,20 @@ void ParticlesSystem::updatePositions() {
     // TODO Compute Shadeeeeeer
     GLCall(glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_actualPosSSBOid));
     GLCall(glBufferData(GL_SHADER_STORAGE_BUFFER, m_nbParticles * 2 * sizeof(float), m_restPositions.data(), GL_DYNAMIC_DRAW)); // TODO check which hint is best
-    //GLCall(glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, m_actualPosSSBOid));
+    GLCall(glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, m_actualPosSSBOid));
+
+    //m_shaderManager.useProgram(m_computeProgID);
+    //
+    //m_shaderManager.loadUniform(m_csLocations.dt, static_cast<GLfloat>(dt));
+    //
+    //m_shaderManager.loadUniform(m_csLocations.attPos,
+    //    m_attractor.pos().x,
+    //    m_attractor.pos().y,
+    //    m_attractor.pos().z,
+    //    m_attractor.active() ? 1.0f : -1.0f); //Uses the last vector-entry to determine whether attractor or gravity is used
+    //
+    //glDispatchCompute((m_particleBuffer.getNumParticles() / WORK_GROUP_SIZE) + 1, 1, 1);
+    //glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT | GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT);
 }
 
 
