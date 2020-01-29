@@ -16,8 +16,9 @@ void main(){
     uint gid = gl_GlobalInvocationID.x;
 
     //if(gid <= nbParticles){
-        vec2 pos = actualPos[gid];
-        pos.x += 0.01;
-        actualPos[gid] = pos;
+        vec2 dir = restPos[gid] - actualPos[gid];
+        float mag = length(dir);
+        if (mag > 0.01)
+            actualPos[gid] += 0.01 * dir / mag;
     //}
 }

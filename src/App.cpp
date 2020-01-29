@@ -15,7 +15,7 @@
 App::App(SDL_Window* window)
 	: m_bShowImGUIDemoWindow(false),
 	  m_bFullScreen(false),
-	  m_particlesSystem(20),
+	  m_particlesSystem(2000),
 	  m_configFillScreen(m_particlesSystem),
 	  m_window(window), m_running(true)
 {

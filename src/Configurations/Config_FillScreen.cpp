@@ -18,6 +18,6 @@ void Config_FillScreen::embody() {
 }
 
 void Config_FillScreen::generate() {
-	m_nbRows = 10;
-	m_nbColumns = 10;
+	m_nbRows = 44;
+	m_nbColumns = 44;
 }
