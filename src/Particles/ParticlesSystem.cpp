@@ -74,5 +74,12 @@ void ParticlesSystem::updatePositions() {
     // TODO Compute Shadeeeeeer
     GLCall(glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_actualPosSSBOid));
     GLCall(glBufferData(GL_SHADER_STORAGE_BUFFER, m_nbParticles * 2 * sizeof(float), m_restPositions.data(), GL_DYNAMIC_DRAW)); // TODO check which hint is best
-    GLCall(glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, m_actualPosSSBOid));
+    //GLCall(glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, m_actualPosSSBOid));
+}
+
+
+void ParticlesSystem::sendRestPositionsToGPU() {
+    GLCall(glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_restPosSSBOid));
+    GLCall(glBufferData(GL_SHADER_STORAGE_BUFFER, m_nbParticles * 2 * sizeof(float), m_restPositions.data(), GL_STATIC_DRAW));
+    //GLCall(glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, m_restPosSSBOid));
 }

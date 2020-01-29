@@ -15,8 +15,9 @@
 App::App(SDL_Window* window)
 	: m_bShowImGUIDemoWindow(false),
 	  m_bFullScreen(false),
-	  m_particlesSystem(20),
 	  m_shader("res/shaders/default.vert", "res/shaders/default.frag"),
+	  m_particlesSystem(20),
+	  m_configFillScreen(m_particlesSystem),
 	  m_window(window), m_running(true)
 {
 	onWindowResize();
@@ -93,7 +94,10 @@ void App::onEvent(const SDL_Event& e) {
 		if (e.key.keysym.scancode == SDL_SCANCODE_ESCAPE && m_bFullScreen)
 			switchFullScreenMode();
 		if (!ImGui::GetIO().WantCaptureKeyboard) {
-
+			if (e.key.keysym.scancode == SDL_SCANCODE_SPACE) {
+				m_configFillScreen.embody();
+				m_particlesSystem.sendRestPositionsToGPU();
+			}
 		}
 		break;
 

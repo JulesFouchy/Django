@@ -6,6 +6,8 @@ union SDL_Event;
 #include "Particles/ParticlesSystem.h"
 #include "OpenGL/Shader.h"
 
+#include "Configurations/Config_FillScreen.h"
+
 class App {
 private:
 	App(SDL_Window* window);
@@ -23,8 +25,10 @@ private:
 private:
 	bool m_bShowImGUIDemoWindow;
 	bool m_bFullScreen;
-	ParticlesSystem m_particlesSystem;
+
 	Shader m_shader;
+	ParticlesSystem m_particlesSystem;
+	Config_FillScreen m_configFillScreen;
 
 /********************
   * INTERNAL CODE *
