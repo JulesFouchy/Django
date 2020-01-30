@@ -17,7 +17,7 @@ ParticlesSystem::ParticlesSystem(unsigned int nbParticles)
     : m_nbParticles(nbParticles), m_physicsSettings(m_computeShader)
 {
     // Compute shader
-    m_computeShader.addShader(ShaderType::Compute, "res/shaders/updatePositions.comp");
+    m_computeShader.addShader(ShaderType::Compute, "res/shaders/physics.comp");
     m_computeShader.createProgram();
     //
     m_restPositions.resize(nbParticles);

@@ -16,6 +16,6 @@ private:
 
 private:
 	float m_raideur;
-	float m_dampening;
+	float m_damping;
 	ShaderPipeline& m_physicsShader;
 };
