@@ -7,6 +7,7 @@ union SDL_Event;
 #include "OpenGL/ShaderPipeline.h"
 
 #include "Configurations/Config_FillScreen.h"
+#include "Configurations/Config_Random.h"
 
 class App {
 private:
@@ -29,6 +30,7 @@ private:
 	ShaderPipeline m_pipeline;
 	ParticlesSystem m_particlesSystem;
 	Config_FillScreen m_configFillScreen;
+	Config_Random m_configRandom;
 
 /********************
   * INTERNAL CODE *

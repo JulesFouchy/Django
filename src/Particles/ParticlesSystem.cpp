@@ -19,11 +19,10 @@ ParticlesSystem::ParticlesSystem(unsigned int nbParticles)
     // Compute shader
     m_computeShader.addShader(ShaderType::Compute, "res/shaders/updatePositions.comp");
     m_computeShader.createProgram();
+    //
+    m_restPositions.resize(nbParticles);
     // Uniforms
     m_physicsSettings.setUniforms();
-    //
-    for (size_t i = 0; i < nbParticles; ++i)
-        m_restPositions.emplace_back(MyRand::_m1to1(), MyRand::_m1to1());
     // Particles buffer
     GLCall(glGenBuffers(1, &m_particlesSSBOid));
     GLCall(glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_particlesSSBOid));
