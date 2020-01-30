@@ -9,6 +9,8 @@ union SDL_Event;
 #include "Configurations/Config_FillScreen.h"
 #include "Configurations/Config_Random.h"
 
+#include "Time/Time_Realtime.h"
+
 class App {
 private:
 	App(SDL_Window* window);
@@ -31,6 +33,7 @@ private:
 	ParticlesSystem m_particlesSystem;
 	Config_FillScreen m_configFillScreen;
 	Config_Random m_configRandom;
+	Time_Realtime m_time;
 
 /********************
   * INTERNAL CODE *

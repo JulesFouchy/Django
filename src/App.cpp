@@ -51,7 +51,12 @@ void App::onLoopIteration() {
 	if (m_bShowImGUIDemoWindow) // Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
 		ImGui::ShowDemoWindow(&m_bShowImGUIDemoWindow);
 #endif
+	ImGui::Begin("Time");
+	ImGui::Text(("time : " + std::to_string(m_time.time())).c_str());
+	ImGui::Text(("FPS  : " + std::to_string(1.0f/m_time.deltaTime())).c_str());
+	ImGui::End();
 	//
+	m_time.update();
 	glClear(GL_COLOR_BUFFER_BIT);
 	m_pipeline.bind();
 	m_particlesSystem.draw();

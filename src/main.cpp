@@ -9,6 +9,7 @@
 #include "Debugging/Log.h"
 
 #include "Settings/GeneralSettings.h"
+#include "Time/Time_Realtime.h"
 
 #include <SDL2/SDL.h>
 #include <glad/glad.h>
@@ -106,6 +107,7 @@ int main(int argc, char *argv[]) {
 
 		ParticlesSystem::Initialize();
 		GeneralSettings::Initialize();
+		Time_Realtime::Initialize();
 		App::Initialize(window);
 
 		// ------ Actual App
