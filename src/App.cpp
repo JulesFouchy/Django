@@ -54,6 +54,7 @@ void App::onLoopIteration() {
 	m_pipeline.bind();
 	m_particlesSystem.draw();
 	m_particlesSystem.updatePositions();
+	m_particlesSystem.ImGui_Windows();
 }
 
 void App::onEvent(const SDL_Event& e) {

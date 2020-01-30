@@ -3,8 +3,8 @@
 //#extension GL_ARB_shader_storage_buffer_object : enable
 
 const float dt = 1.0/60;
-const float raideur = 20;
-const float dampening = 3;
+uniform float u_Raideur = 20;
+uniform float u_Dampening = 3;
 
 struct particle{
     vec2 pos;
@@ -25,7 +25,7 @@ void main(){
     int nbParticles = 2000;
     if(gid < nbParticles){
         vec2 dir = restPos[gid] - part[gid].pos;
-        vec2 acc = dir * raideur - part[gid].vel * dampening;
+        vec2 acc = dir * u_Raideur - part[gid].vel * u_Dampening;
         part[gid].vel += acc * dt;
         part[gid].pos += part[gid].vel * dt;
     }

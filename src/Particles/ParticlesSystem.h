@@ -1,5 +1,7 @@
 #include "OpenGL/ShaderPipeline.h"
 
+#include "Settings/PhysicsSettings.h"
+
 #include <glm.hpp>
 #include <vector>
 
@@ -10,6 +12,7 @@ public:
 
 	void draw();
 	void updatePositions();
+	void ImGui_Windows();
 
 	void recomputeVBO();
 
@@ -29,6 +32,7 @@ private:
 	unsigned int m_particlesSSBOid;
 
 	ShaderPipeline m_computeShader;
+	PhysicsSettings m_physicsSettings;
 
 	unsigned int m_vaoID;
 	unsigned int m_vboID;

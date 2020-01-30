@@ -7,16 +7,20 @@
 #include "Helper/DisplayInfos.h"
 #include "Helper/Random.h"
 
+#include <imgui/imgui.h>
+
 #define WORK_GROUP_SIZE 256
 #define ACTUAL_POS_ID 0
 #define REST_POS_ID 1
 
 ParticlesSystem::ParticlesSystem(unsigned int nbParticles)
-    : m_nbParticles(nbParticles)
+    : m_nbParticles(nbParticles), m_physicsSettings(m_computeShader)
 {
     // Compute shader
     m_computeShader.addShader(ShaderType::Compute, "res/shaders/updatePositions.comp");
     m_computeShader.createProgram();
+    // Uniforms
+    m_physicsSettings.setUniforms();
     //
     for (size_t i = 0; i < nbParticles; ++i)
         m_restPositions.emplace_back(MyRand::_m1to1(), MyRand::_m1to1());
@@ -83,4 +87,10 @@ void ParticlesSystem::updatePositions() {
 void ParticlesSystem::sendRestPositionsToGPU() {
     GLCall(glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_restPosSSBOid));
     GLCall(glBufferData(GL_SHADER_STORAGE_BUFFER, m_nbParticles * 2 * sizeof(float), m_restPositions.data(), GL_STATIC_DRAW));
+}
+
+void ParticlesSystem::ImGui_Windows() {
+    ImGui::Begin("Physics parameters");
+    m_physicsSettings.ImGui_Parameters();
+    ImGui::End();
 }
