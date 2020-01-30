@@ -16,8 +16,6 @@ App::App(SDL_Window* window)
 	: m_bShowImGUIDemoWindow(false),
 	  m_bFullScreen(false),
 	  m_particlesSystem(2000),
-	  m_configFillScreen(m_particlesSystem),
-	  m_configRandom(m_particlesSystem),
 	  m_window(window), m_running(true)
 {
 	// Create graphics pipeline
@@ -25,7 +23,7 @@ App::App(SDL_Window* window)
 	m_pipeline.addShader(ShaderType::Fragment, "res/shaders/default.frag");
 	m_pipeline.createProgram();
 	//
-	m_configRandom.embody();
+	m_configRandom.embody(m_particlesSystem);
 	m_particlesSystem.sendRestPositionsToGPU();
 	//
 	onWindowResize();
@@ -104,12 +102,12 @@ void App::onEvent(const SDL_Event& e) {
 			switchFullScreenMode();
 		if (!ImGui::GetIO().WantCaptureKeyboard) {
 			if (e.key.keysym.scancode == SDL_SCANCODE_SPACE) {
-				m_configFillScreen.embody();
+				m_configFillScreen.embody(m_particlesSystem);
 				m_particlesSystem.sendRestPositionsToGPU();
 			}
 			else if (e.key.keysym.sym == 'a') {
 				m_configRandom.generate();
-				m_configRandom.embody();
+				m_configRandom.embody(m_particlesSystem);
 				m_particlesSystem.sendRestPositionsToGPU();
 			}
 		}

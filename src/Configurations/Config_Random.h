@@ -7,10 +7,10 @@
 
 class Config_Random : public Configuration {
 public:
-	Config_Random(ParticlesSystem& particlesSystem);
+	Config_Random();
 	~Config_Random() = default;
 
-	void embody() override;
+	void embody(ParticlesSystem& particlesSystem) override;
 	void generate() override;
 
 private:

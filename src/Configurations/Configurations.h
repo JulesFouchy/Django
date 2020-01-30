@@ -4,18 +4,9 @@ class ParticlesSystem;
 
 class Configuration {
 public:
-	Configuration(ParticlesSystem& particlesSystem)
-		: m_partSystem(particlesSystem)
-	{
-		generate();
-	}
+	Configuration() = default;
 	virtual ~Configuration() = default;
 
-	virtual void embody() = 0;
-
-private:
+	virtual void embody(ParticlesSystem& particlesSystem) = 0;
 	virtual void generate() {};
-
-protected:
-	ParticlesSystem& m_partSystem;
 };

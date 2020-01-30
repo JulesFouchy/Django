@@ -4,12 +4,10 @@
 
 class Config_FillScreen : public Configuration {
 public:
-	Config_FillScreen(ParticlesSystem& particlesSystem);
+	Config_FillScreen();
 	~Config_FillScreen() = default;
 
-	void embody() override;
-
-private:
+	void embody(ParticlesSystem& particlesSystem) override;
 	void generate() override;
 
 private:
