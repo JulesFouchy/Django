@@ -4,7 +4,7 @@
 
 uniform int u_NbOfParticles;
 
-const float dt = 1.0/60;
+uniform float dt;
 uniform float u_Stiffness = 20;
 uniform float u_Damping = 3;
 

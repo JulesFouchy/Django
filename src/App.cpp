@@ -57,6 +57,9 @@ void App::onLoopIteration() {
 	ImGui::End();
 	//
 	m_time.update();
+	ParticlesSystem::PhysicsShader().bind();
+	ParticlesSystem::PhysicsShader().setUniform1f("dt", m_time.deltaTime());
+	ParticlesSystem::PhysicsShader().unbind();
 	glClear(GL_COLOR_BUFFER_BIT);
 	m_pipeline.bind();
 	m_particlesSystem.draw();

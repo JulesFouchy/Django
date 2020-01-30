@@ -8,6 +8,10 @@ void Time_Realtime::Initialize() {
     SDLPerformanceFrequency = (float)SDL_GetPerformanceFrequency();
 }
 
+Time_Realtime::Time_Realtime() {
+    m_lastTime = m_currentTime = SDL_GetPerformanceCounter();
+}
+
 float Time_Realtime::deltaTime() {
     return (m_currentTime - m_lastTime) / SDLPerformanceFrequency;
 }
