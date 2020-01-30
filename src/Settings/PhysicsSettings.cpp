@@ -4,34 +4,34 @@
 
 #include <imgui/imgui.h>
 
-PhysicsSettings::PhysicsSettings(ShaderPipeline& physicsShader, float raideur, float dampening)
-	: m_physicsShader(physicsShader), m_raideur(raideur), m_damping(dampening)
+PhysicsSettings::PhysicsSettings(ShaderPipeline& physicsShader, float stiffness, float damping)
+	: m_physicsShader(physicsShader), m_stiffness(stiffness), m_damping(damping)
 {}
 
 void PhysicsSettings::setUniforms() {
-	setRaideurInShader();
-	setDampeningInShader();
+	setStiffnessInShader();
+	setDampingInShader();
 }
 
-void PhysicsSettings::setRaideurInShader() {
+void PhysicsSettings::setStiffnessInShader() {
 	m_physicsShader.bind();
-	m_physicsShader.setUniform1f("u_Raideur", m_raideur);
+	m_physicsShader.setUniform1f("u_Stiffness", m_stiffness);
 	m_physicsShader.unbind();
 }
 
-void PhysicsSettings::setDampeningInShader() {
+void PhysicsSettings::setDampingInShader() {
 	m_physicsShader.bind();
 	m_physicsShader.setUniform1f("u_Damping", m_damping);
 	m_physicsShader.unbind();
 }
 
 void PhysicsSettings::ImGui_Parameters() {
-	if (ImGui::SliderFloat("Pull force", &m_raideur, 0.0f, 20.0f))
-		setRaideurInShader();
+	if (ImGui::SliderFloat("Pull force", &m_stiffness, 0.0f, 20.0f))
+		setStiffnessInShader();
 	if (ImGui::SliderFloat("Damping", &m_damping, 0.0f, 20.0f))
-		setDampeningInShader();
+		setDampingInShader();
 	if (ImGui::Button("Perfect")) {
-		m_raideur = m_damping * m_damping / 4.0f;
-		setRaideurInShader();
+		m_stiffness = m_damping * m_damping / 4.0f;
+		setStiffnessInShader();
 	}
 }

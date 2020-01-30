@@ -4,18 +4,18 @@ class ShaderPipeline;
 
 class PhysicsSettings {
 public:
-	PhysicsSettings(ShaderPipeline& physicsShader, float raideur = 20.0f, float dampening = 3.0f);
+	PhysicsSettings(ShaderPipeline& physicsShader, float stiffness = 20.0f, float damping = 3.0f);
 	~PhysicsSettings() = default;
 
 	void setUniforms();
 	void ImGui_Parameters();
 
 private:
-	void setRaideurInShader();
-	void setDampeningInShader();
+	void setStiffnessInShader();
+	void setDampingInShader();
 
 private:
-	float m_raideur;
+	float m_stiffness;
 	float m_damping;
 	ShaderPipeline& m_physicsShader;
 };
