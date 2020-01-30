@@ -14,11 +14,15 @@ void PhysicsSettings::setUniforms() {
 }
 
 void PhysicsSettings::setRaideurInShader() {
+	m_physicsShader.bind();
 	m_physicsShader.setUniform1f("u_Raideur", m_raideur);
+	m_physicsShader.unbind();
 }
 
 void PhysicsSettings::setDampeningInShader() {
+	m_physicsShader.bind();
 	m_physicsShader.setUniform1f("u_Dampening", m_dampening);
+	m_physicsShader.unbind();
 }
 
 void PhysicsSettings::ImGui_Parameters() {
