@@ -3,8 +3,9 @@
 //#extension GL_ARB_shader_storage_buffer_object : enable
 
 
-layout(std430, binding=0) buffer actualPositions{
-   vec2 actualPos[];
+layout(std430, binding=0) buffer particles{
+   vec2 positions[];
+   vec2 velocities[];
 };
 
 layout(std430, binding=1) buffer restPositions{
@@ -16,9 +17,9 @@ void main(){
     uint gid = gl_GlobalInvocationID.x;
 
     //if(gid <= nbParticles){
-        vec2 dir = restPos[gid] - actualPos[gid];
+        vec2 dir = restPos[gid] - positions[gid];
         float mag = length(dir);
         if (mag > 0.01)
-            actualPos[gid] += 0.01 * dir / mag;
+            positions[gid] += 0.01 * dir / mag;
     //}
 }

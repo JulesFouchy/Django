@@ -26,7 +26,7 @@ private:
 	unsigned int m_nbParticles;
 
 	unsigned int m_restPosSSBOid;
-	unsigned int m_actualPosSSBOid;
+	unsigned int m_particlesSSBOid;
 
 	ShaderPipeline m_computeShader;
 

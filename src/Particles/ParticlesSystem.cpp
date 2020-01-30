@@ -20,11 +20,11 @@ ParticlesSystem::ParticlesSystem(unsigned int nbParticles)
     //
     for (size_t i = 0; i < nbParticles; ++i)
         m_restPositions.emplace_back(MyRand::_m1to1(), MyRand::_m1to1());
-    // Actual positions buffer
-    GLCall(glGenBuffers(1, &m_actualPosSSBOid));
-    GLCall(glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_actualPosSSBOid));
-    GLCall(glBufferData(GL_SHADER_STORAGE_BUFFER, nbParticles * 2 * sizeof(float), m_restPositions.data(), GL_DYNAMIC_DRAW)); // TODO check which hint is best
-    GLCall(glBindBufferBase(GL_SHADER_STORAGE_BUFFER, ACTUAL_POS_ID, m_actualPosSSBOid));
+    // Particles buffer
+    GLCall(glGenBuffers(1, &m_particlesSSBOid));
+    GLCall(glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_particlesSSBOid));
+    GLCall(glBufferData(GL_SHADER_STORAGE_BUFFER, nbParticles * 4 * sizeof(float), nullptr, GL_DYNAMIC_DRAW)); // TODO check which hint is best
+    GLCall(glBindBufferBase(GL_SHADER_STORAGE_BUFFER, ACTUAL_POS_ID, m_particlesSSBOid));
     // Rest positions buffer
     GLCall(glGenBuffers(1, &m_restPosSSBOid));
     GLCall(glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_restPosSSBOid));
@@ -64,12 +64,12 @@ void ParticlesSystem::recomputeVBO() {
 
 ParticlesSystem::~ParticlesSystem() {
     GLCall(glDeleteBuffers(1, &m_restPosSSBOid));
-    GLCall(glDeleteBuffers(1, &m_actualPosSSBOid));
+    GLCall(glDeleteBuffers(1, &m_particlesSSBOid));
 }
 
 void ParticlesSystem::draw() {
     GLCall(glBindVertexArray(m_vaoID));
-    //GLCall(glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_actualPosSSBOid));
+    //GLCall(glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_particlesSSBOid));
     GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, 6, m_nbParticles));
 }
 
