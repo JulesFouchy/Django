@@ -13,13 +13,17 @@
 #define ACTUAL_POS_ID 0
 #define REST_POS_ID 1
 
-ParticlesSystem::ParticlesSystem(unsigned int nbParticles)
-    : m_nbParticles(nbParticles), m_physicsSettings(m_computeShader)
-{
+ShaderPipeline ParticlesSystem::m_physicsShader;
+
+void ParticlesSystem::Initialize() {
     // Compute shader
-    m_computeShader.addShader(ShaderType::Compute, "res/shaders/physics.comp");
-    m_computeShader.createProgram();
-    //
+    m_physicsShader.addShader(ShaderType::Compute, "res/shaders/physics.comp");
+    m_physicsShader.createProgram();
+}
+
+ParticlesSystem::ParticlesSystem(unsigned int nbParticles)
+    : m_nbParticles(nbParticles), m_physicsSettings()
+{
     m_restPositions.resize(nbParticles);
     // Uniforms
     m_physicsSettings.setUniforms();
@@ -77,10 +81,10 @@ void ParticlesSystem::draw() {
 }
 
 void ParticlesSystem::updatePositions() {
-    m_computeShader.bind();
+    m_physicsShader.bind();
     glDispatchCompute(m_nbParticles / WORK_GROUP_SIZE + 1, 1, 1);
     glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT | GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT);
-    m_computeShader.unbind();
+    m_physicsShader.unbind();
 }
 
 void ParticlesSystem::sendRestPositionsToGPU() {

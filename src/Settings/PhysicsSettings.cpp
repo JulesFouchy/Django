@@ -1,11 +1,11 @@
 #include "PhysicsSettings.h"
 
-#include "OpenGL/ShaderPipeline.h"
+#include "Particles/ParticlesSystem.h"
 
 #include <imgui/imgui.h>
 
-PhysicsSettings::PhysicsSettings(ShaderPipeline& physicsShader, float stiffness, float damping)
-	: m_physicsShader(physicsShader), m_stiffness(stiffness), m_damping(damping)
+PhysicsSettings::PhysicsSettings(float stiffness, float damping)
+	: m_stiffness(stiffness), m_damping(damping)
 {}
 
 void PhysicsSettings::setUniforms() {
@@ -14,15 +14,15 @@ void PhysicsSettings::setUniforms() {
 }
 
 void PhysicsSettings::setStiffnessInShader() {
-	m_physicsShader.bind();
-	m_physicsShader.setUniform1f("u_Stiffness", m_stiffness);
-	m_physicsShader.unbind();
+	ParticlesSystem::PhysicsShader().bind();
+	ParticlesSystem::PhysicsShader().setUniform1f("u_Stiffness", m_stiffness);
+	ParticlesSystem::PhysicsShader().unbind();
 }
 
 void PhysicsSettings::setDampingInShader() {
-	m_physicsShader.bind();
-	m_physicsShader.setUniform1f("u_Damping", m_damping);
-	m_physicsShader.unbind();
+	ParticlesSystem::PhysicsShader().bind();
+	ParticlesSystem::PhysicsShader().setUniform1f("u_Damping", m_damping);
+	ParticlesSystem::PhysicsShader().unbind();
 }
 
 void PhysicsSettings::ImGui_Parameters() {

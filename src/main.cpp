@@ -102,6 +102,7 @@ int main(int argc, char *argv[]) {
 
 		// ------ Initialize our own classes
 
+		ParticlesSystem::Initialize();
 		App::Initialize(window);
 
 		// ------ Actual App

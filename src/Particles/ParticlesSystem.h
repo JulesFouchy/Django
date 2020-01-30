@@ -8,6 +8,7 @@
 class ParticlesSystem {
 public:
 	ParticlesSystem(unsigned int nbParticles);
+	static void Initialize();
 	~ParticlesSystem();
 
 	void draw();
@@ -15,6 +16,8 @@ public:
 	void ImGui_Windows();
 
 	void recomputeVBO();
+
+	inline static ShaderPipeline& PhysicsShader() { return m_physicsShader; }
 
 private:
 	friend class Config_FillScreen;
@@ -31,10 +34,10 @@ private:
 
 	unsigned int m_restPosSSBOid;
 	unsigned int m_particlesSSBOid;
-
-	ShaderPipeline m_computeShader;
 	PhysicsSettings m_physicsSettings;
 
 	unsigned int m_vaoID;
 	unsigned int m_vboID;
+
+	static ShaderPipeline m_physicsShader;
 };
