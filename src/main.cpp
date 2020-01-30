@@ -1,8 +1,5 @@
 #include "App.h"
 
-#include <SDL2/SDL.h>
-#include <glad/glad.h>
-
 #include <imgui.h>
 #include <imgui_impl_sdl.h>
 #include <imgui_impl_opengl3.h>
@@ -10,6 +7,11 @@
 #include <debug_break/debug_break.h>
 
 #include "Debugging/Log.h"
+
+#include "Settings/GeneralSettings.h"
+
+#include <SDL2/SDL.h>
+#include <glad/glad.h>
 
 #ifdef _WIN32
 	#define _CRTDBG_MAP_ALLOC
@@ -103,6 +105,7 @@ int main(int argc, char *argv[]) {
 		// ------ Initialize our own classes
 
 		ParticlesSystem::Initialize();
+		GeneralSettings::Initialize();
 		App::Initialize(window);
 
 		// ------ Actual App

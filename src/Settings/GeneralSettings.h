@@ -2,7 +2,10 @@
 
 class GeneralSettings {
 public:
+	static void Initialize();
+
 	static inline int NbOfParticles() { return NB_OF_PARTICLES; }
+	static void SetNbOfParticles(int N);
 private:
-	static const int NB_OF_PARTICLES = 2000;
+	static int NB_OF_PARTICLES;
 };
