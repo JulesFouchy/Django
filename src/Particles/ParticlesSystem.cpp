@@ -22,21 +22,17 @@ void ParticlesSystem::Initialize() {
 }
 
 ParticlesSystem::ParticlesSystem(unsigned int nbParticles)
-    : m_nbParticles(nbParticles), m_physicsSettings()
+    : m_nbParticles(nbParticles),
+      m_particlesSSBO(0, 4, GL_DYNAMIC_DRAW), // TODO check which hint is best
+      m_restPositionsSSBO(1, 2, GL_STATIC_DRAW),
+      m_physicsSettings()
 {
     m_restPositions.resize(nbParticles);
     // Uniforms
     m_physicsSettings.setUniforms();
-    // Particles buffer
-    GLCall(glGenBuffers(1, &m_particlesSSBOid));
-    GLCall(glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_particlesSSBOid));
-    GLCall(glBufferData(GL_SHADER_STORAGE_BUFFER, nbParticles * 4 * sizeof(float), nullptr, GL_DYNAMIC_DRAW)); // TODO check which hint is best
-    GLCall(glBindBufferBase(GL_SHADER_STORAGE_BUFFER, ACTUAL_POS_ID, m_particlesSSBOid));
-    // Rest positions buffer
-    GLCall(glGenBuffers(1, &m_restPosSSBOid));
-    GLCall(glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_restPosSSBOid));
-    GLCall(glBufferData(GL_SHADER_STORAGE_BUFFER, nbParticles * 2 * sizeof(float), m_restPositions.data(), GL_STATIC_DRAW));
-    GLCall(glBindBufferBase(GL_SHADER_STORAGE_BUFFER, REST_POS_ID, m_restPosSSBOid));
+    // SSBOs
+    m_particlesSSBO.uploadData(nbParticles, nullptr);
+    m_restPositionsSSBO.uploadData(nbParticles, nullptr);
     // Vertex buffer
     GLCall(glGenBuffers(1, &m_vboID));
     // Vertex array
@@ -70,8 +66,8 @@ void ParticlesSystem::recomputeVBO() {
 }
 
 ParticlesSystem::~ParticlesSystem() {
-    GLCall(glDeleteBuffers(1, &m_restPosSSBOid));
-    GLCall(glDeleteBuffers(1, &m_particlesSSBOid));
+    GLCall(glDeleteBuffers(1, &m_vboID));
+    GLCall(glDeleteVertexArrays(1, &m_vaoID));
 }
 
 void ParticlesSystem::draw() {
@@ -88,8 +84,7 @@ void ParticlesSystem::updatePositions() {
 }
 
 void ParticlesSystem::sendRestPositionsToGPU() {
-    GLCall(glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_restPosSSBOid));
-    GLCall(glBufferData(GL_SHADER_STORAGE_BUFFER, m_nbParticles * 2 * sizeof(float), m_restPositions.data(), GL_STATIC_DRAW));
+    m_restPositionsSSBO.uploadData(m_nbParticles, (float*)m_restPositions.data());
 }
 
 void ParticlesSystem::ImGui_Windows() {

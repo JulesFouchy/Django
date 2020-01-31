@@ -1,5 +1,7 @@
 #include "OpenGL/ShaderPipeline.h"
 
+#include "OpenGL/SSBO.h"
+
 #include "Settings/PhysicsSettings.h"
 
 #include <glm.hpp>
@@ -32,8 +34,8 @@ private:
 
 	unsigned int m_nbParticles;
 
-	unsigned int m_restPosSSBOid;
-	unsigned int m_particlesSSBOid;
+	SSBO m_restPositionsSSBO;
+	SSBO m_particlesSSBO;
 	PhysicsSettings m_physicsSettings;
 
 	unsigned int m_vaoID;
