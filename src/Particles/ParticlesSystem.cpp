@@ -25,6 +25,7 @@ ParticlesSystem::ParticlesSystem(unsigned int nbParticles)
     : m_nbParticles(nbParticles),
       m_particlesSSBO(0, 4, GL_DYNAMIC_DRAW), // TODO check which hint is best
       m_restPositionsSSBO(1, 2, GL_STATIC_DRAW),
+      m_colorsSSBO(2, 3, GL_STATIC_DRAW),
       m_physicsSettings()
 {
     m_restPositions.resize(nbParticles);
@@ -33,6 +34,15 @@ ParticlesSystem::ParticlesSystem(unsigned int nbParticles)
     // SSBOs
     m_particlesSSBO.uploadData(nbParticles, nullptr);
     m_restPositionsSSBO.uploadData(nbParticles, nullptr);
+        // Colors
+    std::vector<glm::vec3> colors;
+    colors.resize(nbParticles);
+    for (int i = 0; i < m_nbParticles; ++i) {
+        float t = i / (float)m_nbParticles;
+        colors[i] = t * glm::vec3(1, 0, 0) + (1-t) * glm::vec3(0,0,1);
+        //colors[i] = glm::vec3(1, 0,0);
+    }
+    m_colorsSSBO.uploadData(nbParticles, (float*)colors.data());
     // Vertex buffer
     GLCall(glGenBuffers(1, &m_vboID));
     // Vertex array

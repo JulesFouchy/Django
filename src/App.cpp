@@ -60,6 +60,7 @@ void App::onLoopIteration() {
 	ParticlesSystem::PhysicsShader().bind();
 	ParticlesSystem::PhysicsShader().setUniform1f("dt", m_time.deltaTime());
 	ParticlesSystem::PhysicsShader().unbind();
+	glClearColor(0.5, 0.5, 0.5, 0.5);
 	glClear(GL_COLOR_BUFFER_BIT);
 	m_pipeline.bind();
 	m_particlesSystem.draw();

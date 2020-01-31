@@ -36,6 +36,7 @@ private:
 
 	SSBO m_restPositionsSSBO;
 	SSBO m_particlesSSBO;
+	SSBO m_colorsSSBO;
 	PhysicsSettings m_physicsSettings;
 
 	unsigned int m_vaoID;
