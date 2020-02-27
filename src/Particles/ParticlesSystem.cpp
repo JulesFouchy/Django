@@ -59,7 +59,7 @@ ParticlesSystem::ParticlesSystem(unsigned int nbParticles)
 }
 
 void ParticlesSystem::recomputeVBO() {
-    float radius = 0.015f;
+    float radius = 0.0135f;
     float halfW = radius;
     float halfH = radius * DisplayInfos::Ratio();
     float vertices[] = {

@@ -5,6 +5,7 @@ union SDL_Event;
 
 #include "Particles/ParticlesSystem.h"
 #include "OpenGL/ShaderPipeline.h"
+#include "OpenGL/QuadVAO.h"
 
 #include "Configurations/Config_FillScreen.h"
 #include "Configurations/Config_Random.h"
@@ -31,6 +32,7 @@ private:
 
 	ShaderPipeline m_particlePipeline;
 	ShaderPipeline m_clearScreenPipeline;
+	QuadVAO m_fullScreenVAO;
 	ParticlesSystem m_particlesSystem;
 	Config_FillScreen m_configFillScreen;
 	Config_Random m_configRandom;

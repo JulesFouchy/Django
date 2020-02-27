@@ -65,8 +65,13 @@ void App::onLoopIteration() {
 	ParticlesSystem::PhysicsComputeShader().setUniform1f("dt", m_time.deltaTime());
 	ParticlesSystem::PhysicsComputeShader().unbind();
 	// Clear screen
-	glClearColor(0.5, 0.5, 0.5, 0.5);
-	glClear(GL_COLOR_BUFFER_BIT);
+	//glClearColor(0.5, 0.5, 0.5, 0.5);
+	//glClear(GL_COLOR_BUFFER_BIT);
+	m_clearScreenPipeline.bind();
+	m_clearScreenPipeline.setUniform1f("dt", m_time.deltaTime());
+	m_fullScreenVAO.bind();
+	GLCall(glDrawArrays(GL_TRIANGLES, 0, 6));
+	
 	// Draw particles
 	m_particlePipeline.bind();
 	m_particlesSystem.draw();

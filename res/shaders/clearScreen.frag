@@ -1,12 +1,7 @@
 #version 430 core
 
-in vec2 vTexCoords;
-in vec3 vColor;
+uniform float dt;
 
 void main(void){
-    float d = length(vTexCoords - vec2(0.5));
-    float alpha = smoothstep(0.5, 0.4, d);
-    float t = smoothstep(0.5, 0.15, d);
-    vec3 col = t * vColor;
-    gl_FragColor = vec4(col, alpha);
+    gl_FragColor = vec4(0., 0., 0., 20.0 * dt);
 }
