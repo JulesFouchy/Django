@@ -18,9 +18,9 @@ App::App(SDL_Window* window)
 	  m_particlesSystem(2000),
 	  m_window(window), m_running(true)
 {
-	// Create graphics pipeline
-	m_pipeline.addShader(ShaderType::Vertex,   "res/shaders/default.vert");
-	m_pipeline.addShader(ShaderType::Fragment, "res/shaders/default.frag");
+	// Create graphics pipeline for particles
+	m_pipeline.addShader(ShaderType::Vertex,   "res/shaders/particle.vert");
+	m_pipeline.addShader(ShaderType::Fragment, "res/shaders/particle.frag");
 	m_pipeline.createProgram();
 	//
 	m_configRandom.embody(m_particlesSystem);

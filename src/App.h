@@ -30,6 +30,7 @@ private:
 	bool m_bFullScreen;
 
 	ShaderPipeline m_pipeline;
+	ShaderPipeline m_clearScreenPipeline;
 	ParticlesSystem m_particlesSystem;
 	Config_FillScreen m_configFillScreen;
 	Config_Random m_configRandom;
