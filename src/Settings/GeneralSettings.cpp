@@ -12,7 +12,7 @@ void GeneralSettings::SetNbOfParticles(int N) {
 	// Set
 	NB_OF_PARTICLES = N;
 	// Update physics shader
-	ParticlesSystem::PhysicsShader().bind();
-	ParticlesSystem::PhysicsShader().setUniform1i("u_NbOfParticles", NB_OF_PARTICLES);
-	ParticlesSystem::PhysicsShader().unbind();
+	ParticlesSystem::PhysicsComputeShader().bind();
+	ParticlesSystem::PhysicsComputeShader().setUniform1i("u_NbOfParticles", NB_OF_PARTICLES);
+	ParticlesSystem::PhysicsComputeShader().unbind();
 }

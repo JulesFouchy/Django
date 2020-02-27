@@ -19,9 +19,13 @@ App::App(SDL_Window* window)
 	  m_window(window), m_running(true)
 {
 	// Create graphics pipeline for particles
-	m_pipeline.addShader(ShaderType::Vertex,   "res/shaders/particle.vert");
-	m_pipeline.addShader(ShaderType::Fragment, "res/shaders/particle.frag");
-	m_pipeline.createProgram();
+	m_particlePipeline.addShader(ShaderType::Vertex,   "res/shaders/particle.vert");
+	m_particlePipeline.addShader(ShaderType::Fragment, "res/shaders/particle.frag");
+	m_particlePipeline.createProgram();
+	// Clear screen pipeline
+	m_clearScreenPipeline.addShader(ShaderType::Vertex,   "res/shaders/clearScreen.vert");
+	m_clearScreenPipeline.addShader(ShaderType::Fragment, "res/shaders/clearScreen.frag");
+	m_clearScreenPipeline.createProgram();
 	//
 	m_configRandom.embody(m_particlesSystem);
 	m_particlesSystem.sendRestPositionsToGPU();
@@ -55,16 +59,20 @@ void App::onLoopIteration() {
 	ImGui::Text(("time : " + std::to_string(m_time.time())).c_str());
 	ImGui::Text(("FPS  : " + std::to_string(1.0f/m_time.deltaTime())).c_str());
 	ImGui::End();
-	//
+	// Send time to physics compute shader
 	m_time.update();
-	ParticlesSystem::PhysicsShader().bind();
-	ParticlesSystem::PhysicsShader().setUniform1f("dt", m_time.deltaTime());
-	ParticlesSystem::PhysicsShader().unbind();
+	ParticlesSystem::PhysicsComputeShader().bind();
+	ParticlesSystem::PhysicsComputeShader().setUniform1f("dt", m_time.deltaTime());
+	ParticlesSystem::PhysicsComputeShader().unbind();
+	// Clear screen
 	glClearColor(0.5, 0.5, 0.5, 0.5);
 	glClear(GL_COLOR_BUFFER_BIT);
-	m_pipeline.bind();
+	// Draw particles
+	m_particlePipeline.bind();
 	m_particlesSystem.draw();
+	// Update particles physics
 	m_particlesSystem.updatePositions();
+	// ImGui
 	m_particlesSystem.ImGui_Windows();
 }
 

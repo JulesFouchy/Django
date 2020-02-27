@@ -14,15 +14,15 @@ void PhysicsSettings::setUniforms() {
 }
 
 void PhysicsSettings::setStiffnessInShader() {
-	ParticlesSystem::PhysicsShader().bind();
-	ParticlesSystem::PhysicsShader().setUniform1f("u_Stiffness", m_stiffness);
-	ParticlesSystem::PhysicsShader().unbind();
+	ParticlesSystem::PhysicsComputeShader().bind();
+	ParticlesSystem::PhysicsComputeShader().setUniform1f("u_Stiffness", m_stiffness);
+	ParticlesSystem::PhysicsComputeShader().unbind();
 }
 
 void PhysicsSettings::setDampingInShader() {
-	ParticlesSystem::PhysicsShader().bind();
-	ParticlesSystem::PhysicsShader().setUniform1f("u_Damping", m_damping);
-	ParticlesSystem::PhysicsShader().unbind();
+	ParticlesSystem::PhysicsComputeShader().bind();
+	ParticlesSystem::PhysicsComputeShader().setUniform1f("u_Damping", m_damping);
+	ParticlesSystem::PhysicsComputeShader().unbind();
 }
 
 void PhysicsSettings::ImGui_Parameters() {

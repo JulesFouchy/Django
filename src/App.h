@@ -29,7 +29,7 @@ private:
 	bool m_bShowImGUIDemoWindow;
 	bool m_bFullScreen;
 
-	ShaderPipeline m_pipeline;
+	ShaderPipeline m_particlePipeline;
 	ShaderPipeline m_clearScreenPipeline;
 	ParticlesSystem m_particlesSystem;
 	Config_FillScreen m_configFillScreen;

@@ -19,7 +19,7 @@ public:
 
 	void recomputeVBO();
 
-	inline static ShaderPipeline& PhysicsShader() { return m_physicsShader; }
+	inline static ShaderPipeline& PhysicsComputeShader() { return m_physicsShader; }
 
 private:
 	friend class Config_FillScreen;
