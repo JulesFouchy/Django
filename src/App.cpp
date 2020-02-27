@@ -143,6 +143,11 @@ void App::onEvent(const SDL_Event& e) {
 				m_configRandom.embody(m_particlesSystem);
 				m_particlesSystem.sendRestPositionsToGPU();
 			}
+			else if (e.key.keysym.sym == 'c') {
+				m_configCircle.generate();
+				m_configCircle.embody(m_particlesSystem);
+				m_particlesSystem.sendRestPositionsToGPU();
+			}
 		}
 		break;
 

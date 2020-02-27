@@ -9,6 +9,7 @@ union SDL_Event;
 
 #include "Configurations/Config_FillScreen.h"
 #include "Configurations/Config_Random.h"
+#include "Configurations/Config_Circle.h"
 
 #include "Time/Time_Realtime.h"
 
@@ -36,6 +37,7 @@ private:
 	ParticlesSystem m_particlesSystem;
 	Config_FillScreen m_configFillScreen;
 	Config_Random m_configRandom;
+	Config_Circle m_configCircle;
 	Time_Realtime m_time;
 
 /********************
