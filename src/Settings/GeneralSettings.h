@@ -11,8 +11,10 @@ public:
 	static void  EnableAlphaTrail();
 	static void DisableAlphaTrail();
 	static inline bool IsAlphaTrailEnabled() { return ALPHA_TRAIL_ENABLED; }
+	static inline float AlphaTrailDecay() { return ALPHA_TRAIL_DECAY; }
 
 private:
 	static int NB_OF_PARTICLES;
 	static bool ALPHA_TRAIL_ENABLED;
+	static float ALPHA_TRAIL_DECAY;
 };

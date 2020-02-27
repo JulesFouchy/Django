@@ -2,3 +2,5 @@
 bin/Debug/
 
 build/
+
+*.ini

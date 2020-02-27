@@ -73,6 +73,7 @@ void App::onLoopIteration() {
 	if (GeneralSettings::IsAlphaTrailEnabled()) {
 		m_clearScreenPipeline.bind();
 		m_clearScreenPipeline.setUniform1f("dt", m_time.deltaTime());
+		m_clearScreenPipeline.setUniform1f("decay", GeneralSettings::AlphaTrailDecay());
 		m_fullScreenVAO.bind();
 		GLCall(glDrawArrays(GL_TRIANGLES, 0, 6));
 	}
