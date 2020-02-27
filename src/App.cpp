@@ -9,6 +9,8 @@
 #include "Debugging/Log.h"
 #include "Debugging/glException.h"
 
+#include "Settings/GeneralSettings.h"
+
 #include "Helper/DisplayInfos.h"
 
 
@@ -55,22 +57,29 @@ void App::onLoopIteration() {
 	if (m_bShowImGUIDemoWindow) // Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
 		ImGui::ShowDemoWindow(&m_bShowImGUIDemoWindow);
 #endif
+	// Time
 	ImGui::Begin("Time");
 	ImGui::Text(("time : " + std::to_string(m_time.time())).c_str());
 	ImGui::Text(("FPS  : " + std::to_string(1.0f/m_time.deltaTime())).c_str());
 	ImGui::End();
+	// Settings
+	GeneralSettings::ImGuiWindow();
 	// Send time to physics compute shader
 	m_time.update();
 	ParticlesSystem::PhysicsComputeShader().bind();
 	ParticlesSystem::PhysicsComputeShader().setUniform1f("dt", m_time.deltaTime());
 	ParticlesSystem::PhysicsComputeShader().unbind();
 	// Clear screen
-	//glClearColor(0.5, 0.5, 0.5, 0.5);
-	//glClear(GL_COLOR_BUFFER_BIT);
-	m_clearScreenPipeline.bind();
-	m_clearScreenPipeline.setUniform1f("dt", m_time.deltaTime());
-	m_fullScreenVAO.bind();
-	GLCall(glDrawArrays(GL_TRIANGLES, 0, 6));
+	if (GeneralSettings::IsAlphaTrailEnabled()) {
+		m_clearScreenPipeline.bind();
+		m_clearScreenPipeline.setUniform1f("dt", m_time.deltaTime());
+		m_fullScreenVAO.bind();
+		GLCall(glDrawArrays(GL_TRIANGLES, 0, 6));
+	}
+	else {
+		glClearColor(0, 0, 0, 1);
+		glClear(GL_COLOR_BUFFER_BIT);
+	}
 	
 	// Draw particles
 	m_particlePipeline.bind();
