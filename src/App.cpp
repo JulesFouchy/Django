@@ -109,7 +109,7 @@ void App::onEvent(const SDL_Event& e) {
 			switchFullScreenMode();
 		if (e.key.keysym.scancode == SDL_SCANCODE_ESCAPE && m_bFullScreen)
 			switchFullScreenMode();
-		if (!ImGui::GetIO().WantCaptureKeyboard) {
+		if (!ImGui::GetIO().WantTextInput) {
 			if (e.key.keysym.scancode == SDL_SCANCODE_SPACE) {
 				m_configFillScreen.embody(m_particlesSystem);
 				m_particlesSystem.sendRestPositionsToGPU();
@@ -123,7 +123,7 @@ void App::onEvent(const SDL_Event& e) {
 		break;
 
 	case SDL_KEYUP:
-		if (!ImGui::GetIO().WantCaptureKeyboard) {
+		if (!ImGui::GetIO().WantTextInput) {
 
 		}
 		break;
