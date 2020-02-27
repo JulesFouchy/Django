@@ -1,0 +1,234 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="author" content="Dejan D. M. Milosavljevic">
+		<link rel="icon" href="../../favicon.ico" type="image/ico">
+		<title>Namespaces</title>
+	</head>
+	<body>
+		<h1 align="center"> Namespaces </h1>
+
+		<h3> TOC </h3>
+		<ul>
+			<li><a href="#color::_root"><code>color</code></a></li>
+			<li><a href="#color::akin"><code>color::akin</code></a></li>
+			<li><a href="#color::category"><code>color::category</code></a></li>
+			<li><a href="#color::check"><code>color::check</code></a></li>
+			<li><a href="#color::compare"><code>color::compare</code></a></li>
+			<li><a href="#color::constant"><code>color::constant</code></a></li>
+			<li><a href="#color::fix"><code>color::fix</code></a></li>
+			<li><a href="#color::get"><code>color::get</code></a></li>
+			<li><a href="#color::make"><code>color::make</code></a></li>
+			<li><a href="#color::operation"><code>color::operation</code></a></li>
+			<li><s><a href="#color::operation::functor"><code>color::operation::functor</code></a></s></li>
+			<li><a href="#color::place"><code>color::place</code></a></li>
+			<li><a href="#color::set"><code>color::set</code></a></li>
+			<li><a href="#color::trait"><code>color::trait</code></a></li>
+			<li><a href="#color::type"><code>color::type</code></a></li>
+			<li><a href="#color::_internal"><code>color::_internal</code></a></li>
+		</ul>
+
+		<dl>
+			<dt><a name="color::_root" /><h3><code>color</code></h3></dt>
+			<dd>Main name space. Usually contain color <a href="../glossary.html#model">model</a> classes, but also might contain other useful things.
+			</dd>
+
+			<dt><a name="color::akin" /><h3><code>color::akin</code></h3></dt>
+			<dd>
+				<dl>
+					<dt>Main Page</dt>
+					<dd><a href="./akin.html" ><code>akin</code> Main page.</a></dd>
+					<dt>Description</dt>
+					<dd>Mach most similar <a href="../glossary.html#model">model</a>/formats. e.g akin type for <code>::color::rgb&lt; double &gt;</code> is <code>::color::hsl&lt; double &gt;</code> and vice versa.</dd>
+					<dt>Example</dt>
+					<dd>
+						<code>
+							typedef ::color::rgb&lt; double &gt; <b>rgb_t</b>; <br>
+							typedef ::color::akin::hsl&lt; rgb_t::category_type &gt;::akin_type hsl_category_t;<br>
+							typedef ::color::model&lt; hsl_category_t &gt; <b>hsl_t</b>;<br>
+						</code>
+					</dd>
+				</dl>
+			</dd>
+
+			<dt><a name="color::category" /><h3><code>color::category</code></h3></dt>
+			<dd>
+				Contain all color categories. Category is pair of <a href="../glossary.html#model">model</a> and format.
+				<br>For more details see <a href="./category.html">category</a>.
+			</dd>
+
+			<dt><a name="color::check" /><h3><code>color::check</code></h3></dt>
+			<dd>
+				<dl>
+					<dt>Main Page</dt>
+					<dd><a href="./check.html" ><code>check</code> main Page</a></dd>
+					<dt>Description</dt>
+					<dd>Test/check color components for some inconsistency.</dd>
+					<dt>Example</dt>
+					<dd>
+						<code>
+							::color::rgb&lt; double &gt; r; <br>
+							r[0]=2; r[1]=0.5; r[2]=-1;  <br>
+							std::cout &lt;&lt; ::color::check::overburn( r );<br>
+						</code>
+					</dd>
+				</dl>
+			</dd>
+
+			<dt><a name="color::compare" /><h3><code>color::compare</code></h3></dt>
+			<dd>
+				<dl>
+					<dt>Main Page</dt>
+					<dd><a href="./compare.html" ><code>compare</code> main Page</a></dd>
+					<dt>Description</dt>
+					<dd>Contain functions to compare color by some criteria.</dd>
+					<dt>Example</dt>
+					<dd>
+						<code>
+							::color::rgb&lt; double &gt; a, b; <br>
+							std::cout &lt;&lt; ::color::compare::darker( a,b );<br>
+							std::cout &lt;&lt; ::color::compare::brighter( a,b );<br>
+						</code>
+					</dd>
+				</dl>
+			</dd>
+
+			<dt><a name="color::constant" /><h3><code>color::constant</code></h3></dt>
+			<dd>
+				<dl>
+					<dt>Main Page</dt>
+					<dd><a href="./constant.html" ><code>constant</code> Main Page</a></dd>
+					<dt>Description</dt>
+					<dd>Contain various constants and constant like types for easy color manipulation.</dd>
+					<dt>Example</dt>
+					<dd>
+						 <code>
+							::color::rgb&lt; double &gt; a( ::color::constant::aqua_t{} ); <br>
+							a = ::color::constant::orange_t{};
+						</code>
+					</dd>
+				</dl>
+			</dd>
+
+			<dt><a name="color::fix" /><h3><code>color::fix</code></h3></dt>
+			<dd>
+				<dl>
+					<dt>Main Page</dt>
+					<dd><a href="./fix.html" ><code>fix</code> main Page</a></dd>
+					<dt>Description</dt>
+					<dd>Fix color so instance can pass overburn and integrity checks.</dd>
+					<dt>Example</dt>
+					<dd>
+						<code>
+							::color::rgb&lt; double &gt; a; <br>
+							r[0]=2; r[1]=0.5; r[2]=-1;  <br>
+							::color::fix::overburn( r );<br>
+							std::cout &lt;&lt; r[0] &lt;&lt; ", " &lt;&lt;  r[1] &lt;&lt; ", " r[2] &lt;&lt; std::endl; <br>
+						</code>
+					</dd>
+				</dl>
+			</dd>
+
+			<dt><a name="color::get" /><h3><code>color::get</code></h3></dt>
+			<dd>
+
+				<dl>
+					<dt>Main Page</dt>
+					<dd><a href="./get.html"><code>get</code> Main Page</a></dd>
+					<dt>Description</dt>
+					<dd>Get some property of color by the name. Depend of used color <a href="../glossary.html#model">model</a> this operation might be instant like getting <i>red channel</i> from RGB or require some calculation like get <i>red</i> from HSV <a href="../glossary.html#model">model</a>.<br><br>
+						Sub namespaces:
+						<dl>
+							<dt><code>::color::get::constant::rgb</code></dt>
+							<dd>Constants to extract various features by different algorithnam</dd>
+							<dt><code>::color::get::constant::cmy</code></dt>
+							<dd>Constants to extract various features by different algorithnam</dd>
+							<dt><code>::color::get::constant::cmyk</code></dt>
+							<dd>Constants to extract various features by different algorithnam</dd>
+						</dl>
+					</dd>
+					<dt>Example</dt>
+					<dd>
+						<code>
+							::color::rgb&lt;float&gt; c;<br>
+							auto hue = color::get::hue&lt; ::color::get::constant::rgb::hue::polar_acos_entity &gt;( c );
+						</code>
+					</dd>
+				</dl>
+
+			</dd>
+
+			<dt><a name="color::make" /><h3><code>color::make</code></h3></dt>
+			<dd>
+				<dl>
+					<dt>Main Page</dt>
+					<dd><a href="./make.html"><code>make</code> Main Page</a></dd>
+					<dt>Description</dt>
+					<dd>Make color by some algorithm.</dd>
+					<dt>Example</dt>
+					<dd>
+						<code>
+							::color::gray&lt; double &gt; g;<br>::color::make::gray( g, 25 ); <br>
+						</code>
+					</dd>
+				</dl>
+			</dd>
+
+			<dt><a name="color::operation" /><h3><code>color::operation</code></h3></dt>
+			<dd>
+				All operations are situated here. Some operations are not designed to be used in this form e.g. <code>color::operation:addition</code>
+				<br>For more details see <a href="./operations.html" >operations</a>.
+			</dd>
+
+			<dt><a name="color::operation::functor" /><h3><code><s>color::operation::functor</s></code></h3></dt>
+			<dd>
+				<s>Functor classes.
+				<br>For more details see <a href="./functor.html" >functor</a>s.</s>
+			</dd>
+
+
+			<dt><a name="color::place" /><h3><code>color::place</code></h3></dt>
+			<dd>
+				Get index of some color component.</code>
+				<br>For more details see <a href="./place.html" >place</a>.
+			</dd>
+
+			<dt><a name="color::set" /><h3><code>color::set</code></h3></dt>
+			<dd>
+				<dl>
+					<dt>Main Page</dt>
+					<dd><a href="./set.html">set Main page</a></dd>
+					<dt>Description</dt>
+					<dd>Set some property of color. Similarly  to get this operation might be instant or need calculation.</dd>
+					<dt>Example</dt>
+					<dd>
+						<code>
+							::color::rgb&lt; double &gt; c{ ::color::constant::pink{} }; <br>
+							::color::set::red( c, 0.5 ); // set red to be 0.5<br>
+						</code>
+					</dd>
+				</dl>
+			</dd>
+
+			<dt><a name="color::trait" /><h3><code>color::trait</code></h3></dt>
+			<dd>
+				Contain classes to retrieve some property of color specified color category. </code>
+				<br>For more details see <a href="./trait.html" >trait</a>.
+			</dd>
+
+			<dt><a name="color::type" /><h3><code>color::type</code></h3></dt>
+			<dd>
+				Contain useful types.
+				<br>For more details see <a href="./type.html" >type</a>.
+			</dd>
+
+			<dt><a name="color::_internal" /><h3><code>color::_internal</code></h3></dt>
+			<dd>
+				Miscellaneous internal things. Do not use entities from here. It is highly probably that this might change from version to version or from one commit to another.
+			</dd>
+
+		</dl>
+		<hr>
+	</body>
+</html>

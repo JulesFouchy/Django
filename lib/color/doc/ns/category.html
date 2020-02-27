@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="author" content="Dejan D. M. Milosavljevic">
+		<link rel="icon" href="../../favicon.ico" type="image/ico">
+		<title>Namespace category</title>
+	</head>
+	<body>
+		<h1 align="center">Namespace <code>color::category</code></h1>
+		<dl>
+			<dt><h3>TOC</h3></dt>
+			<dd>
+				<ul>
+					<li><a href="#Description">Description</a></li>
+					<li><a href="#List">List</a>
+						<ul>
+							<li><a href="#cmy">cmy</a></li>
+							<li><a href="#cmyk">cmyk</a></li>
+							<li><a href="#gray">gray</a></li>
+							<li><a href="#hsl">hsi</a></li>
+							<li><a href="#hsl">hsl</a></li>
+							<li><a href="#hsv">hsv</a></li>
+							<li><a href="#hwb">hwb</a></li>
+							<li><a href="#lab">lab</a></li>
+
+							<li><a href="#LabCH">LabCH</a></li>
+							<li><a href="#lms">lms</a></li>
+							<li><a href="#luv">luv</a></li>
+
+							<li><a href="#rgb">rgb</a></li>
+							<li><a href="#xyz">xyz</a></li>
+
+							<li><a href="#YCgCo">YCgCo</a></li>
+							<li><a href="#YDbDr">YDbDr</a></li>
+
+							<li><a href="#yiq">yiq</a></li>
+							<li><a href="#YPbPr">YPbPr</a></li>
+							<li><a href="#yuv">yuv</a></li>
+						</ul>
+					</li>
+				</ul>
+			</dd>
+
+			<dt><h3>Description</h3></dt>
+			<dd>Containe all <a href="../glossary.html#category">categories</a> types.</dd>
+			<dt><h3>List</h3></dt>
+			<dd>
+				<dl>
+					<dt><a name="CMY" />CMY</dt>
+					<dd>
+						<dl>
+							<dt><code>template&lt; typename tag_name &gt; struct cmy;</code></dt>
+							<dd>Generalized CMY category. All CMY categories are alias of instance of this class for some internal <code>tag_type</code>.</dd>
+							<dt>List</dt>
+							<dd>
+								<ul>
+									<!-- <li><code>using cmy_bool    = ::color::category::cmy&lt; <i>unspecified</i> &gt;;</code></li> -->
+									<li><code>using cmy_uint8   = ::color::category::cmy&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using cmy_uint16  = ::color::category::cmy&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using cmy_uint24  = ::color::category::cmy&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using cmy_uint32  = ::color::category::cmy&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using cmy_uint48  = ::color::category::cmy&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using cmy_uint64  = ::color::category::cmy&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using cmy_float   = ::color::category::cmy&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using cmy_double  = ::color::category::cmy&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using cmy_ldouble = ::color::category::cmy&lt; <i>unspecified</i> &gt;;</code></li>
+								</ul>
+							</dd>
+							<dt>Example(s)</dt>
+							<dd>
+								Next two types are the same:
+								<blockquote><code>
+								::color::model&lt; ::color::category::cmy_double &gt; c0; <br>
+								::color::cmy&lt; double &gt;  &nbsp; &nbsp;&nbsp;&nbsp;    c1; </code></blockquote>
+							</dd>
+						</dl>
+					</dd>
+					<dt><a name="CMYK" />CMYK</dt>
+					<dd>
+						<dl>
+							<dt><code>template&lt; typename tag_name &gt; struct cmyk;</code></dt>
+							<dd>Generalized CMYK category. All CMYK categories are alias of instance of this class for some internal <code>tag_type</code>.</dd>
+							<dt>List</dt>
+							<dd>
+								<ul>
+									<!-- <li><code>using cmyk_bool    = ::color::category::cmyk&lt; <i>unspecified</i> &gt;;</code></li> -->
+									<li><code>using cmyk_uint8   = ::color::category::cmyk&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using cmyk_uint16  = ::color::category::cmyk&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using cmyk_uint24  = ::color::category::cmyk&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using cmyk_uint32  = ::color::category::cmyk&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using cmyk_uint48  = ::color::category::cmyk&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using cmyk_uint64  = ::color::category::cmyk&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using cmyk_float   = ::color::category::cmyk&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using cmyk_double  = ::color::category::cmyk&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using cmyk_ldouble = ::color::category::cmyk&lt; <i>unspecified</i> &gt;;</code></li>
+								</ul>
+							</dd>
+							<dt>Example(s)</dt>
+							<dd>
+								Next two types are the same:
+								<blockquote><code>
+								::color::model&lt; ::color::category::cmyk_float &gt; c0; <br>
+								::color::cmyk&lt; float &gt;  &nbsp;&nbsp;&nbsp; &nbsp;    c1; </code></blockquote>
+							</dd>
+						</dl>
+					</dd>
+					<dt><a name="gray" />gray</dt>
+					<dd>
+						<dl>
+							<dt><code>template&lt; typename tag_name &gt; struct gray;</code></dt>
+							<dd>Generalized Gray category. All Gray categories are alias of instance of this class for some internal <code>tag_type</code>.</dd>
+							<dt>List</dt>
+							<dd>
+								<ul>
+									<!-- <li><code>using cmyk_bool    = ::color::category::cmyk&lt; <i>unspecified</i> &gt;;</code></li> -->
+									<li><code>using gray_uint8   = ::color::category::gray&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using gray_uint16  = ::color::category::gray&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using gray_uint24  = ::color::category::gray&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using gray_uint32  = ::color::category::gray&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using gray_uint48  = ::color::category::gray&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using gray_uint64  = ::color::category::gray&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using gray_float   = ::color::category::gray&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using gray_double  = ::color::category::gray&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using gray_ldouble = ::color::category::gray&lt; <i>unspecified</i> &gt;;</code></li>
+								</ul>
+							</dd>
+							<dt>Example(s)</dt>
+							<dd>
+								Next two types are the same:
+								<blockquote><code>
+								::color::model&lt; ::color::category::gray_uint8 &gt; &nbsp;&nbsp; c0; <br>
+								::color::gray&lt; std::uint8_t &gt;  &nbsp;    c1; </code>
+								</blockquote>
+							</dd>
+						</dl>
+					</dd>
+
+					<dt><a name="HSI" />HSI</dt>
+					<dd>
+						<dl>
+							<dt><code>template&lt; typename tag_name &gt; struct hsi;</code></dt>
+							<dd>Generalized HSI category. All HSI categories are alias of instance of this class for some internal <code>tag_type</code>.</dd>
+							<dt>List</dt>
+							<dd>
+								<ul>
+									<!-- <li><code>using hsi_bool    = ::color::category::hsi&lt; <i>unspecified</i> &gt;;</code></li> -->
+									<li><code>using hsi_uint8   = ::color::category::hsi&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using hsi_uint16  = ::color::category::hsi&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using hsi_uint24  = ::color::category::hsi&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using hsi_uint32  = ::color::category::hsi&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using hsi_uint48  = ::color::category::hsi&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using hsi_uint64  = ::color::category::hsi&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using hsi_float   = ::color::category::hsi&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using hsi_double  = ::color::category::hsi&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using hsi_ldouble = ::color::category::hsi&lt; <i>unspecified</i> &gt;;</code></li>
+								</ul>
+							</dd>
+							<dt>Example(s)</dt>
+							<dd>
+								Next two types are the same:
+								<blockquote><code>
+								::color::model&lt; ::color::category::hsi_uint16 &gt;   &nbsp; &nbsp; c0; <br>
+								::color::hsi&lt; std::uint16_t &gt;  &nbsp;&nbsp; c1; </code>
+								</blockquote>
+							</dd>
+						</dl>
+					</dd>
+
+					<dt><a name="HSL" />HSL</dt>
+					<dd>
+						<dl>
+							<dt><code>template&lt; typename tag_name &gt; struct hsl;</code></dt>
+							<dd>Generalized HSL category. All HSL categories are alias of instance of this class for some internal <code>tag_type</code>.</dd>
+							<dt>List</dt>
+							<dd>
+								<ul>
+									<!-- <li><code>using hsl_bool    = ::color::category::hsk&lt; <i>unspecified</i> &gt;;</code></li> -->
+									<li><code>using hsl_uint8   = ::color::category::hsl&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using hsl_uint16  = ::color::category::hsl&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using hsl_uint24  = ::color::category::hsl&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using hsl_uint32  = ::color::category::hsl&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using hsl_uint48  = ::color::category::hsl&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using hsl_uint64  = ::color::category::hsl&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using hsl_float   = ::color::category::hsl&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using hsl_double  = ::color::category::hsl&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using hsl_ldouble = ::color::category::hsl&lt; <i>unspecified</i> &gt;;</code></li>
+								</ul>
+							</dd>
+							<dt>Example(s)</dt>
+							<dd>
+								Next two types are the same:
+								<blockquote><code>
+								::color::model&lt; ::color::category::hsl_uint16 &gt;   &nbsp; &nbsp; c0; <br>
+								::color::hsl&lt; std::uint16_t &gt;  &nbsp;&nbsp; c1; </code>
+								</blockquote>
+							</dd>
+						</dl>
+					</dd>
+
+					<dt><a name="HSV" />HSV</dt>
+					<dd>
+						<dl>
+							<dt><code>template&lt; typename tag_name &gt; struct hsv;</code></dt>
+							<dd>Generalized HSV category. All HSV categories are alias of instance of this class for some internal <code>tag_type</code>.</dd>
+							<dt>List</dt>
+							<dd>
+								<ul>
+									<!-- <li><code>using cmyk_bool    = ::color::category::cmyk&lt; <i>unspecified</i> &gt;;</code></li> -->
+									<li><code>using hsv_uint8   = ::color::category::hsv&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using hsv_uint16  = ::color::category::hsv&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using hsv_uint24  = ::color::category::hsv&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using hsv_uint32  = ::color::category::hsv&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using hsv_uint48  = ::color::category::hsv&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using hsv_uint64  = ::color::category::hsv&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using hsv_float   = ::color::category::hsv&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using hsv_double  = ::color::category::hsv&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using hsv_ldouble = ::color::category::hsv&lt; <i>unspecified</i> &gt;;</code></li>
+								</ul>
+							</dd>
+							<dt>Example(s)</dt>
+							<dd>
+								Next two types are the same:
+								<blockquote><code>
+								::color::model&lt; ::color::category::hsv_uint32 &gt; &nbsp; &nbsp; c0; <br>
+								::color::hsv&lt; std::uint32_t &gt;  &nbsp;&nbsp;    c1; </code>
+								</blockquote>
+							</dd>
+						</dl>
+					</dd>
+
+
+					<dt><a name="HWB" />HWB</dt>
+					<dd>
+						<dl>
+							<dt><code>template&lt; typename tag_name &gt; struct hwb;</code></dt>
+							<dd>Generalized HWB category. All HWB categories are alias of instance of this class for some internal <code>tag_type</code>.</dd>
+							<dt>List</dt>
+							<dd>
+								<ul>
+									<!-- <li><code>using hwb_bool    = ::color::category::hwb&lt; <i>unspecified</i> &gt;;</code></li> -->
+									<li><code>using hwb_uint8   = ::color::category::hwb&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using hwb_uint16  = ::color::category::hwb&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using hwb_uint24  = ::color::category::hwb&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using hwb_uint32  = ::color::category::hwb&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using hwb_uint48  = ::color::category::hwb&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using hwb_uint64  = ::color::category::hwb&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using hwb_float   = ::color::category::hwb&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using hwb_double  = ::color::category::hwb&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using hwb_ldouble = ::color::category::hwb&lt; <i>unspecified</i> &gt;;</code></li>
+								</ul>
+							</dd>
+							<dt>Example(s)</dt>
+							<dd>
+								Next two types are the same:
+								<blockquote><code>
+								::color::model&lt; ::color::category::hwb_uint32 &gt; &nbsp; &nbsp; c0; <br>
+								::color::hwb&lt; std::uint32_t &gt;  &nbsp;&nbsp;    c1; </code>
+								</blockquote>
+							</dd>
+						</dl>
+					</dd>
+
+					<dt><a name="lab" />LAB</dt>
+					<dd>
+						<dl>
+							<dt><code>template&lt; typename tag_name &gt; struct lab;</code></dt>
+							<dd>Generalized LAB category. All LAB categories are alias of instance of this class for some internal <code>tag_type</code>.</dd>
+							<dt>List</dt>
+							<dd>
+								<ul>
+									<!-- <li><code>using cmyk_bool    = ::color::category::cmyk&lt; <i>unspecified</i> &gt;;</code></li> -->
+									<li><code>using lab_uint8   = ::color::category::lab&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using lab_uint16  = ::color::category::lab&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using lab_uint24  = ::color::category::lab&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using lab_uint32  = ::color::category::lab&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using lab_uint48  = ::color::category::lab&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using lab_uint64  = ::color::category::lab&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using lab_float   = ::color::category::lab&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using lab_double  = ::color::category::lab&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using lab_ldouble = ::color::category::lab&lt; <i>unspecified</i> &gt;;</code></li>
+								</ul>
+							</dd>
+							<dt>Example(s)</dt>
+							<dd>
+								Next two types are the same:
+								<blockquote><code>
+								::color::model&lt; ::color::category::lab_uint32 &gt; &nbsp; &nbsp; c0; <br>
+								::color::lab&lt; std::uint32_t &gt;  &nbsp;&nbsp;    c1; </code>
+								</blockquote>
+							</dd>
+						</dl>
+					</dd>
+
+					<dt><a name="LabCH" />LabCH</dt>
+					<dd>s
+						<dl>
+							<dt><code>template&lt; typename tag_name &gt; struct LabCH;</code></dt>
+							<dd>Generalized LabCH category. All LabCH categories are alias of instance of this class for some internal <code>tag_type</code>.</dd>
+							<dt>List</dt>
+							<dd>
+								<ul>
+									<!-- <li><code>using cmyk_bool    = ::color::category::cmyk&lt; <i>unspecified</i> &gt;;</code></li> -->
+									<li><code>using lab_uint8   = ::color::category::LabCH&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using lab_uint16  = ::color::category::LabCH&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using lab_uint24  = ::color::category::LabCH&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using lab_uint32  = ::color::category::LabCH&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using lab_uint48  = ::color::category::LabCH&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using lab_uint64  = ::color::category::LabCH&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using lab_float   = ::color::category::LabCH&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using lab_double  = ::color::category::LabCH&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using lab_ldouble = ::color::category::LabCH&lt; <i>unspecified</i> &gt;;</code></li>
+								</ul>
+							</dd>
+							<dt>Example(s)</dt>
+							<dd>
+								Next two types are the same:
+								<blockquote><code>
+								::color::model&lt; ::color::category::lab_uint32 &gt; &nbsp; &nbsp; c0; <br>
+								::color::LabCH&lt; std::uint32_t &gt;  &nbsp;&nbsp;    c1; </code>
+								</blockquote>
+							</dd>
+						</dl>
+					</dd>
+
+					<dt><a name="RGB" />RGB</dt>
+					<dd>
+						<dl>
+							<dt><code>template&lt; typename tag_name &gt; struct rgb;</code></dt>
+							<dd>Generalized RGB category. All RGB categories are alias of instance of this class for some internal <code>tag_type</code>.</dd>
+							<dt>List</dt>
+							<dd>
+								<ul>
+									<!-- <li><code>using cmyk_bool    = ::color::category::cmyk&lt; <i>unspecified</i> &gt;;</code></li> -->
+									<li><code>using rgb_uint8   = ::color::category::rgb&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using rgb_uint16  = ::color::category::rgb&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using rgb_uint24  = ::color::category::rgb&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using rgb_uint32  = ::color::category::rgb&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using rgb_uint48  = ::color::category::rgb&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using rgb_uint64  = ::color::category::rgb&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using rgb_float   = ::color::category::rgb&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using rgb_double  = ::color::category::rgb&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using rgb_ldouble = ::color::category::rgb&lt; <i>unspecified</i> &gt;;</code></li>
+								</ul>
+							</dd>
+							<dt>Example(s)</dt>
+							<dd>
+								Next two types are the same:
+								<blockquote><code>
+								::color::model&lt; ::color::category::rgb_uint64 &gt; c0; <br>
+								::color::rgb&lt; std::uint64_t &gt;  &nbsp;&nbsp;&nbsp;&nbsp;    c1; </code>
+								</blockquote>
+							</dd>
+						</dl>
+					</dd>
+
+					<dt><a name="XYZ" />XYZ</dt>
+					<dd>
+						<dl>
+							<dt><code>template&lt; typename tag_name &gt; struct xyz;</code></dt>
+							<dd>Generalized XYZ category. All XYZ categories are alias of instance of this class for some internal <code>tag_type</code>.</dd>
+							<dt>List</dt>
+							<dd>
+								<ul>
+									<!-- <li><code>using xyz_bool    = ::color::category::xyz&lt; <i>unspecified</i> &gt;;</code></li> -->
+									<li><code>using xyz_uint8   = ::color::category::xyz&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using xyz_uint16  = ::color::category::xyz&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using xyz_uint24  = ::color::category::xyz&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using xyz_uint32  = ::color::category::xyz&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using xyz_uint48  = ::color::category::xyz&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using xyz_uint64  = ::color::category::xyz&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using xyz_float   = ::color::category::xyz&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using xyz_double  = ::color::category::xyz&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using xyz_ldouble = ::color::category::xyz&lt; <i>unspecified</i> &gt;;</code></li>
+								</ul>
+							</dd>
+							<dt>Example(s)</dt>
+							<dd>
+								Next two types are the same:
+								<blockquote><code>
+								::color::model&lt; ::color::category::xyz_double &gt; c0; <br>
+								::color::xyz&lt; double &gt;  &nbsp;&nbsp;&nbsp;&nbsp;    c1; </code>
+								</blockquote>
+							</dd>
+						</dl>
+					</dd>
+
+
+					<dt><a name="YIQ" />YIQ</dt>
+					<dd>
+						<dl>
+							<dt><code>template&lt; typename tag_name &gt; struct yiq;</code></dt>
+							<dd>Generalized YIQ category. All YIQ categories are alias of instance of this class for some internal <code>tag_type</code>.</dd>
+							<dt>List</dt>
+							<dd>
+								<ul>
+									<!-- <li><code>using cmyk_bool    = ::color::category::cmyk&lt; <i>unspecified</i> &gt;;</code></li> -->
+									<li><code>using yiq_uint8   = ::color::category::yiq&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using yiq_uint16  = ::color::category::yiq&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using yiq_uint24  = ::color::category::yiq&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using yiq_uint32  = ::color::category::yiq&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using yiq_uint48  = ::color::category::yiq&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using yiq_uint64  = ::color::category::yiq&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using yiq_float   = ::color::category::yiq&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using yiq_double  = ::color::category::yiq&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using yiq_ldouble = ::color::category::yiq&lt; <i>unspecified</i> &gt;;</code></li>
+								</ul>
+							</dd>
+							<dt>Example(s)</dt>
+							<dd>
+								Next two types are the same:
+								<blockquote><code>
+								::color::model&lt; ::color::category::yiq_double &gt; c0; <br>
+								::color::yiq&lt; double &gt;  &nbsp;&nbsp;&nbsp;&nbsp;    c1; </code>
+								</blockquote>
+							</dd>
+						</dl>
+					</dd>
+
+					<dt><a name="YUV" />YUV</dt>
+					<dd>
+						<dl>
+							<dt><code>template&lt; typename tag_name &gt; struct yuv;</code></dt>
+							<dd>Generalized YUV category. All YUV categories are alias of instance of this class for some internal <code>tag_type</code>.</dd>
+							<dt>List</dt>
+							<dd>
+								<ul>
+									<!-- <li><code>using cmyk_bool    = ::color::category::cmyk&lt; <i>unspecified</i> &gt;;</code></li> -->
+									<li><code>using yuv_uint8   = ::color::category::yuv&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using yuv_uint16  = ::color::category::yuv&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using yuv_uint24  = ::color::category::yuv&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using yuv_uint32  = ::color::category::yuv&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using yuv_uint48  = ::color::category::yuv&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using yuv_uint64  = ::color::category::yuv&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using yuv_float   = ::color::category::yuv&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using yuv_double  = ::color::category::yuv&lt; <i>unspecified</i> &gt;;</code></li>
+									<li><code>using yuv_ldouble = ::color::category::yuv&lt; <i>unspecified</i> &gt;;</code></li>
+								</ul>
+							</dd>
+							<dt>Example(s)</dt>
+							<dd>
+								Next two types are the same:
+								<blockquote><code>
+								::color::model&lt; ::color::category::yuv_double &gt; c0; <br>
+								::color::yuv&lt; double &gt;  &nbsp;&nbsp;&nbsp;&nbsp;    c1; </code>
+								</blockquote>
+							</dd>
+						</dl>
+					</dd>
+
+				</dl>
+
+			</dd>
+		</dl>
+		<hr>
+	</body>
+</html>

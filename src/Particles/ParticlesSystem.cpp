@@ -3,9 +3,12 @@
 #include <glad/glad.h>
 
 #include "Debugging/glException.h"
+#include "Debugging/Log.h"
 
 #include "Helper/DisplayInfos.h"
 #include "Helper/Random.h"
+
+#include <color/color.hpp>
 
 #include <imgui/imgui.h>
 
@@ -35,12 +38,12 @@ ParticlesSystem::ParticlesSystem(unsigned int nbParticles)
     m_particlesSSBO.uploadData(nbParticles, nullptr);
     m_restPositionsSSBO.uploadData(nbParticles, nullptr);
         // Colors
-    std::vector<glm::vec3> colors;
+    std::vector<color::rgb<float>> colors;
     colors.resize(nbParticles);
     for (int i = 0; i < m_nbParticles; ++i) {
         float t = i / (float)m_nbParticles;
-        colors[i] = t * glm::vec3(1, 0, 0) + (1-t) * glm::vec3(0,0,1);
-        //colors[i] = glm::vec3(1, 0,0);
+        colors[i] = color::hsv<float>({ t * 360.0f, 80.0f, 80.0f });
+        //spdlog::info("{} {} {}", ::color::get::red(colors[i]), ::color::get::green(colors[i]), ::color::get::blue(colors[i]));
     }
     m_colorsSSBO.uploadData(nbParticles, (float*)colors.data());
     // Vertex buffer

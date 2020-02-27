@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="author" content="Dejan D. M. Milosavljevic">
+		<link rel="icon" href="../../favicon.ico" type="image/ico">
+		<title>Namespace get</title>
+	</head>
+	<body>
+		<h1 align="center">Namespace <code>color::get</code></h1>
+		<dl>
+			<dt><h3>TOC</h3></dt>
+			<dd>
+				<ul>
+					<li><a href="#Description">Description</a></li>
+					<li><a href="#Note">Note</a></li>
+					<li><a href="#Namespaces">Namespaces</a>
+						<ul>
+							<li><a href="#constant__rgb">constant::rgb</a></li>
+						</ul>
+					</li>
+					<li><a href="#Functions">Functions</a>
+						<ul>
+							<li><a href="#alpha">alpha</a></li>
+							<li><a href="#blue">blue</a></li>
+							<li><a href="#black">black</a></li>
+							<li><a href="#chroma">chroma</a></li>
+							<li><a href="#gray">gray</a></li>
+							<li><a href="#green">green</a></li>
+							<li><a href="#hue">hue</a></li>
+							<li><a href="#inphase">inphase </a></li>
+							<li><a href="#key">key</a></li>
+							<li><a href="#luma">luma</a></li>
+							<li><a href="#luminance">luminance</a></li>
+							<li><a href="#quadrature">quadrature</a></li>
+							<li><a href="#saturation">saturation</a></li>
+							<li><a href="#red">red</a></li>
+							<li><a href="#white">white</a></li>
+						</ul>
+					</li>
+				</ul>
+			</dd>
+
+			<dt><a name="#Description"/><h3>Description</h3></dt>
+			<dd>Get color property. From each color we can uniquely <i>extract</i> some information.</dd>
+			<dt><a name="#Note"/><h3>Note</h3></dt>
+			<dd><a name="general"/>All functions has the same signature and they return akin values for akin type for given <a href="../glossary.html#model">model</a>.<br><br>
+				<dl>
+					<dt>Generalized form:</dt>
+					<dd>
+						<code>
+						template&lt; typename  category_name &gt; <br>
+						&nbsp; inline <br>
+						&nbsp; typename ::color::trait::component&lt; category_name &gt;::return_image_type <br>
+						&nbsp; blue( ::color::model&lt; category_name &gt; const&amp; color_parameter ); <br>
+					</code>
+
+				</dd>
+				<dt>Specialized:</dt>
+				<dd>
+					<code style="white-space: nowrap">
+					     template&lt; typename  tag_name &gt;<br>
+					     &nbsp;  inline<br>
+					     &nbsp;  typename ::color::trait::component&lt; typename ::color::akin::rgb&lt;::color::category::<i>ModelName</i>&lt; tag_name &gt; &gt;::akin_type >::return_type<br>
+					     &nbsp;  blue( ::color::model&lt; ::color::category::<i>ModelName</i>&lt; tag_name &gt; &gt; const&amp; color_parameter );
+					</code>
+				</dd>
+				<dt>Example:</dt>
+				<dd>
+					<code style="white-space: nowrap">
+						template&lt; typename tag_name &gt;<br>
+						&nbsp;  inline<br>
+						&nbsp;  typename ::color::trait::component&lt; typename ::color::akin::rgb&lt;::color::category::hsv&lt; tag_name &gt; &gt;::akin_type >::return_type<br>
+						&nbsp;  blue( ::color::model&lt; ::color::category::hsv&lt; tag_name &gt; &gt; const&amp; color_parameter );
+					</code>
+					</dd>
+				</dl><hr width="%20">
+			</dd>
+
+			<dt><a name="#Namespaces"/><h3>Namespaces</h3></dt>
+			<dd>
+				<dl>
+					<dt>Name</dt>
+					<dd><a name="#constant__rgb"/><i>::color::get::constant::rgb</i></dd>
+					<dt>Description</dt>
+					<dd>Contain constant to retrieve various feature from rgb model with different algorithm.</dd>
+					<dt>Example</dt>
+					<dd>
+						<code>
+							color::rgb<float> c{ color::constant::turquoise_t{} };<br>
+							auto hue = color::get::hue&lt; ::color::get::constant::rgb::hue::polar_entity &gt;( c );<br>
+						</code>
+					</dd>
+				</dl><hr width="%20">
+			</dd>
+
+			<dt><a name="#Functions"/><h3>Functions</h3></dt>
+			<dd>
+				<dl>
+					<dt>Name</dt>
+					<dd><a name="#alpha"/><i>alpha</i></dd>
+					<dt>Declaration</dt>
+					<dd>See <a href="#general">general Note</a> about general declaration.</dd>
+					<dt>Description</dt>
+					<dd>Get alpha <a href="glossary.html#component">component</a>.</dd>
+					<dt>Note</dt>
+					<dd>If alpha not exist maximum possible value for zeroth <a href="glossary.html#component">component</a> will be returned.</dd>
+					<dt>Example</dt>
+					<dd>
+						<code>::color::hsv &lt; double &gt; h{ ::color::constant::turquoise{} };<br>
+							std::cout &lt;&lt; ::color::get::alpha( h ) &lt;&lt; std::cout;<br></code>
+					</dd>
+				</dl><hr width="%20">
+
+				<dl>
+					<dt>Name</dt>
+					<dd><a name="#black"/><i>black</i></dd>
+					<dt>Declaration</dt>
+					<dd>See <a href="#general">general Note</a> about general declaration.</dd>
+					<dt>Description</dt>
+					<dd>Get black <a href="glossary.html#component">component</a> or calculate if <a href="glossary.html#model">model</a> does not support natively.</dd>
+					<dt>Example</dt>
+					<dd>
+						<code>::color::yiq &lt; double &gt; h{ ::color::constant::aqua_t{}; };<br>
+							std::cout &lt;&lt; ::color::get::black( h ) &lt;&lt; std::cout;<br></code>
+					</dd>
+				</dl><hr width="%20">
+
+				<dl>
+					<dt>Name</dt>
+					<dd><a name="#blue"/><i>blue</i></dd>
+					<dt>Declaration</dt>
+					<dd>See <a href="#general">general Note</a> about general declaration.</dd>
+					<dt>Description</dt>
+					<dd>Get blue <a href="glossary.html#component">component</a> or calculate if <a href="glossary.html#model">model</a> does not support natively.</dd>
+					<dt>Example</dt>
+					<dd>
+						<code>::color::hsv &lt; double &gt; h{ ::color::constant::turquoise{} };<br>
+							std::cout &lt;&lt; ::color::get::blue( h ) &lt;&lt; std::cout;<br></code>
+					</dd>
+				</dl><hr width="%20">
+
+				<dl>
+					<dt>Name</dt>
+					<dd><a name="#chroma"/><i>chroma</i></dd>
+					<dt>Declaration</dt>
+					<dd>See <a href="#general">general Note</a> about general declaration.</dd>
+					<dt>Description</dt>
+					<dd>Get chroma <a href="glossary.html#component">component</a> or calculate if <a href="glossary.html#model">model</a> does not support natively.</dd>
+					<dt>Note</dt>
+					<dt>Getting chroma from different model may result different values.</dt>
+					<dt>Example</dt>
+					<dd>
+						<code>::color::rgb &lt; double &gt; c { ::color::constant::aqua_t{}; }<br>
+							std::cout &lt;&lt; ::color::get::chroma&lt; ::color::get::constant::rgb::chroma::distance2gray_entity &gt;( c ) &lt;&lt; std::cout;<br>
+							std::cout &lt;&lt; ::color::get::chroma&lt; ::color::get::constant::rgb::chroma::max_minus_min_entity &gt;( c ) &lt;&lt; std::cout;<br>
+							<br>
+							::color::LuvCH&lt; double &gt; c1;<br>
+							std::cout &lt;&lt; color::get::chroma( c1 ) &lt;&lt; std::cout;<br>
+						</code>
+					</dd>
+				</dl><hr width="%20">
+
+				<dl>
+					<dt>Name</dt>
+					<dd><a name="#gray"/><i>gray</i></dd>
+					<dt>Declaration</dt>
+					<dd>See <a href="#general">general Note</a> about general declaration.</dd>
+					<dt>Description</dt>
+					<dd>Get gray <a href="glossary.html#component">component</a> natively supported by <a href="glossary.html#model">model</a> or calculate if does not supported natively.</dd>
+					<dt>Note</dt>
+					<dd>RGB support two algorithms for gray extraction.</dd>
+					<dt>Example</dt>
+					<dd>
+						<code>::color::hsl &lt; double &gt; h = ::color::constant::orange_t{};<br>
+							std::cout &lt;&lt; ::color::get::gray( h ) &lt;&lt; std::cout;<br></code>
+					</dd>
+					<dt>Example </dt>
+					<dd>
+						<code>
+							color::rgb&lt;float&gt; c = color::constant::turquoise_t{};<br><br>
+
+							// Here is how to get gray <a href="glossary.html#component">component</a> using default algorithm. Default is yuv709_entity formula.<br>
+							auto g0 = color::get::gray( c );<br><br>
+
+							// Here is how to get gray <a href="glossary.html#component">component</a> by calculating average of them<br>
+							auto g1 = color::get::gray&lt; ::color::get::constant::gray::average_entity &gt;( c );<br><br>
+
+							// Here is how to get gray <a href="glossary.html#component">component</a> by calculating (min + max)/2 of them<br>
+							auto g1 = color::get::gray&lt; ::color::get::constant::gray::middle_entity &gt;( c );<br><br>
+
+							// Here is how to get gray <a href="glossary.html#component">component</a> by calculating y from YUV<br>
+							auto g2 = color::get::gray&lt; ::color::get::constant::gray::yuv709_entity &gt;( c );<br>
+					</code>
+					</dd>
+				</dl><hr width="%20">
+
+				<dl>
+					<dt>Name</dt>
+					<dd><a name="#green"/><i>green</i></dd>
+					<dt>Declaration</dt>
+					<dd>See <a href="#general">general Note</a> about general declaration.</dd>
+					<dt>Description</dt>
+					<dd>Get green <a href="glossary.html#component">component</a> or calculate if <a href="glossary.html#model">model</a> does not support natively.</dd>
+					<dt>Example</dt>
+					<dd>
+						<code>::color::yiq &lt; double &gt; h{ ::color::constant::aqua_t{}; };<br>
+							std::cout &lt;&lt; ::color::get::green( h ) &lt;&lt; std::cout;<br></code>
+					</dd>
+				</dl><hr width="%20">
+
+				<dl>
+					<dt>Name</dt>
+					<dd><a name="#hue"/><i>hue</i></dd>
+					<dt>Declaration</dt>
+					<dd>See <a href="#general">general Note</a> about general declaration.</dd>
+					<dt>Description</dt>
+					<dd>Get hue <a href="glossary.html#component">component</a> or calculate if <a href="glossary.html#model">model</a> does not support natively.</dd>
+					<dt>Note</dt>
+					<dd>If <a href="glossary.html#model">model</a> is RGB you can pick different formula for calculation.</dd>
+					<dt>Note</dt>
+					<dd>For RGB <a href="glossary.html#model">model</a>:<br>
+						 - Return type is <code>::color::trait::component&lt; ::color::rgb&lt; <i>_type_</i> &gt; ::category_type >::component_type</code>. <br>
+						 - Range of return value mach to <code>::color::trait::bound&lt; ::color::rgb&lt; <i>_type_</i> &gt; ::category_type ></code>.
+					</dd>
+				</dl>
+
+				<dl>
+					<dt>Example</dt>
+					<dd>
+						<code>::color::yiq &lt; double &gt; y{ ::color::contant::aqua_t{} };<br>
+							std::cout &lt;&lt; ::color::get::hue( y ) &lt;&lt; std::cout;<br></code>
+					</dd>
+					<dt>Example</dt>
+					<dd>
+						<code>::color::rgb&lt; double &gt; r{ ::color::contant::aqua_t{} };<br>
+							::color::get::hue( r ); // Use default formula. Defualt is hexagon_entity<br>
+							::color::get::hue&lt; ::color::constant::hue::polar_entity       &gt;( r ); // Use default polar formula . Equal to polar_atan2_entity<br>
+							::color::get::hue&lt; ::color::constant::hue::polar_atan2_entity &gt;( r ); // Use Evans, Hanson, and Brewer.<br>
+							::color::get::hue&lt; ::color::constant::hue::polar_acos_entity  &gt;( r ); // Use Evans, Hanson, and Brewer.<br>
+							::color::get::hue&lt; ::color::constant::hue::hexagon_entity     &gt;( r ); // Use Preucil formula.<br>
+						</code>
+					</dd>
+					<dt>See</dt><dd> <a href="./constant.html#hue">hue in constants</a></dd>
+				</dl><hr width="%20">
+
+				<dl>
+					<dt>Name</dt>
+					<dd><a name="#inphase"/><i>inphase</i></dd>
+					<dt>Declaration</dt>
+					<dd>See <a href="#general">general Note</a> about general declaration.</dd>
+					<dt>Description</dt>
+					<dd>Get inphase <a href="glossary.html#component">component</a> or calculate if <a href="glossary.html#model">model</a> does not support natively.</dd>
+					<dt>Example</dt>
+					<dd>
+						<code>::color::yiq &lt; double &gt; h{ ::color::constant::aqua_t{}; };<br>
+							std::cout &lt;&lt; ::color::get::inphase( h ) &lt;&lt; std::cout;<br></code>
+					</dd>
+				</dl><hr width="%20">
+
+				<dl>
+					<dt>Name</dt>
+					<dd><a name="#key"/><i>key</i></dd>
+					<dt>Declaration</dt>
+					<dd>See <a href="#general">general Note</a> about general declaration.</dd>
+					<dt>Description</dt>
+					<dd>Get key <a href="glossary.html#component">component</a> or calculate if <a href="glossary.html#model">model</a> does not support natively.</dd>
+					<dt>Note</dt>
+					<dd>Key is fourth <a href="glossary.html#component">component</a> of CMYK <a href="glossary.html#model">model</a>.</dd>
+					<dt>Example</dt>
+					<dd>
+						<code>::color::yiq &lt; double &gt; h{ ::color::constant::aqua_t{}; };<br>
+							std::cout &lt;&lt; ::color::get::key( h ) &lt;&lt; std::cout;<br></code>
+					</dd>
+				</dl><hr width="%20">
+
+				<dl>
+					<dt>Name</dt>
+					<dd><a name="#luma"/><i>luma</i></dd>
+					<dt>Declaration</dt>
+					<dd>See <a href="#general">general Note</a> about general declaration.</dd>
+					<dd>Get luma <a href="glossary.html#component">component</a> or calculate if <a href="glossary.html#model">model</a> does not support natively.</dd>
+					<dt>Example</dt>
+					<dd>
+						<code>::color::yiq &lt; double &gt; h{ ::color::constant::aqua_t{}; };<br>
+							std::cout &lt;&lt; ::color::get::luma( h ) &lt;&lt; std::cout;<br></code>
+					</dd>
+				</dl><hr width="%20">
+
+				<dl>
+					<dt>Name</dt>
+					<dd><a name="#luminance"/><i>luminance</i></dd>
+					<dt>Declaration</dt>
+					<dd>See <a href="#general">general Note</a> about general declaration.</dd>
+					<dt>Description</dt>
+					<dd>Get luminance <a href="glossary.html#component">component</a> or calculate if <a href="glossary.html#model">model</a> does not support natively.</dd>
+					<dt>Example</dt>
+					<dd>
+						<code>::color::yiq &lt; double &gt; h{ ::color::constant::aqua_t{}; };<br>
+							std::cout &lt;&lt; ::color::get::luminance( h ) &lt;&lt; std::cout;<br></code>
+					</dd>
+				</dl><hr width="%20">
+
+				<dl>
+					<dt>Name</dt>
+					<dd><a name="#quadrature"/><i>quadrature</i></dd>
+					<dt>Declaration</dt>
+					<dd>See <a href="#general">general Note</a> about general declaration.</dd>
+					<dt>Description</dt>
+					<dd>Get quadrature <a href="glossary.html#component">component</a> or calculate if <a href="glossary.html#model">model</a> does not support natively.</dd>
+					<dt>Example</dt>
+					<dd>
+						<code>::color::yiq &lt; double &gt; h{ ::color::constant::aqua_t{}; };<br>
+							std::cout &lt;&lt; ::color::get::quadrature( h ) &lt;&lt; std::cout;<br></code>
+					</dd>
+				</dl><hr width="%20">
+
+				<dl>
+					<dt>Name</dt>
+					<dd><a name="#saturation"/><i>saturation</i></dd>
+					<dt>Declaration</dt>
+					<dd>See <a href="#general">general Note</a> about general declaration.</dd>
+					<dt>Description</dt>
+					<dd>Get saturation <a href="glossary.html#component">component</a> or calculate if <a href="glossary.html#model">model</a> does not support natively.</dd>
+					<dt>Example</dt>
+					<dd>
+						<code>::color::rgb &lt; double &gt; c { ::color::constant::aqua_t{}; }<br>
+							std::cout &lt;&lt; ::color::get::saturation&lt; ::color::get::constant::rgb::saturation::hsv_entity &gt;( c ) &lt;&lt; std::cout;<br>
+							std::cout &lt;&lt; ::color::get::saturation&lt; ::color::get::constant::rgb::saturation::hsl_entity &gt;( c ) &lt;&lt; std::cout;<br>
+							std::cout &lt;&lt; ::color::get::saturation&lt; ::color::get::constant::rgb::saturation::hsi_entity &gt;( c ) &lt;&lt; std::cout;<br>
+							<br>
+							::color::hsi&lt; double &gt; c1;<br>
+							std::cout &lt;&lt; color::get::saturation( c1 ) &lt;&lt; std::cout;<br>
+							::color::hsl&lt; double &gt; c2;<br>
+							std::cout &lt;&lt; color::get::saturation( c2 ) &lt;&lt; std::cout;<br>
+							::color::hsv&lt; double &gt; c3;<br>
+							std::cout &lt;&lt; color::get::saturation( c3 ) &lt;&lt; std::cout;<br>
+						</code>
+					</dd>
+				</dl><hr width="%20">
+
+				<dl>
+					<dt>Name</dt>
+					<dd><a name="#red"/><i>red</i></dd>
+					<dt>Declaration</dt>
+					<dd>See <a href="#general">general Note</a> about general declaration.</dd>
+					<dt>Description</dt>
+					<dd>Get red <a href="glossary.html#component">component</a> or calculate if <a href="glossary.html#model">model</a> does not support natively.</dd>
+					<dt>Example</dt>
+					<dd>
+						<code>::color::yiq &lt; double &gt; h{ ::color::constant::aqua_t{}; };<br>
+							std::cout &lt;&lt; ::color::get::red( h ) &lt;&lt; std::cout;<br></code>
+					</dd>
+				</dl><hr width="%20">
+
+				<dl>
+					<dt>Name</dt>
+					<dd><a name="#white"/><i>white</i></dd>
+					<dt>Declaration</dt>
+					<dd>See <a href="#general">general Note</a> about general declaration.</dd>
+					<dt>Description</dt>
+					<dd>Get white <a href="glossary.html#component">component</a> or calculate if <a href="glossary.html#model">model</a> does not support natively.</dd>
+					<dt>Example</dt>
+					<dd>
+						<code>::color::yiq &lt; double &gt; h{ ::color::constant::aqua_t{}; };<br>
+							std::cout &lt;&lt; ::color::get::white( h ) &lt;&lt; std::cout;<br></code>
+					</dd>
+				</dl><hr width="%20">
+
+			</dd>
+		</dl>
+		<hr/>
+	</body>
+</html>

@@ -1,0 +1,68 @@
+x:310063/1000000;
+y:316158/1000000;
+
+/* Constants */
+space_sRGB  :matrix( [   64/100,    33/100   ], [ 30/100,    60/100 ], [  15/100,    60/1000 ] ); 
+space_NTSC  :matrix( [   67/100,    33/100   ], [ 21/100,    71/100 ], [  14/100,    80/1000 ] ); 
+space_BT2020:matrix( [  708/1000,  292/1000  ], [ 17/100,  797/1000 ], [ 131/1000,   46/1000 ] ); 
+
+W_normalized:matrix( [ x/y,                      1, (1-x-y)/y     ] );
+W_C         :matrix( [ 98074/100000, 100000/100000, 118232/100000 ] );
+W_D65       :matrix( [ 95047/100000, 100000/100000, 108883/100000 ] );
+
+/* Input */
+space: space_BT2020;
+W    : W_D65;
+
+/* Calculation */
+x_r: ( matrix( [1, 0, 0] ) . space ) . matrix( [1], [0] ) ;
+y_r: ( matrix( [1, 0, 0] ) . space ) . matrix( [0], [1] ) ;
+x_g: ( matrix( [0, 1, 0] ) . space ) . matrix( [1], [0] ) ;
+y_g: ( matrix( [0, 1, 0] ) . space ) . matrix( [0], [1] ) ;
+x_b: ( matrix( [0, 0, 1] ) . space ) . matrix( [1], [0] ) ;
+y_b: ( matrix( [0, 0, 1] ) . space ) . matrix( [0], [1] ) ;
+
+X_W: W . matrix( [1], [0], [0] );
+Y_W: W . matrix( [0], [1], [0] ); 
+Z_W: W . matrix( [0], [0], [1] );
+
+X_r:x_r/y_r;
+Y_r:1;
+Z_r:(1-x_r-y_r)/y_r;
+
+X_g:x_g/y_g;
+Y_g:1;
+Z_g:(1-x_g-y_g)/y_g;
+
+X_b:x_b/y_b;
+Y_b:1;
+Z_b:(1-x_b-y_b)/y_b;
+
+A:matrix([ X_r,X_g,X_b ],[ Y_r, Y_g, Y_b ],[ Z_r, Z_g, Z_b] );
+Ai:invert( A );
+/*Ai:ratsimp (Ai);*/
+
+determinant(Ai);
+/*ratsimp(%);*/
+
+As: Ai / determinant(Ai);
+As: fullratsimp(As);
+
+/*rat(As, x_r, x_g, x_b );*/
+/*rat(As, y_r, y_g, y_b );*/
+
+W_p:matrix([X_W],[Y_W],[Z_W]);
+
+gray: Ai . W_p;
+S_r:gray . matrix( [1], [0], [0] );
+S_g:gray . matrix( [0], [1], [0] );
+S_b:gray . matrix( [0], [0], [1] );
+
+
+RGB2XYZ:matrix( [S_r * X_r, S_g * X_g, S_b*X_b ], [S_r*Y_r, S_g*Y_g, S_b*Y_b ], [S_r*Z_r, S_g*Z_g, S_b*Z_b ] );
+RGB2XYZ:ratsimp(RGB2XYZ);
+ev( %, numer );
+XYZ2RGB:invert(RGB2XYZ);
+XYZ2RGB:ratsimp(XYZ2RGB);
+ev( %, numer );
+
