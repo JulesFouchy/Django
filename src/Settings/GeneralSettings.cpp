@@ -8,6 +8,7 @@
 int GeneralSettings::NB_OF_PARTICLES;
 bool GeneralSettings::ALPHA_TRAIL_ENABLED;
 float GeneralSettings::ALPHA_TRAIL_DECAY;
+float GeneralSettings::BACKGROUND_COLOR[3] = { 0.0f, 0.0f, 0.0f };
 
 void GeneralSettings::Initialize() {
 	SetNbOfParticles(2000);
@@ -28,6 +29,8 @@ void GeneralSettings::ImGuiWindow() {
 	}
 		// strength
 	ImGui::SliderFloat("Trail Decay", &ALPHA_TRAIL_DECAY, 0.0f, 60.0f);
+	// Background Color
+	ImGui::ColorEdit3("Background Color", BACKGROUND_COLOR);
 	ImGui::End();
 }
 

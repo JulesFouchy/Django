@@ -74,11 +74,12 @@ void App::onLoopIteration() {
 		m_clearScreenPipeline.bind();
 		m_clearScreenPipeline.setUniform1f("dt", m_time.deltaTime());
 		m_clearScreenPipeline.setUniform1f("decay", GeneralSettings::AlphaTrailDecay());
+		m_clearScreenPipeline.setUniform3f("backgroundColor", GeneralSettings::BackgroundColor()[0], GeneralSettings::BackgroundColor()[1], GeneralSettings::BackgroundColor()[2]);
 		m_fullScreenVAO.bind();
 		GLCall(glDrawArrays(GL_TRIANGLES, 0, 6));
 	}
 	else {
-		glClearColor(0, 0, 0, 1);
+		glClearColor(GeneralSettings::BackgroundColor()[0], GeneralSettings::BackgroundColor()[1], GeneralSettings::BackgroundColor()[2], 1);
 		glClear(GL_COLOR_BUFFER_BIT);
 	}
 	
