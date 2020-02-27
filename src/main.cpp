@@ -67,7 +67,7 @@ int main(int argc, char *argv[]) {
 			debug_break();
 		}
 
-		SDL_GL_SetSwapInterval(1);
+		SDL_GL_SetSwapInterval(0);
 
 		if (!gladLoadGLLoader(SDL_GL_GetProcAddress)) {
 			spdlog::critical("[Glad] Glad not init");
