@@ -1,23 +1,23 @@
-#include "GeneralSettings.h"
+#include "VisualSettings.h"
 
 #include "Particles/ParticlesSystem.h"
 
 #include <imgui/imgui.h>
 #include <SDL2/SDL.h>
 
-int GeneralSettings::NB_OF_PARTICLES;
-float GeneralSettings::PARTICLE_RADIUS_IN_INCHES = 0.87f;
-bool GeneralSettings::ALPHA_TRAIL_ENABLED;
-float GeneralSettings::ALPHA_TRAIL_DECAY = 20.0f;
-float GeneralSettings::BACKGROUND_COLOR[3] = { 0.0f, 0.0f, 0.0f };
+int VisualSettings::NB_OF_PARTICLES;
+float VisualSettings::PARTICLE_RADIUS_IN_INCHES = 0.87f;
+bool VisualSettings::ALPHA_TRAIL_ENABLED;
+float VisualSettings::ALPHA_TRAIL_DECAY = 20.0f;
+float VisualSettings::BACKGROUND_COLOR[3] = { 0.0f, 0.0f, 0.0f };
 
-void GeneralSettings::Initialize() {
+void VisualSettings::Initialize() {
 	SetNbOfParticles(2000);
 	ALPHA_TRAIL_ENABLED = true;
 	EnableAlphaTrail();
 }
 
-void GeneralSettings::ImGuiWindow() {
+void VisualSettings::ImGuiWindow() {
 	ImGui::Begin("Rendering Settings");
 	// Alpha trail
 		// toggle
@@ -34,7 +34,7 @@ void GeneralSettings::ImGuiWindow() {
 	ImGui::End();
 }
 
-void GeneralSettings::SetNbOfParticles(int N) {
+void VisualSettings::SetNbOfParticles(int N) {
 	// Set
 	NB_OF_PARTICLES = N;
 	// Update physics shader
@@ -43,10 +43,10 @@ void GeneralSettings::SetNbOfParticles(int N) {
 	ParticlesSystem::PhysicsComputeShader().unbind();
 }
 
-void GeneralSettings::EnableAlphaTrail() {
+void VisualSettings::EnableAlphaTrail() {
 	SDL_GL_SetSwapInterval(0);
 }
 
-void GeneralSettings::DisableAlphaTrail() {
+void VisualSettings::DisableAlphaTrail() {
 	SDL_GL_SetSwapInterval(1);
 }

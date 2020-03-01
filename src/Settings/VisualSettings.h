@@ -1,6 +1,6 @@
 #pragma once
 
-class GeneralSettings {
+class VisualSettings {
 public:
 	static void Initialize();
 	static void ImGuiWindow();

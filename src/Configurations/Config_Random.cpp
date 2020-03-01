@@ -3,7 +3,7 @@
 #include "Particles/ParticlesSystem.h"
 
 #include "Helper/Random.h"
-#include "Settings/GeneralSettings.h"
+#include "Settings/VisualSettings.h"
 
 #include "Debugging/Log.h"
 
@@ -18,7 +18,7 @@ void Config_Random::embody(ParticlesSystem& partSystem) {
 }
 
 void Config_Random::generate() {
-	int N = GeneralSettings::NbOfParticles();
+	int N = VisualSettings::NbOfParticles();
 	m_randomPositions.resize(N);
 	for (int k = 0; k < N; ++k)
 		m_randomPositions[k] = glm::vec2(MyRand::_m1to1(), MyRand::_m1to1());

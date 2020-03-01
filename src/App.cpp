@@ -9,7 +9,7 @@
 #include "Debugging/Log.h"
 #include "Debugging/glException.h"
 
-#include "Settings/GeneralSettings.h"
+#include "Settings/VisualSettings.h"
 
 #include "Helper/DisplayInfos.h"
 
@@ -63,23 +63,23 @@ void App::onLoopIteration() {
 	ImGui::Text(("FPS  : " + std::to_string(1.0f/m_time.deltaTime())).c_str());
 	ImGui::End();
 	// Settings
-	GeneralSettings::ImGuiWindow();
+	VisualSettings::ImGuiWindow();
 	// Send time to physics compute shader
 	m_time.update();
 	ParticlesSystem::PhysicsComputeShader().bind();
 	ParticlesSystem::PhysicsComputeShader().setUniform1f("dt", m_time.deltaTime());
 	ParticlesSystem::PhysicsComputeShader().unbind();
 	// Clear screen
-	if (GeneralSettings::IsAlphaTrailEnabled()) {
+	if (VisualSettings::IsAlphaTrailEnabled()) {
 		m_clearScreenPipeline.bind();
 		m_clearScreenPipeline.setUniform1f("dt", m_time.deltaTime());
-		m_clearScreenPipeline.setUniform1f("decay", GeneralSettings::AlphaTrailDecay());
-		m_clearScreenPipeline.setUniform3f("backgroundColor", GeneralSettings::BackgroundColor()[0], GeneralSettings::BackgroundColor()[1], GeneralSettings::BackgroundColor()[2]);
+		m_clearScreenPipeline.setUniform1f("decay", VisualSettings::AlphaTrailDecay());
+		m_clearScreenPipeline.setUniform3f("backgroundColor", VisualSettings::BackgroundColor()[0], VisualSettings::BackgroundColor()[1], VisualSettings::BackgroundColor()[2]);
 		m_fullScreenVAO.bind();
 		GLCall(glDrawArrays(GL_TRIANGLES, 0, 6));
 	}
 	else {
-		glClearColor(GeneralSettings::BackgroundColor()[0], GeneralSettings::BackgroundColor()[1], GeneralSettings::BackgroundColor()[2], 1);
+		glClearColor(VisualSettings::BackgroundColor()[0], VisualSettings::BackgroundColor()[1], VisualSettings::BackgroundColor()[2], 1);
 		glClear(GL_COLOR_BUFFER_BIT);
 	}
 	
