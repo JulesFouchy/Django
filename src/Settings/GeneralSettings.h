@@ -8,6 +8,8 @@ public:
 	static inline int NbOfParticles() { return NB_OF_PARTICLES; }
 	static void SetNbOfParticles(int N);
 
+	static inline float ParticleRadiusInInches() { return PARTICLE_RADIUS_IN_INCHES; }
+
 	static void  EnableAlphaTrail();
 	static void DisableAlphaTrail();
 	static inline bool IsAlphaTrailEnabled() { return ALPHA_TRAIL_ENABLED; }
@@ -16,6 +18,7 @@ public:
 
 private:
 	static int NB_OF_PARTICLES;
+	static float PARTICLE_RADIUS_IN_INCHES;
 	static bool ALPHA_TRAIL_ENABLED;
 	static float ALPHA_TRAIL_DECAY;
 	static float BACKGROUND_COLOR[3];

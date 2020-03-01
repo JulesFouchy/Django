@@ -6,15 +6,15 @@
 #include <SDL2/SDL.h>
 
 int GeneralSettings::NB_OF_PARTICLES;
+float GeneralSettings::PARTICLE_RADIUS_IN_INCHES = 0.87f;
 bool GeneralSettings::ALPHA_TRAIL_ENABLED;
-float GeneralSettings::ALPHA_TRAIL_DECAY;
+float GeneralSettings::ALPHA_TRAIL_DECAY = 20.0f;
 float GeneralSettings::BACKGROUND_COLOR[3] = { 0.0f, 0.0f, 0.0f };
 
 void GeneralSettings::Initialize() {
 	SetNbOfParticles(2000);
 	ALPHA_TRAIL_ENABLED = true;
 	EnableAlphaTrail();
-	ALPHA_TRAIL_DECAY = 20.0f;
 }
 
 void GeneralSettings::ImGuiWindow() {
