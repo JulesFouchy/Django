@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Configurations.h"
+#include "Configuration.h"
 
 #include <glm/glm.hpp>
 #include <vector>
@@ -10,8 +10,8 @@ public:
 	Config_Random();
 	~Config_Random() = default;
 
-	void embody(ParticlesSystem& particlesSystem) override;
-	void generate(unsigned int nbParticles) override;
+	void applyTo(ParticlesSystem& particlesSystem) override;
+	void reroll(unsigned int nbParticles) override;
 
 private:
 	std::vector<glm::vec2> m_randomPositions;

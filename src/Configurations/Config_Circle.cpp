@@ -7,7 +7,7 @@
 Config_Circle::Config_Circle() {
 }
 
-void Config_Circle::embody(ParticlesSystem& partSystem) {
+void Config_Circle::applyTo(ParticlesSystem& partSystem) {
 	for (int i = 0; i < partSystem.size(); ++i) {
 		float angle = 2.0f * 3.141f * i / (float)partSystem.size();
 		float radius = 0.8f;

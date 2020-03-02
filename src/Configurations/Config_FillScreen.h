@@ -1,14 +1,14 @@
 #pragma once
 
-#include "Configurations.h"
+#include "Configuration.h"
 
 class Config_FillScreen : public Configuration {
 public:
 	Config_FillScreen();
 	~Config_FillScreen() = default;
 
-	void embody(ParticlesSystem& particlesSystem) override;
-	void generate(unsigned int nbParticles) override;
+	void applyTo(ParticlesSystem& particlesSystem) override;
+	void reroll(unsigned int nbParticles) override;
 
 private:
 	int m_nbRows;

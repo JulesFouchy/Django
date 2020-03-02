@@ -29,8 +29,8 @@ App::App(SDL_Window* window)
 	m_clearScreenPipeline.addShader(ShaderType::Fragment, "res/shaders/clearScreen.frag");
 	m_clearScreenPipeline.createProgram();
 	//
-	m_configRandom.generate(m_particlesSystem.getNbParticles());
-	m_configRandom.embody(m_particlesSystem);
+	m_configRandom.reroll(m_particlesSystem.getNbParticles());
+	m_configRandom.applyTo(m_particlesSystem);
 	m_particlesSystem.sendRestPositionsToGPU();
 	//
 	onWindowResize();
@@ -129,18 +129,18 @@ void App::onEvent(const SDL_Event& e) {
 			switchFullScreenMode();
 		if (!ImGui::GetIO().WantTextInput) {
 			if (e.key.keysym.scancode == SDL_SCANCODE_SPACE) {
-				m_configFillScreen.generate(m_particlesSystem.getNbParticles());
-				m_configFillScreen.embody(m_particlesSystem);
+				m_configFillScreen.reroll(m_particlesSystem.getNbParticles());
+				m_configFillScreen.applyTo(m_particlesSystem);
 				m_particlesSystem.sendRestPositionsToGPU();
 			}
 			else if (e.key.keysym.sym == 'a') {
-				m_configRandom.generate(m_particlesSystem.getNbParticles());
-				m_configRandom.embody(m_particlesSystem);
+				m_configRandom.reroll(m_particlesSystem.getNbParticles());
+				m_configRandom.applyTo(m_particlesSystem);
 				m_particlesSystem.sendRestPositionsToGPU();
 			}
 			else if (e.key.keysym.sym == 'c') {
-				m_configCircle.generate(m_particlesSystem.getNbParticles());
-				m_configCircle.embody(m_particlesSystem);
+				m_configCircle.reroll(m_particlesSystem.getNbParticles());
+				m_configCircle.applyTo(m_particlesSystem);
 				m_particlesSystem.sendRestPositionsToGPU();
 			}
 		}
