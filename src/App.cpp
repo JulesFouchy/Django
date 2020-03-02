@@ -14,10 +14,13 @@
 #include "Helper/DisplayInfos.h"
 
 
-App::App(SDL_Window* window)
+App::App(unsigned int nbParticles, SDL_Window* window)
 	: m_bShowImGUIDemoWindow(false),
 	  m_bFullScreen(false),
-	  m_particlesSystem(2000),
+	  m_particlesSystem(nbParticles),
+	  m_configFillScreen(nbParticles),
+	  m_configRandom(nbParticles),
+	  m_configCircle(nbParticles),
 	  m_window(window), m_running(true)
 {
 	// Create graphics pipeline for particles
@@ -29,7 +32,6 @@ App::App(SDL_Window* window)
 	m_clearScreenPipeline.addShader(ShaderType::Fragment, "res/shaders/clearScreen.frag");
 	m_clearScreenPipeline.createProgram();
 	//
-	m_configRandom.reroll(m_particlesSystem.getNbParticles());
 	setCurrentConfiguration(m_configRandom);
 	//
 	onWindowResize();
@@ -82,12 +84,13 @@ void App::onLoopIteration() {
 	// Update particles physics
 	m_particlesSystem.updatePositions();
 	// ImGui
-	m_particlesSystem.ImGui_Windows();
+	m_particlesSystem.ImGui_Windows(*m_currentConfig);
 }
 
 
 void App::setCurrentConfiguration(Configuration& newConfig) {
 	m_currentConfig = &newConfig;
+	m_currentConfig->setup(m_particlesSystem.getNbParticles());
 	m_currentConfig->applyTo(m_particlesSystem);
 	m_particlesSystem.sendRestPositionsToGPU();
 }
@@ -135,7 +138,7 @@ void App::onEvent(const SDL_Event& e) {
 			switchFullScreenMode();
 		if (!ImGui::GetIO().WantTextInput) {
 			if (e.key.keysym.scancode == SDL_SCANCODE_SPACE) {
-				if (m_currentConfig->reroll(m_particlesSystem.getNbParticles())) {
+				if (m_currentConfig->reroll()) {
 					m_currentConfig->applyTo(m_particlesSystem);
 					m_particlesSystem.sendRestPositionsToGPU();
 				}
@@ -195,7 +198,7 @@ App* App::m_instance = nullptr;
 
 void App::Initialize(SDL_Window* window) {
 	assert(!m_instance);
-	m_instance = new App(window);
+	m_instance = new App(2000, window);
 	if (m_instance == nullptr)
 		spdlog::error("[App::Initialize] Unable to allocate enough memory !");
 }

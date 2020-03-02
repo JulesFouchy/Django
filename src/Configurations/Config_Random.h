@@ -7,11 +7,12 @@
 
 class Config_Random : public Configuration {
 public:
-	Config_Random();
+	Config_Random(unsigned int nbParticles);
 	~Config_Random() = default;
 
+	bool setup(unsigned int nbParticles) override;
+	bool reroll() override;
 	void applyTo(ParticlesSystem& particlesSystem) override;
-	bool reroll(unsigned int nbParticles) override;
 
 private:
 	std::vector<glm::vec2> m_randomPositions;

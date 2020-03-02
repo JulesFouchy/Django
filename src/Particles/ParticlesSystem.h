@@ -7,6 +7,8 @@
 #include <glm.hpp>
 #include <vector>
 
+class Configuration;
+
 class ParticlesSystem {
 public:
 	static void Initialize();
@@ -15,7 +17,7 @@ public:
 
 	void draw();
 	void updatePositions();
-	void ImGui_Windows();
+	void ImGui_Windows(Configuration& currentConfiguration);
 
 	void setNbParticles(unsigned int newNbParticles);
 	inline unsigned int getNbParticles() { return m_nbParticles; }

@@ -4,7 +4,9 @@
 
 #include "Debugging/Log.h"
 
-Config_Circle::Config_Circle() {
+Config_Circle::Config_Circle(unsigned int nbParticles)
+{
+	setup(nbParticles);
 }
 
 void Config_Circle::applyTo(ParticlesSystem& partSystem) {

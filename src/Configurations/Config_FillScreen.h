@@ -4,11 +4,11 @@
 
 class Config_FillScreen : public Configuration {
 public:
-	Config_FillScreen();
+	Config_FillScreen(unsigned int nbParticles);
 	~Config_FillScreen() = default;
 
+	bool setup(unsigned int nbParticles) override;
 	void applyTo(ParticlesSystem& particlesSystem) override;
-	bool reroll(unsigned int nbParticles) override;
 
 private:
 	int m_nbRows;

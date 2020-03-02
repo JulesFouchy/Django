@@ -15,7 +15,7 @@ union SDL_Event;
 
 class App {
 private:
-	App(SDL_Window* window);
+	App(unsigned int nbParticles, SDL_Window* window);
 	~App() = default;
 
 public:

@@ -8,6 +8,8 @@
 #include "Helper/DisplayInfos.h"
 #include "Helper/Random.h"
 
+#include "Configurations/Configuration.h"
+
 #include <color/color.hpp>
 
 #include <imgui/imgui.h>
@@ -109,13 +111,17 @@ void ParticlesSystem::setNbParticles(unsigned int newNbParticles) {
     ParticlesSystem::PhysicsComputeShader().unbind();
 }
 
-void ParticlesSystem::ImGui_Windows() {
+void ParticlesSystem::ImGui_Windows(Configuration& currentConfiguration) {
     ImGui::Begin("Physics parameters");
     m_physicsSettings.ImGui_Parameters();
     ImGui::End();
 
     ImGui::Begin("ParticlesSystem parameters");
-    if (ImGui::SliderInt("Nb of particles", (int*)&m_nbParticles, 1, 5000))
+    if (ImGui::SliderInt("Nb of particles", (int*)&m_nbParticles, 1, 5000)) {
         setNbParticles(m_nbParticles);
+        currentConfiguration.setup(m_nbParticles);
+        currentConfiguration.applyTo(*this);
+        sendRestPositionsToGPU();
+    }
     ImGui::End();
 }
