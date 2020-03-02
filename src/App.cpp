@@ -58,7 +58,7 @@ void App::onLoopIteration() {
 	ImGui::Text(("FPS  : " + std::to_string(1.0f/m_time.deltaTime())).c_str());
 	ImGui::End();
 	// Settings
-	VisualSettings::ImGuiWindow(m_particlesSystem);
+	VisualSettings::ImGuiWindow();
 	// Send time to physics compute shader
 	m_time.update();
 	ParticlesSystem::PhysicsComputeShader().bind();
@@ -178,7 +178,7 @@ void App::onEvent(const SDL_Event& e) {
 void App::onWindowResize() {
 	DisplayInfos::RefreshSize(m_window);
 	glViewport(0, 0, DisplayInfos::Width(), DisplayInfos::Height());
-	m_particlesSystem.recomputeVBO(VisualSettings::ParticleRadiusPropToHeight());
+	m_particlesSystem.recomputeVBO();
 }
 
 void App::switchFullScreenMode(){

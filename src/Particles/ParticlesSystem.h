@@ -15,6 +15,9 @@ public:
 	ParticlesSystem(unsigned int nbParticles);
 	~ParticlesSystem();
 
+	//inline float ParticleRadiusInInches() { return PARTICLE_RADIUS_IN_INCHES; }
+	inline float ParticleRadiusPropToHeight() { return PARTICLE_RADIUS_PROP_TO_HEIGHT; }
+
 	void draw();
 	void updatePositions();
 	void ImGui_Windows(Configuration& currentConfiguration);
@@ -22,21 +25,24 @@ public:
 	void setNbParticles(unsigned int newNbParticles);
 	inline unsigned int getNbParticles() { return m_nbParticles; }
 
-	void recomputeVBO(float radius);
-
 	inline static ShaderPipeline& PhysicsComputeShader() { return s_physicsShader; }
 
 private:
-	friend class Config_FillScreen;
-	friend class Config_Random;
-	friend class Config_Circle;
-	friend class App;
+friend class Config_FillScreen;
+friend class Config_Random;
+friend class Config_Circle;
+friend class App;
 	inline size_t size() { return m_restPositions.size(); }
 	inline glm::vec2& operator[](size_t index) { return m_restPositions[index]; }
+
 	void sendRestPositionsToGPU();
+	void recomputeVBO();
 
 private:
 	unsigned int m_nbParticles;
+	//float PARTICLE_RADIUS_IN_INCHES;
+	float PARTICLE_RADIUS_PROP_TO_HEIGHT = 0.0135f;
+
 	std::vector<glm::vec2> m_restPositions;
 
 	SSBO m_restPositionsSSBO;

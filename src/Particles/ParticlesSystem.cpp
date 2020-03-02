@@ -1,7 +1,5 @@
 #include "ParticlesSystem.h"
 
-#include <glad/glad.h>
-
 #include "Debugging/glException.h"
 #include "Debugging/Log.h"
 
@@ -13,6 +11,8 @@
 #include <color/color.hpp>
 
 #include <imgui/imgui.h>
+
+#include <glad/glad.h>
 
 #define WORK_GROUP_SIZE 256
 #define ACTUAL_POS_ID 0
@@ -50,7 +50,8 @@ ParticlesSystem::ParticlesSystem(unsigned int nbParticles)
     GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
 }
 
-void ParticlesSystem::recomputeVBO(float radius) {
+void ParticlesSystem::recomputeVBO() {
+    float radius = PARTICLE_RADIUS_PROP_TO_HEIGHT;
     float halfW = radius;
     float halfH = radius * DisplayInfos::Ratio();
     float vertices[] = {
@@ -117,11 +118,16 @@ void ParticlesSystem::ImGui_Windows(Configuration& currentConfiguration) {
     ImGui::End();
 
     ImGui::Begin("ParticlesSystem parameters");
+    // Nb of particles
     if (ImGui::SliderInt("Nb of particles", (int*)&m_nbParticles, 1, 5000)) {
         setNbParticles(m_nbParticles);
         currentConfiguration.setup(m_nbParticles);
         currentConfiguration.applyTo(*this);
         sendRestPositionsToGPU();
     }
+    // Particles Radius
+    if (ImGui::SliderFloat("Particles Radius", &PARTICLE_RADIUS_PROP_TO_HEIGHT, 0.0f, 0.1f))
+        recomputeVBO();
+    //
     ImGui::End();
 }
