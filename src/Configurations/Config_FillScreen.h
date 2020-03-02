@@ -8,7 +8,7 @@ public:
 	~Config_FillScreen() = default;
 
 	void applyTo(ParticlesSystem& particlesSystem) override;
-	void reroll(unsigned int nbParticles) override;
+	bool reroll(unsigned int nbParticles) override;
 
 private:
 	int m_nbRows;

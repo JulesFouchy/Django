@@ -11,7 +11,7 @@ public:
 	~Config_Random() = default;
 
 	void applyTo(ParticlesSystem& particlesSystem) override;
-	void reroll(unsigned int nbParticles) override;
+	bool reroll(unsigned int nbParticles) override;
 
 private:
 	std::vector<glm::vec2> m_randomPositions;

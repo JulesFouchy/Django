@@ -21,6 +21,8 @@ private:
 public:
 	void onInit();
 private:
+	void setCurrentConfiguration(Configuration& newConfig);
+
 	void onLoopIteration();
 	void onEvent(const SDL_Event& e);
 
@@ -34,11 +36,13 @@ private:
 	ShaderPipeline m_particlePipeline;
 	ShaderPipeline m_clearScreenPipeline;
 	QuadVAO m_fullScreenVAO;
+	Time_Realtime m_time;
 	ParticlesSystem m_particlesSystem;
+
+	Configuration* m_currentConfig;
 	Config_FillScreen m_configFillScreen;
 	Config_Random m_configRandom;
 	Config_Circle m_configCircle;
-	Time_Realtime m_time;
 
 /********************
   * INTERNAL CODE *

@@ -14,7 +14,8 @@ void Config_FillScreen::applyTo(ParticlesSystem& partSystem) {
 	}
 }
 
-void Config_FillScreen::reroll(unsigned int nbParticles) {
+bool Config_FillScreen::reroll(unsigned int nbParticles) {
 	m_nbRows = 44;
 	m_nbColumns = 44;
+	return true;
 }

@@ -15,8 +15,9 @@ void Config_Random::applyTo(ParticlesSystem& partSystem) {
 	}
 }
 
-void Config_Random::reroll(unsigned int nbParticles) {
+bool Config_Random::reroll(unsigned int nbParticles) {
 	m_randomPositions.resize(nbParticles);
 	for (int k = 0; k < nbParticles; ++k)
 		m_randomPositions[k] = glm::vec2(MyRand::_m1to1(), MyRand::_m1to1());
+	return true;
 }

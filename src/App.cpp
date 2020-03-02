@@ -30,8 +30,7 @@ App::App(SDL_Window* window)
 	m_clearScreenPipeline.createProgram();
 	//
 	m_configRandom.reroll(m_particlesSystem.getNbParticles());
-	m_configRandom.applyTo(m_particlesSystem);
-	m_particlesSystem.sendRestPositionsToGPU();
+	setCurrentConfiguration(m_configRandom);
 	//
 	onWindowResize();
 	glEnable(GL_BLEND);
@@ -86,6 +85,13 @@ void App::onLoopIteration() {
 	m_particlesSystem.ImGui_Windows();
 }
 
+
+void App::setCurrentConfiguration(Configuration& newConfig) {
+	m_currentConfig = &newConfig;
+	m_currentConfig->applyTo(m_particlesSystem);
+	m_particlesSystem.sendRestPositionsToGPU();
+}
+
 void App::onEvent(const SDL_Event& e) {
 	switch (e.type) {
 
@@ -129,20 +135,17 @@ void App::onEvent(const SDL_Event& e) {
 			switchFullScreenMode();
 		if (!ImGui::GetIO().WantTextInput) {
 			if (e.key.keysym.scancode == SDL_SCANCODE_SPACE) {
-				m_configFillScreen.reroll(m_particlesSystem.getNbParticles());
-				m_configFillScreen.applyTo(m_particlesSystem);
-				m_particlesSystem.sendRestPositionsToGPU();
+				if (m_currentConfig->reroll(m_particlesSystem.getNbParticles())) {
+					m_currentConfig->applyTo(m_particlesSystem);
+					m_particlesSystem.sendRestPositionsToGPU();
+				}
 			}
-			else if (e.key.keysym.sym == 'a') {
-				m_configRandom.reroll(m_particlesSystem.getNbParticles());
-				m_configRandom.applyTo(m_particlesSystem);
-				m_particlesSystem.sendRestPositionsToGPU();
-			}
-			else if (e.key.keysym.sym == 'c') {
-				m_configCircle.reroll(m_particlesSystem.getNbParticles());
-				m_configCircle.applyTo(m_particlesSystem);
-				m_particlesSystem.sendRestPositionsToGPU();
-			}
+			else if (e.key.keysym.sym == 'a')
+				setCurrentConfiguration(m_configRandom);
+			else if (e.key.keysym.sym == 'z')
+				setCurrentConfiguration(m_configFillScreen);
+			else if (e.key.keysym.sym == 'e')
+				setCurrentConfiguration(m_configCircle);
 		}
 		break;
 
