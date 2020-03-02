@@ -20,6 +20,8 @@ public:
 	void setNbParticles(unsigned int newNbParticles);
 	inline unsigned int getNbParticles() { return m_nbParticles; }
 
+	void recomputeVBO(float radius);
+
 	inline static ShaderPipeline& PhysicsComputeShader() { return s_physicsShader; }
 
 private:
@@ -30,8 +32,6 @@ private:
 	inline size_t size() { return m_restPositions.size(); }
 	inline glm::vec2& operator[](size_t index) { return m_restPositions[index]; }
 	void sendRestPositionsToGPU();
-
-	void recomputeVBO();
 
 private:
 	unsigned int m_nbParticles;

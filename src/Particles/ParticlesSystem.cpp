@@ -48,8 +48,7 @@ ParticlesSystem::ParticlesSystem(unsigned int nbParticles)
     GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
 }
 
-void ParticlesSystem::recomputeVBO() {
-    float radius = 0.0135f;
+void ParticlesSystem::recomputeVBO(float radius) {
     float halfW = radius;
     float halfH = radius * DisplayInfos::Ratio();
     float vertices[] = {
