@@ -5,7 +5,6 @@
 #include "Debugging/Log.h"
 
 Config_FillScreen::Config_FillScreen() {
-	generate();
 }
 
 void Config_FillScreen::embody(ParticlesSystem& partSystem) {
@@ -15,7 +14,7 @@ void Config_FillScreen::embody(ParticlesSystem& partSystem) {
 	}
 }
 
-void Config_FillScreen::generate() {
+void Config_FillScreen::generate(unsigned int nbParticles) {
 	m_nbRows = 44;
 	m_nbColumns = 44;
 }

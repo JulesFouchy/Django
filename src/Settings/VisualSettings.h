@@ -5,9 +5,6 @@ public:
 	static void Initialize();
 	static void ImGuiWindow();
 
-	static inline int NbOfParticles() { return NB_OF_PARTICLES; }
-	static void SetNbOfParticles(int N);
-
 	static inline float ParticleRadiusInInches() { return PARTICLE_RADIUS_IN_INCHES; }
 
 	static void  EnableAlphaTrail();

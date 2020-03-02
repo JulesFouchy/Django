@@ -5,7 +5,6 @@
 #include "Debugging/Log.h"
 
 Config_Circle::Config_Circle() {
-	generate();
 }
 
 void Config_Circle::embody(ParticlesSystem& partSystem) {
@@ -15,8 +14,4 @@ void Config_Circle::embody(ParticlesSystem& partSystem) {
 		partSystem[i].x = radius * cos(angle);
 		partSystem[i].y = radius * sin(angle);
 	}
-}
-
-void Config_Circle::generate() {
-
 }

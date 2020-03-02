@@ -8,5 +8,5 @@ public:
 	virtual ~Configuration() = default;
 
 	virtual void embody(ParticlesSystem& particlesSystem) = 0;
-	virtual void generate() {};
+	virtual void generate(unsigned int nbParticles) {};
 };

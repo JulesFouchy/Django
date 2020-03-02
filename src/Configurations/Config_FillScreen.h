@@ -8,7 +8,7 @@ public:
 	~Config_FillScreen() = default;
 
 	void embody(ParticlesSystem& particlesSystem) override;
-	void generate() override;
+	void generate(unsigned int nbParticles) override;
 
 private:
 	int m_nbRows;

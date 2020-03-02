@@ -8,5 +8,4 @@ public:
 	~Config_Circle() = default;
 
 	void embody(ParticlesSystem& particlesSystem) override;
-	void generate() override;
 };

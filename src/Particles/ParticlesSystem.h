@@ -9,17 +9,18 @@
 
 class ParticlesSystem {
 public:
-	ParticlesSystem(unsigned int nbParticles);
 	static void Initialize();
+	ParticlesSystem(unsigned int nbParticles);
 	~ParticlesSystem();
 
 	void draw();
 	void updatePositions();
 	void ImGui_Windows();
 
-	void recomputeVBO();
+	void setNbParticles(unsigned int newNbParticles);
+	inline unsigned int getNbParticles() { return m_nbParticles; }
 
-	inline static ShaderPipeline& PhysicsComputeShader() { return m_physicsShader; }
+	inline static ShaderPipeline& PhysicsComputeShader() { return s_physicsShader; }
 
 private:
 	friend class Config_FillScreen;
@@ -30,10 +31,11 @@ private:
 	inline glm::vec2& operator[](size_t index) { return m_restPositions[index]; }
 	void sendRestPositionsToGPU();
 
-private:
-	std::vector<glm::vec2> m_restPositions;
+	void recomputeVBO();
 
+private:
 	unsigned int m_nbParticles;
+	std::vector<glm::vec2> m_restPositions;
 
 	SSBO m_restPositionsSSBO;
 	SSBO m_particlesSSBO;
@@ -43,5 +45,5 @@ private:
 	unsigned int m_vaoID;
 	unsigned int m_vboID;
 
-	static ShaderPipeline m_physicsShader;
+	static ShaderPipeline s_physicsShader;
 };

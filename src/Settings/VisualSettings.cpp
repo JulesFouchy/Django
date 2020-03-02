@@ -5,14 +5,12 @@
 #include <imgui/imgui.h>
 #include <SDL2/SDL.h>
 
-int VisualSettings::NB_OF_PARTICLES;
 float VisualSettings::PARTICLE_RADIUS_IN_INCHES = 0.87f;
 bool VisualSettings::ALPHA_TRAIL_ENABLED;
 float VisualSettings::ALPHA_TRAIL_DECAY = 20.0f;
 float VisualSettings::BACKGROUND_COLOR[3] = { 0.0f, 0.0f, 0.0f };
 
 void VisualSettings::Initialize() {
-	SetNbOfParticles(2000);
 	ALPHA_TRAIL_ENABLED = true;
 	EnableAlphaTrail();
 }
@@ -32,15 +30,6 @@ void VisualSettings::ImGuiWindow() {
 	// Background Color
 	ImGui::ColorEdit3("Background Color", BACKGROUND_COLOR);
 	ImGui::End();
-}
-
-void VisualSettings::SetNbOfParticles(int N) {
-	// Set
-	NB_OF_PARTICLES = N;
-	// Update physics shader
-	ParticlesSystem::PhysicsComputeShader().bind();
-	ParticlesSystem::PhysicsComputeShader().setUniform1i("u_NbOfParticles", NB_OF_PARTICLES);
-	ParticlesSystem::PhysicsComputeShader().unbind();
 }
 
 void VisualSettings::EnableAlphaTrail() {

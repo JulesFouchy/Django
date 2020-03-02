@@ -16,21 +16,21 @@
 #define ACTUAL_POS_ID 0
 #define REST_POS_ID 1
 
-ShaderPipeline ParticlesSystem::m_physicsShader;
+ShaderPipeline ParticlesSystem::s_physicsShader;
 
 void ParticlesSystem::Initialize() {
     // Compute shader
-    m_physicsShader.addShader(ShaderType::Compute, "res/shaders/physics.comp");
-    m_physicsShader.createProgram();
+    s_physicsShader.addShader(ShaderType::Compute, "res/shaders/physics.comp");
+    s_physicsShader.createProgram();
 }
 
 ParticlesSystem::ParticlesSystem(unsigned int nbParticles)
-    : m_nbParticles(nbParticles),
-      m_particlesSSBO(0, 4, GL_DYNAMIC_DRAW), // TODO check which hint is best
+    : m_particlesSSBO(0, 4, GL_DYNAMIC_DRAW), // TODO check which hint is best
       m_restPositionsSSBO(1, 2, GL_STATIC_DRAW),
       m_colorsSSBO(2, 3, GL_STATIC_DRAW),
       m_physicsSettings()
 {
+    setNbParticles(nbParticles);
     m_restPositions.resize(nbParticles);
     // Uniforms
     m_physicsSettings.setUniforms();
@@ -90,14 +90,23 @@ void ParticlesSystem::draw() {
 }
 
 void ParticlesSystem::updatePositions() {
-    m_physicsShader.bind();
+    s_physicsShader.bind();
     glDispatchCompute(m_nbParticles / WORK_GROUP_SIZE + 1, 1, 1);
     glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT | GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT);
-    m_physicsShader.unbind();
+    s_physicsShader.unbind();
 }
 
 void ParticlesSystem::sendRestPositionsToGPU() {
     m_restPositionsSSBO.uploadData(m_nbParticles, (float*)m_restPositions.data());
+}
+
+void ParticlesSystem::setNbParticles(unsigned int newNbParticles) {
+    // Set
+    m_nbParticles = newNbParticles;
+    // Update physics shader
+    ParticlesSystem::PhysicsComputeShader().bind();
+    ParticlesSystem::PhysicsComputeShader().setUniform1i("u_NbOfParticles", m_nbParticles);
+    ParticlesSystem::PhysicsComputeShader().unbind();
 }
 
 void ParticlesSystem::ImGui_Windows() {

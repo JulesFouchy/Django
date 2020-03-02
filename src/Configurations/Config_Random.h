@@ -11,7 +11,7 @@ public:
 	~Config_Random() = default;
 
 	void embody(ParticlesSystem& particlesSystem) override;
-	void generate() override;
+	void generate(unsigned int nbParticles) override;
 
 private:
 	std::vector<glm::vec2> m_randomPositions;
