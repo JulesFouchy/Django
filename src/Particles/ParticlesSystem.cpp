@@ -31,21 +31,8 @@ ParticlesSystem::ParticlesSystem(unsigned int nbParticles)
       m_physicsSettings()
 {
     setNbParticles(nbParticles);
-    m_restPositions.resize(nbParticles);
     // Uniforms
     m_physicsSettings.setUniforms();
-    // SSBOs
-    m_particlesSSBO.uploadData(nbParticles, nullptr);
-    m_restPositionsSSBO.uploadData(nbParticles, nullptr);
-        // Colors
-    std::vector<color::rgb<float>> colors;
-    colors.resize(nbParticles);
-    for (int i = 0; i < m_nbParticles; ++i) {
-        float t = i / (float)m_nbParticles;
-        colors[i] = color::hsv<float>({ t * 360.0f, 80.0f, 80.0f });
-        //spdlog::info("{} {} {}", ::color::get::red(colors[i]), ::color::get::green(colors[i]), ::color::get::blue(colors[i]));
-    }
-    m_colorsSSBO.uploadData(nbParticles, (float*)colors.data());
     // Vertex buffer
     GLCall(glGenBuffers(1, &m_vboID));
     // Vertex array
@@ -103,6 +90,20 @@ void ParticlesSystem::sendRestPositionsToGPU() {
 void ParticlesSystem::setNbParticles(unsigned int newNbParticles) {
     // Set
     m_nbParticles = newNbParticles;
+    // Rest positions
+    m_restPositions.resize(m_nbParticles);
+    // SSBOs
+    m_particlesSSBO.uploadData(m_nbParticles, nullptr);
+    m_restPositionsSSBO.uploadData(m_nbParticles, nullptr);
+    // Colors
+    std::vector<color::rgb<float>> colors;
+    colors.resize(m_nbParticles);
+    for (int i = 0; i < m_nbParticles; ++i) {
+        float t = i / (float)m_nbParticles;
+        colors[i] = color::hsv<float>({ t * 360.0f, 80.0f, 80.0f });
+        //spdlog::info("{} {} {}", ::color::get::red(colors[i]), ::color::get::green(colors[i]), ::color::get::blue(colors[i]));
+    }
+    m_colorsSSBO.uploadData(m_nbParticles, (float*)colors.data());
     // Update physics shader
     ParticlesSystem::PhysicsComputeShader().bind();
     ParticlesSystem::PhysicsComputeShader().setUniform1i("u_NbOfParticles", m_nbParticles);
@@ -112,5 +113,10 @@ void ParticlesSystem::setNbParticles(unsigned int newNbParticles) {
 void ParticlesSystem::ImGui_Windows() {
     ImGui::Begin("Physics parameters");
     m_physicsSettings.ImGui_Parameters();
+    ImGui::End();
+
+    ImGui::Begin("ParticlesSystem parameters");
+    if (ImGui::SliderInt("Nb of particles", (int*)&m_nbParticles, 1, 5000))
+        setNbParticles(m_nbParticles);
     ImGui::End();
 }
