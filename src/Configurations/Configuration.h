@@ -20,7 +20,7 @@ public:
 
 	virtual bool reroll() { return false; } // returns whether this actually changed anything
 	virtual void applyTo(ParticlesSystem& particlesSystem) = 0;
-	virtual void ImGuiParameters() {}
+	virtual void ImGuiParameters(ParticlesSystem& particlesSystem) {}
 
 	inline std::string getName() { return m_name + " Configuration"; }
 

@@ -16,7 +16,7 @@ public:
 	bool reroll() override;
 	void applyTo(ParticlesSystem& particlesSystem) override;
 
-	void ImGui();
+	void ImGuiParameters(ParticlesSystem& particlesSystem) override;
 
 private:
 	float m_seed;

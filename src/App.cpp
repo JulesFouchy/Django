@@ -56,7 +56,10 @@ void App::onLoopIteration() {
 	ImGui::End();
 	// Settings
 	VisualSettings::ImGuiWindow();
-	m_configRandomGPU.ImGui();
+	// Current configuration
+	ImGui::Begin(m_currentConfig->getName().c_str());
+	m_currentConfig->ImGuiParameters(m_particlesSystem);
+	ImGui::End();
 	// Send time to physics compute shader
 	m_time.update();
 	m_particlesSystem.physicsComputeShader().bind();
