@@ -18,7 +18,7 @@ bool Config_FillScreen::setup(unsigned int nbParticles) {
 
 void Config_FillScreen::applyTo(ParticlesSystem& partSystem) {
 	for (int i = 0; i < partSystem.size(); ++i) {
-		int index = i < m_nbColumns * m_nbRows ? i : m_nbColumns * m_nbRows - 1;
+		int index = i < m_nbColumns * m_nbRows ? i : m_nbColumns * m_nbRows - 1 - i % m_nbColumns;
 		partSystem[i].x = ((index % m_nbColumns - (m_nbColumns - 1) * 0.5f) * m_spacing) / DisplayInfos::Ratio();
 		partSystem[i].y =  (index / m_nbColumns - (m_nbRows    - 1) * 0.5f) * m_spacing;
 	}
