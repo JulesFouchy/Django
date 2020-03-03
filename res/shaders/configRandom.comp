@@ -2,6 +2,7 @@
 
 uniform int u_NbOfParticles;
 uniform float u_Seed;
+
 uniform float a;
 uniform vec2 v;
 uniform float off;

@@ -14,9 +14,9 @@ Config_RandomGPU::Config_RandomGPU()
 
 void Config_RandomGPU::ImGuiParameters(ParticlesSystem& particlesSystem) {
 	bool change =
-		ImGui::DragFloat("a", &m_a) ||
-		ImGui::DragFloat2("v", (float*)&m_v) ||
 		ImGui::DragFloat("off", &m_off) ||
+		ImGui::DragFloat("a", &m_a, 0.01f) ||
+		ImGui::DragFloat2("v", (float*)&m_v) ||
 		ImGui::DragFloat("delta", &m_delta, 0.01f);
 	if (change)
 		applyTo(particlesSystem);
