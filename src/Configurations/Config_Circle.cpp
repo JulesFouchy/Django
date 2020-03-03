@@ -6,8 +6,11 @@
 
 #include "Helper/DisplayInfos.h"
 
+#include <imgui/imgui.h>
+
 Config_Circle::Config_Circle()
-	: Configuration("Circle")
+	: Configuration("Circle"), 
+	  m_radius(0.8f), m_rotation(0.0f)
 {}
 
 bool Config_Circle::setup(unsigned int nbParticles) {
@@ -24,8 +27,17 @@ bool Config_Circle::setup(unsigned int nbParticles) {
 }
 
 void Config_Circle::applyTo(ParticlesSystem& partSystem) {
-	float radius = 0.8f;
+	int offset = floor(m_rotation / 6.2832f * partSystem.size());
 	for (int i = 0; i < partSystem.size(); ++i)
-		partSystem[i] = radius * m_unitCircle[i];
+		partSystem[i] = m_radius * m_unitCircle[(i + offset) % partSystem.size()];
 	partSystem.sendRestPositionsToGPU();
+}
+
+void Config_Circle::ImGuiParameters(ParticlesSystem& particlesSystem) {
+	bool change =
+		ImGui::SliderFloat("Radius", &m_radius, 0.0f, 1.0f) ||
+		ImGui::DragFloat("Rotation", &m_rotation, 0.3f)
+	;
+	if (change)
+		applyTo(particlesSystem);
 }

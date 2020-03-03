@@ -13,6 +13,11 @@ public:
 	bool setup(unsigned int nbParticles) override;
 	void applyTo(ParticlesSystem& particlesSystem) override;
 
+	void ImGuiParameters(ParticlesSystem& particlesSystem) override;
+
 private:
 	std::vector<glm::vec2> m_unitCircle;
+
+	float m_radius;
+	float m_rotation;
 };
