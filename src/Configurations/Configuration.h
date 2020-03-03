@@ -1,11 +1,13 @@
 #pragma once
 
+#include <string>
+
 class ParticlesSystem;
 
 class Configuration {
 public:
-	Configuration()
-		: m_nbParticles(-1)
+	Configuration(const std::string& name)
+		: m_nbParticles(-1), m_name(name)
 	{}
 	virtual ~Configuration() = default;
 
@@ -18,7 +20,11 @@ public:
 
 	virtual bool reroll() { return false; } // returns whether this actually changed anything
 	virtual void applyTo(ParticlesSystem& particlesSystem) = 0;
+	virtual void ImGuiParameters() {}
+
+	inline std::string getName() { return m_name + " Configuration"; }
 
 protected:
 	unsigned int m_nbParticles;
+	std::string m_name;
 };

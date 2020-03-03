@@ -9,7 +9,7 @@
 #include <imgui/imgui.h>
 
 Config_RandomGPU::Config_RandomGPU()
-	: m_computeShader("res/shaders/configRandom.comp"), m_a(43758.5453), m_v(12.9898, 78.233), m_off(2.0f), m_delta(0.01f)
+	: Configuration("Random GPU"), m_computeShader("res/shaders/configRandom.comp"), m_a(43758.5453), m_v(12.9898, 78.233), m_off(2.0f), m_delta(0.01f)
 {}
 
 void Config_RandomGPU::ImGui() {

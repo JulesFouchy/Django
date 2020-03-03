@@ -6,6 +6,10 @@
 
 #include "Helper/DisplayInfos.h"
 
+Config_Circle::Config_Circle()
+	: Configuration("Circle")
+{}
+
 bool Config_Circle::setup(unsigned int nbParticles) {
 	if (Configuration::setup(nbParticles)) {
 		m_unitCircle.resize(nbParticles);

@@ -6,6 +6,10 @@
 
 #include "Debugging/Log.h"
 
+Config_RandomCPU::Config_RandomCPU()
+	: Configuration("Random CPU")
+{}
+
 bool Config_RandomCPU::setup(unsigned int nbParticles) {
 	if (Configuration::setup(nbParticles)) {
 		unsigned int prevSize = m_randomPositions.size();

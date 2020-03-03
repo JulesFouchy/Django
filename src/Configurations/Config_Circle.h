@@ -7,7 +7,7 @@
 
 class Config_Circle : public Configuration {
 public:
-	Config_Circle() = default;
+	Config_Circle();
 	~Config_Circle() = default;
 
 	bool setup(unsigned int nbParticles) override;

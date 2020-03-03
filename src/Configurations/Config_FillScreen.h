@@ -4,7 +4,7 @@
 
 class Config_FillScreen : public Configuration {
 public:
-	Config_FillScreen() = default;
+	Config_FillScreen();
 	~Config_FillScreen() = default;
 
 	bool setup(unsigned int nbParticles) override;

@@ -6,6 +6,10 @@
 
 #include "Debugging/Log.h"
 
+Config_FillScreen::Config_FillScreen()
+	: Configuration("Fill Screen")
+{}
+
 bool Config_FillScreen::setup(unsigned int nbParticles) {
 	if (Configuration::setup(nbParticles)) {
 		m_spacing = 2.0f * sqrt(DisplayInfos::Ratio() / nbParticles);;

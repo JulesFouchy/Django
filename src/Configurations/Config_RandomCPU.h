@@ -9,7 +9,7 @@
 
 class Config_RandomCPU : public Configuration {
 public:
-	Config_RandomCPU() = default;
+	Config_RandomCPU();
 	~Config_RandomCPU() = default;
 
 	bool setup(unsigned int nbParticles) override;
