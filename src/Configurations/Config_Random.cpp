@@ -42,20 +42,20 @@ bool Config_Random::setup(unsigned int nbParticles) {
 }
 
 bool Config_Random::reroll() {
-	m_computeShader.get().bind();
-	m_computeShader.get().setUniform1f("u_Seed", 100.0f * MyRand::_0to1());
-	m_computeShader.get().setUniform1f("a", m_a);
-	m_computeShader.get().setUniform2f("v", m_v);
-	m_computeShader.get().setUniform1f("off", m_off);
-	m_computeShader.get().setUniform1f("delta", m_delta);
-	m_computeShader.compute(m_nbParticles);
+	m_seed = 100.0f * MyRand::_0to1();
 	//for (int k = 0; k < m_nbParticles; ++k)
 	//	m_randomPositions[k] = glm::vec2(MyRand::_m1to1(), MyRand::_m1to1());
 	return true;
 }
 
 void Config_Random::applyTo(ParticlesSystem& partSystem) {
-	reroll();
+	m_computeShader.get().bind();
+	m_computeShader.get().setUniform1f("u_Seed", m_seed);
+	m_computeShader.get().setUniform1f("a", m_a);
+	m_computeShader.get().setUniform2f("v", m_v);
+	m_computeShader.get().setUniform1f("off", m_off);
+	m_computeShader.get().setUniform1f("delta", m_delta);
+	m_computeShader.compute(m_nbParticles);
 	//for (int i = 0; i < partSystem.size(); ++i) {
 	//	partSystem[i] = m_randomPositions[i];
 	//}

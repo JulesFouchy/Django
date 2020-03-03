@@ -19,7 +19,8 @@ public:
 	void ImGui();
 
 private:
-	std::vector<glm::vec2> m_randomPositions;
+	//std::vector<glm::vec2> m_randomPositions;
+	float m_seed;
 	float m_a;
 	glm::vec2 m_v;
 	float m_off;
