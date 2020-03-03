@@ -11,6 +11,7 @@ public:
 	void applyTo(ParticlesSystem& particlesSystem) override;
 
 private:
+	float m_spacing;
 	int m_nbRows;
 	int m_nbColumns;
 };
