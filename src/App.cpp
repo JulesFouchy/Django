@@ -56,6 +56,7 @@ void App::onLoopIteration() {
 	ImGui::End();
 	// Settings
 	VisualSettings::ImGuiWindow();
+	m_configRandom.ImGui();
 	// Send time to physics compute shader
 	m_time.update();
 	m_particlesSystem.physicsComputeShader().bind();

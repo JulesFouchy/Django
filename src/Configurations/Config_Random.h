@@ -16,7 +16,13 @@ public:
 	bool reroll() override;
 	void applyTo(ParticlesSystem& particlesSystem) override;
 
+	void ImGui();
+
 private:
 	std::vector<glm::vec2> m_randomPositions;
+	float m_a;
+	glm::vec2 m_v;
+	float m_off;
+	float m_delta;
 	ComputeShader m_computeShader;
 };
