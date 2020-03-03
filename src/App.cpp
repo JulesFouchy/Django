@@ -58,9 +58,9 @@ void App::onLoopIteration() {
 	VisualSettings::ImGuiWindow();
 	// Send time to physics compute shader
 	m_time.update();
-	ParticlesSystem::PhysicsComputeShader().bind();
-	ParticlesSystem::PhysicsComputeShader().setUniform1f("dt", m_time.deltaTime());
-	ParticlesSystem::PhysicsComputeShader().unbind();
+	m_particlesSystem.physicsComputeShader().bind();
+	m_particlesSystem.physicsComputeShader().setUniform1f("dt", m_time.deltaTime());
+	m_particlesSystem.physicsComputeShader().unbind();
 	// Clear screen
 	if (VisualSettings::IsAlphaTrailEnabled()) {
 		m_clearScreenPipeline.bind();

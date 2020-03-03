@@ -1,4 +1,4 @@
-#include "OpenGL/ShaderPipeline.h"
+#include "OpenGL/ComputeShader.h"
 
 #include "OpenGL/SSBO.h"
 
@@ -11,7 +11,6 @@ class Configuration;
 
 class ParticlesSystem {
 public:
-	static void Initialize();
 	ParticlesSystem(unsigned int nbParticles);
 	~ParticlesSystem();
 
@@ -25,7 +24,7 @@ public:
 	void setNbParticles(unsigned int newNbParticles);
 	inline unsigned int getNbParticles() { return m_nbParticles; }
 
-	inline static ShaderPipeline& PhysicsComputeShader() { return s_physicsShader; }
+	inline ShaderPipeline& physicsComputeShader() { return m_physicsShader.get(); }
 
 private:
 friend class Config_FillScreen;
@@ -53,5 +52,5 @@ private:
 	unsigned int m_vaoID;
 	unsigned int m_vboID;
 
-	static ShaderPipeline s_physicsShader;
+	ComputeShader m_physicsShader;
 };

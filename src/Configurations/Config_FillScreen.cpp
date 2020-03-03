@@ -17,7 +17,7 @@ bool Config_FillScreen::setup(unsigned int nbParticles) {
 }
 
 void Config_FillScreen::applyTo(ParticlesSystem& partSystem) {
-	int overflow = partSystem.size() - m_nbColumns * m_nbRows;
+	unsigned int overflow = partSystem.size() - m_nbColumns * m_nbRows;
 	for (int i = 0; i < partSystem.size(); ++i) {
 		int index = i < overflow ? i : i - overflow;
 		partSystem[i].x = ((index % m_nbColumns - (m_nbColumns - 1) * 0.5f) * m_spacing) / DisplayInfos::Ratio();

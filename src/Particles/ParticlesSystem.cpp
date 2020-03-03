@@ -14,27 +14,19 @@
 
 #include <glad/glad.h>
 
-#define WORK_GROUP_SIZE 256
 #define ACTUAL_POS_ID 0
 #define REST_POS_ID 1
-
-ShaderPipeline ParticlesSystem::s_physicsShader;
-
-void ParticlesSystem::Initialize() {
-    // Compute shader
-    s_physicsShader.addShader(ShaderType::Compute, "res/shaders/physics.comp");
-    s_physicsShader.createProgram();
-}
 
 ParticlesSystem::ParticlesSystem(unsigned int nbParticles)
     : m_particlesSSBO(0, 4, GL_DYNAMIC_DRAW), // TODO check which hint is best
       m_restPositionsSSBO(1, 2, GL_STATIC_DRAW),
       m_colorsSSBO(2, 3, GL_STATIC_DRAW),
-      m_physicsSettings()
+      m_physicsSettings(),
+      m_physicsShader("res/shaders/physics.comp")
 {
     setNbParticles(nbParticles);
     // Uniforms
-    m_physicsSettings.setUniforms();
+    m_physicsSettings.setUniforms(physicsComputeShader());
     // Vertex buffer
     GLCall(glGenBuffers(1, &m_vboID));
     // Vertex array
@@ -79,10 +71,7 @@ void ParticlesSystem::draw() {
 }
 
 void ParticlesSystem::updatePositions() {
-    s_physicsShader.bind();
-    glDispatchCompute(m_nbParticles / WORK_GROUP_SIZE + 1, 1, 1);
-    glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT | GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT);
-    s_physicsShader.unbind();
+    m_physicsShader.compute(m_nbParticles);
 }
 
 void ParticlesSystem::sendRestPositionsToGPU() {
@@ -107,14 +96,14 @@ void ParticlesSystem::setNbParticles(unsigned int newNbParticles) {
     }
     m_colorsSSBO.uploadData(m_nbParticles, (float*)colors.data());
     // Update physics shader
-    ParticlesSystem::PhysicsComputeShader().bind();
-    ParticlesSystem::PhysicsComputeShader().setUniform1i("u_NbOfParticles", m_nbParticles);
-    ParticlesSystem::PhysicsComputeShader().unbind();
+   m_physicsShader.get().bind();
+   m_physicsShader.get().setUniform1i("u_NbOfParticles", m_nbParticles);
+   m_physicsShader.get().unbind();
 }
 
 void ParticlesSystem::ImGui_Windows(Configuration& currentConfiguration) {
     ImGui::Begin("Physics parameters");
-    m_physicsSettings.ImGui_Parameters();
+    m_physicsSettings.ImGui_Parameters(physicsComputeShader());
     ImGui::End();
 
     ImGui::Begin("ParticlesSystem parameters");
