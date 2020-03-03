@@ -8,7 +8,8 @@ union SDL_Event;
 #include "OpenGL/QuadVAO.h"
 
 #include "Configurations/Config_FillScreen.h"
-#include "Configurations/Config_Random.h"
+#include "Configurations/Config_RandomCPU.h"
+#include "Configurations/Config_RandomGPU.h"
 #include "Configurations/Config_Circle.h"
 
 #include "Time/Time_Realtime.h"
@@ -41,7 +42,8 @@ private:
 
 	Configuration* m_currentConfig;
 	Config_FillScreen m_configFillScreen;
-	Config_Random m_configRandom;
+	Config_RandomCPU m_configRandomCPU;
+	Config_RandomGPU m_configRandomGPU;
 	Config_Circle m_configCircle;
 
 /********************

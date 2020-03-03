@@ -29,7 +29,7 @@ App::App(unsigned int nbParticles, SDL_Window* window)
 	m_clearScreenPipeline.addShader(ShaderType::Fragment, "res/shaders/clearScreen.frag");
 	m_clearScreenPipeline.createProgram();
 	//
-	setCurrentConfiguration(m_configRandom);
+	setCurrentConfiguration(m_configRandomGPU);
 	//
 	onWindowResize();
 	glEnable(GL_BLEND);
@@ -56,7 +56,7 @@ void App::onLoopIteration() {
 	ImGui::End();
 	// Settings
 	VisualSettings::ImGuiWindow();
-	m_configRandom.ImGui();
+	m_configRandomGPU.ImGui();
 	// Send time to physics compute shader
 	m_time.update();
 	m_particlesSystem.physicsComputeShader().bind();
@@ -140,7 +140,9 @@ void App::onEvent(const SDL_Event& e) {
 				}
 			}
 			else if (e.key.keysym.sym == 'a')
-				setCurrentConfiguration(m_configRandom);
+				setCurrentConfiguration(m_configRandomGPU);
+			else if (e.key.keysym.sym == 'q')
+				setCurrentConfiguration(m_configRandomCPU);
 			else if (e.key.keysym.sym == 'z')
 				setCurrentConfiguration(m_configFillScreen);
 			else if (e.key.keysym.sym == 'e')

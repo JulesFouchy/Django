@@ -28,7 +28,7 @@ public:
 
 private:
 friend class Config_FillScreen;
-friend class Config_Random;
+friend class Config_RandomCPU;
 friend class Config_Circle;
 friend class App;
 	inline size_t size() { return m_restPositions.size(); }

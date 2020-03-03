@@ -112,7 +112,6 @@ void ParticlesSystem::ImGui_Windows(Configuration& currentConfiguration) {
         setNbParticles(m_nbParticles);
         currentConfiguration.setup(m_nbParticles);
         currentConfiguration.applyTo(*this);
-        sendRestPositionsToGPU();
     }
     // Particles Radius
     if (ImGui::SliderFloat("Particles Radius", &PARTICLE_RADIUS_PROP_TO_HEIGHT, 0.0f, 0.1f))
