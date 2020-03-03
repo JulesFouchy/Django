@@ -23,4 +23,5 @@ void Config_Circle::applyTo(ParticlesSystem& partSystem) {
 	float radius = 0.8f;
 	for (int i = 0; i < partSystem.size(); ++i)
 		partSystem[i] = radius * m_unitCircle[i];
+	partSystem.sendRestPositionsToGPU();
 }

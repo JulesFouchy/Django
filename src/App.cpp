@@ -89,7 +89,6 @@ void App::setCurrentConfiguration(Configuration& newConfig) {
 	m_currentConfig = &newConfig;
 	m_currentConfig->setup(m_particlesSystem.getNbParticles());
 	m_currentConfig->applyTo(m_particlesSystem);
-	m_particlesSystem.sendRestPositionsToGPU();
 }
 
 void App::onEvent(const SDL_Event& e) {
@@ -137,7 +136,6 @@ void App::onEvent(const SDL_Event& e) {
 			if (e.key.keysym.scancode == SDL_SCANCODE_SPACE) {
 				if (m_currentConfig->reroll()) {
 					m_currentConfig->applyTo(m_particlesSystem);
-					m_particlesSystem.sendRestPositionsToGPU();
 				}
 			}
 			else if (e.key.keysym.sym == 'a')
