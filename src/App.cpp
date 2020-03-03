@@ -18,9 +18,6 @@ App::App(unsigned int nbParticles, SDL_Window* window)
 	: m_bShowImGUIDemoWindow(false),
 	  m_bFullScreen(false),
 	  m_particlesSystem(nbParticles),
-	  m_configFillScreen(nbParticles),
-	  m_configRandom(nbParticles),
-	  m_configCircle(nbParticles),
 	  m_window(window), m_running(true)
 {
 	// Create graphics pipeline for particles

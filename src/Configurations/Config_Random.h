@@ -7,7 +7,7 @@
 
 class Config_Random : public Configuration {
 public:
-	Config_Random(unsigned int nbParticles);
+	Config_Random() = default;
 	~Config_Random() = default;
 
 	bool setup(unsigned int nbParticles) override;

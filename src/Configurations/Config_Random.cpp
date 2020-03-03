@@ -6,11 +6,6 @@
 
 #include "Debugging/Log.h"
 
-Config_Random::Config_Random(unsigned int nbParticles)
-{
-	setup(nbParticles);
-}
-
 bool Config_Random::setup(unsigned int nbParticles) {
 	if (Configuration::setup(nbParticles)) {
 		unsigned int prevSize = m_randomPositions.size();

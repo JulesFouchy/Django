@@ -4,16 +4,23 @@
 
 #include "Debugging/Log.h"
 
-Config_Circle::Config_Circle(unsigned int nbParticles)
-{
-	setup(nbParticles);
+#include "Helper/DisplayInfos.h"
+
+bool Config_Circle::setup(unsigned int nbParticles) {
+	if (Configuration::setup(nbParticles)) {
+		m_unitCircle.resize(nbParticles);
+		for (int i = 0; i < nbParticles; ++i) {
+			float angle = 2.0f * 3.1415927f * i / (float)nbParticles;
+			m_unitCircle[i].x = cos(angle) / DisplayInfos::Ratio();
+			m_unitCircle[i].y = sin(angle);
+		}
+		return true;
+	}
+	return false;
 }
 
 void Config_Circle::applyTo(ParticlesSystem& partSystem) {
-	for (int i = 0; i < partSystem.size(); ++i) {
-		float angle = 2.0f * 3.141f * i / (float)partSystem.size();
-		float radius = 0.8f;
-		partSystem[i].x = radius * cos(angle);
-		partSystem[i].y = radius * sin(angle);
-	}
+	float radius = 0.8f;
+	for (int i = 0; i < partSystem.size(); ++i)
+		partSystem[i] = radius * m_unitCircle[i];
 }

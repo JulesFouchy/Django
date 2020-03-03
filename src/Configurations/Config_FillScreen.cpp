@@ -4,11 +4,6 @@
 
 #include "Debugging/Log.h"
 
-Config_FillScreen::Config_FillScreen(unsigned int nbParticles)
-{
-	setup(nbParticles);
-}
-
 bool Config_FillScreen::setup(unsigned int nbParticles) {
 	if (Configuration::setup(nbParticles)) {
 		m_nbRows = 44;
