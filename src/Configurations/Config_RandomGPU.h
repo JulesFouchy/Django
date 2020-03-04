@@ -22,7 +22,7 @@ private:
 	float m_seed;
 	float m_a;
 	glm::vec2 m_v;
-	float m_off;
+	float m_xyOff[2] = { 0.0f, 2.0f };
 	float m_delta;
 
 	ComputeShader m_computeShader;

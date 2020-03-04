@@ -5,7 +5,7 @@ uniform float u_Seed;
 
 uniform float a;
 uniform vec2 v;
-uniform float off;
+uniform vec2 xyOff;
 uniform float delta;
 
 layout(std430, binding=1) buffer restPositions {
@@ -21,6 +21,6 @@ void main(){
     uint gid = gl_GlobalInvocationID.x;
 
     if (gid < u_NbOfParticles) {
-        restPos[gid] = vec2(rand(vec2(gid*delta, u_Seed)), rand(vec2(gid*delta, u_Seed + off)));
+        restPos[gid] = vec2(rand(vec2(gid*delta, u_Seed + xyOff.y)), rand(vec2(gid*delta, u_Seed + xyOff.x)));
     }
 }
