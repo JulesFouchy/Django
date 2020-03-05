@@ -145,7 +145,7 @@ void App::onEvent(const SDL_Event& e) {
 			else if (e.key.keysym.sym == 'a')
 				setCurrentConfiguration(m_configRandomGPU);
 			else if (e.key.keysym.sym == 'q')
-				setCurrentConfiguration(m_configRandomCPU);
+				setCurrentConfiguration(m_configClusterRandom);
 			else if (e.key.keysym.sym == 'z')
 				setCurrentConfiguration(m_configFillScreen);
 			else if (e.key.keysym.sym == 'e')

@@ -11,6 +11,7 @@ union SDL_Event;
 #include "Configurations/Config_RandomCPU.h"
 #include "Configurations/Config_RandomGPU.h"
 #include "Configurations/Config_Circle.h"
+#include "Configurations/Config_ClusterRandom.h"
 
 #include "Time/Time_Realtime.h"
 
@@ -45,6 +46,7 @@ private:
 	Config_RandomCPU m_configRandomCPU;
 	Config_RandomGPU m_configRandomGPU;
 	Config_Circle m_configCircle;
+	Config_ClusterRandom m_configClusterRandom;
 
 /********************
   * INTERNAL CODE *
