@@ -9,7 +9,9 @@
 #include <imgui/imgui.h>
 
 Config_ClusterRandom::Config_ClusterRandom()
-	: Configuration("Cluster Random"), m_computeShader("res/shaders/configClusterRandom.comp"), m_nbClusters(1), m_a(43758.5453), m_v(12.9898, 78.233), m_delta(0.01f)
+	: Configuration("Cluster Random"), m_computeShader("res/shaders/configClusterRandom.comp"), 
+	m_nbClusters(1), m_clusterShape(ClusterShape::Circle),
+	m_a(43758.5453), m_v(12.9898, 78.233), m_delta(0.01f)
 {}
 
 void Config_ClusterRandom::ImGuiParameters(ParticlesSystem& particlesSystem) {
@@ -42,6 +44,7 @@ bool Config_ClusterRandom::reroll() {
 void Config_ClusterRandom::applyTo(ParticlesSystem& partSystem) {
 	m_computeShader.get().bind();
 	m_computeShader.get().setUniform1i("u_NbClusters", m_nbClusters);
+	m_computeShader.get().setUniform1i("u_Shape", (int)m_clusterShape);
 	m_computeShader.get().setUniform1f("u_Seed", m_seed);
 	m_computeShader.get().setUniform1f("a", m_a);
 	m_computeShader.get().setUniform2f("v", m_v);
@@ -51,12 +54,39 @@ void Config_ClusterRandom::applyTo(ParticlesSystem& partSystem) {
 }
 
 void Config_ClusterRandom::onKeyPressed(SDL_Scancode scancode, ParticlesSystem& partSystem) {
+	spdlog::info((int)scancode);
 	if (scancode == SDL_SCANCODE_KP_PLUS) {
 		m_nbClusters++;
 		applyTo(partSystem);
 	}
 	else if (scancode == SDL_SCANCODE_KP_MINUS) {
 		m_nbClusters--;
+		applyTo(partSystem);
+	}
+	else if (scancode == SDL_SCANCODE_KP_0) {
+		m_nbClusters = 0;
+		applyTo(partSystem);
+	}
+	else if (scancode == SDL_SCANCODE_KP_1) {
+		m_nbClusters = 1;
+		applyTo(partSystem);
+	}
+	else if (scancode == SDL_SCANCODE_KP_2) {
+		m_nbClusters = 10;
+		applyTo(partSystem);
+	}
+	else if (scancode == SDL_SCANCODE_KP_3) {
+		m_nbClusters = 100;
+		applyTo(partSystem);
+	}
+	else if (scancode == 29) {
+		m_clusterShape = ClusterShape::Circle;
+		spdlog::info("dsf");
+		applyTo(partSystem);
+	}
+	else if (scancode == SDL_SCANCODE_X) {
+		spdlog::info("x");
+		m_clusterShape = ClusterShape::Spiral;
 		applyTo(partSystem);
 	}
 }

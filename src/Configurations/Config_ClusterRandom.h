@@ -7,6 +7,11 @@
 #include <glm/glm.hpp>
 #include <vector>
 
+enum class ClusterShape {
+	Circle,
+	Spiral
+};
+
 class Config_ClusterRandom : public Configuration {
 public:
 	Config_ClusterRandom();
@@ -21,6 +26,7 @@ public:
 
 private:
 	int m_nbClusters;
+	ClusterShape m_clusterShape;
 	float m_seed;
 	float m_a;
 	glm::vec2 m_v;
