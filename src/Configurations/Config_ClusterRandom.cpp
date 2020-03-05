@@ -49,3 +49,14 @@ void Config_ClusterRandom::applyTo(ParticlesSystem& partSystem) {
 	m_computeShader.get().setUniform1f("delta", m_delta);
 	m_computeShader.compute(m_nbParticles);
 }
+
+void Config_ClusterRandom::onKeyPressed(SDL_Scancode scancode, ParticlesSystem& partSystem) {
+	if (scancode == SDL_SCANCODE_KP_PLUS) {
+		m_nbClusters++;
+		applyTo(partSystem);
+	}
+	else if (scancode == SDL_SCANCODE_KP_MINUS) {
+		m_nbClusters--;
+		applyTo(partSystem);
+	}
+}

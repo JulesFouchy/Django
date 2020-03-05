@@ -150,6 +150,8 @@ void App::onEvent(const SDL_Event& e) {
 				setCurrentConfiguration(m_configFillScreen);
 			else if (e.key.keysym.sym == 'e')
 				setCurrentConfiguration(m_configCircle);
+			else
+				m_currentConfig->onKeyPressed(e.key.keysym.scancode, m_particlesSystem);
 		}
 		break;
 

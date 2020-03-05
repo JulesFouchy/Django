@@ -15,6 +15,7 @@ public:
 	bool setup(unsigned int nbParticles) override;
 	bool reroll() override;
 	void applyTo(ParticlesSystem& particlesSystem) override;
+	void onKeyPressed(SDL_Scancode scancode, ParticlesSystem& partSystem) override;
 
 	void ImGuiParameters(ParticlesSystem& particlesSystem) override;
 
