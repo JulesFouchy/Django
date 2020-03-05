@@ -26,6 +26,6 @@ void main(){
         int clusterID = min(int(gid) / clusterSize, u_NbClusters-1);
         float clusterCoord = (gid % clusterSize) / float(clusterSize);
         vec2 center = vec2(rand(vec2(clusterID*delta, u_Seed + xyOff.y)), rand(vec2(clusterID*delta, u_Seed + xyOff.x)));
-        restPos[gid] = center + 0.2 * vec2(cos(6.28*clusterCoord), sin(6.28*clusterCoord));
+        restPos[gid] = center + clusterCoord * 0.2 * vec2(cos(6.28*clusterCoord*15), sin(6.28*clusterCoord*15));
     }
 }

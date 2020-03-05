@@ -40,7 +40,7 @@ friend class App;
 private:
 	unsigned int m_nbParticles;
 	//float PARTICLE_RADIUS_IN_INCHES;
-	float PARTICLE_RADIUS_PROP_TO_HEIGHT = 0.0135f;
+	float PARTICLE_RADIUS_PROP_TO_HEIGHT = 0.002f;
 
 	std::vector<glm::vec2> m_restPositions;
 
