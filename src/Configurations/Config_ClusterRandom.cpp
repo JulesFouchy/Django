@@ -3,6 +3,7 @@
 #include "Particles/ParticlesSystem.h"
 
 #include "Helper/Random.h"
+#include "Helper/DisplayInfos.h"
 
 #include "Debugging/Log.h"
 
@@ -43,6 +44,7 @@ bool Config_ClusterRandom::reroll() {
 
 void Config_ClusterRandom::applyTo(ParticlesSystem& partSystem) {
 	m_computeShader.get().bind();
+	m_computeShader.get().setUniform1f("u_AspectRatio", DisplayInfos::Ratio());
 	m_computeShader.get().setUniform1i("u_NbClusters", m_nbClusters);
 	m_computeShader.get().setUniform1i("u_Shape", (int)m_clusterShape);
 	m_computeShader.get().setUniform1f("u_Seed", m_seed);
