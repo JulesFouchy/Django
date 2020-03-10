@@ -7,6 +7,7 @@
 #include "Helper/DisplayInfos.h"
 
 #include <imgui/imgui.h>
+#include "Helper/MyImGui.h"
 
 Config_Circle::Config_Circle()
 	: Configuration("Circle"), 
@@ -34,10 +35,10 @@ void Config_Circle::applyTo(ParticlesSystem& partSystem) {
 }
 
 void Config_Circle::ImGuiParameters(ParticlesSystem& particlesSystem) {
-	bool change =
-		ImGui::SliderFloat("Radius", &m_radius, 0.0f, 1.0f) ||
-		ImGui::DragFloat("Rotation", &m_rotation, 0.3f)
-	;
+	static float min = 0.0f;
+	static float max = 1.0f;
+	bool change = MyImGui::SliderFloatWithExtensibleRange("Radius", &m_radius, &min, &max, 0.05f);
+	change     |=   ImGui::DragFloat("Rotation", &m_rotation, 0.3f);
 	if (change)
 		applyTo(particlesSystem);
 }
