@@ -17,15 +17,13 @@ Config_ClusterRandom::Config_ClusterRandom()
 {}
 
 void Config_ClusterRandom::ImGuiParameters(ParticlesSystem& particlesSystem) {
-	bool change =
-		ImGui::InputInt("Nb of Clusters", &m_nbClusters) ||
-		ImGui::DragFloat2("X / Y variation", m_xyOff) ||
-		ImGui::DragFloat("a", &m_a, 0.01f) ||
-		ImGui::DragFloat2("v", (float*)&m_v) ||
-		ImGui::DragFloat("delta", &m_delta, 0.01f);
+	bool change = ImGui::InputInt("Nb of Clusters", &m_nbClusters);
+	change |= ImGui::DragFloat2("X / Y variation", m_xyOff);
+	change |= ImGui::DragFloat("a", &m_a, 0.01f);
+	change |= ImGui::DragFloat2("v", (float*)&m_v);
+	change |= ImGui::DragFloat("delta", &m_delta, 0.01f);
 	ImGui::Separator();
-	change |= 
-		ImGui::SliderFloat("Radius", &m_shapeRadius, 0.0f, 1.0f);
+	change |= ImGui::SliderFloat("Radius", &m_shapeRadius, 0.0f, 1.0f);
 	switch (m_clusterShape)
 	{
 	case ClusterShape::Circle:

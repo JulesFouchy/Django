@@ -13,11 +13,10 @@ Config_RandomGPU::Config_RandomGPU()
 {}
 
 void Config_RandomGPU::ImGuiParameters(ParticlesSystem& particlesSystem) {
-	bool change =
-		ImGui::DragFloat2("X / Y variation", m_xyOff) ||
-		ImGui::DragFloat("a", &m_a, 0.01f) ||
-		ImGui::DragFloat2("v", (float*)&m_v) ||
-		ImGui::DragFloat("delta", &m_delta, 0.01f);
+	bool change = ImGui::DragFloat2("X / Y variation", m_xyOff);
+	change |= ImGui::DragFloat("a", &m_a, 0.01f);
+	change |= ImGui::DragFloat2("v", (float*)&m_v);
+	change |= ImGui::DragFloat("delta", &m_delta, 0.01f);
 	if (change)
 		applyTo(particlesSystem);
 }
