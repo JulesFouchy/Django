@@ -10,8 +10,9 @@
 #include <imgui/imgui.h>
 
 Config_ClusterRandom::Config_ClusterRandom()
-	: Configuration("Cluster Random"), m_computeShader("res/shaders/configClusterRandom.comp"), 
+	: Configuration("Cluster Random"), m_computeShader("res/shaders/configClusterRandom.comp"),
 	m_nbClusters(1), m_clusterShape(ClusterShape::Circle),
+	m_shapeRadius(0.2f), m_spiralRotationSpeed(15.0f),
 	m_a(43758.5453), m_v(12.9898, 78.233), m_delta(0.01f)
 {}
 
@@ -22,6 +23,19 @@ void Config_ClusterRandom::ImGuiParameters(ParticlesSystem& particlesSystem) {
 		ImGui::DragFloat("a", &m_a, 0.01f) ||
 		ImGui::DragFloat2("v", (float*)&m_v) ||
 		ImGui::DragFloat("delta", &m_delta, 0.01f);
+	ImGui::Separator();
+	change |= 
+		ImGui::SliderFloat("Radius", &m_shapeRadius, 0.0f, 1.0f);
+	switch (m_clusterShape)
+	{
+	case ClusterShape::Circle:
+		break;
+	case ClusterShape::Spiral:
+		change |= ImGui::SliderFloat("Spiral Rotation", &m_spiralRotationSpeed, 0.0f, 20.0f);
+		break;
+	default:
+		break;
+	}
 	if (change)
 		applyTo(particlesSystem);
 }
@@ -47,6 +61,8 @@ void Config_ClusterRandom::applyTo(ParticlesSystem& partSystem) {
 	m_computeShader.get().setUniform1f("u_AspectRatio", DisplayInfos::Ratio());
 	m_computeShader.get().setUniform1i("u_NbClusters", m_nbClusters);
 	m_computeShader.get().setUniform1i("u_Shape", (int)m_clusterShape);
+	m_computeShader.get().setUniform1f("u_Radius", m_shapeRadius);
+	m_computeShader.get().setUniform1f("u_SpiralRotationSpeed", m_spiralRotationSpeed);
 	m_computeShader.get().setUniform1f("u_Seed", m_seed);
 	m_computeShader.get().setUniform1f("a", m_a);
 	m_computeShader.get().setUniform2f("v", m_v);

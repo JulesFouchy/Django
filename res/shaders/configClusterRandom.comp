@@ -6,6 +6,9 @@ uniform int u_NbOfParticles;
 uniform int u_NbClusters;
 uniform int u_Shape;
 
+uniform float u_Radius;
+uniform float u_SpiralRotationSpeed;
+
 uniform float u_Seed;
 
 uniform float a;
@@ -31,10 +34,10 @@ void main(){
         vec2 center = vec2(rand(vec2(clusterID*delta, u_Seed + xyOff.y)), rand(vec2(clusterID*delta, u_Seed + xyOff.x)));
         switch (u_Shape){
             case 0: // Circle
-                restPos[gid] = center + 0.2 * vec2(cos(6.28*clusterCoord*15) / u_AspectRatio, sin(6.28*clusterCoord*15));
+                restPos[gid] = center + u_Radius * vec2(cos(6.28*clusterCoord) / u_AspectRatio, sin(6.28*clusterCoord));
                 break;
             case 1: // Spiral
-                restPos[gid] = center + clusterCoord * 0.2 * vec2(cos(6.28*clusterCoord*15) / u_AspectRatio, sin(6.28*clusterCoord*15));
+                restPos[gid] = center + clusterCoord * u_Radius * vec2(cos(6.28*clusterCoord*u_SpiralRotationSpeed) / u_AspectRatio, sin(6.28*clusterCoord*u_SpiralRotationSpeed));
                 break;
         }
     }

@@ -27,6 +27,10 @@ public:
 private:
 	int m_nbClusters;
 	ClusterShape m_clusterShape;
+
+	float m_shapeRadius;
+	float m_spiralRotationSpeed;
+
 	float m_seed;
 	float m_a;
 	glm::vec2 m_v;
