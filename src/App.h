@@ -13,6 +13,8 @@ union SDL_Event;
 #include "Configurations/Config_Circle.h"
 #include "Configurations/Config_ClusterRandom.h"
 
+#include "Settings/WindSettings.h"
+
 #include "Time/Time_Realtime.h"
 
 class App {
@@ -47,6 +49,8 @@ private:
 	Config_RandomGPU m_configRandomGPU;
 	Config_Circle m_configCircle;
 	Config_ClusterRandom m_configClusterRandom;
+
+	WindSettings m_windSettings;
 
 /********************
   * INTERNAL CODE *

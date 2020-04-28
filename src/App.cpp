@@ -37,6 +37,9 @@ App::App(unsigned int nbParticles, SDL_Window* window)
 }
 
 void App::onInit() {
+	m_particlesSystem.physicsComputeShader().bind();
+	m_windSettings.setUniforms(m_particlesSystem.physicsComputeShader());
+	m_particlesSystem.physicsComputeShader().unbind();
 }
 
 void App::onLoopIteration() {
@@ -56,14 +59,19 @@ void App::onLoopIteration() {
 	ImGui::End();
 	// Settings
 	VisualSettings::ImGuiWindow();
+	m_particlesSystem.physicsComputeShader().bind();
+	ImGui::Begin("Wind");
+	m_windSettings.ImGui_Parameters(m_particlesSystem.physicsComputeShader());
+	ImGui::End();
 	// Current configuration
 	ImGui::Begin(m_currentConfig->getName().c_str());
 	m_currentConfig->ImGuiParameters(m_particlesSystem);
 	ImGui::End();
 	// Send time to physics compute shader
 	m_time.update();
-	m_particlesSystem.physicsComputeShader().bind();
 	m_particlesSystem.physicsComputeShader().setUniform1f("dt", m_time.deltaTime());
+	// Send wind to physics compute shader
+	m_windSettings.setWindOffset(m_particlesSystem.physicsComputeShader(), m_time.time());
 	m_particlesSystem.physicsComputeShader().unbind();
 	// Clear screen
 	if (VisualSettings::IsAlphaTrailEnabled()) {
