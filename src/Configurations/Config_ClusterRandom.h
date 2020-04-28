@@ -9,7 +9,8 @@
 
 enum class ClusterShape {
 	Circle,
-	Spiral
+	Spiral,
+	Star
 };
 
 class Config_ClusterRandom : public Configuration {

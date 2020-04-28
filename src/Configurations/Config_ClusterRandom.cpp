@@ -105,4 +105,9 @@ void Config_ClusterRandom::onKeyPressed(SDL_Scancode scancode, ParticlesSystem& 
 		m_clusterShape = ClusterShape::Spiral;
 		applyTo(partSystem);
 	}
+	else if (scancode == SDL_SCANCODE_C) {
+		spdlog::info("x");
+		m_clusterShape = ClusterShape::Star;
+		applyTo(partSystem);
+	}
 }
