@@ -34,10 +34,10 @@ void main(){
         vec2 center = vec2(rand(vec2(clusterID*delta, u_Seed + xyOff.y)), rand(vec2(clusterID*delta, u_Seed + xyOff.x)));
         switch (u_Shape){
             case 0: // Circle
-                restPos[gid] = center + u_Radius * vec2(cos(6.28*clusterCoord) / u_AspectRatio, sin(6.28*clusterCoord));
+                restPos[gid] = center + u_Radius * vec2(cos(6.28*clusterCoord), sin(6.28*clusterCoord));
                 break;
             case 1: // Spiral
-                restPos[gid] = center + clusterCoord * u_Radius * vec2(cos(6.28*clusterCoord*u_SpiralRotationSpeed) / u_AspectRatio, sin(6.28*clusterCoord*u_SpiralRotationSpeed));
+                restPos[gid] = center + clusterCoord * u_Radius * vec2(cos(6.28*clusterCoord*u_SpiralRotationSpeed), sin(6.28*clusterCoord*u_SpiralRotationSpeed));
                 break;
             case 2: // Star
                 int nbBranches = 5;
@@ -45,7 +45,7 @@ void main(){
                 int branchId = int(clusterCoord * nbPartPerBranch);
                 float branchCoord = float(gid % nbPartPerBranch) / nbPartPerBranch;
                 float angle = branchId * 6.18 / nbBranches;
-                restPos[gid] = center + u_Radius * branchCoord * vec2(cos(angle) / u_AspectRatio, sin(angle));
+                restPos[gid] = center + u_Radius * branchCoord * vec2(cos(angle), sin(angle));
                 break;
         }
     }

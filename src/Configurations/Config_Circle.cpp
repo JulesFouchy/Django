@@ -19,7 +19,7 @@ bool Config_Circle::setup(unsigned int nbParticles) {
 		m_unitCircle.resize(nbParticles);
 		for (int i = 0; i < nbParticles; ++i) {
 			float angle = 2.0f * 3.1415927f * i / (float)nbParticles;
-			m_unitCircle[i].x = cos(angle) / DisplayInfos::Ratio();
+			m_unitCircle[i].x = cos(angle);
 			m_unitCircle[i].y = sin(angle);
 		}
 		return true;
