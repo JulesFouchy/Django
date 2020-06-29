@@ -36,6 +36,7 @@ private:
 private:
 	bool m_bShowImGUIDemoWindow;
 	bool m_bFullScreen;
+	bool m_bShowGUI;
 
 	ShaderPipeline m_particlePipeline;
 	ShaderPipeline m_clearScreenPipeline;

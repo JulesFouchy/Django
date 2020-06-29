@@ -12,11 +12,13 @@
 #include "Settings/VisualSettings.h"
 
 #include "Helper/DisplayInfos.h"
+#include "Helper/Input.h"
 
 
 App::App(unsigned int nbParticles, SDL_Window* window)
 	: m_bShowImGUIDemoWindow(false),
 	  m_bFullScreen(false),
+	  m_bShowGUI(true),
 	  m_particlesSystem(nbParticles),
 	  m_window(window), m_running(true)
 {
@@ -43,6 +45,7 @@ void App::onInit() {
 }
 
 void App::onLoopIteration() {
+	m_particlesSystem.physicsComputeShader().bind();
 	// ImGui windows
 #ifndef NDEBUG 
 	ImGui::Begin("Debug");
@@ -55,11 +58,10 @@ void App::onLoopIteration() {
 	// Time
 	ImGui::Begin("Time");
 	ImGui::Text(("time : " + std::to_string(m_time.time())).c_str());
-	ImGui::Text(("FPS  : " + std::to_string(1.0f/m_time.deltaTime())).c_str());
+	ImGui::Text(("FPS  : " + std::to_string(1.0f / m_time.deltaTime())).c_str());
 	ImGui::End();
 	// Settings
 	VisualSettings::ImGuiWindow();
-	m_particlesSystem.physicsComputeShader().bind();
 	ImGui::Begin("Wind");
 	m_windSettings.ImGui_Parameters(m_particlesSystem.physicsComputeShader());
 	ImGui::End();
@@ -158,6 +160,8 @@ void App::onEvent(const SDL_Event& e) {
 				setCurrentConfiguration(m_configFillScreen);
 			else if (e.key.keysym.sym == 'e')
 				setCurrentConfiguration(m_configCircle);
+			else if (e.key.keysym.sym == 'h' && Input::IsKeyDown(SDL_SCANCODE_LCTRL))
+				m_bShowGUI = !m_bShowGUI;
 			else
 				m_currentConfig->onKeyPressed(e.key.keysym.scancode, m_particlesSystem);
 		}
@@ -233,7 +237,8 @@ void App::_loopIteration() {
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	ImGui::Render();
 	glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+	if (m_bShowGUI)
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 	// Update and Render additional Platform Windows
 	// (Platform functions may change the current OpenGL context, so we save/restore it to make it easier to paste this code elsewhere.
