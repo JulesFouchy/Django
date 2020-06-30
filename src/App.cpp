@@ -13,8 +13,6 @@ App::App(unsigned int nbParticles, SDL_Window* window)
 	  m_particlesSystem(nbParticles),
 	  m_window(window), m_running(true)
 {
-	// Load settings
-	m_settings.deserializeFrom("C:/Dev/Django/settings/lastSession.json");
 	// Create graphics pipeline for particles
 	m_particlePipeline.addShader(ShaderType::Vertex,   "res/shaders/particle.vert");
 	m_particlePipeline.addShader(ShaderType::Fragment, "res/shaders/particle.frag");
@@ -33,7 +31,7 @@ App::App(unsigned int nbParticles, SDL_Window* window)
 
 void App::onInit() {
 	m_particlesSystem.physicsComputeShader().bind();
-	m_settings.getWind().setUniforms(m_particlesSystem.physicsComputeShader());
+	m_settingsMng.get().getWind().setUniforms(m_particlesSystem.physicsComputeShader());
 	m_particlesSystem.physicsComputeShader().unbind();
 }
 
@@ -55,7 +53,7 @@ void App::onLoopIteration() {
 		ImGui::Text(("FPS  : " + std::to_string(1.0f / m_time.deltaTime())).c_str());
 		ImGui::End();
 		// Settings
-		m_settings.ImGuiWindows(m_particlesSystem.physicsComputeShader());
+		m_settingsMng.get().ImGuiWindows(m_particlesSystem.physicsComputeShader());
 		// Current configuration
 		ImGui::Begin(m_currentConfig->getName().c_str());
 		m_currentConfig->ImGuiParameters(m_particlesSystem);
@@ -67,19 +65,19 @@ void App::onLoopIteration() {
 	m_time.update();
 	m_particlesSystem.physicsComputeShader().setUniform1f("dt", m_time.deltaTime());
 	// Send wind to physics compute shader
-	m_settings.getWind().setWindOffset(m_particlesSystem.physicsComputeShader(), m_time.time());
+	m_settingsMng.get().getWind().setWindOffset(m_particlesSystem.physicsComputeShader(), m_time.time());
 	m_particlesSystem.physicsComputeShader().unbind();
 	// Clear screen
-	if (m_settings.getVisuals().isAlphaTrailEnabled()) {
+	if (m_settingsMng.get().getVisuals().isAlphaTrailEnabled()) {
 		m_clearScreenPipeline.bind();
 		m_clearScreenPipeline.setUniform1f("dt", m_time.deltaTime());
-		m_clearScreenPipeline.setUniform1f("decay", m_settings.getVisuals().alphaTrailDecay());
-		m_clearScreenPipeline.setUniform3f("backgroundColor", m_settings.getVisuals().backgroundColor().x, m_settings.getVisuals().backgroundColor().y, m_settings.getVisuals().backgroundColor().z);
+		m_clearScreenPipeline.setUniform1f("decay", m_settingsMng.get().getVisuals().alphaTrailDecay());
+		m_clearScreenPipeline.setUniform3f("backgroundColor", m_settingsMng.get().getVisuals().backgroundColor().x, m_settingsMng.get().getVisuals().backgroundColor().y, m_settingsMng.get().getVisuals().backgroundColor().z);
 		m_fullScreenVAO.bind();
 		GLCall(glDrawArrays(GL_TRIANGLES, 0, 6));
 	}
 	else {
-		glClearColor(m_settings.getVisuals().backgroundColor().x, m_settings.getVisuals().backgroundColor().y, m_settings.getVisuals().backgroundColor().z, 1);
+		glClearColor(m_settingsMng.get().getVisuals().backgroundColor().x, m_settingsMng.get().getVisuals().backgroundColor().y, m_settingsMng.get().getVisuals().backgroundColor().z, 1);
 		glClear(GL_COLOR_BUFFER_BIT);
 	}
 	
@@ -200,7 +198,7 @@ void App::switchFullScreenMode(){
 }
 
 void App::beforeShutDown() {
-	m_settings.serializeTo("C:/Dev/Django/settings/lastSession.json");
+
 }
 
 /////////////////////////////////////////////////////////////////////////////

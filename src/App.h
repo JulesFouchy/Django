@@ -10,7 +10,7 @@
 #include "Configurations/Config_Circle.h"
 #include "Configurations/Config_ClusterRandom.h"
 
-#include "Settings/Settings.h"
+#include "Settings/SettingsManager.h"
 
 #include "Time/Time_Realtime.h"
 
@@ -50,7 +50,7 @@ private:
 	Config_Circle m_configCircle;
 	Config_ClusterRandom m_configClusterRandom;
 
-	Settings m_settings;
+	SettingsManager m_settingsMng;
 
 /********************
   * INTERNAL CODE *
