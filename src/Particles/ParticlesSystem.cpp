@@ -93,13 +93,13 @@ void ParticlesSystem::setNbParticles(unsigned int newNbParticles) {
 }
 
 void ParticlesSystem::ImGui_Windows(Configuration& currentConfiguration) {
-    ImGui::Begin("Physics parameters");
+    ImGui::Begin("Physics");
     m_physicsSettings.ImGui_Parameters(physicsComputeShader());
     ImGui::End();
 
-    ImGui::Begin("ParticlesSystem parameters");
+    ImGui::Begin("Particles");
     // Nb of particles
-    if (ImGui::SliderInt("Nb of particles", (int*)&m_nbParticles, 1, 5000)) {
+    if (ImGui::SliderInt("Nb of particles", (int*)&m_nbParticles, 1, 100000)) {
         setNbParticles(m_nbParticles);
         currentConfiguration.setup(m_nbParticles);
         currentConfiguration.applyTo(*this);
