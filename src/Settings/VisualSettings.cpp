@@ -12,10 +12,10 @@ void VisualSettings::Initialize() {
 }
 
 void VisualSettings::ImGuiWindow() {
-	ImGui::Begin("Rendering Settings");
+	ImGui::Begin("Rendering");
 	// Alpha trail
 		// toggle
-	if (ImGui::Checkbox("Alpha Trail enabled", &ALPHA_TRAIL_ENABLED)) {
+	if (ImGui::Checkbox("Alpha Trail", &ALPHA_TRAIL_ENABLED)) {
 		if (ALPHA_TRAIL_ENABLED)
 			EnableAlphaTrail();
 		else
