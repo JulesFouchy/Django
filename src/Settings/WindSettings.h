@@ -9,13 +9,13 @@ public:
 
 	void apply(ShaderPipeline& physicsCompute);
 	void ImGui(ShaderPipeline& physicsCompute);
-	void setWindOffset(ShaderPipeline& shader, float time);
+	void setWindOffset(ShaderPipeline& physicsCompute, float time);
 
 private:
-	void setNoiseFrequency(ShaderPipeline& shader);
-	void setMaxStrength(ShaderPipeline& shader);
-	void setMinStrength(ShaderPipeline& shader);
-	void setDirection(ShaderPipeline& shader);
+	void setNoiseFrequency(ShaderPipeline& physicsCompute);
+	void setMaxStrength(ShaderPipeline& physicsCompute);
+	void setMinStrength(ShaderPipeline& physicsCompute);
+	void setDirection(ShaderPipeline& physicsCompute);
 
 private:
 	float m_noiseFrequency = 0.319f;

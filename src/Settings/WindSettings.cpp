@@ -19,18 +19,18 @@ void WindSettings::apply(ShaderPipeline& physicsCompute) {
 	setDirection(physicsCompute);
 }
 
-void WindSettings::setWindOffset(ShaderPipeline& shader, float time) {
-	shader.setUniform2f("u_windOffset", - m_speed * time * m_direction);
+void WindSettings::setWindOffset(ShaderPipeline& physicsCompute, float time) {
+	physicsCompute.setUniform2f("u_windOffset", - m_speed * time * m_direction);
 }
-void WindSettings::setNoiseFrequency(ShaderPipeline& shader){
-	shader.setUniform1f("u_windNoisePuls", m_noiseFrequency);
+void WindSettings::setNoiseFrequency(ShaderPipeline& physicsCompute){
+	physicsCompute.setUniform1f("u_windNoisePuls", m_noiseFrequency);
 }
-void WindSettings::setMaxStrength(ShaderPipeline& shader) {
-	shader.setUniform1f("u_windMaxStrength", m_maxStrength);
+void WindSettings::setMaxStrength(ShaderPipeline& physicsCompute) {
+	physicsCompute.setUniform1f("u_windMaxStrength", m_maxStrength);
 }
-void WindSettings::setMinStrength(ShaderPipeline& shader) {
-	shader.setUniform1f("u_windMinStrength", m_minStrength);
+void WindSettings::setMinStrength(ShaderPipeline& physicsCompute) {
+	physicsCompute.setUniform1f("u_windMinStrength", m_minStrength);
 }
-void WindSettings::setDirection(ShaderPipeline& shader) {
-	shader.setUniform1f("u_windDirectionAngle", m_directionAngle);
+void WindSettings::setDirection(ShaderPipeline& physicsCompute) {
+	physicsCompute.setUniform1f("u_windDirectionAngle", m_directionAngle);
 }
