@@ -3,11 +3,8 @@
 #include <imgui_impl_sdl.h>
 #include <imgui_impl_opengl3.h>
 
-#include "Settings/VisualSettings.h"
-
 #include "Helper/DisplayInfos.h"
 #include "Helper/Input.h"
-
 
 App::App(unsigned int nbParticles, SDL_Window* window)
 	: m_bShowImGUIDemoWindow(false),
@@ -34,7 +31,7 @@ App::App(unsigned int nbParticles, SDL_Window* window)
 
 void App::onInit() {
 	m_particlesSystem.physicsComputeShader().bind();
-	m_windSettings.setUniforms(m_particlesSystem.physicsComputeShader());
+	m_settings.getWind().setUniforms(m_particlesSystem.physicsComputeShader());
 	m_particlesSystem.physicsComputeShader().unbind();
 }
 
@@ -56,10 +53,7 @@ void App::onLoopIteration() {
 		ImGui::Text(("FPS  : " + std::to_string(1.0f / m_time.deltaTime())).c_str());
 		ImGui::End();
 		// Settings
-		VisualSettings::ImGuiWindow();
-		ImGui::Begin("Wind");
-		m_windSettings.ImGui_Parameters(m_particlesSystem.physicsComputeShader());
-		ImGui::End();
+		m_settings.ImGuiWindows(m_particlesSystem.physicsComputeShader());
 		// Current configuration
 		ImGui::Begin(m_currentConfig->getName().c_str());
 		m_currentConfig->ImGuiParameters(m_particlesSystem);
@@ -71,19 +65,19 @@ void App::onLoopIteration() {
 	m_time.update();
 	m_particlesSystem.physicsComputeShader().setUniform1f("dt", m_time.deltaTime());
 	// Send wind to physics compute shader
-	m_windSettings.setWindOffset(m_particlesSystem.physicsComputeShader(), m_time.time());
+	m_settings.getWind().setWindOffset(m_particlesSystem.physicsComputeShader(), m_time.time());
 	m_particlesSystem.physicsComputeShader().unbind();
 	// Clear screen
-	if (VisualSettings::IsAlphaTrailEnabled()) {
+	if (m_settings.getVisuals().isAlphaTrailEnabled()) {
 		m_clearScreenPipeline.bind();
 		m_clearScreenPipeline.setUniform1f("dt", m_time.deltaTime());
-		m_clearScreenPipeline.setUniform1f("decay", VisualSettings::AlphaTrailDecay());
-		m_clearScreenPipeline.setUniform3f("backgroundColor", VisualSettings::BackgroundColor()[0], VisualSettings::BackgroundColor()[1], VisualSettings::BackgroundColor()[2]);
+		m_clearScreenPipeline.setUniform1f("decay", m_settings.getVisuals().alphaTrailDecay());
+		m_clearScreenPipeline.setUniform3f("backgroundColor", m_settings.getVisuals().backgroundColor().x, m_settings.getVisuals().backgroundColor().y, m_settings.getVisuals().backgroundColor().z);
 		m_fullScreenVAO.bind();
 		GLCall(glDrawArrays(GL_TRIANGLES, 0, 6));
 	}
 	else {
-		glClearColor(VisualSettings::BackgroundColor()[0], VisualSettings::BackgroundColor()[1], VisualSettings::BackgroundColor()[2], 1);
+		glClearColor(m_settings.getVisuals().backgroundColor().x, m_settings.getVisuals().backgroundColor().y, m_settings.getVisuals().backgroundColor().z, 1);
 		glClear(GL_COLOR_BUFFER_BIT);
 	}
 	
@@ -203,6 +197,10 @@ void App::switchFullScreenMode(){
 	onWindowResize();
 }
 
+void App::beforeShutDown() {
+
+}
+
 /////////////////////////////////////////////////////////////////////////////
 ///////////////////////////// INTERNAL CODE /////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
@@ -217,6 +215,7 @@ void App::Initialize(SDL_Window* window) {
 }
 
 void App::ShutDown() {
+	m_instance->beforeShutDown();
 	delete m_instance;
 }
 

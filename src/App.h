@@ -10,7 +10,7 @@
 #include "Configurations/Config_Circle.h"
 #include "Configurations/Config_ClusterRandom.h"
 
-#include "Settings/WindSettings.h"
+#include "Settings/Settings.h"
 
 #include "Time/Time_Realtime.h"
 
@@ -30,6 +30,8 @@ private:
 	void onWindowResize();
 	void switchFullScreenMode();
 
+	void beforeShutDown();
+
 private:
 	bool m_bShowImGUIDemoWindow;
 	bool m_bFullScreen;
@@ -48,7 +50,7 @@ private:
 	Config_Circle m_configCircle;
 	Config_ClusterRandom m_configClusterRandom;
 
-	WindSettings m_windSettings;
+	Settings m_settings;
 
 /********************
   * INTERNAL CODE *

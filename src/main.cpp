@@ -99,7 +99,6 @@ int main(int argc, char *argv[]) {
 
 		// ------ Initialize our own classes
 
-		VisualSettings::Initialize();
 		Time_Realtime::Initialize();
 		App::Initialize(window);
 

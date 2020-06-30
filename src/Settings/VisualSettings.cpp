@@ -2,29 +2,38 @@
 
 #include "Particles/ParticlesSystem.h"
 
-bool VisualSettings::ALPHA_TRAIL_ENABLED;
-float VisualSettings::ALPHA_TRAIL_DECAY = 20.0f;
-float VisualSettings::BACKGROUND_COLOR[3] = { 0.0f, 0.0f, 0.0f };
+const VisualSettings VisualSettings::DEFAULT(
+	true,
+	20.0f,
+	glm::vec3(0.0f, 0.0f, 0.0f)
+);
 
-void VisualSettings::Initialize() {
-	ALPHA_TRAIL_ENABLED = true;
-	EnableAlphaTrail();
+VisualSettings::VisualSettings(bool isAlphaTrailEnabled, float alphaTrailDecay, const glm::vec3& backgroundColor) 
+	: m_bAlphaTrail(isAlphaTrailEnabled), m_alphaTrailDecay(alphaTrailDecay), m_bgColor(backgroundColor)
+{}
+
+void VisualSettings::apply() {
+	if (m_bAlphaTrail)
+		EnableAlphaTrail();
+	else
+		DisableAlphaTrail();
+	// TODO apply alphaTrailDecay and backgroundColor
 }
 
-void VisualSettings::ImGuiWindow() {
+void VisualSettings::ImGui() {
 	ImGui::Begin("Rendering");
 	// Alpha trail
 		// toggle
-	if (ImGui::Checkbox("Alpha Trail", &ALPHA_TRAIL_ENABLED)) {
-		if (ALPHA_TRAIL_ENABLED)
+	if (ImGui::Checkbox("Alpha Trail", &m_bAlphaTrail)) {
+		if (m_bAlphaTrail)
 			EnableAlphaTrail();
 		else
 			DisableAlphaTrail();
 	}
 		// strength
-	ImGui::SliderFloat("Trail Decay", &ALPHA_TRAIL_DECAY, 0.0f, 60.0f);
+	ImGui::SliderFloat("Trail Decay", &m_alphaTrailDecay, 0.0f, 60.0f);
 	// Background Color
-	ImGui::ColorEdit3("Background Color", BACKGROUND_COLOR);
+	ImGui::ColorEdit3("Background Color", (float*)&m_bgColor[0]);
 	//
 	ImGui::End();
 }

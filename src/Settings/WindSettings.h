@@ -24,4 +24,21 @@ private:
 	float m_speed = 0.304f;
 	float m_directionAngle = 2.849f;
 	glm::vec2 m_direction = glm::vec2(-0.956f, 0.292f);
+
+private:
+	//Serialization
+	friend class cereal::access;
+	template <class Archive>
+	void serialize(Archive& archive)
+	{
+		archive(
+			CEREAL_NVP(m_noiseFrequency),
+			CEREAL_NVP(m_minStrength),
+			CEREAL_NVP(m_maxStrength),
+			CEREAL_NVP(m_speed),
+			CEREAL_NVP(m_directionAngle),
+			CEREAL_NVP(m_direction.x),
+			CEREAL_NVP(m_direction.y)
+		);
+	}
 };

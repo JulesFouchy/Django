@@ -17,4 +17,16 @@ private:
 private:
 	float m_stiffness;
 	float m_damping;
+
+private:
+	//Serialization
+	friend class cereal::access;
+	template <class Archive>
+	void serialize(Archive& archive)
+	{
+		archive(
+			CEREAL_NVP(m_stiffness),
+			CEREAL_NVP(m_damping)
+		);
+	}
 };
