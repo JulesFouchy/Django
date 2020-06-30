@@ -12,6 +12,7 @@ public:
 	void ImGuiWindows(ShaderPipeline& physicsCompute);
 
 	void serializeTo(const std::string& filePath);
+	void deserializeFrom(const std::string& filePath);
 
 	inline PhysicsSettings& getPhysics() { return m_physicsSettings; }
 	inline VisualSettings&  getVisuals() { return m_visualSettings; }

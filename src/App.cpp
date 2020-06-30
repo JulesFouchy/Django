@@ -13,6 +13,8 @@ App::App(unsigned int nbParticles, SDL_Window* window)
 	  m_particlesSystem(nbParticles),
 	  m_window(window), m_running(true)
 {
+	// Load settings
+	m_settings.deserializeFrom("C:/Dev/Django/settings/lastSession.json");
 	// Create graphics pipeline for particles
 	m_particlePipeline.addShader(ShaderType::Vertex,   "res/shaders/particle.vert");
 	m_particlePipeline.addShader(ShaderType::Fragment, "res/shaders/particle.frag");
@@ -198,7 +200,7 @@ void App::switchFullScreenMode(){
 }
 
 void App::beforeShutDown() {
-
+	m_settings.serializeTo("C:/Dev/Django/settings/lastSession.json");
 }
 
 /////////////////////////////////////////////////////////////////////////////

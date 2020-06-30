@@ -25,3 +25,15 @@ void Settings::serializeTo(const std::string& filePath) {
 		);
 	}
 }
+
+void Settings::deserializeFrom(const std::string& filePath) {
+	std::ifstream is(filePath);
+	{
+		cereal::JSONInputArchive archive(is);
+		archive(
+			m_physicsSettings,
+			m_visualSettings,
+			m_windSettings
+		);
+	}
+}
