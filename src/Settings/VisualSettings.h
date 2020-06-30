@@ -1,21 +1,25 @@
 #pragma once
 
-class ParticlesSystem;
-
 class VisualSettings {
 public:
-	VisualSettings(bool isAlphaTrailEnabled, float alphaTrailDecay, const glm::vec3& backgroundColor);
+	VisualSettings(
+		bool             isAlphaTrailEnabled = true,
+		float            alphaTrailDecay     = 20.0f,
+		const glm::vec3& backgroundColor     = glm::vec3(0.0f, 0.0f, 0.0f)
+	);
 	~VisualSettings() = default;
-	static const VisualSettings DEFAULT;
 
 	void apply();
 	void ImGui();
 
-	static void  EnableAlphaTrail();
-	static void DisableAlphaTrail();
+	// Getters
 	inline bool isAlphaTrailEnabled() { return m_bAlphaTrail; }
 	inline float alphaTrailDecay() { return m_alphaTrailDecay; }
 	inline const glm::vec3& backgroundColor() { return m_bgColor; }
+
+private:
+	static void  EnableAlphaTrail();
+	static void DisableAlphaTrail();
 
 private:
 	bool m_bAlphaTrail;

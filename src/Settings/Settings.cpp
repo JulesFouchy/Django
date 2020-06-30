@@ -4,13 +4,15 @@
 #include <fstream>
 
 Settings::Settings()
-	: m_physicsSettings(), m_visualSettings(VisualSettings::DEFAULT), m_windSettings()
+	: m_physicsSettings(), m_visualSettings(), m_windSettings()
 {}
 
 void Settings::ImGuiWindows(ShaderPipeline& physicsCompute) {
-	m_visualSettings.ImGui();
+	ImGui::Begin("Style");
+		m_visualSettings.ImGui();
+	ImGui::End();
 	ImGui::Begin("Wind");
-	m_windSettings.ImGui_Parameters(physicsCompute);
+		m_windSettings.ImGui_Parameters(physicsCompute);
 	ImGui::End();
 }
 
