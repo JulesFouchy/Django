@@ -41,28 +41,32 @@ void App::onInit() {
 void App::onLoopIteration() {
 	m_particlesSystem.physicsComputeShader().bind();
 	// ImGui windows
+	if (m_bShowGUI) {
 #ifndef NDEBUG 
-	ImGui::Begin("Debug");
-	ImGui::Checkbox("Show Demo Window", &m_bShowImGUIDemoWindow);
-	ImGui::Text("Application average %.1f FPS", ImGui::GetIO().Framerate);
-	ImGui::End();
-	if (m_bShowImGUIDemoWindow) // Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-		ImGui::ShowDemoWindow(&m_bShowImGUIDemoWindow);
+		ImGui::Begin("Debug");
+		ImGui::Checkbox("Show Demo Window", &m_bShowImGUIDemoWindow);
+		ImGui::Text("Application average %.1f FPS", ImGui::GetIO().Framerate);
+		ImGui::End();
+		if (m_bShowImGUIDemoWindow) // Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
+			ImGui::ShowDemoWindow(&m_bShowImGUIDemoWindow);
 #endif
-	// Time
-	ImGui::Begin("Time");
-	ImGui::Text(("time : " + std::to_string(m_time.time())).c_str());
-	ImGui::Text(("FPS  : " + std::to_string(1.0f / m_time.deltaTime())).c_str());
-	ImGui::End();
-	// Settings
-	VisualSettings::ImGuiWindow();
-	ImGui::Begin("Wind");
-	m_windSettings.ImGui_Parameters(m_particlesSystem.physicsComputeShader());
-	ImGui::End();
-	// Current configuration
-	ImGui::Begin(m_currentConfig->getName().c_str());
-	m_currentConfig->ImGuiParameters(m_particlesSystem);
-	ImGui::End();
+		// Time
+		ImGui::Begin("Time");
+		ImGui::Text(("time : " + std::to_string(m_time.time())).c_str());
+		ImGui::Text(("FPS  : " + std::to_string(1.0f / m_time.deltaTime())).c_str());
+		ImGui::End();
+		// Settings
+		VisualSettings::ImGuiWindow();
+		ImGui::Begin("Wind");
+		m_windSettings.ImGui_Parameters(m_particlesSystem.physicsComputeShader());
+		ImGui::End();
+		// Current configuration
+		ImGui::Begin(m_currentConfig->getName().c_str());
+		m_currentConfig->ImGuiParameters(m_particlesSystem);
+		ImGui::End();
+		// Particles System
+		m_particlesSystem.ImGui_Windows(*m_currentConfig);
+	}
 	// Send time to physics compute shader
 	m_time.update();
 	m_particlesSystem.physicsComputeShader().setUniform1f("dt", m_time.deltaTime());
@@ -88,8 +92,6 @@ void App::onLoopIteration() {
 	m_particlesSystem.draw();
 	// Update particles physics
 	m_particlesSystem.updatePositions();
-	// ImGui
-	m_particlesSystem.ImGui_Windows(*m_currentConfig);
 }
 
 
@@ -233,8 +235,7 @@ void App::_loopIteration() {
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	ImGui::Render();
 	glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
-	if (m_bShowGUI)
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 	// Update and Render additional Platform Windows
 	// (Platform functions may change the current OpenGL context, so we save/restore it to make it easier to paste this code elsewhere.
