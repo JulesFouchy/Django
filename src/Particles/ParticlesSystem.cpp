@@ -17,7 +17,7 @@ ParticlesSystem::ParticlesSystem(unsigned int nbParticles)
 {
     setNbParticles(nbParticles);
     // Uniforms
-    m_physicsSettings.setUniforms(physicsComputeShader());
+    m_physicsSettings.apply(physicsComputeShader());
     // Vertex buffer
     GLCall(glGenBuffers(1, &m_vboID));
     // Vertex array
@@ -94,7 +94,7 @@ void ParticlesSystem::setNbParticles(unsigned int newNbParticles) {
 
 void ParticlesSystem::ImGui_Windows(Configuration& currentConfiguration) {
     ImGui::Begin("Physics");
-    m_physicsSettings.ImGui_Parameters(physicsComputeShader());
+    m_physicsSettings.ImGui(physicsComputeShader());
     ImGui::End();
 
     ImGui::Begin("Particles");

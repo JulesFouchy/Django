@@ -3,34 +3,30 @@
 #include "Particles/ParticlesSystem.h"
 #include "OpenGL/ShaderPipeline.h"
 
-PhysicsSettings::PhysicsSettings(float stiffness, float damping)
-	: m_stiffness(stiffness), m_damping(damping)
-{}
-
-void PhysicsSettings::setUniforms(ShaderPipeline& shader) {
-	setStiffnessInShader(shader);
-	setDampingInShader(shader);
-}
-
-void PhysicsSettings::setStiffnessInShader(ShaderPipeline& shader) {
-	shader.bind();
-	shader.setUniform1f("u_Stiffness", m_stiffness);
-	shader.unbind();
-}
-
-void PhysicsSettings::setDampingInShader(ShaderPipeline& shader) {
-	shader.bind();
-	shader.setUniform1f("u_Damping", m_damping);
-	shader.unbind();
-}
-
-void PhysicsSettings::ImGui_Parameters(ShaderPipeline& shader) {
+void PhysicsSettings::ImGui(ShaderPipeline& physicsCompute) {
 	if (ImGui::SliderFloat("Pull force", &m_stiffness, 0.0f, 20.0f))
-		setStiffnessInShader(shader);
+		setStiffnessInShader(physicsCompute);
 	if (ImGui::SliderFloat("Damping", &m_damping, 0.0f, 20.0f))
-		setDampingInShader(shader);
+		setDampingInShader(physicsCompute);
 	if (ImGui::Button("Perfect")) {
 		m_stiffness = m_damping * m_damping / 4.0f;
-		setStiffnessInShader(shader);
+		setStiffnessInShader(physicsCompute);
 	}
+}
+
+void PhysicsSettings::apply(ShaderPipeline& physicsCompute) {
+	setStiffnessInShader(physicsCompute);
+	setDampingInShader(physicsCompute);
+}
+
+void PhysicsSettings::setStiffnessInShader(ShaderPipeline& physicsCompute) {
+	physicsCompute.bind();
+	physicsCompute.setUniform1f("u_Stiffness", m_stiffness);
+	physicsCompute.unbind();
+}
+
+void PhysicsSettings::setDampingInShader(ShaderPipeline& physicsCompute) {
+	physicsCompute.bind();
+	physicsCompute.setUniform1f("u_Damping", m_damping);
+	physicsCompute.unbind();
 }

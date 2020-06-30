@@ -4,19 +4,19 @@ class ShaderPipeline;
 
 class PhysicsSettings {
 public:
-	PhysicsSettings(float stiffness = 20.0f, float damping = 3.0f);
+	PhysicsSettings() = default;
 	~PhysicsSettings() = default;
 
-	void setUniforms(ShaderPipeline& shader);
-	void ImGui_Parameters(ShaderPipeline& shader);
+	void apply(ShaderPipeline& physicsCompute);
+	void ImGui(ShaderPipeline& physicsCompute);
 
 private:
-	void setStiffnessInShader(ShaderPipeline& shader);
-	void setDampingInShader(ShaderPipeline& shader);
+	void setStiffnessInShader(ShaderPipeline& physicsCompute);
+	void setDampingInShader(ShaderPipeline& physicsCompute);
 
 private:
-	float m_stiffness;
-	float m_damping;
+	float m_stiffness = 20.0f;
+	float m_damping = 3.0f;
 
 private:
 	//Serialization
