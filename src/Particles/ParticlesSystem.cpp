@@ -12,12 +12,9 @@ ParticlesSystem::ParticlesSystem(unsigned int nbParticles)
     : m_particlesSSBO(0, 4, GL_DYNAMIC_DRAW), // TODO check which hint is best
       m_restPositionsSSBO(1, 2, GL_STATIC_DRAW),
       m_colorsSSBO(2, 3, GL_STATIC_DRAW),
-      m_physicsSettings(),
       m_physicsShader("res/shaders/physics.comp")
 {
     setNbParticles(nbParticles);
-    // Uniforms
-    m_physicsSettings.apply(physicsComputeShader());
     // Vertex buffer
     GLCall(glGenBuffers(1, &m_vboID));
     // Vertex array
@@ -93,10 +90,6 @@ void ParticlesSystem::setNbParticles(unsigned int newNbParticles) {
 }
 
 void ParticlesSystem::ImGui_Windows(Configuration& currentConfiguration) {
-    ImGui::Begin("Physics");
-    m_physicsSettings.ImGui(physicsComputeShader());
-    ImGui::End();
-
     ImGui::Begin("Particles");
     // Nb of particles
     if (ImGui::SliderInt("Nb of particles", (int*)&m_nbParticles, 1, 100000)) {

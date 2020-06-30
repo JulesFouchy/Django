@@ -2,8 +2,6 @@
 
 #include "OpenGL/SSBO.h"
 
-#include "Settings/PhysicsSettings.h"
-
 class Configuration;
 
 class ParticlesSystem {
@@ -44,7 +42,6 @@ private:
 	SSBO m_restPositionsSSBO;
 	SSBO m_particlesSSBO;
 	SSBO m_colorsSSBO;
-	PhysicsSettings m_physicsSettings;
 
 	unsigned int m_vaoID;
 	unsigned int m_vboID;
