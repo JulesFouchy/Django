@@ -3,14 +3,15 @@
 #include "PhysicsSettings.h"
 #include "VisualSettings.h"
 #include "WindSettings.h"
+#include "ParticleSystemSettings.h"
 
 class Settings {
 public:
-	Settings();
+	Settings() = default;
 	~Settings() = default;
 
-	void ImGuiWindows(ShaderPipeline& physicsCompute);
-	void apply(ShaderPipeline& physicsCompute);
+	void ImGuiWindows(ShaderPipeline& physicsCompute, ParticlesSystem& partSystem, Configuration& currentConfiguration);
+	void apply(ShaderPipeline& physicsCompute, ParticlesSystem& partSystem, Configuration& currentConfiguration);
 
 	void serializeTo(const std::string& filePath);
 	void deserializeFrom(const std::string& filePath);
@@ -23,4 +24,5 @@ private:
 	PhysicsSettings m_physicsSettings;
 	VisualSettings m_visualSettings;
 	WindSettings m_windSettings;
+	ParticleSystemSettings m_particleSystemSettings;
 };

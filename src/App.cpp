@@ -6,11 +6,11 @@
 #include "Helper/DisplayInfos.h"
 #include "Helper/Input.h"
 
-App::App(unsigned int nbParticles, SDL_Window* window)
+App::App(SDL_Window* window)
 	: m_bShowImGUIDemoWindow(false),
 	  m_bFullScreen(false),
 	  m_bShowGUI(true),
-	  m_particlesSystem(nbParticles),
+	  m_particlesSystem(),
 	  m_window(window), m_running(true)
 {
 	// Create graphics pipeline for particles
@@ -31,7 +31,7 @@ App::App(unsigned int nbParticles, SDL_Window* window)
 
 void App::onInit() {
 	m_particlesSystem.physicsComputeShader().bind();
-	m_settingsMng.get().apply(m_particlesSystem.physicsComputeShader());
+	m_settingsMng.get().apply(m_particlesSystem.physicsComputeShader(), m_particlesSystem, *m_currentConfig);
 	m_particlesSystem.physicsComputeShader().unbind();
 }
 
@@ -53,13 +53,11 @@ void App::onLoopIteration() {
 		ImGui::Text(("FPS  : " + std::to_string(1.0f / m_time.deltaTime())).c_str());
 		ImGui::End();
 		// Settings
-		m_settingsMng.get().ImGuiWindows(m_particlesSystem.physicsComputeShader());
+		m_settingsMng.get().ImGuiWindows(m_particlesSystem.physicsComputeShader(), m_particlesSystem, *m_currentConfig);
 		// Current configuration
 		ImGui::Begin(m_currentConfig->getName().c_str());
 		m_currentConfig->ImGuiParameters(m_particlesSystem);
 		ImGui::End();
-		// Particles System
-		m_particlesSystem.ImGui_Windows(*m_currentConfig);
 	}
 	// Send time to physics compute shader
 	m_time.update();
@@ -185,7 +183,7 @@ void App::onWindowResize() {
 	m_particlePipeline.bind();
 	m_particlePipeline.setUniform1f("u_invAspectRatio", 1.0f / DisplayInfos::Ratio());
 	glViewport(0, 0, DisplayInfos::Width(), DisplayInfos::Height());
-	m_particlesSystem.recomputeVBO();
+	//m_particlesSystem.recomputeVBO();
 }
 
 void App::switchFullScreenMode(){
@@ -209,7 +207,7 @@ App* App::m_instance = nullptr;
 
 void App::Initialize(SDL_Window* window) {
 	assert(!m_instance);
-	m_instance = new App(100000, window);
+	m_instance = new App(window);
 	if (m_instance == nullptr)
 		spdlog::error("[App::Initialize] Unable to allocate enough memory !");
 }

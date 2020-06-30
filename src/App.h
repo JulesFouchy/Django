@@ -16,7 +16,7 @@
 
 class App {
 private:
-	App(unsigned int nbParticles, SDL_Window* window);
+	App(SDL_Window* window);
 	~App() = default;
 
 public:

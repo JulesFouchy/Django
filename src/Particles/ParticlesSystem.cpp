@@ -3,18 +3,15 @@
 #include "Helper/DisplayInfos.h"
 #include "Helper/Random.h"
 
-#include "Configurations/Configuration.h"
-
 #define ACTUAL_POS_ID 0
 #define REST_POS_ID 1
 
-ParticlesSystem::ParticlesSystem(unsigned int nbParticles)
+ParticlesSystem::ParticlesSystem()
     : m_particlesSSBO(0, 4, GL_DYNAMIC_DRAW), // TODO check which hint is best
       m_restPositionsSSBO(1, 2, GL_STATIC_DRAW),
       m_colorsSSBO(2, 3, GL_STATIC_DRAW),
       m_physicsShader("res/shaders/physics.comp")
 {
-    setNbParticles(nbParticles);
     // Vertex buffer
     GLCall(glGenBuffers(1, &m_vboID));
     // Vertex array
@@ -30,8 +27,8 @@ ParticlesSystem::ParticlesSystem(unsigned int nbParticles)
     GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
 }
 
-void ParticlesSystem::recomputeVBO() {
-    float radius = PARTICLE_RADIUS_PROP_TO_HEIGHT;
+void ParticlesSystem::recomputeVBO(float partRadiusRelToHeight) {
+    float radius = partRadiusRelToHeight;
     float halfW = radius;
     float halfH = radius;
     float vertices[] = {
@@ -84,22 +81,7 @@ void ParticlesSystem::setNbParticles(unsigned int newNbParticles) {
     }
     m_colorsSSBO.uploadData(m_nbParticles, (float*)colors.data());
     // Update physics shader
-   m_physicsShader.get().bind();
-   m_physicsShader.get().setUniform1i("u_NbOfParticles", m_nbParticles);
-   m_physicsShader.get().unbind();
-}
-
-void ParticlesSystem::ImGui_Windows(Configuration& currentConfiguration) {
-    ImGui::Begin("Particles");
-    // Nb of particles
-    if (ImGui::SliderInt("Nb of particles", (int*)&m_nbParticles, 1, 100000)) {
-        setNbParticles(m_nbParticles);
-        currentConfiguration.setup(m_nbParticles);
-        currentConfiguration.applyTo(*this);
-    }
-    // Particles Radius
-    if (ImGui::SliderFloat("Particles Radius", &PARTICLE_RADIUS_PROP_TO_HEIGHT, 0.0f, 0.1f))
-        recomputeVBO();
-    //
-    ImGui::End();
+    m_physicsShader.get().bind();
+    m_physicsShader.get().setUniform1i("u_NbOfParticles", m_nbParticles);
+    m_physicsShader.get().unbind();
 }
