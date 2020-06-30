@@ -1,5 +1,4 @@
 #include "OpenGL/ComputeShader.h"
-
 #include "OpenGL/SSBO.h"
 
 class ParticlesSystem {
@@ -11,7 +10,6 @@ public:
 	void updatePositions();
 
 	void setNbParticles(unsigned int newNbParticles);
-	inline unsigned int getNbParticles() { return m_nbParticles; }
 
 	inline ShaderPipeline& physicsComputeShader() { return m_physicsShader.get(); }
 

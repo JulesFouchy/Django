@@ -11,6 +11,8 @@ public:
 	void ImGui(ParticlesSystem& partSystem, Configuration& currentConfiguration);
 	void apply(ParticlesSystem& partSystem, Configuration& currentConfiguration);
 
+	inline unsigned int nbParticles() { return m_nbParticles; }
+
 private:
 	unsigned int m_nbParticles = 1000000;
 	float m_particleRadiusRelToHeight = 0.002f;

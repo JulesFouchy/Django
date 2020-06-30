@@ -22,8 +22,6 @@ App::App(SDL_Window* window)
 	m_clearScreenPipeline.addShader(ShaderType::Fragment, "res/shaders/clearScreen.frag");
 	m_clearScreenPipeline.createProgram();
 	//
-	setCurrentConfiguration(m_configRandomGPU);
-	//
 	onWindowResize();
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -31,8 +29,11 @@ App::App(SDL_Window* window)
 
 void App::onInit() {
 	m_particlesSystem.physicsComputeShader().bind();
-	m_settingsMng.get().apply(m_particlesSystem.physicsComputeShader(), m_particlesSystem, *m_currentConfig);
+	Configuration& startupConfig = m_configRandomGPU;
+	m_settingsMng.get().apply(m_particlesSystem.physicsComputeShader(), m_particlesSystem, startupConfig);
 	m_particlesSystem.physicsComputeShader().unbind();
+	//
+	setCurrentConfiguration(startupConfig);
 }
 
 void App::onLoopIteration() {
@@ -89,7 +90,7 @@ void App::onLoopIteration() {
 
 void App::setCurrentConfiguration(Configuration& newConfig) {
 	m_currentConfig = &newConfig;
-	m_currentConfig->setup(m_particlesSystem.getNbParticles());
+	m_currentConfig->setup(m_settingsMng.get().getPartSystem().nbParticles());
 	m_currentConfig->applyTo(m_particlesSystem);
 }
 

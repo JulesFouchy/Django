@@ -16,9 +16,10 @@ public:
 	void serializeTo(const std::string& filePath);
 	void deserializeFrom(const std::string& filePath);
 
-	inline PhysicsSettings& getPhysics() { return m_physicsSettings; }
-	inline VisualSettings&  getVisuals() { return m_visualSettings; }
-	inline WindSettings&    getWind()    { return m_windSettings; }
+	inline PhysicsSettings&        getPhysics()    { return m_physicsSettings; }
+	inline VisualSettings&         getVisuals()    { return m_visualSettings; }
+	inline WindSettings&           getWind()       { return m_windSettings; }
+	inline ParticleSystemSettings& getPartSystem() { return m_particleSystemSettings; }
 
 private:
 	PhysicsSettings m_physicsSettings;
