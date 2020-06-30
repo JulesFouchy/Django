@@ -9,6 +9,7 @@ public:
 
 	void apply(ShaderPipeline& physicsCompute);
 	void ImGui(ShaderPipeline& physicsCompute);
+
 	void setWindOffset(ShaderPipeline& physicsCompute, float time);
 
 private:

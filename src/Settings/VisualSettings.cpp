@@ -1,9 +1,5 @@
 #include "VisualSettings.h"
 
-VisualSettings::VisualSettings(bool isAlphaTrailEnabled, float alphaTrailDecay, const glm::vec3& backgroundColor) 
-	: m_bAlphaTrail(isAlphaTrailEnabled), m_alphaTrailDecay(alphaTrailDecay), m_bgColor(backgroundColor)
-{}
-
 void VisualSettings::apply() {
 	if (m_bAlphaTrail)
 		EnableAlphaTrail();

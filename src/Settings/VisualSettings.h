@@ -2,11 +2,7 @@
 
 class VisualSettings {
 public:
-	VisualSettings(
-		bool             isAlphaTrailEnabled = true,
-		float            alphaTrailDecay     = 20.0f,
-		const glm::vec3& backgroundColor     = glm::vec3(0.0f, 0.0f, 0.0f)
-	);
+	VisualSettings() = default;
 	~VisualSettings() = default;
 
 	void apply();
@@ -22,9 +18,9 @@ private:
 	static void DisableAlphaTrail();
 
 private:
-	bool m_bAlphaTrail;
-	float m_alphaTrailDecay;
-	glm::vec3 m_bgColor;
+	bool m_bAlphaTrail = true;
+	float m_alphaTrailDecay = 20.0f;
+	glm::vec3 m_bgColor = glm::vec3(0.0f, 0.0f, 0.0f);
 
 private:
 	//Serialization
