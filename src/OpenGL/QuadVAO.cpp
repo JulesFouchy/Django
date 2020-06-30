@@ -1,7 +1,5 @@
 #include "QuadVAO.h"
 
-#include "Debugging/glException.h"
-
 QuadVAO::QuadVAO() {
     // Vertex array
     GLCall(glGenVertexArrays(1, &m_vaoID));

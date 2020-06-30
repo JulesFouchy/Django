@@ -1,7 +1,5 @@
 #include "SSBO.h"
 
-#include "Debugging/glException.h"
-
 SSBO::SSBO(unsigned int binding, int componentsCount, GLuint hint)
 	: m_binding(binding), m_componentsCount(componentsCount), m_hint(hint)
 {

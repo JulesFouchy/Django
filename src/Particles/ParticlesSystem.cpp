@@ -1,7 +1,5 @@
 #include "ParticlesSystem.h"
 
-#include "Debugging/glException.h"
-
 #include "Helper/DisplayInfos.h"
 #include "Helper/Random.h"
 

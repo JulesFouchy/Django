@@ -125,4 +125,5 @@ target_precompile_headers(${PROJECT_NAME}
     <unordered_map>
   # Project Code
     [["Debugging/Log.h"]]
+    [["Debugging/glException.h"]]
 )

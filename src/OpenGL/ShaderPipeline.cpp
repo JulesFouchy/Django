@@ -1,7 +1,5 @@
 #include "ShaderPipeline.h"
 
-#include "Debugging/glException.h"
-
 ShaderPipeline::ShaderPipeline()
 	: m_programID(0)
 {}
