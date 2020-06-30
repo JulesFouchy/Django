@@ -2,8 +2,6 @@
 
 class ShaderPipeline;
 
-#include <glm/glm.hpp>
-
 class WindSettings {
 public:
 	WindSettings() = default;

@@ -1,7 +1,5 @@
 #pragma once
 
-struct SDL_Window;
-
 class DisplayInfos {
 public:
 	static void RefreshSize(SDL_Window* window);

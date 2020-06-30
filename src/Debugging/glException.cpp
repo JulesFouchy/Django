@@ -1,7 +1,5 @@
 #include "glException.h"
 
-#include <spdlog/spdlog.h>
-
 void glexp::clear() {
 	while (glGetError() != GL_NO_ERROR);
 }

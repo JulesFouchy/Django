@@ -1,11 +1,7 @@
 #include "Shader.h"
 
-#include <glad/glad.h>
-
 #include <fstream>
 #include <iostream>
-
-#include "Debugging/Log.h"
 
 Shader::Shader(ShaderType type, const std::string& shaderFilepath)
 	: m_filepath(shaderFilepath)

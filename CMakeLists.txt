@@ -102,3 +102,27 @@ add_custom_command(
 set_target_properties(
     ${PROJECT_NAME} PROPERTIES
     VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
+
+# /////////////////////////////////////////////////////////////////////////////
+# ////////////////////////// PRECOMPILED HEADER ! /////////////////////////////
+# /////////////////////////////////////////////////////////////////////////////
+
+target_precompile_headers(${PROJECT_NAME}
+  PRIVATE
+  # Libraries
+    <imgui/imgui.h>
+    <imgui/misc/cpp/imgui_stdlib.h>
+    <glm/glm.hpp>
+    <glad/glad.h>
+    <SDL2/SDL.h>
+    <spdlog/spdlog.h>
+    <color/color.hpp>
+  # std
+    <vector>
+    <string>
+    <random>
+    <memory>
+    <unordered_map>
+  # Project Code
+    [["Debugging/Log.h"]]
+)

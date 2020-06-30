@@ -4,9 +4,6 @@
 
 #include "Settings/PhysicsSettings.h"
 
-#include <glm.hpp>
-#include <vector>
-
 class Configuration;
 
 class ParticlesSystem {

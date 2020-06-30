@@ -4,9 +4,6 @@
 
 #include "OpenGL/ComputeShader.h"
 
-#include <glm/glm.hpp>
-#include <vector>
-
 enum class ClusterShape {
 	Circle,
 	Spiral,

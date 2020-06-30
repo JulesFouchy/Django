@@ -4,10 +4,6 @@
 
 #include "Helper/Random.h"
 
-#include "Debugging/Log.h"
-
-#include <imgui/imgui.h>
-
 Config_RandomGPU::Config_RandomGPU()
 	: Configuration("Random GPU"), m_computeShader("res/shaders/configRandom.comp"), m_a(43758.5453), m_v(12.9898, 78.233), m_delta(0.01f)
 {}

@@ -1,8 +1,5 @@
 #pragma once
 
-struct SDL_Window;
-union SDL_Event;
-
 #include "Particles/ParticlesSystem.h"
 #include "OpenGL/ShaderPipeline.h"
 #include "OpenGL/QuadVAO.h"

@@ -1,18 +1,12 @@
 #include "App.h"
 
-#include <imgui.h>
 #include <imgui_impl_sdl.h>
 #include <imgui_impl_opengl3.h>
 
 #include <debug_break/debug_break.h>
 
-#include "Debugging/Log.h"
-
 #include "Settings/VisualSettings.h"
 #include "Time/Time_Realtime.h"
-
-#include <SDL2/SDL.h>
-#include <glad/glad.h>
 
 #ifdef _WIN32
 	#define _CRTDBG_MAP_ALLOC

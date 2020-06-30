@@ -4,8 +4,6 @@
 
 #include "Helper/Random.h"
 
-#include "Debugging/Log.h"
-
 Config_RandomCPU::Config_RandomCPU()
 	: Configuration("Random CPU")
 {}

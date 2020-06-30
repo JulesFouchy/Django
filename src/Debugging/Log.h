@@ -1,9 +1,5 @@
 #pragma once
 
-#include "spdlog/spdlog.h"
-
-#include "glm/glm.hpp"
-
 namespace Log {
 	void Initialize();
 

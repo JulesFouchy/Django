@@ -4,9 +4,6 @@
 
 #include "OpenGL/ComputeShader.h"
 
-#include <glm/glm.hpp>
-#include <vector>
-
 class Config_RandomGPU : public Configuration {
 public:
 	Config_RandomGPU();

@@ -3,8 +3,6 @@
 #include "Particles/ParticlesSystem.h"
 #include "OpenGL/ShaderPipeline.h"
 
-#include <imgui/imgui.h>
-
 PhysicsSettings::PhysicsSettings(float stiffness, float damping)
 	: m_stiffness(stiffness), m_damping(damping)
 {}

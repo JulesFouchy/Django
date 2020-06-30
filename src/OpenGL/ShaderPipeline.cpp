@@ -1,9 +1,6 @@
 #include "ShaderPipeline.h"
 
-#include "Debugging/Log.h"
-
 #include "Debugging/glException.h"
-#include <glad/glad.h>
 
 ShaderPipeline::ShaderPipeline()
 	: m_programID(0)

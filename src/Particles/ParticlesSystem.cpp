@@ -1,18 +1,11 @@
 #include "ParticlesSystem.h"
 
 #include "Debugging/glException.h"
-#include "Debugging/Log.h"
 
 #include "Helper/DisplayInfos.h"
 #include "Helper/Random.h"
 
 #include "Configurations/Configuration.h"
-
-#include <color/color.hpp>
-
-#include <imgui/imgui.h>
-
-#include <glad/glad.h>
 
 #define ACTUAL_POS_ID 0
 #define REST_POS_ID 1

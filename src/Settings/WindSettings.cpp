@@ -1,7 +1,6 @@
 #include "WindSettings.h"
 
 #include "OpenGL/ShaderPipeline.h"
-#include <imgui/imgui.h>
 
 void WindSettings::ImGui_Parameters(ShaderPipeline& shader) {
 	if (ImGui::SliderFloat("Frequency", &m_noiseFrequency, 0.0f, 1.5f))

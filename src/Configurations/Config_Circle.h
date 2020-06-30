@@ -2,9 +2,6 @@
 
 #include "Configuration.h"
 
-#include <glm/glm.hpp>
-#include <vector>
-
 class Config_Circle : public Configuration {
 public:
 	Config_Circle();

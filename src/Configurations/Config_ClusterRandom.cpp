@@ -5,10 +5,6 @@
 #include "Helper/Random.h"
 #include "Helper/DisplayInfos.h"
 
-#include "Debugging/Log.h"
-
-#include <imgui/imgui.h>
-
 Config_ClusterRandom::Config_ClusterRandom()
 	: Configuration("Cluster Random"), m_computeShader("res/shaders/configClusterRandom.comp"),
 	m_nbClusters(1), m_clusterShape(ClusterShape::Circle),

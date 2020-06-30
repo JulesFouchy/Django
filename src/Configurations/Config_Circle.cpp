@@ -2,11 +2,8 @@
 
 #include "Particles/ParticlesSystem.h"
 
-#include "Debugging/Log.h"
-
 #include "Helper/DisplayInfos.h"
 
-#include <imgui/imgui.h>
 #include "Helper/MyImGui.h"
 
 Config_Circle::Config_Circle()

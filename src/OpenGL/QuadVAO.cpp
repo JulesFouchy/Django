@@ -1,7 +1,6 @@
 #include "QuadVAO.h"
 
 #include "Debugging/glException.h"
-#include <glad/glad.h>
 
 QuadVAO::QuadVAO() {
     // Vertex array

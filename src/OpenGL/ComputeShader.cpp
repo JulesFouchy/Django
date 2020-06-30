@@ -1,7 +1,5 @@
 #include "ComputeShader.h"
 
-#include <glad/glad.h>
-
 #define WORK_GROUP_SIZE 256
 
 ComputeShader::ComputeShader(const std::string& filepath)

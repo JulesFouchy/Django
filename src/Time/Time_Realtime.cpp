@@ -1,7 +1,5 @@
 #include "Time_Realtime.h"
 
-#include <SDL2/SDL.h>
-
 float Time_Realtime::SDLPerformanceFrequency;
 
 void Time_Realtime::Initialize() {

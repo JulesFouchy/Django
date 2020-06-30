@@ -4,8 +4,6 @@
 
 #include "Helper/DisplayInfos.h"
 
-#include "Debugging/Log.h"
-
 Config_FillScreen::Config_FillScreen()
 	: Configuration("Fill Screen")
 {}

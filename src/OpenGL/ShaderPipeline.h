@@ -2,11 +2,6 @@
 
 #include "Shader.h"
 
-#include <unordered_map>
-#include <vector>
-#include <memory>
-#include <glm.hpp>
-
 class ShaderPipeline {
 public:
 	ShaderPipeline();

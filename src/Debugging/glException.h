@@ -1,6 +1,5 @@
 #pragma once
 
-#include <glad/glad.h>
 #include <assert.h>
 #include <debug_break/debug_break.h>
 

@@ -1,8 +1,5 @@
 #include "DisplayInfos.h"
 
-#include <SDL2/SDL.h>
-#include <glad/glad.h>
-
 int DisplayInfos::m_windowWidth;
 int DisplayInfos::m_windowHeight;
 float DisplayInfos::m_aspectRatio;

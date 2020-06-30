@@ -2,9 +2,6 @@
 
 #include "Particles/ParticlesSystem.h"
 
-#include <imgui/imgui.h>
-#include <SDL2/SDL.h>
-
 bool VisualSettings::ALPHA_TRAIL_ENABLED;
 float VisualSettings::ALPHA_TRAIL_DECAY = 20.0f;
 float VisualSettings::BACKGROUND_COLOR[3] = { 0.0f, 0.0f, 0.0f };
