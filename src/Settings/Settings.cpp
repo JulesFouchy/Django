@@ -12,8 +12,13 @@ void Settings::ImGuiWindows(ShaderPipeline& physicsCompute) {
 		m_visualSettings.ImGui();
 	ImGui::End();
 	ImGui::Begin("Wind");
-		m_windSettings.ImGui_Parameters(physicsCompute);
+		m_windSettings.ImGui(physicsCompute);
 	ImGui::End();
+}
+
+void Settings::apply(ShaderPipeline& physicsCompute) {
+	m_visualSettings.apply();
+	m_windSettings.apply(physicsCompute);
 }
 
 void Settings::serializeTo(const std::string& filePath) {

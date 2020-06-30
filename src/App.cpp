@@ -31,7 +31,7 @@ App::App(unsigned int nbParticles, SDL_Window* window)
 
 void App::onInit() {
 	m_particlesSystem.physicsComputeShader().bind();
-	m_settingsMng.get().getWind().setUniforms(m_particlesSystem.physicsComputeShader());
+	m_settingsMng.get().apply(m_particlesSystem.physicsComputeShader());
 	m_particlesSystem.physicsComputeShader().unbind();
 }
 

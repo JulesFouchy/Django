@@ -2,21 +2,21 @@
 
 #include "OpenGL/ShaderPipeline.h"
 
-void WindSettings::ImGui_Parameters(ShaderPipeline& shader) {
+void WindSettings::ImGui(ShaderPipeline& physicsCompute) {
 	if (ImGui::SliderFloat("Frequency", &m_noiseFrequency, 0.0f, 1.5f))
-		setNoiseFrequency(shader);
+		setNoiseFrequency(physicsCompute);
 	if (ImGui::SliderFloat2("Strength range", &m_minStrength, -1.0f, 2.0f)) {
-		setMinStrength(shader);
-		setMaxStrength(shader);
+		setMinStrength(physicsCompute);
+		setMaxStrength(physicsCompute);
 	}
 	ImGui::SliderFloat("Speed", &m_speed, 0.0f, 1.5f);
 }
 
-void WindSettings::setUniforms(ShaderPipeline& shader) {
-	setNoiseFrequency(shader);
-	setMaxStrength(shader);
-	setMinStrength(shader);
-	setDirection(shader);
+void WindSettings::apply(ShaderPipeline& physicsCompute) {
+	setNoiseFrequency(physicsCompute);
+	setMaxStrength(physicsCompute);
+	setMinStrength(physicsCompute);
+	setDirection(physicsCompute);
 }
 
 void WindSettings::setWindOffset(ShaderPipeline& shader, float time) {

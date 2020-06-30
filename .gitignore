@@ -4,3 +4,5 @@ bin/Debug/
 build/
 
 *.ini
+
+settings/lastSession.json

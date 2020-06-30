@@ -10,6 +10,7 @@ public:
 	~Settings() = default;
 
 	void ImGuiWindows(ShaderPipeline& physicsCompute);
+	void apply(ShaderPipeline& physicsCompute);
 
 	void serializeTo(const std::string& filePath);
 	void deserializeFrom(const std::string& filePath);

@@ -7,8 +7,8 @@ public:
 	WindSettings() = default;
 	~WindSettings() = default;
 
-	void setUniforms(ShaderPipeline& shader);
-	void ImGui_Parameters(ShaderPipeline& shader);
+	void apply(ShaderPipeline& physicsCompute);
+	void ImGui(ShaderPipeline& physicsCompute);
 	void setWindOffset(ShaderPipeline& shader, float time);
 
 private:
