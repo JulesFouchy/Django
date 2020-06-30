@@ -54,6 +54,7 @@ include_directories(
     lib/imgui
     lib/glm
     lib/color/src
+    lib/cereal-1.3.0/include/
     lib
     src
     res
@@ -117,6 +118,10 @@ target_precompile_headers(${PROJECT_NAME}
     <SDL2/SDL.h>
     <spdlog/spdlog.h>
     <color/color.hpp>
+    <cereal/access.hpp>
+    <cereal/types/vector.hpp>
+    <cereal/types/string.hpp>
+    <cereal/types/memory.hpp>
   # std
     <vector>
     <string>
