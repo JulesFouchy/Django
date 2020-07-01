@@ -6,3 +6,5 @@ build/
 *.ini
 
 settings/lastSession.json
+
+*.djgPhysics.json

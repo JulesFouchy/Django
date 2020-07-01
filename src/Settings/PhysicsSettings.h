@@ -1,10 +1,29 @@
 #pragma once
 
+#include "Presets.h"
+
 class ShaderPipeline;
+
+struct PhysicsSettingsValues {
+	float stiffness = 20.0f;
+	float damping = 3.0f;
+
+private:
+	// Serialization
+	friend class cereal::access;
+	template <class Archive>
+	void serialize(Archive& archive)
+	{
+		archive(
+			CEREAL_NVP(stiffness),
+			CEREAL_NVP(damping)
+		);
+	}
+};
 
 class PhysicsSettings {
 public:
-	PhysicsSettings() = default;
+	PhysicsSettings();
 	~PhysicsSettings() = default;
 
 	void apply(ShaderPipeline& physicsCompute);
@@ -15,18 +34,17 @@ private:
 	void setDampingInShader(ShaderPipeline& physicsCompute);
 
 private:
-	float m_stiffness = 20.0f;
-	float m_damping = 3.0f;
+	PhysicsSettingsValues m_values;
+	Presets<PhysicsSettingsValues> m_presets;
 
 private:
-	//Serialization
+	// Serialization
 	friend class cereal::access;
 	template <class Archive>
 	void serialize(Archive& archive)
 	{
 		archive(
-			CEREAL_NVP(m_stiffness),
-			CEREAL_NVP(m_damping)
+			CEREAL_NVP(m_values)
 		);
 	}
 };
