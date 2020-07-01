@@ -5,9 +5,9 @@ in vec3 vColor;
 
 void main(void){
     float d = length(vTexCoords - vec2(0.5));
-    float alpha = smoothstep(0.5, 0.4, d);
-    float t = smoothstep(0.5, 0.15, d);
-    //vec3 col = t * vColor;
+    //float alpha = smoothstep(0.5, 0.4, d);
+    if (d > 0.5)
+        discard;
     vec3 col = vColor;
-    gl_FragColor = vec4(col, alpha);
+    gl_FragColor = vec4(col, 1.);
 }

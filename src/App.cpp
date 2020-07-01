@@ -23,6 +23,7 @@ App::App(SDL_Window* window)
 	m_clearScreenPipeline.createProgram();
 	//
 	onWindowResize();
+	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
@@ -74,10 +75,11 @@ void App::onLoopIteration() {
 		m_clearScreenPipeline.setUniform3f("backgroundColor", m_settingsMng.get().getVisuals().backgroundColor().x, m_settingsMng.get().getVisuals().backgroundColor().y, m_settingsMng.get().getVisuals().backgroundColor().z);
 		m_fullScreenVAO.bind();
 		GLCall(glDrawArrays(GL_TRIANGLES, 0, 6));
+		glClear(GL_DEPTH_BUFFER_BIT);
 	}
 	else {
 		glClearColor(m_settingsMng.get().getVisuals().backgroundColor().x, m_settingsMng.get().getVisuals().backgroundColor().y, m_settingsMng.get().getVisuals().backgroundColor().z, 1);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 	
 	// Draw particles
