@@ -14,7 +14,7 @@ public:
 	inline unsigned int nbParticles() { return m_nbParticles; }
 
 private:
-	unsigned int m_nbParticles = 1000000;
+	unsigned int m_nbParticles = 100000;
 	float m_particleRadiusRelToHeight = 0.002f;
 
 	//Serialization

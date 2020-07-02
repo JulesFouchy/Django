@@ -2,14 +2,29 @@
 
 #include "OpenGL/ShaderPipeline.h"
 
+WindSettings::WindSettings()
+	: m_presets("djgWind")
+{}
+
 void WindSettings::ImGui(ShaderPipeline& physicsCompute) {
-	if (ImGui::SliderFloat("Frequency", &m_noiseFrequency, 0.0f, 1.5f))
+	bool b = false;
+	if (ImGui::SliderFloat("Frequency", &m_values.noiseFrequency, 0.0f, 1.5f)) {
+		b = true;
 		setNoiseFrequency(physicsCompute);
-	if (ImGui::SliderFloat2("Strength range", &m_minStrength, -1.0f, 2.0f)) {
+	}
+	if (ImGui::SliderFloat2("Strength range", &m_values.minStrength, -1.0f, 2.0f)) {
+		b = true;
 		setMinStrength(physicsCompute);
 		setMaxStrength(physicsCompute);
 	}
-	ImGui::SliderFloat("Speed", &m_speed, 0.0f, 1.5f);
+	if (ImGui::SliderFloat("Speed", &m_values.speed, 0.0f, 1.5f)) {
+		b = true;
+	}
+	if (m_presets.ImGui(&m_values)) {
+		apply(physicsCompute);
+	}
+	if (b)
+		m_presets.setToPlaceholderSetting();
 }
 
 void WindSettings::apply(ShaderPipeline& physicsCompute) {
@@ -20,17 +35,17 @@ void WindSettings::apply(ShaderPipeline& physicsCompute) {
 }
 
 void WindSettings::setWindOffset(ShaderPipeline& physicsCompute, float time) {
-	physicsCompute.setUniform2f("u_windOffset", - m_speed * time * m_direction);
+	physicsCompute.setUniform2f("u_windOffset", -m_values.speed * time * m_values.direction);
 }
 void WindSettings::setNoiseFrequency(ShaderPipeline& physicsCompute){
-	physicsCompute.setUniform1f("u_windNoisePuls", m_noiseFrequency);
+	physicsCompute.setUniform1f("u_windNoisePuls", m_values.noiseFrequency);
 }
 void WindSettings::setMaxStrength(ShaderPipeline& physicsCompute) {
-	physicsCompute.setUniform1f("u_windMaxStrength", m_maxStrength);
+	physicsCompute.setUniform1f("u_windMaxStrength", m_values.maxStrength);
 }
 void WindSettings::setMinStrength(ShaderPipeline& physicsCompute) {
-	physicsCompute.setUniform1f("u_windMinStrength", m_minStrength);
+	physicsCompute.setUniform1f("u_windMinStrength", m_values.minStrength);
 }
 void WindSettings::setDirection(ShaderPipeline& physicsCompute) {
-	physicsCompute.setUniform1f("u_windDirectionAngle", m_directionAngle);
+	physicsCompute.setUniform1f("u_windDirectionAngle", m_values.directionAngle);
 }
