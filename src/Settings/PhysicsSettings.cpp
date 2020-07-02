@@ -4,7 +4,7 @@
 #include "OpenGL/ShaderPipeline.h"
 
 PhysicsSettings::PhysicsSettings()
-	: m_presets("djgPhysics", "C:/Dev/Django/settings")
+	: m_presets("djgPhysics")
 {}
 
 void PhysicsSettings::ImGui(ShaderPipeline& physicsCompute) {

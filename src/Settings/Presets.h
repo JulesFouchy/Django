@@ -5,6 +5,7 @@ namespace fs = std::filesystem;
 #include <cereal/archives/json.hpp>
 #include <fstream>
 #include "Helper/String.h"
+#include "Constants/SettingsFolder.h"
 
 template <typename T>
 struct Preset {
@@ -15,10 +16,10 @@ struct Preset {
 template <typename T>
 class Presets {
 public:
-	Presets(const char* fileExtension, const std::string& settingsFolderPath)
+	Presets(const char* fileExtension)
 		: m_fileExtension(std::string(".") + fileExtension)
 	{
-		loadPresetsFrom(settingsFolderPath);
+		loadPresetsFrom(djg::SettingsFolder);
 		setToPlaceholderSetting();
 	}
 	~Presets() = default;
@@ -36,7 +37,7 @@ public:
 		}
 		ImGui::Separator();
 		if (ImGui::Button("Save settings")) {
-			savePresetTo(*settingValues, "C:/Dev/Django/settings");
+			savePresetTo(*settingValues, djg::SettingsFolder);
 		}
 		ImGui::SameLine();
 		ImGui::Text("as");
