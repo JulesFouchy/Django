@@ -27,9 +27,14 @@ public:
 			}
 			ImGui::EndCombo();
 		}
+		ImGui::Separator();
 		if (ImGui::Button("Save settings")) {
 			savePresetTo(*settingValues, "C:/Dev/Django/settings");
 		}
+		ImGui::SameLine();
+		ImGui::Text("as");
+		ImGui::SameLine();
+		ImGui::InputText("", &m_savePresetAs);
 		return b;
 	}
 
@@ -52,18 +57,26 @@ private:
 					);
 				}
 				m_presets.push_back(preset);
+				// Default is always put first in the list
+				if (!m_presetsNames.back().compare("Default")) {
+					std::swap(m_presetsNames.back(), m_presetsNames[0]);
+					std::swap(m_presets.back(), m_presets[0]);
+				}
 			}
 		}
 	}
 
 	void savePresetTo(T& settingValues, const std::string& folderPath) {
-		std::ofstream os(folderPath + "/myTest1" + m_fileExtension + ".json");
+		std::ofstream os(folderPath + "/" + m_savePresetAs + m_fileExtension + ".json");
 		{
 			cereal::JSONOutputArchive archive(os);
 			archive(
 				settingValues
 			);
 		}
+		// Add it to current list
+		m_presets.push_back(settingValues);
+		m_presetsNames.push_back(m_savePresetAs);
 	}
 
 private:
@@ -71,4 +84,5 @@ private:
 	std::vector<T> m_presets;
 	std::vector<std::string> m_presetsNames;
 	const char* m_currentPresetName;
+	std::string m_savePresetAs;
 };
