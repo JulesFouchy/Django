@@ -4,6 +4,7 @@
 namespace fs = std::filesystem;
 #include <cereal/archives/json.hpp>
 #include <fstream>
+#include "Helper/String.h"
 
 template <typename T>
 struct Preset {
@@ -54,12 +55,7 @@ private:
 	void sort() {
 		// Case insensitive alphabetical sort
 		std::sort(m_presets.begin(), m_presets.end(), [](const Preset<T>& l, const Preset<T>& r) {
-			return std::equal(
-				l.name.begin(), l.name.end(),
-				r.name.begin(), r.name.end(),
-				[](char a, char b) {
-					return tolower(a) == tolower(b);
-			});;
+			return MyString::ToLower(l.name) < MyString::ToLower(r.name);
 		});
 		// Put Default first
 		for (size_t i = 0; i < m_presets.size(); ++i) {
@@ -75,7 +71,6 @@ private:
 	void loadPresetsFrom(const std::string& folderPath) {
 		for (const auto& file : fs::directory_iterator(folderPath)) {
 			if (!file.path().filename().replace_extension("").extension().string().compare(m_fileExtension)) {
-				spdlog::warn(file.path().string());
 				std::string name = file.path().filename().replace_extension("").replace_extension("").string();
 				T values;
 				std::ifstream is(file.path());
