@@ -19,7 +19,8 @@ class Presets {
 public:
 	Presets(const char* fileExtension)
 		: m_fileExtension(std::string(".") + fileExtension), 
-		m_savePresetAs(findPlaceholderName(djg::SettingsFolder))
+		m_savePresetAs(findPlaceholderName(djg::SettingsFolder)),
+		m_nameAvailable(true)
 	{
 		loadPresetsFrom(djg::SettingsFolder);
 		setToPlaceholderSetting();
@@ -38,14 +39,21 @@ public:
 			ImGui::EndCombo();
 		}
 		ImGui::Separator();
-		if (ImGui::Button("Save settings")) {
-			savePresetTo(*settingValues, djg::SettingsFolder);
+		if (m_nameAvailable) {
+			if (ImGui::Button("Save settings")) {
+				savePresetTo(*settingValues, djg::SettingsFolder);
+			}
+			ImGui::SameLine();
+			ImGui::Text("as");
+		}
+		else {
+			ImGui::TextColored(ImVec4(0.74, 0.04, 0.04, 1), "Name already used :");
 		}
 		ImGui::SameLine();
-		ImGui::Text("as");
-		ImGui::SameLine();
 		ImGui::PushID(138571);
-		ImGui::InputText("", &m_savePresetAs);
+		if (ImGui::InputText("", &m_savePresetAs)) {
+			m_nameAvailable = !MyFile::Exists(djg::SettingsFolder + "/" + m_savePresetAs + m_fileExtension + ".json");
+		}
 		ImGui::PopID();
 		return b;
 	}
@@ -119,4 +127,5 @@ private:
 	const char* m_currentPresetName;
 	std::vector<Preset<T>> m_presets;
 	std::string m_savePresetAs;
+	bool m_nameAvailable;
 };
