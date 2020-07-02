@@ -34,7 +34,9 @@ public:
 		ImGui::SameLine();
 		ImGui::Text("as");
 		ImGui::SameLine();
+		ImGui::PushID(138571);
 		ImGui::InputText("", &m_savePresetAs);
+		ImGui::PopID();
 		return b;
 	}
 
