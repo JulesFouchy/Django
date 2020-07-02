@@ -1,21 +1,13 @@
 #pragma once
 
+#include "Presets.h"
+
 class ParticlesSystem;
 class Configuration;
 
-class ParticleSystemSettings {
-public:
-	ParticleSystemSettings() = default;
-	~ParticleSystemSettings() = default;
-
-	void ImGui(ParticlesSystem& partSystem, Configuration& currentConfiguration);
-	void apply(ParticlesSystem& partSystem, Configuration& currentConfiguration);
-
-	inline unsigned int nbParticles() { return m_nbParticles; }
-
-private:
-	unsigned int m_nbParticles = 100000;
-	float m_particleRadiusRelToHeight = 0.002f;
+struct ParticleSystemSettingsValues {
+	unsigned int nbParticles = 100000;
+	float particleRadiusRelToHeight = 0.002f;
 
 	//Serialization
 	friend class cereal::access;
@@ -23,8 +15,35 @@ private:
 	void serialize(Archive& archive)
 	{
 		archive(
-			CEREAL_NVP(m_nbParticles),
-			CEREAL_NVP(m_particleRadiusRelToHeight)
+			CEREAL_NVP(nbParticles),
+			CEREAL_NVP(particleRadiusRelToHeight)
+		);
+	}
+};
+
+class ParticleSystemSettings {
+public:
+	ParticleSystemSettings();
+	~ParticleSystemSettings() = default;
+
+	void ImGui(ParticlesSystem& partSystem, Configuration& currentConfiguration);
+	void apply(ParticlesSystem& partSystem, Configuration& currentConfiguration);
+
+	inline unsigned int nbParticles() { return m_values.nbParticles; }
+
+private:
+	ParticleSystemSettingsValues m_values;
+	Presets<ParticleSystemSettingsValues> m_presets;
+
+private:
+	// Serialization
+	friend class cereal::access;
+	template <class Archive>
+	void serialize(Archive& archive)
+	{
+		archive(
+			CEREAL_NVP(m_values),
+			CEREAL_NVP(m_presets)
 		);
 	}
 };
