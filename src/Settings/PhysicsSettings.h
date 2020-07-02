@@ -44,7 +44,8 @@ private:
 	void serialize(Archive& archive)
 	{
 		archive(
-			CEREAL_NVP(m_values)
+			CEREAL_NVP(m_values),
+			CEREAL_NVP(m_presets)
 		);
 	}
 };

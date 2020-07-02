@@ -29,10 +29,10 @@ public:
 
 	bool ImGui(T* settingValues) {
 		bool b;
-		if (b = ImGui::BeginCombo("Presets", m_currentPresetName, 0)) {
+		if (b = ImGui::BeginCombo("Presets", m_currentPresetName.c_str(), 0)) {
 			for (size_t i = 0; i < m_presets.size(); i++) {
 				if (ImGui::Selectable(m_presets[i].name.c_str(), false)) {
-					m_currentPresetName = m_presets[i].name.c_str();
+					m_currentPresetName = m_presets[i].name;
 					*settingValues = m_presets[i].values;
 				}
 			}
@@ -124,8 +124,19 @@ private:
 
 private:
 	const std::string m_fileExtension;
-	const char* m_currentPresetName;
+	std::string m_currentPresetName;
 	std::vector<Preset<T>> m_presets;
 	std::string m_savePresetAs;
 	bool m_nameAvailable;
+
+private:
+	// Serialization
+	friend class cereal::access;
+	template <class Archive>
+	void serialize(Archive& archive)
+	{
+		archive(
+			CEREAL_NVP(m_currentPresetName)
+		);
+	}
 };
