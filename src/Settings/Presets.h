@@ -5,6 +5,7 @@ namespace fs = std::filesystem;
 #include <cereal/archives/json.hpp>
 #include <fstream>
 #include "Helper/String.h"
+#include "Helper/File.h"
 #include "Constants/SettingsFolder.h"
 
 template <typename T>
@@ -17,7 +18,8 @@ template <typename T>
 class Presets {
 public:
 	Presets(const char* fileExtension)
-		: m_fileExtension(std::string(".") + fileExtension)
+		: m_fileExtension(std::string(".") + fileExtension), 
+		m_savePresetAs(findPlaceholderName(djg::SettingsFolder))
 	{
 		loadPresetsFrom(djg::SettingsFolder);
 		setToPlaceholderSetting();
@@ -69,6 +71,16 @@ private:
 		}
 	}
 
+	std::string findPlaceholderName(const std::string& folderPath) {
+		int i = 1;
+		std::string name = "MyPreset";
+		while (MyFile::Exists(folderPath + "/" + name + m_fileExtension + ".json")) {
+			name = "MyPreset(" + std::to_string(i) + ")";
+			i++;
+		}
+		return name;
+	}
+
 	void loadPresetsFrom(const std::string& folderPath) {
 		for (const auto& file : fs::directory_iterator(folderPath)) {
 			if (!file.path().filename().replace_extension("").extension().string().compare(m_fileExtension)) {
@@ -98,11 +110,13 @@ private:
 		// Add it to current list
 		m_presets.push_back({ m_savePresetAs, settingValues });
 		sort();
+		// Find new placeholder name
+		m_savePresetAs = findPlaceholderName(folderPath);
 	}
 
 private:
 	const std::string m_fileExtension;
-	std::vector<Preset<T>> m_presets;
 	const char* m_currentPresetName;
+	std::vector<Preset<T>> m_presets;
 	std::string m_savePresetAs;
 };
