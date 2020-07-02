@@ -28,10 +28,11 @@ public:
 	~Presets() = default;
 
 	bool ImGui(T* settingValues) {
-		bool b;
-		if (b = ImGui::BeginCombo("Presets", m_currentPresetName.c_str(), 0)) {
+		bool b = false;
+		if (ImGui::BeginCombo("Presets", m_currentPresetName.c_str(), 0)) {
 			for (size_t i = 0; i < m_presets.size(); i++) {
 				if (ImGui::Selectable(m_presets[i].name.c_str(), false)) {
+					b = true;
 					m_currentPresetName = m_presets[i].name;
 					*settingValues = m_presets[i].values;
 				}
