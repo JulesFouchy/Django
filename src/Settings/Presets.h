@@ -118,6 +118,8 @@ private:
 		// Add it to current list
 		m_presets.push_back({ m_savePresetAs, settingValues });
 		sort();
+		// Give the name to the selected preset
+		m_currentPresetName = m_savePresetAs;
 		// Find new placeholder name
 		m_savePresetAs = findPlaceholderName(folderPath);
 	}
