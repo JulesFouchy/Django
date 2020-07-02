@@ -6,7 +6,12 @@ SettingsManager::SettingsManager()
 	: m_currentSettings(), m_defaultSettings()
 {
 	if (MyFile::Exists(lastSessionFilePath())) {
-		m_currentSettings.deserializeFrom(lastSessionFilePath());
+		try {
+			m_currentSettings.deserializeFrom(lastSessionFilePath());
+		}
+		catch (const std::exception& e) {
+			spdlog::warn("lastSession.json is corrupted :\n {}",  e.what());
+		}
 	}
 }
 
