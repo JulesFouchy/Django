@@ -5,7 +5,6 @@
 
 #include <debug_break/debug_break.h>
 
-#include "Settings/VisualSettings.h"
 #include "Time/Time_Realtime.h"
 
 #ifdef _WIN32

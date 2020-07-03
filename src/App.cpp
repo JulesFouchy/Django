@@ -68,17 +68,17 @@ void App::onLoopIteration() {
 	m_settingsMng.get().getWind().setWindOffset(m_particlesSystem.physicsComputeShader(), m_time.time());
 	m_particlesSystem.physicsComputeShader().unbind();
 	// Clear screen
-	if (m_settingsMng.get().getVisuals().isAlphaTrailEnabled()) {
+	if (m_settingsMng.get().getTrail().isEnabled()) {
 		m_clearScreenPipeline.bind();
 		m_clearScreenPipeline.setUniform1f("dt", m_time.deltaTime());
-		m_clearScreenPipeline.setUniform1f("decay", m_settingsMng.get().getVisuals().alphaTrailDecay());
-		m_clearScreenPipeline.setUniform3f("backgroundColor", m_settingsMng.get().getVisuals().backgroundColor().x, m_settingsMng.get().getVisuals().backgroundColor().y, m_settingsMng.get().getVisuals().backgroundColor().z);
+		m_clearScreenPipeline.setUniform1f("decay", m_settingsMng.get().getTrail().alphaTrailDecay());
+		m_clearScreenPipeline.setUniform3f("backgroundColor", m_settingsMng.get().getColors().backgroundColor().x, m_settingsMng.get().getColors().backgroundColor().y, m_settingsMng.get().getColors().backgroundColor().z);
 		m_fullScreenVAO.bind();
 		GLCall(glDrawArrays(GL_TRIANGLES, 0, 6));
 		glClear(GL_DEPTH_BUFFER_BIT);
 	}
 	else {
-		glClearColor(m_settingsMng.get().getVisuals().backgroundColor().x, m_settingsMng.get().getVisuals().backgroundColor().y, m_settingsMng.get().getVisuals().backgroundColor().z, 1);
+		glClearColor(m_settingsMng.get().getColors().backgroundColor().x, m_settingsMng.get().getColors().backgroundColor().y, m_settingsMng.get().getColors().backgroundColor().z, 1);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 	

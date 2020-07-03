@@ -1,7 +1,8 @@
 #pragma once
 
 #include "PhysicsSettings.h"
-#include "VisualSettings.h"
+#include "AlphaTrailSettings.h"
+#include "ColorSettings.h"
 #include "WindSettings.h"
 #include "ParticleSystemSettings.h"
 
@@ -17,13 +18,15 @@ public:
 	void deserializeFrom(const std::string& filePath);
 
 	inline PhysicsSettings&        getPhysics()    { return m_physicsSettings; }
-	inline VisualSettings&         getVisuals()    { return m_visualSettings; }
+	inline AlphaTrailSettings&     getTrail()      { return m_alphaTrailSettings; }
+	inline ColorSettings&          getColors()     { return m_colorSettings; }
 	inline WindSettings&           getWind()       { return m_windSettings; }
 	inline ParticleSystemSettings& getPartSystem() { return m_particleSystemSettings; }
 
 private:
 	PhysicsSettings m_physicsSettings;
-	VisualSettings m_visualSettings;
+	AlphaTrailSettings m_alphaTrailSettings;
+	ColorSettings m_colorSettings;
 	WindSettings m_windSettings;
 	ParticleSystemSettings m_particleSystemSettings;
 };
