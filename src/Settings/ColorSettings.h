@@ -7,6 +7,8 @@ struct ColorSettingsValues {
 	glm::vec3 bgColor = glm::vec3(0.0f, 0.0f, 0.0f);
 	float particlesHueStart = 0.0f;
 	float particlesHueEnd = 360.0f;
+	float particleSaturation = 80.0f;
+	float particleValue = 80.0f;
 
 private:
 	//Serialization
@@ -19,7 +21,9 @@ private:
 			CEREAL_NVP(bgColor.g),
 			CEREAL_NVP(bgColor.b),
 			CEREAL_NVP(particlesHueStart),
-			CEREAL_NVP(particlesHueEnd)
+			CEREAL_NVP(particlesHueEnd),
+			CEREAL_NVP(particleSaturation),
+			CEREAL_NVP(particleValue)
 		);
 	}
 };

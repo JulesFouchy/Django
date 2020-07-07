@@ -94,7 +94,7 @@ void ParticlesSystem::setParticlesColors(const ColorSettingsValues& colorSetting
     //
     for (int i = 0; i < m_nbParticles; ++i) {
         float t = i / (float)m_nbParticles;
-        colors[i] = color::hsv<float>({ (1-t) * hueStart + t * hueEnd, 80.0f, 80.0f });
+        colors[i] = color::hsv<float>({ (1-t) * hueStart + t * hueEnd, colorSettings.particleSaturation, colorSettings.particleValue });
     }
     m_colorsSSBO.uploadData(m_nbParticles, (float*)colors.data());
 }
