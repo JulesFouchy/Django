@@ -19,25 +19,57 @@ void ColorSettings::ImGui(ParticlesSystem& partSystem) {
 	// Particles
 	ImGui::Separator();
 	ImGui::Text("Particles");
-		// Hue
-	ImGui::Text("Hue from "); ImGui::SameLine();
-	ImGui::PushItemWidth(70);
-	ImGui::PushID(4387654);
-	if (ImGui::DragFloat("", &m_values.particlesHueStart))
-		bColorsChanged = true;
-	ImGui::PopID();
-	ImGui::SameLine();
-	ImGui::Text(" to "); ImGui::SameLine();
-	ImGui::PushID(5387655);
-	if (ImGui::DragFloat("", &m_values.particlesHueEnd))
-		bColorsChanged = true;
-	ImGui::PopID();
-	ImGui::PopItemWidth();
+		// Choose mode
+	const char* items[] = { "Hue gradient", "Color Gradient" };
+	static const char* item_current = items[0];
+	if (ImGui::BeginCombo("Gradient mode", item_current, 0))
+	{
+		for (int n = 0; n < IM_ARRAYSIZE(items); n++)
+		{
+			bool is_selected = (item_current == items[n]);
+			if (ImGui::Selectable(items[n], is_selected)) {
+				if (item_current != items[n])
+					bColorsChanged = true;
+				item_current = items[n];
+				m_values.bColorModeHueGradient = n == 0;
+			}
+			if (is_selected)
+				ImGui::SetItemDefaultFocus();
+		}
+		ImGui::EndCombo();
+	}
+	// Hue gradient mode
+	if (m_values.bColorModeHueGradient) {
+		ImGui::Text("Hue from "); ImGui::SameLine();
+		ImGui::PushItemWidth(70);
+		ImGui::PushID(4387654);
+		if (ImGui::DragFloat("", &m_values.particlesHueStart))
+			bColorsChanged = true;
+		ImGui::PopID();
+		ImGui::SameLine();
+		ImGui::Text(" to "); ImGui::SameLine();
+		ImGui::PushID(5387655);
+		if (ImGui::DragFloat("", &m_values.particlesHueEnd))
+			bColorsChanged = true;
+		ImGui::PopID();
+		ImGui::PopItemWidth();
 		//
-	if (ImGui::SliderFloat("Saturation", &m_values.particleSaturation, 0, 100))
-		bColorsChanged = true;
-	if (ImGui::SliderFloat("Value", &m_values.particleValue, 0, 100))
-		bColorsChanged = true;
+		if (ImGui::SliderFloat("Saturation", &m_values.particleSaturation, 0, 100))
+			bColorsChanged = true;
+		if (ImGui::SliderFloat("Value", &m_values.particleValue, 0, 100))
+			bColorsChanged = true;
+	}
+	// Color gradient mode
+	else {
+		ImGui::PushID(6387655);
+		if (ImGui::ColorEdit3("", &m_values.particleColorStart[0]))
+			bColorsChanged = true;
+		ImGui::PopID();
+		ImGui::PushID(7387655);
+		if (ImGui::ColorEdit3("", &m_values.particleColorEnd[0]))
+			bColorsChanged = true;
+		ImGui::PopID();
+	}
 	//
 	if (bColorsChanged) {
 		b = true;

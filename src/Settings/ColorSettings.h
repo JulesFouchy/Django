@@ -5,10 +5,15 @@ class ParticlesSystem;
 
 struct ColorSettingsValues {
 	glm::vec3 bgColor = glm::vec3(0.0f, 0.0f, 0.0f);
+	bool bColorModeHueGradient = true;
+	// Hue gradient
 	float particlesHueStart = 0.0f;
 	float particlesHueEnd = 360.0f;
 	float particleSaturation = 80.0f;
 	float particleValue = 80.0f;
+	// Color gradient
+	glm::vec3 particleColorStart = glm::vec3(1.0f, 0.0f, 0.0f);
+	glm::vec3 particleColorEnd = glm::vec3(0.0f, 0.0f, 1.0f);
 
 private:
 	//Serialization
@@ -20,10 +25,17 @@ private:
 			CEREAL_NVP(bgColor.r),
 			CEREAL_NVP(bgColor.g),
 			CEREAL_NVP(bgColor.b),
+			CEREAL_NVP(bColorModeHueGradient),
 			CEREAL_NVP(particlesHueStart),
 			CEREAL_NVP(particlesHueEnd),
 			CEREAL_NVP(particleSaturation),
-			CEREAL_NVP(particleValue)
+			CEREAL_NVP(particleValue),
+			CEREAL_NVP(particleColorStart.r),
+			CEREAL_NVP(particleColorStart.g),
+			CEREAL_NVP(particleColorStart.b),
+			CEREAL_NVP(particleColorEnd.r),
+			CEREAL_NVP(particleColorEnd.g),
+			CEREAL_NVP(particleColorEnd.b)
 		);
 	}
 };

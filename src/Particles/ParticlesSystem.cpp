@@ -84,17 +84,28 @@ void ParticlesSystem::setNbParticles(unsigned int newNbParticles, const ColorSet
 void ParticlesSystem::setParticlesColors(const ColorSettingsValues& colorSettings) {
     std::vector<color::rgb<float>> colors;
     colors.resize(m_nbParticles);
-    // We need to do the following because our color library doesn't handle negative hues
-    int k = std::max(
-        - floor(colorSettings.particlesHueStart / 360.0f), // we check both because, despite the names,
-        - floor(colorSettings.particlesHueEnd   / 360.0f)  // hue start and end could actually be in any order
-    );
-    float hueStart = colorSettings.particlesHueStart + k * 360;
-    float hueEnd = colorSettings.particlesHueEnd + k * 360;
-    //
-    for (int i = 0; i < m_nbParticles; ++i) {
-        float t = i / (float)m_nbParticles;
-        colors[i] = color::hsv<float>({ (1-t) * hueStart + t * hueEnd, colorSettings.particleSaturation, colorSettings.particleValue });
+    // Hue gradient mode
+    if (colorSettings.bColorModeHueGradient) {
+        // We need to do the following because our color library doesn't handle negative hues
+        int k = std::max(
+            -floor(colorSettings.particlesHueStart / 360.0f), // we check both because, despite the names,
+            -floor(colorSettings.particlesHueEnd / 360.0f)  // hue start and end could actually be in any order
+        );
+        float hueStart = colorSettings.particlesHueStart + k * 360;
+        float hueEnd = colorSettings.particlesHueEnd + k * 360;
+        //
+        for (int i = 0; i < m_nbParticles; ++i) {
+            float t = i / (float)m_nbParticles;
+            colors[i] = color::hsv<float>({ (1 - t) * hueStart + t * hueEnd, colorSettings.particleSaturation, colorSettings.particleValue });
+        }
+    }
+    // Color gradient mode
+    else {
+        for (int i = 0; i < m_nbParticles; ++i) {
+            float t = i / (float)m_nbParticles;
+            glm::vec3 col = (1-t) * colorSettings.particleColorStart + t * colorSettings.particleColorEnd;
+            colors[i] = color::rgb<float>({ col.r, col.g, col.b });
+        }
     }
     m_colorsSSBO.uploadData(m_nbParticles, (float*)colors.data());
 }
