@@ -22,10 +22,10 @@ void Settings::ImGuiWindows(ShaderPipeline& physicsCompute, ParticlesSystem& par
 }
 
 void Settings::apply(ShaderPipeline& physicsCompute, ParticlesSystem& partSystem, Configuration& currentConfiguration) {
+	m_windSettings.apply(physicsCompute); // must be before particleSystemSettings
 	m_particleSystemSettings.apply(partSystem, currentConfiguration, m_colorSettings.getValues());
 	m_alphaTrailSettings.apply();
-	m_colorSettings.apply(partSystem);
-	m_windSettings.apply(physicsCompute);
+	m_colorSettings.apply(partSystem); // must be after particleSystemSettings
 	m_physicsSettings.apply(physicsCompute);
 }
 
