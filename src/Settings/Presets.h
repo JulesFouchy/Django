@@ -28,6 +28,7 @@ public:
 	~Presets() = default;
 
 	bool ImGui(T* settingValues) {
+		ImGui::Separator();
 		bool b = false;
 		if (ImGui::BeginCombo("Presets", m_currentPresetName.c_str(), 0)) {
 			for (size_t i = 0; i < m_presets.size(); i++) {
@@ -39,7 +40,6 @@ public:
 			}
 			ImGui::EndCombo();
 		}
-		ImGui::Separator();
 		if (m_nameAvailable) {
 			if (ImGui::Button("Save settings")) {
 				savePresetTo(*settingValues, djg::SettingsFolder);
