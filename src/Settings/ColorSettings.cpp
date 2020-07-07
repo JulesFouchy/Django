@@ -21,7 +21,7 @@ void ColorSettings::ImGui(ParticlesSystem& partSystem) {
 	ImGui::Text("Particles");
 		// Choose mode
 	const char* items[] = { "Hue gradient", "Color Gradient" };
-	static const char* item_current = items[0];
+	const char* item_current = items[m_values.bColorModeHueGradient ? 0 : 1];
 	if (ImGui::BeginCombo("Gradient mode", item_current, 0))
 	{
 		for (int n = 0; n < IM_ARRAYSIZE(items); n++)
@@ -30,7 +30,6 @@ void ColorSettings::ImGui(ParticlesSystem& partSystem) {
 			if (ImGui::Selectable(items[n], is_selected)) {
 				if (item_current != items[n])
 					bColorsChanged = true;
-				item_current = items[n];
 				m_values.bColorModeHueGradient = n == 0;
 			}
 			if (is_selected)
