@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Presets.h"
+class ParticlesSystem;
 
 struct ColorSettingsValues {
 	glm::vec3 bgColor = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -28,14 +29,15 @@ public:
 	ColorSettings();
 	~ColorSettings() = default;
 
-	void apply();
-	void ImGui();
+	void apply(ParticlesSystem& partSystem);
+	void ImGui(ParticlesSystem& partSystem);
 
 	// Getters
 	inline const glm::vec3& backgroundColor() { return m_values.bgColor; }
+	inline const ColorSettingsValues& getValues() { return m_values; }
 
 private:
-	void applyParticlesColors();
+	void applyParticlesColors(ParticlesSystem& partSystem);
 
 private:
 	ColorSettingsValues m_values;

@@ -3,6 +3,8 @@
 #include "Helper/DisplayInfos.h"
 #include "Helper/Random.h"
 
+#include "Settings/ColorSettings.h"
+
 #define ACTUAL_POS_ID 0
 #define REST_POS_ID 1
 
@@ -63,7 +65,7 @@ void ParticlesSystem::sendRestPositionsToGPU() {
     m_restPositionsSSBO.uploadData(m_nbParticles, (float*)m_restPositions.data());
 }
 
-void ParticlesSystem::setNbParticles(unsigned int newNbParticles) {
+void ParticlesSystem::setNbParticles(unsigned int newNbParticles, const ColorSettingsValues& colorSettings) {
     // Set
     m_nbParticles = newNbParticles;
     // Rest positions
@@ -72,16 +74,27 @@ void ParticlesSystem::setNbParticles(unsigned int newNbParticles) {
     m_particlesSSBO.uploadData(m_nbParticles, nullptr);
     m_restPositionsSSBO.uploadData(m_nbParticles, nullptr);
     // Colors
-    std::vector<color::rgb<float>> colors;
-    colors.resize(m_nbParticles);
-    for (int i = 0; i < m_nbParticles; ++i) {
-        float t = i / (float)m_nbParticles;
-        colors[i] = color::hsv<float>({ t * 360.0f, 80.0f, 80.0f });
-        //spdlog::info("{} {} {}", ::color::get::red(colors[i]), ::color::get::green(colors[i]), ::color::get::blue(colors[i]));
-    }
-    m_colorsSSBO.uploadData(m_nbParticles, (float*)colors.data());
+    setParticlesColors(colorSettings);
     // Update physics shader
     m_physicsShader.get().bind();
     m_physicsShader.get().setUniform1i("u_NbOfParticles", m_nbParticles);
     m_physicsShader.get().unbind();
+}
+
+void ParticlesSystem::setParticlesColors(const ColorSettingsValues& colorSettings) {
+    std::vector<color::rgb<float>> colors;
+    colors.resize(m_nbParticles);
+    // We need to do the following because our color library doesn't handle negative hues
+    int k = std::max(
+        - floor(colorSettings.particlesHueStart / 360.0f), // we check both because, despite the names,
+        - floor(colorSettings.particlesHueEnd   / 360.0f)  // hue start and end could actually be in any order
+    );
+    float hueStart = colorSettings.particlesHueStart + k * 360;
+    float hueEnd = colorSettings.particlesHueEnd + k * 360;
+    //
+    for (int i = 0; i < m_nbParticles; ++i) {
+        float t = i / (float)m_nbParticles;
+        colors[i] = color::hsv<float>({ (1-t) * hueStart + t * hueEnd, 80.0f, 80.0f });
+    }
+    m_colorsSSBO.uploadData(m_nbParticles, (float*)colors.data());
 }

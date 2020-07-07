@@ -8,7 +8,7 @@ void Settings::ImGuiWindows(ShaderPipeline& physicsCompute, ParticlesSystem& par
 		m_alphaTrailSettings.ImGui();
 	ImGui::End();
 	ImGui::Begin("Colors");
-		m_colorSettings.ImGui();
+		m_colorSettings.ImGui(partSystem);
 	ImGui::End();
 	ImGui::Begin("Wind");
 		m_windSettings.ImGui(physicsCompute);
@@ -17,16 +17,16 @@ void Settings::ImGuiWindows(ShaderPipeline& physicsCompute, ParticlesSystem& par
 		m_physicsSettings.ImGui(physicsCompute);
 	ImGui::End();
 	ImGui::Begin("Particles");
-		m_particleSystemSettings.ImGui(partSystem, currentConfiguration);
+		m_particleSystemSettings.ImGui(partSystem, currentConfiguration, m_colorSettings.getValues());
 	ImGui::End();
 }
 
 void Settings::apply(ShaderPipeline& physicsCompute, ParticlesSystem& partSystem, Configuration& currentConfiguration) {
+	m_particleSystemSettings.apply(partSystem, currentConfiguration, m_colorSettings.getValues());
 	m_alphaTrailSettings.apply();
-	m_colorSettings.apply();
+	m_colorSettings.apply(partSystem);
 	m_windSettings.apply(physicsCompute);
 	m_physicsSettings.apply(physicsCompute);
-	m_particleSystemSettings.apply(partSystem, currentConfiguration);
 }
 
 void Settings::serializeTo(const std::string& filePath) {

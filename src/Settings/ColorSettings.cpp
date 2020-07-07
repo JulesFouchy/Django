@@ -1,14 +1,16 @@
 #include "ColorSettings.h"
 
+#include "Particles/ParticlesSystem.h"
+
 ColorSettings::ColorSettings()
 	: m_presets("djgColors")
 {}
 
-void ColorSettings::apply() {
-	applyParticlesColors();
+void ColorSettings::apply(ParticlesSystem& partSystem) {
+	applyParticlesColors(partSystem);
 }
 
-void ColorSettings::ImGui() {
+void ColorSettings::ImGui(ParticlesSystem& partSystem) {
 	bool b = false;
 	// Background
 	if (ImGui::ColorEdit3("Background Color", (float*)&m_values.bgColor[0]))
@@ -19,7 +21,7 @@ void ColorSettings::ImGui() {
 	ImGui::PushID(4387654);
 	if (ImGui::DragFloat("", &m_values.particlesHueStart)) {
 		b = true;
-		applyParticlesColors();
+		applyParticlesColors(partSystem);
 	}
 	ImGui::PopID();
 	ImGui::SameLine();
@@ -27,18 +29,18 @@ void ColorSettings::ImGui() {
 	ImGui::PushID(5387655);
 	if (ImGui::DragFloat("", &m_values.particlesHueEnd)) {
 		b = true;
-		applyParticlesColors();
+		applyParticlesColors(partSystem);
 	}
 	ImGui::PopID();
 	ImGui::PopItemWidth();
 	//
 	if (m_presets.ImGui(&m_values)) {
-		apply();
+		apply(partSystem);
 	}
 	if (b)
 		m_presets.setToPlaceholderSetting();
 }
 
-void ColorSettings::applyParticlesColors() {
-
+void ColorSettings::applyParticlesColors(ParticlesSystem& partSystem) {
+	partSystem.setParticlesColors(m_values);
 }

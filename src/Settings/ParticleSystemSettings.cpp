@@ -2,17 +2,18 @@
 
 #include "Particles/ParticlesSystem.h"
 #include "Configurations/Configuration.h"
+#include "ColorSettings.h"
 
 ParticleSystemSettings::ParticleSystemSettings()
     : m_presets("djgParticles")
 {}
 
-void ParticleSystemSettings::ImGui(ParticlesSystem& partSystem, Configuration& currentConfiguration) {
+void ParticleSystemSettings::ImGui(ParticlesSystem& partSystem, Configuration& currentConfiguration, const ColorSettingsValues& colorSettings) {
     bool b = false;
     // Nb of particles
     if (ImGui::SliderInt("Nb of particles", (int*)&m_values.nbParticles, 1, 100000)) {
         b = true;
-        partSystem.setNbParticles(m_values.nbParticles);
+        partSystem.setNbParticles(m_values.nbParticles, colorSettings);
         currentConfiguration.setup(m_values.nbParticles);
         currentConfiguration.applyTo(partSystem);
     }
@@ -23,15 +24,15 @@ void ParticleSystemSettings::ImGui(ParticlesSystem& partSystem, Configuration& c
     }
     //
     if (m_presets.ImGui(&m_values)) {
-        apply(partSystem, currentConfiguration);
+        apply(partSystem, currentConfiguration, colorSettings);
     }
     if (b)
         m_presets.setToPlaceholderSetting();
 }
 
-void ParticleSystemSettings::apply(ParticlesSystem& partSystem, Configuration& currentConfiguration) {
+void ParticleSystemSettings::apply(ParticlesSystem& partSystem, Configuration& currentConfiguration, const ColorSettingsValues& colorSettings) {
     // Nb particles
-    partSystem.setNbParticles(m_values.nbParticles);
+    partSystem.setNbParticles(m_values.nbParticles, colorSettings);
     currentConfiguration.setup(m_values.nbParticles);
     currentConfiguration.applyTo(partSystem);
     // Radius

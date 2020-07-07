@@ -4,6 +4,7 @@
 
 class ParticlesSystem;
 class Configuration;
+struct ColorSettingsValues;
 
 struct ParticleSystemSettingsValues {
 	unsigned int nbParticles = 100000;
@@ -26,8 +27,8 @@ public:
 	ParticleSystemSettings();
 	~ParticleSystemSettings() = default;
 
-	void ImGui(ParticlesSystem& partSystem, Configuration& currentConfiguration);
-	void apply(ParticlesSystem& partSystem, Configuration& currentConfiguration);
+	void ImGui(ParticlesSystem& partSystem, Configuration& currentConfiguration, const ColorSettingsValues& colorSettings);
+	void apply(ParticlesSystem& partSystem, Configuration& currentConfiguration, const ColorSettingsValues& colorSettings);
 
 	inline unsigned int nbParticles() { return m_values.nbParticles; }
 

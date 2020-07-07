@@ -1,6 +1,8 @@
 #include "OpenGL/ComputeShader.h"
 #include "OpenGL/SSBO.h"
 
+struct ColorSettingsValues;
+
 class ParticlesSystem {
 public:
 	ParticlesSystem();
@@ -9,7 +11,8 @@ public:
 	void draw();
 	void updatePositions();
 
-	void setNbParticles(unsigned int newNbParticles);
+	void setNbParticles(unsigned int newNbParticles, const ColorSettingsValues& colorSettings);
+	void setParticlesColors(const ColorSettingsValues& colorSettings);
 
 	inline ShaderPipeline& physicsComputeShader() { return m_physicsShader.get(); }
 
