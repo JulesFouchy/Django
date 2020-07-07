@@ -4,6 +4,8 @@
 
 struct ColorSettingsValues {
 	glm::vec3 bgColor = glm::vec3(0.0f, 0.0f, 0.0f);
+	float particlesHueStart = 0.0f;
+	float particlesHueEnd = 360.0f;
 
 private:
 	//Serialization
@@ -14,7 +16,9 @@ private:
 		archive(
 			CEREAL_NVP(bgColor.r),
 			CEREAL_NVP(bgColor.g),
-			CEREAL_NVP(bgColor.b)
+			CEREAL_NVP(bgColor.b),
+			CEREAL_NVP(particlesHueStart),
+			CEREAL_NVP(particlesHueEnd)
 		);
 	}
 };
@@ -29,6 +33,9 @@ public:
 
 	// Getters
 	inline const glm::vec3& backgroundColor() { return m_values.bgColor; }
+
+private:
+	void applyParticlesColors();
 
 private:
 	ColorSettingsValues m_values;
