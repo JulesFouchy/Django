@@ -9,20 +9,24 @@ PhysicsSettings::PhysicsSettings()
 
 void PhysicsSettings::ImGui(ShaderPipeline& physicsCompute) {
 	bool b = false;
-    if (ImGui::SliderFloat("Pull force", &m_values.stiffness, 0.0f, 20.0f)) {
+	if (ImGui::SliderFloat("Pulsation", &m_values.pulsation, 0, 20)) {
 		b = true;
-        setStiffnessInShader(physicsCompute);
-    }
-    if (ImGui::SliderFloat("Damping", &m_values.damping, 0.0f, 20.0f)) {
+		m_values.computePhysicalParameters();
+		apply(physicsCompute);
+	}
+	if (ImGui::SliderFloat("Damping Ratio", &m_values.dampingRatio, 0, 2)) {
 		b = true;
-        setDampingInShader(physicsCompute);
-    }
+		m_values.computeDamping();
+		setDampingInShader(physicsCompute);
+	}
 	if (ImGui::Button("Perfect")) {
 		b = true;
-		m_values.stiffness = m_values.damping * m_values.damping / 4.0f;
-		setStiffnessInShader(physicsCompute);
+		m_values.dampingRatio = 1;
+		m_values.computeDamping();
+		setDampingInShader(physicsCompute);
 	}
 	if (m_presets.ImGui(&m_values)) {
+		m_values.computePhysicalParameters();
 		apply(physicsCompute);
 	}
 	if (b)
@@ -36,12 +40,12 @@ void PhysicsSettings::apply(ShaderPipeline& physicsCompute) {
 
 void PhysicsSettings::setStiffnessInShader(ShaderPipeline& physicsCompute) {
 	physicsCompute.bind();
-	physicsCompute.setUniform1f("u_Stiffness", m_values.stiffness);
+	physicsCompute.setUniform1f("u_Stiffness", m_values.getStiffness());
 	physicsCompute.unbind();
 }
 
 void PhysicsSettings::setDampingInShader(ShaderPipeline& physicsCompute) {
 	physicsCompute.bind();
-	physicsCompute.setUniform1f("u_Damping", m_values.damping);
+	physicsCompute.setUniform1f("u_Damping", m_values.getDamping());
 	physicsCompute.unbind();
 }
