@@ -39,8 +39,7 @@ void AlphaTrailSettings::clearScreen(float dt, const glm::vec3& bgColor) {
 		m_renderBuffer.bind();
 		//
 		m_clearScreenPipeline.bind();
-		m_clearScreenPipeline.setUniform1f("dt", dt);
-		m_clearScreenPipeline.setUniform1f("decay", m_values.alphaTrailDecay);
+		m_clearScreenPipeline.setUniform1f("alpha", dt * m_values.alphaTrailDecay);
 		m_clearScreenPipeline.setUniform3f("backgroundColor", bgColor.x, bgColor.y, bgColor.z);
 		m_fullScreenVAO.bind();
 		GLCall(glDrawArrays(GL_TRIANGLES, 0, 6));
