@@ -15,6 +15,11 @@ void AlphaTrailSettings::apply(const glm::vec3& bgColor) {
 		glClearColor(bgColor.x, bgColor.y, bgColor.z, 1);
 		glClear(GL_COLOR_BUFFER_BIT);
 		m_renderBuffer.unbind();
+		//
+		glEnable(GL_BLEND);
+	}
+	else {
+		glDisable(GL_BLEND);
 	}
 }
 

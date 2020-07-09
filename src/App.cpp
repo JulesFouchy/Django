@@ -20,7 +20,7 @@ App::App(SDL_Window* window)
 	//
 	onWindowResize();
 	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_BLEND);
+	// glEnable(GL_BLEND); // This is already handled by Alpha Trail Settings
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
