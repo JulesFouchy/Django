@@ -68,9 +68,10 @@ void App::onLoopIteration() {
 	m_settingsMng.get().getWind().setWindOffset(m_particlesSystem.physicsComputeShader(), m_time.time());
 	m_particlesSystem.physicsComputeShader().unbind();
 	// Clear screen
-	m_renderBuffer.bind();
-
 	if (m_settingsMng.get().getTrail().isEnabled()) {
+		//
+		m_renderBuffer.bind();
+		//
 		m_clearScreenPipeline.bind();
 		m_clearScreenPipeline.setUniform1f("dt", m_time.deltaTime());
 		m_clearScreenPipeline.setUniform1f("decay", m_settingsMng.get().getTrail().alphaTrailDecay());
@@ -88,8 +89,10 @@ void App::onLoopIteration() {
 	m_particlePipeline.bind();
 	m_particlesSystem.draw();
 
-	m_renderBuffer.unbind();
-	m_renderBuffer.blitToScreen();
+	if (m_settingsMng.get().getTrail().isEnabled()) {
+		m_renderBuffer.unbind();
+		m_renderBuffer.blitToScreen();
+	}
 	// Update particles physics
 	m_particlesSystem.updatePositions();
 }
