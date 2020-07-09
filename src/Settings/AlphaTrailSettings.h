@@ -32,10 +32,6 @@ public:
 	inline float alphaTrailDecay() { return m_values.alphaTrailDecay; }
 
 private:
-	static void  EnableAlphaTrail();
-	static void DisableAlphaTrail();
-
-private:
 	AlphaTrailSettingsValues m_values;
 	Presets<AlphaTrailSettingsValues> m_presets;
 
