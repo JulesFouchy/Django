@@ -4,7 +4,7 @@
 
 #include "OpenGL/ShaderPipeline.h"
 #include "OpenGL/QuadVAO.h"
-#include "OpenGL/FrameBuffer.h"
+#include "OpenGL/RenderBuffer.h"
 
 struct AlphaTrailSettingsValues {
 	bool bAlphaTrail = true;
@@ -34,7 +34,7 @@ public:
 	void clearScreen(float dt, const glm::vec3& bgColor);
 	void finishRendering();
 
-	inline FrameBuffer& getRenderBuffer() { return m_renderBuffer; }
+	inline RenderBuffer& getRenderBuffer() { return m_renderBuffer; }
 
 private:
 	AlphaTrailSettingsValues m_values;
@@ -42,7 +42,7 @@ private:
 
 	ShaderPipeline m_clearScreenPipeline;
 	QuadVAO m_fullScreenVAO;
-	FrameBuffer m_renderBuffer;
+	RenderBuffer m_renderBuffer;
 
 private:
 	// Serialization
