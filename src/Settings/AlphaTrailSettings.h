@@ -2,6 +2,10 @@
 
 #include "Presets.h"
 
+#include "OpenGL/ShaderPipeline.h"
+#include "OpenGL/QuadVAO.h"
+#include "OpenGL/FrameBuffer.h"
+
 struct AlphaTrailSettingsValues {
 	bool bAlphaTrail = true;
 	float alphaTrailDecay = 20.0f;
@@ -27,13 +31,18 @@ public:
 	void apply();
 	void ImGui();
 
-	// Getters
-	inline bool isEnabled() { return m_values.bAlphaTrail; }
-	inline float alphaTrailDecay() { return m_values.alphaTrailDecay; }
+	void clearScreen(float dt, const glm::vec3& bgColor);
+	void finishRendering();
+
+	inline FrameBuffer& getRenderBuffer() { return m_renderBuffer; }
 
 private:
 	AlphaTrailSettingsValues m_values;
 	Presets<AlphaTrailSettingsValues> m_presets;
+
+	ShaderPipeline m_clearScreenPipeline;
+	QuadVAO m_fullScreenVAO;
+	FrameBuffer m_renderBuffer;
 
 private:
 	// Serialization

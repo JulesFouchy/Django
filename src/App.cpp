@@ -17,10 +17,6 @@ App::App(SDL_Window* window)
 	m_particlePipeline.addShader(ShaderType::Vertex,   "res/shaders/particle.vert");
 	m_particlePipeline.addShader(ShaderType::Fragment, "res/shaders/particle.frag");
 	m_particlePipeline.createProgram();
-	// Clear screen pipeline
-	m_clearScreenPipeline.addShader(ShaderType::Vertex,   "res/shaders/clearScreen.vert");
-	m_clearScreenPipeline.addShader(ShaderType::Fragment, "res/shaders/clearScreen.frag");
-	m_clearScreenPipeline.createProgram();
 	//
 	onWindowResize();
 	glEnable(GL_DEPTH_TEST);
@@ -68,31 +64,12 @@ void App::onLoopIteration() {
 	m_settingsMng.get().getWind().setWindOffset(m_particlesSystem.physicsComputeShader(), m_time.time());
 	m_particlesSystem.physicsComputeShader().unbind();
 	// Clear screen
-	if (m_settingsMng.get().getTrail().isEnabled()) {
-		//
-		m_renderBuffer.bind();
-		//
-		m_clearScreenPipeline.bind();
-		m_clearScreenPipeline.setUniform1f("dt", m_time.deltaTime());
-		m_clearScreenPipeline.setUniform1f("decay", m_settingsMng.get().getTrail().alphaTrailDecay());
-		m_clearScreenPipeline.setUniform3f("backgroundColor", m_settingsMng.get().getColors().backgroundColor().x, m_settingsMng.get().getColors().backgroundColor().y, m_settingsMng.get().getColors().backgroundColor().z);
-		m_fullScreenVAO.bind();
-		GLCall(glDrawArrays(GL_TRIANGLES, 0, 6));
-		glClear(GL_DEPTH_BUFFER_BIT);
-	}
-	else {
-		glClearColor(m_settingsMng.get().getColors().backgroundColor().x, m_settingsMng.get().getColors().backgroundColor().y, m_settingsMng.get().getColors().backgroundColor().z, 1);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	}
-	
+	m_settingsMng.get().getTrail().clearScreen(m_time.deltaTime(), m_settingsMng.get().getColors().backgroundColor());
 	// Draw particles
 	m_particlePipeline.bind();
 	m_particlesSystem.draw();
-
-	if (m_settingsMng.get().getTrail().isEnabled()) {
-		m_renderBuffer.unbind();
-		m_renderBuffer.blitToScreen();
-	}
+	// Blit render buffer to screen if needed
+	m_settingsMng.get().getTrail().finishRendering();
 	// Update particles physics
 	m_particlesSystem.updatePositions();
 }
@@ -191,7 +168,7 @@ void App::onEvent(const SDL_Event& e) {
 
 void App::onWindowResize() {
 	DisplayInfos::RefreshSize(m_window);
-	m_renderBuffer.setSize(DisplayInfos::Width(), DisplayInfos::Height());
+	m_settingsMng.get().getTrail().getRenderBuffer().setSize(DisplayInfos::Width(), DisplayInfos::Height());
 	m_particlePipeline.bind();
 	m_particlePipeline.setUniform1f("u_invAspectRatio", 1.0f / DisplayInfos::Ratio());
 	glViewport(0, 0, DisplayInfos::Width(), DisplayInfos::Height());
