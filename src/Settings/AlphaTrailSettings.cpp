@@ -30,8 +30,8 @@ void AlphaTrailSettings::ImGui() {
 }
 
 void AlphaTrailSettings::EnableAlphaTrail() {
-	SDL_GL_SetSwapInterval(0);
+	//SDL_GL_SetSwapInterval(0);
 }
 void AlphaTrailSettings::DisableAlphaTrail() {
-	SDL_GL_SetSwapInterval(1);
+	//SDL_GL_SetSwapInterval(1);
 }

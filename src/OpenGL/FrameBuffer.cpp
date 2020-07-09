@@ -1,5 +1,7 @@
 #include "FrameBuffer.h"
 
+#include "Helper/DisplayInfos.h"
+
 #include "Debugging/glException.h"
 
 FrameBuffer::FrameBuffer()
@@ -25,4 +27,10 @@ void FrameBuffer::bind() {
 void FrameBuffer::unbind() {
 	GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
 	GLCall(glViewport(m_prevViewportSettings[0], m_prevViewportSettings[1], m_prevViewportSettings[2], m_prevViewportSettings[3]));
+}
+
+void FrameBuffer::blitToScreen() {
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+	glBindFramebuffer(GL_READ_FRAMEBUFFER, m_frameBufferId);
+	glBlitFramebuffer(0, 0, m_texture.getWidth(), m_texture.getHeight(), 0, 0, DisplayInfos::Width(), DisplayInfos::Height(), GL_COLOR_BUFFER_BIT, GL_LINEAR);
 }

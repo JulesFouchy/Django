@@ -9,6 +9,7 @@ public:
 
 	void bind();
 	void unbind();
+	void blitToScreen();
 
 	inline void setSize(unsigned int width, unsigned int height) { m_texture.setSize(width, height); }
 
