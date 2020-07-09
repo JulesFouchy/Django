@@ -28,8 +28,8 @@ public:
 	AlphaTrailSettings();
 	~AlphaTrailSettings() = default;
 
-	void apply();
-	void ImGui();
+	void apply(const glm::vec3& bgColor);
+	void ImGui(const glm::vec3& bgColor);
 
 	void clearScreen(float dt, const glm::vec3& bgColor);
 	void finishRendering();

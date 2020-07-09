@@ -5,7 +5,7 @@
 
 void Settings::ImGuiWindows(ShaderPipeline& physicsCompute, ParticlesSystem& partSystem, Configuration& currentConfiguration) {
 	ImGui::Begin("Trail");
-		m_alphaTrailSettings.ImGui();
+		m_alphaTrailSettings.ImGui(m_colorSettings.backgroundColor());
 	ImGui::End();
 	ImGui::Begin("Colors");
 		m_colorSettings.ImGui(partSystem);
@@ -24,7 +24,7 @@ void Settings::ImGuiWindows(ShaderPipeline& physicsCompute, ParticlesSystem& par
 void Settings::apply(ShaderPipeline& physicsCompute, ParticlesSystem& partSystem, Configuration& currentConfiguration) {
 	m_windSettings.apply(physicsCompute); // must be before particleSystemSettings
 	m_particleSystemSettings.apply(partSystem, currentConfiguration, m_colorSettings.getValues());
-	m_alphaTrailSettings.apply();
+	m_alphaTrailSettings.apply(m_colorSettings.backgroundColor());
 	m_colorSettings.apply(partSystem); // must be after particleSystemSettings
 	m_physicsSettings.apply(physicsCompute);
 }

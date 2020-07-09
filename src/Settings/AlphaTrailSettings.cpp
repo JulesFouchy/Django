@@ -8,18 +8,26 @@ AlphaTrailSettings::AlphaTrailSettings()
 	m_clearScreenPipeline.createProgram();
 }
 
-void AlphaTrailSettings::apply() {
-
+void AlphaTrailSettings::apply(const glm::vec3& bgColor) {
+	if (m_values.bAlphaTrail) {
+		// Clear render buffer
+		m_renderBuffer.bind();
+		glClearColor(bgColor.x, bgColor.y, bgColor.z, 1);
+		glClear(GL_COLOR_BUFFER_BIT);
+		m_renderBuffer.unbind();
+	}
 }
 
-void AlphaTrailSettings::ImGui() {
+void AlphaTrailSettings::ImGui(const glm::vec3& bgColor) {
 	bool b = false;
-	if (ImGui::Checkbox("Enabled", &m_values.bAlphaTrail))
+	if (ImGui::Checkbox("Enabled", &m_values.bAlphaTrail)) {
 		b = true;
+		apply(bgColor);
+	}
 	if (ImGui::SliderFloat("Trail Decay", &m_values.alphaTrailDecay, 0.0f, 60.0f))
 		b = true;
 	if (m_presets.ImGui(&m_values)) {
-		apply();
+		apply(bgColor);
 	}
 	if (b)
 		m_presets.setToPlaceholderSetting();
