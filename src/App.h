@@ -3,6 +3,7 @@
 #include "Particles/ParticlesSystem.h"
 #include "OpenGL/ShaderPipeline.h"
 #include "OpenGL/QuadVAO.h"
+#include "OpenGL/FrameBuffer.h"
 
 #include "Configurations/Config_FillScreen.h"
 #include "Configurations/Config_RandomCPU.h"
@@ -40,6 +41,7 @@ private:
 	ShaderPipeline m_particlePipeline;
 	ShaderPipeline m_clearScreenPipeline;
 	QuadVAO m_fullScreenVAO;
+	FrameBuffer m_renderBuffer;
 	Time_Realtime m_time;
 	ParticlesSystem m_particlesSystem;
 

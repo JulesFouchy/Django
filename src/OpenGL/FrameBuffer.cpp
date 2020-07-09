@@ -2,8 +2,7 @@
 
 #include "Debugging/glException.h"
 
-FrameBuffer::FrameBuffer(unsigned int width, unsigned int height)
-	: m_texture(width, height)
+FrameBuffer::FrameBuffer()
 {
 	GLCall(glGenFramebuffers(1, &m_frameBufferId));
 	GLCall(glBindFramebuffer(GL_FRAMEBUFFER, m_frameBufferId));

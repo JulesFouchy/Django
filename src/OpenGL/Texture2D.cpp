@@ -2,7 +2,7 @@
 
 #include "Debugging/glException.h"
 
-Texture2D::Texture2D(unsigned int width, unsigned int height)
+Texture2D::Texture2D()
 	: m_bytesPerPixel(3), m_GLpixelInternalFormat(GL_RGB8), m_GLpixelFormat(GL_RGB), m_GLpixelType(GL_UNSIGNED_BYTE)
 {
 	GLint interpolationMode = GL_NEAREST;
@@ -15,8 +15,6 @@ Texture2D::Texture2D(unsigned int width, unsigned int height)
 	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapMode));
 	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapMode));
 	GLCall(glBindTexture(GL_TEXTURE_2D, 0));
-
-	setSize(width, height);
 }
 
 Texture2D::~Texture2D() {

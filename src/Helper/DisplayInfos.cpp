@@ -1,7 +1,7 @@
 #include "DisplayInfos.h"
 
-int DisplayInfos::m_windowWidth;
-int DisplayInfos::m_windowHeight;
+unsigned int DisplayInfos::m_windowWidth;
+unsigned int DisplayInfos::m_windowHeight;
 float DisplayInfos::m_aspectRatio;
 
 void DisplayInfos::RefreshSize(SDL_Window* window) {

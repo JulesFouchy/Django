@@ -2,7 +2,7 @@
 
 class Texture2D {
 public:
-	Texture2D(unsigned int width, unsigned int height);
+	Texture2D();
 	~Texture2D();
 
 	void setSize(unsigned int width, unsigned int height);

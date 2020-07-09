@@ -183,6 +183,7 @@ void App::onEvent(const SDL_Event& e) {
 
 void App::onWindowResize() {
 	DisplayInfos::RefreshSize(m_window);
+	m_renderBuffer.setSize(DisplayInfos::Width(), DisplayInfos::Height());
 	m_particlePipeline.bind();
 	m_particlePipeline.setUniform1f("u_invAspectRatio", 1.0f / DisplayInfos::Ratio());
 	glViewport(0, 0, DisplayInfos::Width(), DisplayInfos::Height());

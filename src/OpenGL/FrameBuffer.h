@@ -4,19 +4,13 @@
 
 class FrameBuffer {
 public:
-	FrameBuffer(unsigned int width, unsigned int height);
+	FrameBuffer();
 	~FrameBuffer();
 
-	void attachTexture(Texture2D& texture);
-
 	void bind();
-	void bind_WithoutSettingViewport();
-	void setViewport();
 	void unbind();
-	void unbind_WithoutRestoringViewport();
-	void restoreViewport();
 
-	void clear(); // Make sure you have bound the framebuffer beforehand
+	inline void setSize(unsigned int width, unsigned int height) { m_texture.setSize(width, height); }
 
 protected:
 	unsigned int m_frameBufferId;
