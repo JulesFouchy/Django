@@ -14,12 +14,6 @@ AlphaTrailSettings::AlphaTrailSettings()
 
 void AlphaTrailSettings::apply(const glm::vec3& bgColor) {
 	if (m_values.bAlphaTrail) {
-		// Clear render buffer
-		m_renderBuffer.bind();
-		glClearColor(bgColor.x, bgColor.y, bgColor.z, 1);
-		glClear(GL_COLOR_BUFFER_BIT);
-		m_renderBuffer.unbind();
-		//
 		if (!m_values.bFixResiduals)
 			glEnable(GL_BLEND);
 		else
@@ -34,6 +28,8 @@ void AlphaTrailSettings::ImGui(const glm::vec3& bgColor) {
 	bool b = false;
 	if (ImGui::Checkbox("Enabled", &m_values.bAlphaTrail)) {
 		b = true;
+		if (m_values.bAlphaTrail)
+			clearRenderBuffer(bgColor);
 		apply(bgColor);
 	}
 	if (ImGui::SliderFloat("Trail Decay", &m_values.alphaTrailDecay, 0.0f, 60.0f))
@@ -46,7 +42,10 @@ void AlphaTrailSettings::ImGui(const glm::vec3& bgColor) {
 		ImGui::SliderFloat("Thresh", &thresh, 0.0f, 0.5f);
 		ImGui::SliderFloat("Min Alpha", &minAlpha, 0.0f, 0.2f);
 	}
+	bool prevBTrail = m_values.bAlphaTrail;
 	if (m_presets.ImGui(&m_values)) {
+		if (m_values.bAlphaTrail && !prevBTrail)
+			clearRenderBuffer(bgColor);
 		apply(bgColor);
 	}
 	if (b)
@@ -90,4 +89,11 @@ void AlphaTrailSettings::finishRendering() {
 		m_renderBuffer.unbind();
 		m_renderBuffer.blitToScreen();
 	}
+}
+
+void AlphaTrailSettings::clearRenderBuffer(const glm::vec3& bgColor) {
+	m_renderBuffer.bind();
+	glClearColor(bgColor.x, bgColor.y, bgColor.z, 1);
+	glClear(GL_COLOR_BUFFER_BIT);
+	m_renderBuffer.unbind();
 }

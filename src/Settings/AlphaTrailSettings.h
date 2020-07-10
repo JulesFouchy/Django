@@ -40,6 +40,9 @@ public:
 	inline void setSize(unsigned int width, unsigned int height) { m_renderBuffer.setSize(width, height); m_textureFrameBuffer.setSize(width, height); }
 
 private:
+	void clearRenderBuffer(const glm::vec3& bgColor);
+
+private:
 	AlphaTrailSettingsValues m_values;
 	Presets<AlphaTrailSettingsValues> m_presets;
 
