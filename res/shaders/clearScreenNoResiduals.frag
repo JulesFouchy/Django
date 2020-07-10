@@ -9,12 +9,9 @@ uniform float minAlpha;
 layout (location = 0) in vec2 uv;
 
 void main(void){
-    vec3 pCol = texture2D(prevFrame, uv).rgb;
-    vec3 col = alpha * backgroundColor + (1.0 - alpha) * pCol;
-    if (length( col - backgroundColor) < threshold) {
-        float a = minAlpha;
-        col = a * backgroundColor + (1.0 - a) * pCol;
-        //col = backgroundColor;
-    }
-    gl_FragColor = vec4(col, 1.0);
+    vec3 prevCol = texture2D(prevFrame, uv).rgb;
+    float a = length(prevCol - backgroundColor) < threshold
+              ? minAlpha
+              : alpha;
+    gl_FragColor = vec4(a * backgroundColor + (1.0 - a) * prevCol, 1.0);
 }
