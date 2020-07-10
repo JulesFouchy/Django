@@ -1,5 +1,7 @@
 #include "AlphaTrailSettings.h"
 
+#include "Helper/MyImGui.h"
+
 AlphaTrailSettings::AlphaTrailSettings()
 	: m_presets("djgTrail"), m_fullScreenVAOWithUVs(true)
 {
@@ -39,6 +41,8 @@ void AlphaTrailSettings::ImGui(const glm::vec3& bgColor) {
 			b = true;
 			apply(bgColor);
 		}
+		ImGui::SameLine();
+		MyImGui::HelpMarker("For very small values of Trail Decay, some artifacts appear.\nCheck this only if you see them, since the fix comes at a small performance cost.");
 		if (m_values.bFixResiduals) {
 			if (ImGui::SliderFloat("Threshold", &m_values.threshold, 0.0f, 0.5f))
 				b = true;

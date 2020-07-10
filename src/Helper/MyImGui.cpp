@@ -9,3 +9,15 @@ bool MyImGui::SliderFloatWithExtensibleRange(const char* label, float* v, float*
 	}
 	return b;
 }
+
+void MyImGui::HelpMarker(const char* text) {
+    ImGui::TextDisabled("(?)");
+    if (ImGui::IsItemHovered())
+    {
+        ImGui::BeginTooltip();
+        ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+        ImGui::TextUnformatted(text);
+        ImGui::PopTextWrapPos();
+        ImGui::EndTooltip();
+    }
+}
