@@ -1,25 +1,18 @@
 #pragma once
 
-class RenderBuffer {
+#include "FrameBuffer.h"
+
+class RenderBuffer : public FrameBuffer {
 public:
-	RenderBuffer();
+	RenderBuffer() = default;
 	~RenderBuffer();
 
-	void setSize(unsigned int width, unsigned int height);
-
-	void bind();
-	void unbind();
-	void blitToScreen();
-
 private:
-	void createAttachments(unsigned int width, unsigned int height);
-	void destroyAttachments();
+	void createAttachments(unsigned int width, unsigned int height) override;
+	void destroyAttachments() override;
+	virtual void attachAttachments() override;
 
 private:
 	unsigned int m_colorRenderBufferId;
 	unsigned int m_depthRenderBufferId;
-	unsigned int m_frameBufferId;
-	int m_prevViewportSettings[4];
-	unsigned int m_width;
-	unsigned int m_height;
 };
