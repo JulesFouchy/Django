@@ -33,7 +33,7 @@ void AlphaTrailSettings::ImGui(const glm::vec3& bgColor) {
 		apply(bgColor);
 	}
 	if (m_values.bAlphaTrail) {
-		if (ImGui::SliderFloat("Trail Decay", &m_values.alphaTrailDecay, 0.0f, 60.0f))
+		if (ImGui::SliderFloat("Trail Decay", &m_values.alphaTrailDecay, 0.0f, 30.0f))
 			b = true;
 		if (ImGui::Checkbox("Fix Residuals", &m_values.bFixResiduals)) {
 			b = true;
