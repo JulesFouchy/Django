@@ -43,6 +43,8 @@ void AlphaTrailSettings::ImGui(const glm::vec3& bgColor) {
 			b = true;
 			apply(bgColor);
 		}
+		ImGui::SliderFloat("Thresh", &thresh, 0.0f, 0.5f);
+		ImGui::SliderFloat("Min Alpha", &minAlpha, 0.0f, 0.2f);
 	}
 	if (m_presets.ImGui(&m_values)) {
 		apply(bgColor);
@@ -68,6 +70,8 @@ void AlphaTrailSettings::clearScreen(float dt, const glm::vec3& bgColor) {
 			m_clearScreenNoResidualsPipeline.bind();
 			m_clearScreenNoResidualsPipeline.setUniform1f("alpha", dt * m_values.alphaTrailDecay);
 			m_clearScreenNoResidualsPipeline.setUniform3f("backgroundColor", bgColor.x, bgColor.y, bgColor.z);
+			m_clearScreenNoResidualsPipeline.setUniform1f("thresh", thresh);
+			m_clearScreenNoResidualsPipeline.setUniform1f("minAlpha", minAlpha);
 			m_textureFrameBuffer.attachTextureToSlot(1);
 			m_clearScreenNoResidualsPipeline.setUniform1i("prevFrame", 1);
 			m_fullScreenVAOWithUVs.bind();

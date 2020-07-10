@@ -50,6 +50,9 @@ private:
 	RenderBuffer m_renderBuffer;
 	TextureFrameBuffer m_textureFrameBuffer;
 
+	float thresh = 0.233;
+	float minAlpha = 0.112;
+
 private:
 	// Serialization
 	friend class cereal::access;
