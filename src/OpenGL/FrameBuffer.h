@@ -10,6 +10,7 @@ public:
 	void bind();
 	void unbind();
 	void blitToScreen();
+	void blitTo(FrameBuffer& frameBuffer);
 
 protected:
 	inline unsigned int getFrameBufferId() { return m_frameBufferId; }

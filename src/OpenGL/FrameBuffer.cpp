@@ -36,4 +36,12 @@ void FrameBuffer::blitToScreen() {
 	GLCall(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0));
 	GLCall(glBindFramebuffer(GL_READ_FRAMEBUFFER, m_frameBufferId));
 	GLCall(glBlitFramebuffer(0, 0, m_width, m_height, 0, 0, DisplayInfos::Width(), DisplayInfos::Height(), GL_COLOR_BUFFER_BIT, GL_LINEAR));
+	GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
+}
+
+void FrameBuffer::blitTo(FrameBuffer& frameBuffer) {
+	GLCall(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, frameBuffer.getFrameBufferId()));
+	GLCall(glBindFramebuffer(GL_READ_FRAMEBUFFER, m_frameBufferId));
+	GLCall(glBlitFramebuffer(0, 0, m_width, m_height, 0, 0, frameBuffer.m_width, frameBuffer.m_height, GL_COLOR_BUFFER_BIT, GL_LINEAR));
+	GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
 }

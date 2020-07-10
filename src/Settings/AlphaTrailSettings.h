@@ -46,6 +46,7 @@ private:
 	ShaderPipeline m_clearScreenPipeline;
 	ShaderPipeline m_clearScreenNoResidualsPipeline;
 	QuadVAO m_fullScreenVAO;
+	QuadVAO m_fullScreenVAOWithUVs;
 	RenderBuffer m_renderBuffer;
 	TextureFrameBuffer m_textureFrameBuffer;
 

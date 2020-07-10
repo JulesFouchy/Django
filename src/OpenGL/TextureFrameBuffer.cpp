@@ -36,3 +36,8 @@ void TextureFrameBuffer::attachAttachments() {
 	//
 	GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
 }
+
+void TextureFrameBuffer::attachTextureToSlot(unsigned int slot) {
+	GLCall(glActiveTexture(GL_TEXTURE0 + slot));
+	GLCall(glBindTexture(GL_TEXTURE_2D, m_colorTextureId));
+}

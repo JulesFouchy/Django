@@ -7,6 +7,8 @@ public:
 	TextureFrameBuffer() = default;
 	~TextureFrameBuffer();
 
+	void attachTextureToSlot(unsigned int slot);
+
 private:
 	void createAttachments(unsigned int width, unsigned int height) override;
 	void destroyAttachments() override;

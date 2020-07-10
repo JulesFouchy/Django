@@ -2,7 +2,7 @@
 
 class QuadVAO {
 public:
-	QuadVAO(); // Full Screen Quad
+	QuadVAO(bool bWithUVs = false); // Full Screen Quad
 	~QuadVAO();
 
 	void bind();

@@ -1,13 +1,13 @@
 #include "AlphaTrailSettings.h"
 
 AlphaTrailSettings::AlphaTrailSettings()
-	: m_presets("djgTrail")
+	: m_presets("djgTrail"), m_fullScreenVAOWithUVs(true)
 {
-	m_clearScreenPipeline.addShader(ShaderType::Vertex, "res/shaders/doNothing.vert");
+	m_clearScreenPipeline.addShader(ShaderType::Vertex, "res/shaders/passVertPos.vert");
 	m_clearScreenPipeline.addShader(ShaderType::Fragment, "res/shaders/clearScreen.frag");
 	m_clearScreenPipeline.createProgram();
 	//
-	m_clearScreenNoResidualsPipeline.addShader(ShaderType::Vertex, "res/shaders/doNothing.vert");
+	m_clearScreenNoResidualsPipeline.addShader(ShaderType::Vertex, "res/shaders/passVertPosAndUVs.vert");
 	m_clearScreenNoResidualsPipeline.addShader(ShaderType::Fragment, "res/shaders/clearScreenNoResiduals.frag");
 	m_clearScreenNoResidualsPipeline.createProgram();
 }
@@ -20,7 +20,10 @@ void AlphaTrailSettings::apply(const glm::vec3& bgColor) {
 		glClear(GL_COLOR_BUFFER_BIT);
 		m_renderBuffer.unbind();
 		//
-		glEnable(GL_BLEND);
+		if (!m_values.bFixResiduals)
+			glEnable(GL_BLEND);
+		else
+			glDisable(GL_BLEND);
 	}
 	else {
 		glDisable(GL_BLEND);
@@ -50,15 +53,27 @@ void AlphaTrailSettings::ImGui(const glm::vec3& bgColor) {
 
 void AlphaTrailSettings::clearScreen(float dt, const glm::vec3& bgColor) {
 	if (m_values.bAlphaTrail) {
-		//
-		m_renderBuffer.bind();
-		//
-		m_clearScreenPipeline.bind();
-		m_clearScreenPipeline.setUniform1f("alpha", dt * m_values.alphaTrailDecay);
-		m_clearScreenPipeline.setUniform3f("backgroundColor", bgColor.x, bgColor.y, bgColor.z);
-		m_fullScreenVAO.bind();
-		GLCall(glDrawArrays(GL_TRIANGLES, 0, 6));
-		glClear(GL_DEPTH_BUFFER_BIT);
+		if (!m_values.bFixResiduals) {
+			m_renderBuffer.bind();
+			m_clearScreenPipeline.bind();
+			m_clearScreenPipeline.setUniform1f("alpha", dt * m_values.alphaTrailDecay);
+			m_clearScreenPipeline.setUniform3f("backgroundColor", bgColor.x, bgColor.y, bgColor.z);
+			m_fullScreenVAO.bind();
+			GLCall(glDrawArrays(GL_TRIANGLES, 0, 6));
+			glClear(GL_DEPTH_BUFFER_BIT);
+		}
+		else {
+			m_renderBuffer.blitTo(m_textureFrameBuffer);
+			m_renderBuffer.bind();
+			m_clearScreenNoResidualsPipeline.bind();
+			m_clearScreenNoResidualsPipeline.setUniform1f("alpha", dt * m_values.alphaTrailDecay);
+			m_clearScreenNoResidualsPipeline.setUniform3f("backgroundColor", bgColor.x, bgColor.y, bgColor.z);
+			m_textureFrameBuffer.attachTextureToSlot(1);
+			m_clearScreenNoResidualsPipeline.setUniform1i("prevFrame", 1);
+			m_fullScreenVAOWithUVs.bind();
+			GLCall(glDrawArrays(GL_TRIANGLES, 0, 6));
+			glClear(GL_DEPTH_BUFFER_BIT);
+		}
 	}
 	else {
 		glClearColor(bgColor.x, bgColor.y, bgColor.z, 1);
