@@ -11,6 +11,8 @@ struct AlphaTrailSettingsValues {
 	bool bAlphaTrail = true;
 	bool bFixResiduals = false;
 	float alphaTrailDecay = 20.0f;
+	float threshold = 0.233;
+	float minAlpha = 0.112;
 
 private:
 	//Serialization
@@ -21,7 +23,9 @@ private:
 		archive(
 			CEREAL_NVP(bAlphaTrail),
 			CEREAL_NVP(bFixResiduals),
-			CEREAL_NVP(alphaTrailDecay)
+			CEREAL_NVP(alphaTrailDecay),
+			CEREAL_NVP(threshold),
+			CEREAL_NVP(minAlpha)
 		);
 	}
 };
@@ -52,9 +56,6 @@ private:
 	QuadVAO m_fullScreenVAOWithUVs;
 	RenderBuffer m_renderBuffer;
 	TextureFrameBuffer m_textureFrameBuffer;
-
-	float thresh = 0.233;
-	float minAlpha = 0.112;
 
 private:
 	// Serialization
