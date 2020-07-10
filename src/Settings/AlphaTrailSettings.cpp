@@ -3,9 +3,13 @@
 AlphaTrailSettings::AlphaTrailSettings()
 	: m_presets("djgTrail")
 {
-	m_clearScreenPipeline.addShader(ShaderType::Vertex, "res/shaders/clearScreen.vert");
+	m_clearScreenPipeline.addShader(ShaderType::Vertex, "res/shaders/doNothing.vert");
 	m_clearScreenPipeline.addShader(ShaderType::Fragment, "res/shaders/clearScreen.frag");
 	m_clearScreenPipeline.createProgram();
+	//
+	m_clearScreenNoResidualsPipeline.addShader(ShaderType::Vertex, "res/shaders/doNothing.vert");
+	m_clearScreenNoResidualsPipeline.addShader(ShaderType::Fragment, "res/shaders/clearScreenNoResiduals.frag");
+	m_clearScreenNoResidualsPipeline.createProgram();
 }
 
 void AlphaTrailSettings::apply(const glm::vec3& bgColor) {
@@ -31,6 +35,12 @@ void AlphaTrailSettings::ImGui(const glm::vec3& bgColor) {
 	}
 	if (ImGui::SliderFloat("Trail Decay", &m_values.alphaTrailDecay, 0.0f, 60.0f))
 		b = true;
+	if (m_values.bAlphaTrail) {
+		if (ImGui::Checkbox("Fix Residuals", &m_values.bFixResiduals)) {
+			b = true;
+			apply(bgColor);
+		}
+	}
 	if (m_presets.ImGui(&m_values)) {
 		apply(bgColor);
 	}
