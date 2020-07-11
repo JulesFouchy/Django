@@ -9,8 +9,6 @@ struct WindSettingsValues {
 	float minStrength = -0.048f;
 	float maxStrength = 0.968f;
 	float speed = 0.304f;
-	float directionAngle = 2.849f;
-	glm::vec2 direction = glm::vec2(-0.956f, 0.292f);
 private:
 	//Serialization
 	friend class cereal::access;
@@ -21,11 +19,24 @@ private:
 			CEREAL_NVP(noiseFrequency),
 			CEREAL_NVP(minStrength),
 			CEREAL_NVP(maxStrength),
-			CEREAL_NVP(speed),
-			CEREAL_NVP(directionAngle),
-			CEREAL_NVP(direction.x),
-			CEREAL_NVP(direction.y)
+			CEREAL_NVP(speed)
 		);
+	}
+};
+
+struct WindDirectionSettingsValues {
+	float directionAngle = 2.849f;
+	glm::vec2 direction = glm::vec2(-0.956f, 0.292f); // must be == {cos(directionAngle), sin(directionAngle)} as defined above
+private:
+	//Serialization
+	friend class cereal::access;
+	template <class Archive>
+	void serialize(Archive& archive)
+	{
+		archive(
+			CEREAL_NVP(directionAngle)
+		);
+		direction = glm::vec2(cos(directionAngle), sin(directionAngle));
 	}
 };
 
@@ -48,6 +59,7 @@ private:
 private:
 	WindSettingsValues m_values;
 	Presets<WindSettingsValues> m_presets;
+	WindDirectionSettingsValues m_dirValues;
 
 private:
 	// Serialization
@@ -57,7 +69,8 @@ private:
 	{
 		archive(
 			CEREAL_NVP(m_values),
-			CEREAL_NVP(m_presets)
+			CEREAL_NVP(m_presets),
+			CEREAL_NVP(m_dirValues)
 		);
 	}
 };

@@ -22,8 +22,9 @@ void WindSettings::ImGui(ShaderPipeline& physicsCompute) {
 	if (ImGui::SliderFloat("Speed", &m_values.speed, 0.0f, 1.5f)) {
 		b = true;
 	}
-	if (MyImGui::AngleWheel("Direction", &m_values.directionAngle)) {
-		//m_values.direction = glm::vec2(cos(m_values.directionAngle), sin(m_values.directionAngle));
+	if (MyImGui::AngleWheel("Direction", &m_dirValues.directionAngle)) {
+		// b = true; // direction isn't actually handled by presets, so don't change b
+		m_dirValues.direction = glm::vec2(cos(m_dirValues.directionAngle), sin(m_dirValues.directionAngle));
 		setDirection(physicsCompute);
 	}
 	if (m_presets.ImGui(&m_values)) {
@@ -41,7 +42,7 @@ void WindSettings::apply(ShaderPipeline& physicsCompute) {
 }
 
 void WindSettings::setWindOffset(ShaderPipeline& physicsCompute, float time) {
-	physicsCompute.setUniform2f("u_windOffset", -m_values.speed * time * m_values.direction);
+	physicsCompute.setUniform2f("u_windOffset", -m_values.speed * time * m_dirValues.direction);
 }
 void WindSettings::setNoiseFrequency(ShaderPipeline& physicsCompute){
 	physicsCompute.setUniform1f("u_windNoisePuls", m_values.noiseFrequency);
@@ -53,5 +54,5 @@ void WindSettings::setMinStrength(ShaderPipeline& physicsCompute) {
 	physicsCompute.setUniform1f("u_windMinStrength", m_values.minStrength);
 }
 void WindSettings::setDirection(ShaderPipeline& physicsCompute) {
-	physicsCompute.setUniform1f("u_windDirectionAngle", m_values.directionAngle);
+	physicsCompute.setUniform1f("u_windDirectionAngle", m_dirValues.directionAngle);
 }
