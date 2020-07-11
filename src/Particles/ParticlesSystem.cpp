@@ -94,8 +94,10 @@ void ParticlesSystem::setParticlesColors(const ColorSettingsValues& colorSetting
     // Hue gradient mode
     if (colorSettings.bColorModeHueGradient) {
         m_hueGradientComputeShader.get().bind();
-        m_hueGradientComputeShader.get().setUniform1f("hueStart", colorSettings.particlesHueStart);
-        m_hueGradientComputeShader.get().setUniform1f("hueEnd",   colorSettings.particlesHueEnd);
+        m_hueGradientComputeShader.get().setUniform1f("hueStart", colorSettings.particlesHueStart / 360.0f);
+        m_hueGradientComputeShader.get().setUniform1f("hueEnd",   colorSettings.particlesHueEnd   / 360.0f);
+        m_hueGradientComputeShader.get().setUniform1f("saturation", colorSettings.particleSaturation / 100.0f);
+        m_hueGradientComputeShader.get().setUniform1f("value", colorSettings.particleValue / 100.0f);
         m_hueGradientComputeShader.compute(m_nbParticles);
     }
     // Color gradient mode

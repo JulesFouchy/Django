@@ -13,7 +13,7 @@ void main(){
     uint gid = gl_GlobalInvocationID.x;
     if (gid < u_NbOfParticles) {
         float t = gid / float(u_NbOfParticles);
-        vec3 col = (1.0-t) * colorStart + t * colorEnd;
+        vec3 col = mix(colorStart, colorEnd, t);
         
         channels[3 * gid + 0] = col.r;
         channels[3 * gid + 1] = col.g;
