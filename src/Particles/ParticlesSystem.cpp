@@ -12,7 +12,8 @@ ParticlesSystem::ParticlesSystem()
     : m_particlesSSBO(0, 4, GL_DYNAMIC_DRAW), // TODO check which hint is best
       m_restPositionsSSBO(1, 2, GL_STATIC_DRAW),
       m_colorsSSBO(2, 3, GL_STATIC_DRAW),
-      m_physicsShader("res/shaders/physics.comp")
+    m_physicsShader("res/shaders/physics.comp"),
+    m_colorComputeShader("res/shaders/colorGradient.comp")
 {
     // Vertex buffer
     GLCall(glGenBuffers(1, &m_vboID));
@@ -70,19 +71,24 @@ void ParticlesSystem::setNbParticles(unsigned int newNbParticles, const ColorSet
     m_nbParticles = newNbParticles;
     // Rest positions
     m_restPositions.resize(m_nbParticles);
-    // SSBOs
+    // Resize SSBOs
     m_particlesSSBO.uploadData(m_nbParticles, nullptr);
     m_restPositionsSSBO.uploadData(m_nbParticles, nullptr);
-    // Colors
-    setParticlesColors(colorSettings);
-    // Update physics shader
+    m_colorsSSBO.uploadData(m_nbParticles, nullptr);
+    // Update uniform
     m_physicsShader.get().bind();
     m_physicsShader.get().setUniform1i("u_NbOfParticles", m_nbParticles);
     m_physicsShader.get().unbind();
+    m_colorsComputeShader.get().bind();
+    m_colorsComputeShader.get().setUniform1i("u_NbOfParticles", m_nbParticles);
+    m_colorsComputeShader.get().unbind();
+    // Colors
+    setParticlesColors(colorSettings);
 }
 
 void ParticlesSystem::setParticlesColors(const ColorSettingsValues& colorSettings) {
-    std::vector<color::rgb<float>> colors;
+    m_colorsComputeShader.compute(m_nbParticles);
+    /*std::vector<color::rgb<float>> colors;
     colors.resize(m_nbParticles);
     // Hue gradient mode
     if (colorSettings.bColorModeHueGradient) {
@@ -108,4 +114,5 @@ void ParticlesSystem::setParticlesColors(const ColorSettingsValues& colorSetting
         }
     }
     m_colorsSSBO.uploadData(m_nbParticles, (float*)colors.data());
+    */
 }
