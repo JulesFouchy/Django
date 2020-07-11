@@ -2,6 +2,8 @@
 
 #include "OpenGL/ShaderPipeline.h"
 
+#include "Helper/MyImGui.h"
+
 WindSettings::WindSettings()
 	: m_presets("djgWind")
 {}
@@ -19,6 +21,10 @@ void WindSettings::ImGui(ShaderPipeline& physicsCompute) {
 	}
 	if (ImGui::SliderFloat("Speed", &m_values.speed, 0.0f, 1.5f)) {
 		b = true;
+	}
+	if (MyImGui::AngleWheel("Direction", &m_values.directionAngle)) {
+		//m_values.direction = glm::vec2(cos(m_values.directionAngle), sin(m_values.directionAngle));
+		setDirection(physicsCompute);
 	}
 	if (m_presets.ImGui(&m_values)) {
 		apply(physicsCompute);
