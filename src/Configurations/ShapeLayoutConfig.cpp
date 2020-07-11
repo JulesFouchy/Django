@@ -2,26 +2,14 @@
 
 #include "Particles/ParticlesSystem.h"
 
+#include "Helper/File.h"
+
 #include <fstream>
-#include <streambuf>
 
 ShapeLayoutConfig::ShapeLayoutConfig(const std::string& shapeFilepath, const std::string& layoutFilepath) {
     // Read shapeFilepath into a string
-    // Thanks to https://stackoverflow.com/questions/2602013/read-whole-ascii-file-into-c-stdstring
-    std::ifstream shapeFilestream(shapeFilepath);
-    if (!shapeFilestream.is_open()) {
-        spdlog::warn("[ShapeLayoutConfig::ShapeLayoutConfig] Failed to open shape file : '{}'", shapeFilepath);
-        return;
-    }
     std::string shapeSrc;
-    shapeFilestream.seekg(0, std::ios::end);
-    shapeSrc.reserve(shapeFilestream.tellg());
-    shapeFilestream.seekg(0, std::ios::beg);
-    shapeSrc.assign(
-        (std::istreambuf_iterator<char>(shapeFilestream)),
-         std::istreambuf_iterator<char>()
-    );
-    shapeFilestream.close();
+    MyFile::ToString(shapeFilepath, &shapeSrc);
     // Open layoutFilepath
     std::ifstream layoutFilestream(layoutFilepath);
     if (!layoutFilestream.is_open()) {

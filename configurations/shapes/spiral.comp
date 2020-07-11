@@ -1,0 +1,6 @@
+const float u_SpiralRotationSpeed = 1.0;
+
+vec2 shape(float t, vec2 center, float radius) {
+	float angle = t * 6.28 * u_SpiralRotationSpeed;
+	return center + t * radius * vec2(cos(angle), sin(angle));
+}
