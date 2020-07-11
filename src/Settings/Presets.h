@@ -18,7 +18,7 @@ template <typename T>
 class Presets {
 public:
 	Presets(const char* fileExtension)
-		: m_fileExtension(std::string(".") + fileExtension), 
+		: m_fileExtension(fileExtension + std::string(".")),
 		m_savePresetAs(findPlaceholderName(djg::SettingsFolder)),
 		m_nameAvailable(true)
 	{
@@ -53,7 +53,7 @@ public:
 		ImGui::SameLine();
 		ImGui::PushID(138571);
 		if (ImGui::InputText("", &m_savePresetAs)) {
-			m_nameAvailable = !MyFile::Exists(djg::SettingsFolder + "/" + m_savePresetAs + m_fileExtension + ".json");
+			m_nameAvailable = !MyFile::Exists(djg::SettingsFolder + "/" + m_fileExtension + m_savePresetAs + ".json");
 		}
 		ImGui::PopID();
 		return b;
@@ -83,7 +83,7 @@ private:
 	std::string findPlaceholderName(const std::string& folderPath) {
 		int i = 1;
 		std::string name = "MyPreset";
-		while (MyFile::Exists(folderPath + "/" + name + m_fileExtension + ".json")) {
+		while (MyFile::Exists(folderPath + "/" + m_fileExtension + name + ".json")) {
 			name = "MyPreset(" + std::to_string(i) + ")";
 			i++;
 		}
@@ -92,8 +92,8 @@ private:
 
 	void loadPresetsFrom(const std::string& folderPath) {
 		for (const auto& file : fs::directory_iterator(folderPath)) {
-			if (!file.path().filename().replace_extension("").extension().string().compare(m_fileExtension)) {
-				std::string name = file.path().filename().replace_extension("").replace_extension("").string();
+			if (!file.path().filename().replace_extension("").replace_extension(".").string().compare(m_fileExtension)) {
+				std::string name = file.path().filename().replace_extension("").extension().string().erase(0, 1);
 				T values;
 				std::ifstream is(file.path());
 				{
@@ -109,7 +109,7 @@ private:
 	}
 
 	void savePresetTo(T& settingValues, const std::string& folderPath) {
-		std::ofstream os(folderPath + "/" + m_savePresetAs + m_fileExtension + ".json");
+		std::ofstream os(folderPath + "/" + m_fileExtension + m_savePresetAs + ".json");
 		{
 			cereal::JSONOutputArchive archive(os);
 			archive(
