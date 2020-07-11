@@ -41,5 +41,6 @@ private:
 	unsigned int m_vboID;
 
 	ComputeShader m_physicsShader;
-	ComputeShader m_colorsComputeShader;
+	ComputeShader m_colorGradientComputeShader;
+	ComputeShader m_hueGradientComputeShader;
 };

@@ -12,8 +12,9 @@ ParticlesSystem::ParticlesSystem()
     : m_particlesSSBO(0, 4, GL_DYNAMIC_DRAW), // TODO check which hint is best
       m_restPositionsSSBO(1, 2, GL_STATIC_DRAW),
       m_colorsSSBO(2, 3, GL_STATIC_DRAW),
-    m_physicsShader("res/shaders/physics.comp"),
-    m_colorComputeShader("res/shaders/colorGradient.comp")
+      m_physicsShader("res/shaders/physics.comp"),
+      m_colorGradientComputeShader("res/shaders/colorGradient.comp"),
+      m_hueGradientComputeShader("res/shaders/hueGradient.comp")
 {
     // Vertex buffer
     GLCall(glGenBuffers(1, &m_vboID));
@@ -79,40 +80,29 @@ void ParticlesSystem::setNbParticles(unsigned int newNbParticles, const ColorSet
     m_physicsShader.get().bind();
     m_physicsShader.get().setUniform1i("u_NbOfParticles", m_nbParticles);
     m_physicsShader.get().unbind();
-    m_colorsComputeShader.get().bind();
-    m_colorsComputeShader.get().setUniform1i("u_NbOfParticles", m_nbParticles);
-    m_colorsComputeShader.get().unbind();
+    m_colorGradientComputeShader.get().bind();
+    m_colorGradientComputeShader.get().setUniform1i("u_NbOfParticles", m_nbParticles);
+    m_colorGradientComputeShader.get().unbind();
+    m_hueGradientComputeShader.get().bind();
+    m_hueGradientComputeShader.get().setUniform1i("u_NbOfParticles", m_nbParticles);
+    m_hueGradientComputeShader.get().unbind();
     // Colors
     setParticlesColors(colorSettings);
 }
 
 void ParticlesSystem::setParticlesColors(const ColorSettingsValues& colorSettings) {
-    m_colorsComputeShader.compute(m_nbParticles);
-    /*std::vector<color::rgb<float>> colors;
-    colors.resize(m_nbParticles);
     // Hue gradient mode
     if (colorSettings.bColorModeHueGradient) {
-        // We need to do the following because our color library doesn't handle negative hues
-        int k = std::max(
-            -floor(colorSettings.particlesHueStart / 360.0f), // we check both because, despite the names,
-            -floor(colorSettings.particlesHueEnd / 360.0f)  // hue start and end could actually be in any order
-        );
-        float hueStart = colorSettings.particlesHueStart + k * 360;
-        float hueEnd = colorSettings.particlesHueEnd + k * 360;
-        //
-        for (int i = 0; i < m_nbParticles; ++i) {
-            float t = i / (float)m_nbParticles;
-            colors[i] = color::hsv<float>({ (1 - t) * hueStart + t * hueEnd, colorSettings.particleSaturation, colorSettings.particleValue });
-        }
+        m_hueGradientComputeShader.get().bind();
+        m_hueGradientComputeShader.get().setUniform1f("hueStart", colorSettings.particlesHueStart);
+        m_hueGradientComputeShader.get().setUniform1f("hueEnd",   colorSettings.particlesHueEnd);
+        m_hueGradientComputeShader.compute(m_nbParticles);
     }
     // Color gradient mode
     else {
-        for (int i = 0; i < m_nbParticles; ++i) {
-            float t = i / (float)m_nbParticles;
-            glm::vec3 col = (1-t) * colorSettings.particleColorStart + t * colorSettings.particleColorEnd;
-            colors[i] = color::rgb<float>({ col.r, col.g, col.b });
-        }
+        m_colorGradientComputeShader.get().bind();
+        m_colorGradientComputeShader.get().setUniform3f("colorStart", colorSettings.particleColorStart);
+        m_colorGradientComputeShader.get().setUniform3f("colorEnd",   colorSettings.particleColorEnd);
+        m_colorGradientComputeShader.compute(m_nbParticles);
     }
-    m_colorsSSBO.uploadData(m_nbParticles, (float*)colors.data());
-    */
 }
