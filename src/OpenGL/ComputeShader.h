@@ -4,8 +4,10 @@
 
 class ComputeShader {
 public:
-	ComputeShader(const std::string& filepath);
+	ComputeShader() = default;
+	ComputeShader(const std::string & filepath);
 	~ComputeShader() = default;
+	void InitWithCode(const std::string& sourceCode);
 
 	void compute(unsigned int nbComputations);
 	inline ShaderPipeline& get() { return m_shader; }

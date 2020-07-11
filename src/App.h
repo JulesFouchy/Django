@@ -8,6 +8,7 @@
 #include "Configurations/Config_RandomGPU.h"
 #include "Configurations/Config_Circle.h"
 #include "Configurations/Config_ClusterRandom.h"
+#include "Configurations/ConfigManager.h"
 
 #include "Settings/SettingsManager.h"
 
@@ -46,6 +47,7 @@ private:
 	Config_RandomGPU m_configRandomGPU;
 	Config_Circle m_configCircle;
 	Config_ClusterRandom m_configClusterRandom;
+	ConfigManager m_configManager;
 
 	SettingsManager m_settingsMng;
 

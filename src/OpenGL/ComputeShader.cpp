@@ -14,3 +14,8 @@ void ComputeShader::compute(unsigned int nbComputations) {
     glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT | GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT);
     m_shader.unbind();
 }
+
+
+void ComputeShader::InitWithCode(const std::string& sourceCode) {
+
+}
