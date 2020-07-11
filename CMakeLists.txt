@@ -124,7 +124,6 @@ target_precompile_headers(${PROJECT_NAME}
     <glad/glad.h>
     <SDL2/SDL.h>
     <spdlog/spdlog.h>
-    <color/color.hpp>
     <cereal/access.hpp>
     <cereal/types/vector.hpp>
     <cereal/types/string.hpp>
