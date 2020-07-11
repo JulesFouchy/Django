@@ -31,7 +31,7 @@ bool MyImGui::AngleWheel(const char* label, float* value_p, float thickness, flo
 	ImVec2 p = ImGui::GetCursorScreenPos();
 	ImVec2 center = ImVec2(p.x + radius, p.y + radius);
 	// Detect clic
-	ImGui::InvisibleButton(label, ImVec2(radius * 2.0f, radius * 2.0f + line_height + style.ItemInnerSpacing.y));
+	ImGui::InvisibleButton(label, ImVec2(radius * 2.0f, radius * 2.0f));
 	bool is_active = ImGui::IsItemActive();
 	bool is_hovered = ImGui::IsItemHovered();
 
@@ -49,7 +49,7 @@ bool MyImGui::AngleWheel(const char* label, float* value_p, float thickness, flo
 	ImDrawList* draw_list = ImGui::GetWindowDrawList();
 	draw_list->AddCircleFilled(center, radius, col32, circleNbSegments);
 	draw_list->AddLine(center, ImVec2(x2, y2), col32line, thickness);
-	draw_list->AddText(ImVec2(p.x, p.y + radius * 2.0f + style.ItemInnerSpacing.y), col32text, label);
+	draw_list->AddText(ImVec2(p.x + radius * 2.0f + style.ItemInnerSpacing.y, p.y + radius - line_height * 0.5f), col32text, label);
 
 	return is_active;
 }
