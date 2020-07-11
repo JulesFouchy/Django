@@ -17,8 +17,6 @@ void ColorSettings::ImGui(ParticlesSystem& partSystem) {
 	if (ImGui::ColorEdit3("Background Color", (float*)&m_values.bgColor[0]))
 		b = true;
 	// Particles
-	ImGui::Separator();
-	ImGui::Text("Particles");
 		// Choose mode
 	const char* items[] = { "Hue gradient", "Color Gradient" };
 	const char* item_current = items[m_values.bColorModeHueGradient ? 0 : 1];
