@@ -1,14 +1,22 @@
 #pragma once
 
-#include "ShapeLayoutConfig.h"
+#include "ConfigGPU.h"
+
+#include "Helper/Array2D.h"
+
+class ParticlesSystem;
 
 class ConfigManager {
 public:
 	ConfigManager();
 	~ConfigManager() = default;
 
-	inline ShapeLayoutConfig& get() { return m_config; }
+	inline ConfigGPU& get() { return m_shapeLayoutConfigs(m_currShapeIndex, m_currLayoutIndex); }
+
+	void onKeyPressed(SDL_Scancode scancode, ParticlesSystem& partSystem);
 
 private:
-	ShapeLayoutConfig m_config;
+	Array2D<ConfigGPU> m_shapeLayoutConfigs;
+	size_t m_currShapeIndex = 0;
+	size_t m_currLayoutIndex = 0;
 };

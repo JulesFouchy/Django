@@ -6,7 +6,9 @@ class ComputeShader {
 public:
 	ComputeShader() = default;
 	ComputeShader(const std::string & filepath);
+	ComputeShader(ComputeShader&& o) noexcept;
 	~ComputeShader() = default;
+	void operator=(ComputeShader&& o);
 	void initWithCode(const std::string& sourceCode);
 
 	void compute(unsigned int nbComputations);

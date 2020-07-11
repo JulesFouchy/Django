@@ -5,7 +5,9 @@
 class ShaderPipeline {
 public:
 	ShaderPipeline();
+	ShaderPipeline(ShaderPipeline&& o) noexcept;
 	~ShaderPipeline();
+	void operator=(ShaderPipeline&& o);
 
 	void addShader(ShaderType type, const std::string& shaderFilepath);
 	void addShaderBySrcCode(ShaderType type, const std::string& shaderSrc);

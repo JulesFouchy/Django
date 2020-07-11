@@ -8,6 +8,13 @@ ComputeShader::ComputeShader(const std::string& filepath)
     m_shader.createProgram();
 }
 
+ComputeShader::ComputeShader(ComputeShader&& o) noexcept
+    : m_shader(std::move(o.m_shader))
+{}
+void ComputeShader::operator=(ComputeShader&& o) {
+    m_shader = std::move(o.m_shader);
+}
+
 void ComputeShader::initWithCode(const std::string& sourceCode) {
     m_shader.addShaderBySrcCode(ShaderType::Compute, sourceCode);
     m_shader.createProgram();
