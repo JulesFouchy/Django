@@ -11,6 +11,7 @@ public:
 	Shader(ShaderType type, const std::string& filepathOrSourceCode, bool bIsFilepath = true);
 	Shader(Shader&& other) noexcept;
 	~Shader();
+	void operator=(Shader&& o);
 
 	inline unsigned int getID() const { return m_shaderID; }
 	inline const std::string& getFilepath() const { return m_bIsFilepath ? m_filepathOrSourceCode : "error..."; }

@@ -4,6 +4,19 @@ ShaderPipeline::ShaderPipeline()
 	: m_programID(0)
 {}
 
+ShaderPipeline::ShaderPipeline(ShaderPipeline&& o) noexcept
+	: m_shaders(std::move(o.m_shaders)), m_programID(o.m_programID)
+{
+	o.m_programID = 0;
+}
+
+void ShaderPipeline::operator=(ShaderPipeline&& o) {
+	m_shaders = std::move(o.m_shaders);
+	m_programID = o.m_programID;
+	//
+	o.m_programID = 0;
+}
+
 ShaderPipeline::~ShaderPipeline() {
 	glDeleteProgram(m_programID);
 }

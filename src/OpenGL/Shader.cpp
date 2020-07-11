@@ -32,6 +32,15 @@ Shader::Shader(Shader&& other) noexcept
 	other.m_shaderID = 0;
 }
 
+void Shader::operator=(Shader&& o) {
+	m_type = o.m_type;
+	m_filepathOrSourceCode = std::move(o.m_filepathOrSourceCode);
+	m_bIsFilepath = o.m_bIsFilepath;
+	m_shaderID = o.m_shaderID;
+	//
+	o.m_shaderID = 0;
+}
+
 Shader::~Shader() {
 	glDeleteShader(m_shaderID);
 }

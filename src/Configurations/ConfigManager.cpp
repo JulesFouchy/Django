@@ -19,8 +19,25 @@ ConfigManager::ConfigManager() {
         MyFile::ToString(entry.path().string(), &str);
         shapesSrcCode.push_back(str);
     }
-    for (auto& t : shapesSrcCode) {
-        spdlog::info(t);
-        Log::separationLine();
+    // Set Array2D size
+    size_t nbLayoutsFiles = 0;
+    for (const auto& entry : fs::directory_iterator(LAYOUTS_FOLDER))
+        nbLayoutsFiles++;
+    m_shapeLayoutConfigs.setSize(nbShapesFiles, nbLayoutsFiles);
+    // Create all shaders
+    size_t y = 0;
+    for (const auto& entry : fs::directory_iterator(LAYOUTS_FOLDER)) {
+        std::string layoutSrc;
+        MyFile::ToString(entry.path().string(), &layoutSrc);
+        size_t x = 0;
+        for (const std::string& shapeSrc : shapesSrcCode) {
+            m_shapeLayoutConfigs(x, y) = std::move(ConfigGPU(
+                "#version 430\n" +
+                 shapeSrc + "\n" +
+                 layoutSrc
+            ));
+            x++;
+        }
+        y++;
     }
 }
