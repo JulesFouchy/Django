@@ -8,12 +8,12 @@ enum class ShaderType {
 
 class Shader {
 public:
-	Shader(ShaderType type, const std::string& shaderFilepath);
+	Shader(ShaderType type, const std::string& filepathOrSourceCode, bool bIsFilepath = true);
 	Shader(Shader&& other) noexcept;
 	~Shader();
 
 	inline unsigned int getID() const { return m_shaderID; }
-	inline const std::string& getFilepath() const { return m_filepath; }
+	inline const std::string& getFilepath() const { return m_bIsFilepath ? m_filepathOrSourceCode : "error..."; }
 
 private:
 friend class ShaderPipeline;
@@ -22,6 +22,7 @@ friend class ShaderPipeline;
 
 private:
 	unsigned int m_type;
-	std::string m_filepath;
+	std::string m_filepathOrSourceCode;
+	bool m_bIsFilepath;
 	unsigned int m_shaderID;
 };

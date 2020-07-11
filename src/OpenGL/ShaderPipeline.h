@@ -8,6 +8,7 @@ public:
 	~ShaderPipeline();
 
 	void addShader(ShaderType type, const std::string& shaderFilepath);
+	void addShaderBySrcCode(ShaderType type, const std::string& shaderSrc);
 	void createProgram();
 
 	void bind();

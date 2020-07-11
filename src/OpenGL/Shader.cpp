@@ -3,8 +3,8 @@
 #include <fstream>
 #include <iostream>
 
-Shader::Shader(ShaderType type, const std::string& shaderFilepath)
-	: m_filepath(shaderFilepath)
+Shader::Shader(ShaderType type, const std::string& filepathOrSourceCode, bool bIsFilepath)
+	: m_filepathOrSourceCode(filepathOrSourceCode), m_bIsFilepath(bIsFilepath)
 {
 	switch (type)
 	{
@@ -25,7 +25,8 @@ Shader::Shader(ShaderType type, const std::string& shaderFilepath)
 
 Shader::Shader(Shader&& other) noexcept
 	: m_type(other.m_type),
-	  m_filepath(other.m_filepath),
+	  m_filepathOrSourceCode(other.m_filepathOrSourceCode),
+	  m_bIsFilepath(other.m_bIsFilepath),
 	  m_shaderID(other.m_shaderID)
 {
 	other.m_shaderID = 0;
@@ -37,7 +38,7 @@ Shader::~Shader() {
 
 void Shader::compile() {
 	m_shaderID = glCreateShader(m_type);
-	std::string srcStr = parseFile(m_filepath);
+	std::string srcStr = m_bIsFilepath ? parseFile(m_filepathOrSourceCode) : m_filepathOrSourceCode;
 	const char* src = srcStr.c_str();
 	glShaderSource(m_shaderID, 1, &src, nullptr);
 	glCompileShader(m_shaderID);
@@ -57,7 +58,7 @@ void Shader::compile() {
 
 std::string Shader::parseFile(const std::string& filepath) {
 	std::ifstream stream(filepath);
-	spdlog::info("Opening '{}'", filepath);
+	//spdlog::info("Opening '{}'", filepath);
 	if (!stream.is_open()) {
 		spdlog::warn("[Shader::parseFile] Failed to open file : '{}'", filepath);
 		return "";

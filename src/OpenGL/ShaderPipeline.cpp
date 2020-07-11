@@ -12,6 +12,10 @@ void ShaderPipeline::addShader(ShaderType type, const std::string& shaderFilepat
 	m_shaders.emplace_back(type, shaderFilepath);
 }
 
+void ShaderPipeline::addShaderBySrcCode(ShaderType type, const std::string& shaderSrc) {
+	m_shaders.emplace_back(type, shaderSrc, false);
+}
+
 void ShaderPipeline::createProgram() {
 	if (m_programID != 0)
 		GLCall(glDeleteProgram(m_programID));
@@ -23,7 +27,7 @@ void ShaderPipeline::createProgram() {
 	glLinkProgram(m_programID);
 	glValidateProgram(m_programID);
 	m_shaders.clear(); // delete all shaders
-	Log::separationLine();
+	//Log::separationLine();
 }
 
 void ShaderPipeline::bind() {

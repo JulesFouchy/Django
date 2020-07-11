@@ -8,14 +8,14 @@ ComputeShader::ComputeShader(const std::string& filepath)
     m_shader.createProgram();
 }
 
+void ComputeShader::initWithCode(const std::string& sourceCode) {
+    m_shader.addShaderBySrcCode(ShaderType::Compute, sourceCode);
+    m_shader.createProgram();
+}
+
 void ComputeShader::compute(unsigned int nbComputations) {
     m_shader.bind();
     glDispatchCompute(nbComputations / WORK_GROUP_SIZE + 1, 1, 1);
     glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT | GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT);
     m_shader.unbind();
-}
-
-
-void ComputeShader::InitWithCode(const std::string& sourceCode) {
-
 }

@@ -53,9 +53,9 @@ void App::onLoopIteration() {
 		// Settings
 		m_settingsMng.get().ImGuiWindows(m_particlesSystem.physicsComputeShader(), m_particlesSystem, *m_currentConfig);
 		// Current configuration
-		ImGui::Begin(m_currentConfig->getName().c_str());
-		m_currentConfig->ImGuiParameters(m_particlesSystem);
-		ImGui::End();
+		//ImGui::Begin(m_currentConfig->getName().c_str());
+		//m_currentConfig->ImGuiParameters(m_particlesSystem);
+		//ImGui::End();
 	}
 	// Send time to physics compute shader
 	m_time.update();
@@ -76,9 +76,10 @@ void App::onLoopIteration() {
 
 
 void App::setCurrentConfiguration(Configuration& newConfig) {
-	m_currentConfig = &newConfig;
-	m_currentConfig->setup(m_settingsMng.get().getPartSystem().nbParticles());
-	m_currentConfig->applyTo(m_particlesSystem);
+	//m_currentConfig = &newConfig;
+	//m_currentConfig->setup(m_settingsMng.get().getPartSystem().nbParticles());
+	//m_currentConfig->applyTo(m_particlesSystem);
+	m_configManager.get().applyTo(m_particlesSystem);
 }
 
 void App::onEvent(const SDL_Event& e) {
