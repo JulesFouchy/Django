@@ -16,5 +16,4 @@ private:
 
 private:
 	unsigned int m_colorTextureId;
-	unsigned int m_depthRenderBufferId;
 };
