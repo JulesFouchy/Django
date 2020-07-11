@@ -119,6 +119,7 @@ void App::onEvent(const SDL_Event& e) {
 
 
 	case SDL_KEYDOWN:
+		m_configManager.onKeyPressed(e.key.keysym.scancode, m_particlesSystem);
 		if (e.key.keysym.scancode == SDL_SCANCODE_F11)
 			switchFullScreenMode();
 		if (e.key.keysym.scancode == SDL_SCANCODE_ESCAPE && m_bFullScreen)
@@ -139,8 +140,8 @@ void App::onEvent(const SDL_Event& e) {
 				setCurrentConfiguration(m_configCircle);
 			else if (e.key.keysym.sym == 'h' && Input::IsKeyDown(SDL_SCANCODE_LCTRL))
 				m_bShowGUI = !m_bShowGUI;
-			else
-				m_currentConfig->onKeyPressed(e.key.keysym.scancode, m_particlesSystem);
+			//else
+			//	m_currentConfig->onKeyPressed(e.key.keysym.scancode, m_particlesSystem);
 		}
 		break;
 

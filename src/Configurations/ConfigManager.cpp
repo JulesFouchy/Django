@@ -41,3 +41,19 @@ ConfigManager::ConfigManager() {
         y++;
     }
 }
+
+void ConfigManager::onKeyPressed(SDL_Scancode scancode, ParticlesSystem& partSystem) {
+    if (m_shapeLayoutConfigs.getWidth() > 1) {
+        if (scancode == SDL_SCANCODE_LEFT)
+            m_currShapeIndex = (m_currShapeIndex   - 1) % m_shapeLayoutConfigs.getWidth();
+        if (scancode == SDL_SCANCODE_RIGHT)
+            m_currShapeIndex = (m_currShapeIndex   + 1) % m_shapeLayoutConfigs.getWidth();
+    }
+    if (m_shapeLayoutConfigs.getHeight() > 1) {
+        if (scancode == SDL_SCANCODE_DOWN)
+            m_currLayoutIndex = (m_currLayoutIndex - 1) % m_shapeLayoutConfigs.getHeight();
+        if (scancode == SDL_SCANCODE_UP)
+            m_currLayoutIndex = (m_currLayoutIndex + 1) % m_shapeLayoutConfigs.getHeight();
+    }
+    get().applyTo(partSystem);
+}
