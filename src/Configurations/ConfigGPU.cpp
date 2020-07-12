@@ -2,6 +2,7 @@
 
 #include "Particles/ParticlesSystem.h"
 #include "ConfigParams.h"
+#include "RandomParams.h"
 
 #include "Helper/File.h"
 #include "Helper/DisplayInfos.h"
@@ -24,8 +25,9 @@ void ConfigGPU::initWithFilePath(const std::string& computeShaderFilePath) {
     initWithSrcCode(src);
 }
 
-void ConfigGPU::applyTo(ParticlesSystem& particlesSystem, const ConfigParams& params) {
+void ConfigGPU::applyTo(ParticlesSystem& particlesSystem, const ConfigParams& params, const RandomParams& randParams) {
     m_computeShader.get().bind();
+    //
     m_computeShader.get().setUniform1i("u_NbOfParticles", particlesSystem.getNbParticles());
     m_computeShader.get().setUniform1f("u_aspectRatio", DisplayInfos::Ratio());
     m_computeShader.get().setUniform1i("u_count", params.count);
@@ -35,11 +37,9 @@ void ConfigGPU::applyTo(ParticlesSystem& particlesSystem, const ConfigParams& pa
     m_computeShader.get().setUniform1f("u_ctrlWheel", params.ctrlWheel);
     m_computeShader.get().setUniform1f("u_shiftWheel", params.shiftWheel);
     m_computeShader.get().setUniform1f("u_altWheel", params.altWheel);
-    m_computeShader.get().setUniform1f("u_seed", 100.31f);
-    m_computeShader.get().setUniform2f("u_xySeed", glm::vec2(12, 154.51));
-    m_computeShader.get().setUniform1f("a", 50.1);
-    m_computeShader.get().setUniform2f("v", glm::vec2(0.564, 0.7));
-    m_computeShader.get().setUniform1f("delta", 0.1657);
+    m_computeShader.get().setUniform1f("u_seed", randParams.seed);
+    m_computeShader.get().setUniform2f("u_xySeed", randParams.xySeed);
+    //
     m_computeShader.compute(particlesSystem.getNbParticles());
     m_computeShader.get().unbind();
 }

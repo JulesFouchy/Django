@@ -34,7 +34,8 @@ void App::onLoopIteration() {
 	m_particlesSystem.physicsComputeShader().bind();
 	// ImGui windows
 	if (m_bShowGUI) {
-#ifndef NDEBUG 
+#ifndef NDEBUG
+		// Debug
 		ImGui::Begin("Debug");
 		ImGui::Checkbox("Show Demo Window", &m_bShowImGUIDemoWindow);
 		ImGui::Text("Application average %.1f FPS", ImGui::GetIO().Framerate);
@@ -43,12 +44,13 @@ void App::onLoopIteration() {
 			ImGui::ShowDemoWindow(&m_bShowImGUIDemoWindow);
 #endif
 		// Time
-		ImGui::Begin("Time");
-		ImGui::Text(("time : " + std::to_string(m_time.time())).c_str());
-		ImGui::Text(("FPS  : " + std::to_string(1.0f / m_time.deltaTime())).c_str());
-		ImGui::End();
+		// ImGui::Begin("Time");
+		// ImGui::Text(("time : " + std::to_string(m_time.time())).c_str());
+		// ImGui::Text(("FPS  : " + std::to_string(1.0f / m_time.deltaTime())).c_str());
+		// ImGui::End();
 		// Settings
 		m_settingsMng.get().ImGuiWindows(m_particlesSystem.physicsComputeShader(), m_particlesSystem, m_configManager);
+		m_configManager.Imgui(m_particlesSystem);
 	}
 	// Send time to physics compute shader
 	m_time.update();

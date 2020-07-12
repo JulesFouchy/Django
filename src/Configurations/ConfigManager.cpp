@@ -4,15 +4,16 @@
 namespace fs = std::filesystem;
 #include "Helper/File.h"
 #include "Helper/Input.h"
+#include "Helper/Random.h"
 
 constexpr float SCROLL_SPEED = 0.1f;
+
+const std::string VERSION = "#version 430";
 
 const std::string SHAPES_FOLDER = "configurations/shapes";
 const std::string LAYOUTS_FOLDER = "configurations/layouts";
 const std::string STANDALONE_FOLDER = "configurations/standalones";
 const std::string RANDOM_FILE = "internal-shaders/random.glsl";
-
-const std::string VERSION = "#version 430";
 
 ConfigManager::ConfigManager() {
     // Get rand() source code
@@ -138,6 +139,11 @@ void ConfigManager::onKeyPressed(SDL_Scancode scancode, ParticlesSystem& partSys
         m_params.intUD++;
         bHandled = true;
     }
+    // Random seed
+    else if (scancode == SDL_SCANCODE_SPACE) {
+        m_randParams.seed = 10.0f * MyRand::_m1to1();
+        bHandled = true;
+    }
     //
     if (m_shapeLayoutConfigs.getWidth() > 0) {
         if (scancode == SDL_SCANCODE_A) {
@@ -209,4 +215,13 @@ Configuration& ConfigManager::get() {
     default:
         break;
     }
+}
+
+void ConfigManager::Imgui(ParticlesSystem& partSystem) {
+    ImGui::Begin("Random");
+    if (ImGui::DragFloat("Seed", &m_randParams.seed))
+        applyTo(partSystem);
+    if (ImGui::DragFloat2("X/Y Seed", &m_randParams.xySeed[0]))
+        applyTo(partSystem);
+    ImGui::End();
 }

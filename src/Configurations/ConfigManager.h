@@ -2,6 +2,7 @@
 
 #include "ConfigGPU.h"
 #include "ConfigParams.h"
+#include "RandomParams.h"
 
 #include "Helper/Array2D.h"
 
@@ -17,7 +18,8 @@ public:
 	ConfigManager();
 	~ConfigManager() = default;
 
-	inline void applyTo(ParticlesSystem& partSystem) { get().applyTo(partSystem, m_params); }
+	inline void applyTo(ParticlesSystem& partSystem) { get().applyTo(partSystem, m_params, m_randParams); }
+	void Imgui(ParticlesSystem& partSystem);
 	Configuration& get();
 
 	void onKeyPressed(SDL_Scancode scancode, ParticlesSystem& partSystem);
@@ -31,4 +33,5 @@ private:
 	size_t m_currLayoutIndex = 0;
 	size_t m_currStandaloneIndex = 0;
 	ConfigParams m_params;
+	RandomParams m_randParams;
 };
