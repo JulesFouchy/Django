@@ -7,10 +7,12 @@ class ParticlesSystem;
 class ConfigGPU {
 public:
 	ConfigGPU() = default;
-	ConfigGPU(const std::string& computeShaderSrcCode);
-	ConfigGPU(ConfigGPU&& o) noexcept;
 	~ConfigGPU() = default;
+	ConfigGPU(ConfigGPU&& o) noexcept;
 	void operator=(ConfigGPU&& o);
+
+	void initWithSrcCode(const std::string& computeShaderSrcCode);
+	void initWithFilePath(const std::string& computeShaderFilePath);
 
 	void applyTo(ParticlesSystem& particlesSystem);
 

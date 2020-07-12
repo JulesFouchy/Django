@@ -17,6 +17,7 @@ public:
 
 private:
 	Array2D<ConfigGPU> m_shapeLayoutConfigs;
+	std::vector< ConfigGPU> m_standaloneConfigs;
 	size_t m_currShapeIndex = 0;
 	size_t m_currLayoutIndex = 0;
 };

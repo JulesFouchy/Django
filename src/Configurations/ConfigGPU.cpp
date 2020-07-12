@@ -2,16 +2,24 @@
 
 #include "Particles/ParticlesSystem.h"
 
-ConfigGPU::ConfigGPU(const std::string& computeShaderSrcCode) {
-    spdlog::info(computeShaderSrcCode);
-    m_computeShader.initWithCode(computeShaderSrcCode);
-    Log::separationLine();
-}
+#include "Helper/File.h"
+
 ConfigGPU::ConfigGPU(ConfigGPU&& o) noexcept
     : m_computeShader(std::move(o.m_computeShader))
 {}
 void ConfigGPU::operator=(ConfigGPU&& o) {
     m_computeShader = std::move(o.m_computeShader);
+}
+
+void ConfigGPU::initWithSrcCode(const std::string& computeShaderSrcCode) {
+    spdlog::info(computeShaderSrcCode);
+    m_computeShader.initWithCode(computeShaderSrcCode);
+    Log::separationLine();
+}
+void ConfigGPU::initWithFilePath(const std::string& computeShaderFilePath) {
+    std::string src;
+    MyFile::ToString(computeShaderFilePath, &src);
+    initWithSrcCode(src);
 }
 
 void ConfigGPU::applyTo(ParticlesSystem& particlesSystem) {

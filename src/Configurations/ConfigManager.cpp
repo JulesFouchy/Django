@@ -6,6 +6,7 @@ namespace fs = std::filesystem;
 
 const std::string SHAPES_FOLDER = "configurations/shapes";
 const std::string LAYOUTS_FOLDER = "configurations/layouts";
+const std::string STANDALONE_FOLDER = "configurations/standalones";
 
 ConfigManager::ConfigManager() {
     // Get all shapes source code
@@ -24,21 +25,31 @@ ConfigManager::ConfigManager() {
     for (const auto& entry : fs::directory_iterator(LAYOUTS_FOLDER))
         nbLayoutsFiles++;
     m_shapeLayoutConfigs.setSize(nbShapesFiles, nbLayoutsFiles);
-    // Create all shaders
+    // Create all shape-layout shaders
     size_t y = 0;
     for (const auto& entry : fs::directory_iterator(LAYOUTS_FOLDER)) {
         std::string layoutSrc;
         MyFile::ToString(entry.path().string(), &layoutSrc);
         size_t x = 0;
         for (const std::string& shapeSrc : shapesSrcCode) {
-            m_shapeLayoutConfigs(x, y) = std::move(ConfigGPU(
+            m_shapeLayoutConfigs(x, y).initWithSrcCode(
                 "#version 430\n" +
                  shapeSrc + "\n" +
                  layoutSrc
-            ));
+            );
             x++;
         }
         y++;
+    }
+    // Create all standalone configurations
+    size_t nbStandaloneConfigs = 0;
+    for (const auto& entry : fs::directory_iterator(STANDALONE_FOLDER))
+        nbStandaloneConfigs++;
+    m_standaloneConfigs.resize(nbStandaloneConfigs);
+    size_t i = 0;
+    for (const auto& entry : fs::directory_iterator(STANDALONE_FOLDER)) {
+        m_standaloneConfigs[i].initWithFilePath(entry.path().string());
+        i++;
     }
 }
 
