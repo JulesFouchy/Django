@@ -10,8 +10,14 @@ constexpr float SCROLL_SPEED = 0.1f;
 const std::string SHAPES_FOLDER = "configurations/shapes";
 const std::string LAYOUTS_FOLDER = "configurations/layouts";
 const std::string STANDALONE_FOLDER = "configurations/standalones";
+const std::string RANDOM_FILE = "internal-shaders/random.glsl";
+
+const std::string VERSION = "#version 430";
 
 ConfigManager::ConfigManager() {
+    // Get rand() source code
+    std::string randSrc;
+    MyFile::ToString(RANDOM_FILE, &randSrc);
     // Get all shapes source code
     size_t nbShapesFiles = 0;
     for (const auto& entry : fs::directory_iterator(SHAPES_FOLDER))
@@ -36,8 +42,9 @@ ConfigManager::ConfigManager() {
         size_t x = 0;
         for (const std::string& shapeSrc : shapesSrcCode) {
             m_shapeLayoutConfigs(x, y).initWithSrcCode(
-                "#version 430\n" +
+                 VERSION  + "\n" +
                  shapeSrc + "\n" +
+                 randSrc  + "\n" +
                  layoutSrc
             );
             x++;
@@ -51,7 +58,13 @@ ConfigManager::ConfigManager() {
     m_standaloneConfigs.resize(nbStandaloneConfigs);
     size_t i = 0;
     for (const auto& entry : fs::directory_iterator(STANDALONE_FOLDER)) {
-        m_standaloneConfigs[i].initWithFilePath(entry.path().string());
+        std::string src;
+        MyFile::ToString(entry.path().string(), &src);
+        m_standaloneConfigs[i].initWithSrcCode(
+            VERSION + "\n" +
+            randSrc + "\n" +
+            src
+        );
         i++;
     }
 }

@@ -8,12 +8,10 @@ uniform float u_wheel;
 uniform float u_ctrlWheel;
 uniform float u_shiftWheel;
 uniform float u_altWheel;
-//Rand
-uniform float u_Seed;
-uniform float a;
-uniform vec2 v;
-uniform vec2 xyOff;
-uniform float delta;
+// Random
+uniform float u_seed;
+uniform vec2 u_xySeed;
+//? float rand(float id, float seed);
 
 vec2 shape(float t, vec2 center, float radius) {
 	float angle = t * 6.28 * u_ctrlWheel;

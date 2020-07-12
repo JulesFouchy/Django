@@ -1,4 +1,4 @@
-//? #version 430 // don't add version directive, it will be automatically added
+//? #version 430
 //? vec2 shape(float t, vec2 center, float radius);
 
 // Included by the shape
@@ -12,16 +12,10 @@
 //? uniform float u_ctrlWheel;
 //? uniform float u_shiftWheel;
 //? uniform float u_altWheel;
-//? //Rand
-//? uniform float u_Seed;
-//? uniform float a;
-//? uniform vec2 v;
-//? uniform vec2 xyOff;
-//? uniform float delta;
-
-float rand(vec2 co){
-  return 2.0 * fract(sin(dot(co.xy ,v)) * a) - 1.0;
-}
+//? // Random
+//? uniform float u_seed;
+//? uniform vec2 u_xySeed;
+//? float rand(float id, float seed);
 
 layout(std430, binding=1) buffer restPositions {
    vec2 restPos[];
@@ -35,7 +29,7 @@ void main(){
         int clusterID = min(int(gid) / clusterSize, u_count-1);
         float clusterCoord = (gid % clusterSize) / float(clusterSize);
 
-        vec2 center = vec2(rand(vec2(clusterID*delta, u_Seed + xyOff.y)), rand(vec2(clusterID*delta, u_Seed + xyOff.x)));
+        vec2 center = vec2(rand(clusterID, u_seed + u_xySeed.y), rand(clusterID, u_seed + u_xySeed.x));
         center.x *= u_aspectRatio;
 
         restPos[gid] = shape(clusterCoord, center, u_wheel);
