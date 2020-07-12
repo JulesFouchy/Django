@@ -56,21 +56,21 @@ ConfigManager::ConfigManager() {
 void ConfigManager::onKeyPressed(SDL_Scancode scancode, ParticlesSystem& partSystem) {
     if (m_shapeLayoutConfigs.getWidth() > 1) {
         if (scancode == SDL_SCANCODE_LEFT)
-            m_currShapeIndex = (m_currShapeIndex   - 1) % m_shapeLayoutConfigs.getWidth();
+            m_currShapeIndex = (m_currShapeIndex   - 1 + m_shapeLayoutConfigs.getWidth()) % m_shapeLayoutConfigs.getWidth();
         if (scancode == SDL_SCANCODE_RIGHT)
-            m_currShapeIndex = (m_currShapeIndex   + 1) % m_shapeLayoutConfigs.getWidth();
+            m_currShapeIndex = (m_currShapeIndex   + 1 + m_shapeLayoutConfigs.getWidth()) % m_shapeLayoutConfigs.getWidth();
     }
     if (m_shapeLayoutConfigs.getHeight() > 1) {
         if (scancode == SDL_SCANCODE_DOWN)
-            m_currLayoutIndex = (m_currLayoutIndex - 1) % m_shapeLayoutConfigs.getHeight();
+            m_currLayoutIndex = (m_currLayoutIndex - 1 + m_shapeLayoutConfigs.getHeight()) % m_shapeLayoutConfigs.getHeight();
         if (scancode == SDL_SCANCODE_UP)
-            m_currLayoutIndex = (m_currLayoutIndex + 1) % m_shapeLayoutConfigs.getHeight();
+            m_currLayoutIndex = (m_currLayoutIndex + 1 + m_shapeLayoutConfigs.getHeight()) % m_shapeLayoutConfigs.getHeight();
     }    
     if (m_standaloneConfigs.size() > 1) {
         if (scancode == SDL_SCANCODE_KP_MINUS)
-            m_currStandaloneIndex = (m_currStandaloneIndex - 1) % m_standaloneConfigs.size();
+            m_currStandaloneIndex = (m_currStandaloneIndex - 1 + m_standaloneConfigs.size()) % m_standaloneConfigs.size();
         if (scancode == SDL_SCANCODE_KP_PLUS)
-            m_currStandaloneIndex = (m_currStandaloneIndex + 1) % m_standaloneConfigs.size();
+            m_currStandaloneIndex = (m_currStandaloneIndex + 1 + m_standaloneConfigs.size()) % m_standaloneConfigs.size();
     }
     if (scancode == SDL_SCANCODE_KP_MINUS || scancode == SDL_SCANCODE_KP_PLUS)
         m_currConfigType = ConfigType::STANDALONE;
