@@ -20,7 +20,7 @@ public:
 	inline void applyTo(ParticlesSystem& partSystem) { get().applyTo(partSystem, m_params); }
 
 	void onKeyPressed(SDL_Scancode scancode, ParticlesSystem& partSystem);
-	void onWheel(float delta, ParticlesSystem& partSystem);
+	void onWheel(float delta, ParticlesSystem& partSystem, bool bNoStandardScroll);
 
 private:
 	ConfigGPU& get();

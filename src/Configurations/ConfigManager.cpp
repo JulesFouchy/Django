@@ -82,7 +82,7 @@ void ConfigManager::onKeyPressed(SDL_Scancode scancode, ParticlesSystem& partSys
     applyTo(partSystem);
 }
 
-void ConfigManager::onWheel(float delta, ParticlesSystem& partSystem) {
+void ConfigManager::onWheel(float delta, ParticlesSystem& partSystem, bool bNoStandardScroll) {
     bool b = false;
     if (Input::KeyIsDown(SDL_SCANCODE_LCTRL) || Input::KeyIsDown(SDL_SCANCODE_RCTRL)) {
         m_params.ctrlWheel += delta * SCROLL_SPEED;
@@ -96,7 +96,7 @@ void ConfigManager::onWheel(float delta, ParticlesSystem& partSystem) {
         m_params.altWheel += delta * SCROLL_SPEED;
         b = true;
     }
-    if (!b) {
+    if (!b && !bNoStandardScroll) {
         m_params.wheel += delta * SCROLL_SPEED;
     }
     applyTo(partSystem);

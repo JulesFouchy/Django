@@ -92,9 +92,7 @@ void App::onEvent(const SDL_Event& e) {
 		break;
 
 	case SDL_MOUSEWHEEL:
-		if (!ImGui::GetIO().WantCaptureMouse){
-			m_configManager.onWheel(e.wheel.y, m_particlesSystem);
-		}
+		m_configManager.onWheel(e.wheel.y, m_particlesSystem, ImGui::GetIO().WantCaptureMouse);
 		break;
 
 	case SDL_MOUSEBUTTONDOWN:
