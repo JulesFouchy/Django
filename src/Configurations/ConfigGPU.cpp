@@ -1,6 +1,7 @@
 #include "ConfigGPU.h"
 
 #include "Particles/ParticlesSystem.h"
+#include "ConfigParams.h"
 
 #include "Helper/File.h"
 
@@ -12,9 +13,9 @@ void ConfigGPU::operator=(ConfigGPU&& o) {
 }
 
 void ConfigGPU::initWithSrcCode(const std::string& computeShaderSrcCode) {
-    spdlog::info(computeShaderSrcCode);
+    // spdlog::info(computeShaderSrcCode);
     m_computeShader.initWithCode(computeShaderSrcCode);
-    Log::separationLine();
+    // Log::separationLine();
 }
 void ConfigGPU::initWithFilePath(const std::string& computeShaderFilePath) {
     std::string src;
@@ -22,11 +23,11 @@ void ConfigGPU::initWithFilePath(const std::string& computeShaderFilePath) {
     initWithSrcCode(src);
 }
 
-void ConfigGPU::applyTo(ParticlesSystem& particlesSystem) {
+void ConfigGPU::applyTo(ParticlesSystem& particlesSystem, const ConfigParams& params) {
     m_computeShader.get().bind();
     m_computeShader.get().setUniform1i("u_NbOfParticles", particlesSystem.getNbParticles());
-    m_computeShader.get().setUniform1i("u_NbClusters", 3);
-    m_computeShader.get().setUniform1f("u_Radius", 0.8);
+    m_computeShader.get().setUniform1i("u_NbClusters", params.count);
+    m_computeShader.get().setUniform1f("u_Radius", params.wheel);
     m_computeShader.get().setUniform1f("u_Seed", 100.165);
     m_computeShader.get().setUniform1f("a", 50.1);
     m_computeShader.get().setUniform2f("v", glm::vec2(0.564, 0.7));

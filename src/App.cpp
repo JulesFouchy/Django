@@ -79,7 +79,7 @@ void App::setCurrentConfiguration(Configuration& newConfig) {
 	//m_currentConfig = &newConfig;
 	//m_currentConfig->setup(m_settingsMng.get().getPartSystem().nbParticles());
 	//m_currentConfig->applyTo(m_particlesSystem);
-	m_configManager.get().applyTo(m_particlesSystem);
+	m_configManager.applyTo(m_particlesSystem);
 }
 
 void App::onEvent(const SDL_Event& e) {
@@ -93,7 +93,7 @@ void App::onEvent(const SDL_Event& e) {
 
 	case SDL_MOUSEWHEEL:
 		if (!ImGui::GetIO().WantCaptureMouse){
-
+			m_configManager.onWheel(e.wheel.y, m_particlesSystem);
 		}
 		break;
 
@@ -132,7 +132,7 @@ void App::onEvent(const SDL_Event& e) {
 			}
 			else if (e.key.keysym.sym == 'z')
 				setCurrentConfiguration(m_configFillScreen);
-			else if (e.key.keysym.sym == 'h' && Input::IsKeyDown(SDL_SCANCODE_LCTRL))
+			else if (e.key.keysym.sym == 'h' && Input::KeyIsDown(SDL_SCANCODE_LCTRL))
 				m_bShowGUI = !m_bShowGUI;
 			//else
 			//	m_currentConfig->onKeyPressed(e.key.keysym.scancode, m_particlesSystem);

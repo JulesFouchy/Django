@@ -1,5 +1,5 @@
 #pragma once
 
 namespace Input {
-	bool IsKeyDown(SDL_Scancode key);
+	bool KeyIsDown(SDL_Scancode key);
 }

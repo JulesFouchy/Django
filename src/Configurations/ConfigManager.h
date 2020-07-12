@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ConfigGPU.h"
+#include "ConfigParams.h"
 
 #include "Helper/Array2D.h"
 
@@ -16,9 +17,13 @@ public:
 	ConfigManager();
 	~ConfigManager() = default;
 
-	ConfigGPU& get();
+	inline void applyTo(ParticlesSystem& partSystem) { get().applyTo(partSystem, m_params); }
 
 	void onKeyPressed(SDL_Scancode scancode, ParticlesSystem& partSystem);
+	void onWheel(float delta, ParticlesSystem& partSystem);
+
+private:
+	ConfigGPU& get();
 
 private:
 	Array2D<ConfigGPU> m_shapeLayoutConfigs;
@@ -27,4 +32,5 @@ private:
 	size_t m_currShapeIndex = 0;
 	size_t m_currLayoutIndex = 0;
 	size_t m_currStandaloneIndex = 0;
+	ConfigParams m_params;
 };

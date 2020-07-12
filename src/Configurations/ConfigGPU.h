@@ -3,6 +3,7 @@
 #include "OpenGL/ComputeShader.h"
 
 class ParticlesSystem;
+struct ConfigParams;
 
 class ConfigGPU {
 public:
@@ -14,7 +15,7 @@ public:
 	void initWithSrcCode(const std::string& computeShaderSrcCode);
 	void initWithFilePath(const std::string& computeShaderFilePath);
 
-	void applyTo(ParticlesSystem& particlesSystem);
+	void applyTo(ParticlesSystem& particlesSystem, const ConfigParams& params);
 
 private:
 	ComputeShader m_computeShader;

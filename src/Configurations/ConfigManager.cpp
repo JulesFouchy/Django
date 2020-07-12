@@ -3,6 +3,9 @@
 #include <filesystem>
 namespace fs = std::filesystem;
 #include "Helper/File.h"
+#include "Helper/Input.h"
+
+constexpr float SCROLL_SPEED = 0.1f;
 
 const std::string SHAPES_FOLDER = "configurations/shapes";
 const std::string LAYOUTS_FOLDER = "configurations/layouts";
@@ -76,7 +79,27 @@ void ConfigManager::onKeyPressed(SDL_Scancode scancode, ParticlesSystem& partSys
         m_currConfigType = ConfigType::STANDALONE;
     else
         m_currConfigType = ConfigType::SHAPE_LAYOUT;
-    get().applyTo(partSystem);
+    applyTo(partSystem);
+}
+
+void ConfigManager::onWheel(float delta, ParticlesSystem& partSystem) {
+    bool b = false;
+    if (Input::KeyIsDown(SDL_SCANCODE_LCTRL) || Input::KeyIsDown(SDL_SCANCODE_RCTRL)) {
+        m_params.ctrlWheel += delta * SCROLL_SPEED;
+        b = true;
+    }
+    if (Input::KeyIsDown(SDL_SCANCODE_LSHIFT) || Input::KeyIsDown(SDL_SCANCODE_RSHIFT)) {
+        m_params.shiftWheel += delta * SCROLL_SPEED;
+        b = true;
+    }
+    if (Input::KeyIsDown(SDL_SCANCODE_LALT) || Input::KeyIsDown(SDL_SCANCODE_RALT)) {
+        m_params.altWheel += delta * SCROLL_SPEED;
+        b = true;
+    }
+    if (!b) {
+        m_params.wheel += delta * SCROLL_SPEED;
+    }
+    applyTo(partSystem);
 }
 
 ConfigGPU& ConfigManager::get() {
