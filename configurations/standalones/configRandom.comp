@@ -1,8 +1,16 @@
 #version 430
 
 uniform int u_NbOfParticles;
+// Params
+uniform int u_count;
+uniform int u_intLR;
+uniform int u_intUD;
+uniform float u_wheel;
+uniform float u_ctrlWheel;
+uniform float u_shiftWheel;
+uniform float u_altWheel;
+//Rand
 uniform float u_Seed;
-
 uniform float a;
 uniform vec2 v;
 uniform vec2 xyOff;

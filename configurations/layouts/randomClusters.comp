@@ -1,21 +1,22 @@
 //? #version 430 // don't add version directive, it will be automatically added
 //? vec2 shape(float t, vec2 center, float radius);
 
-uniform int u_NbOfParticles;
-// Params
-uniform int u_count;
-uniform int u_intLR;
-uniform int u_intUD;
-uniform float u_wheel;
-uniform float u_ctrlWheel;
-uniform float u_shiftWheel;
-uniform float u_altWheel;
-//Rand
-uniform float u_Seed;
-uniform float a;
-uniform vec2 v;
-uniform vec2 xyOff;
-uniform float delta;
+// Included by the shape
+//? uniform int u_NbOfParticles;
+//? // Params
+//? uniform int u_count;
+//? uniform int u_intLR;
+//? uniform int u_intUD;
+//? uniform float u_wheel;
+//? uniform float u_ctrlWheel;
+//? uniform float u_shiftWheel;
+//? uniform float u_altWheel;
+//? //Rand
+//? uniform float u_Seed;
+//? uniform float a;
+//? uniform vec2 v;
+//? uniform vec2 xyOff;
+//? uniform float delta;
 
 float rand(vec2 co){
   return 2.0 * fract(sin(dot(co.xy ,v)) * a) - 1.0;
