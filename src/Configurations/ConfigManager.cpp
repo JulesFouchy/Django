@@ -57,29 +57,70 @@ ConfigManager::ConfigManager() {
 }
 
 void ConfigManager::onKeyPressed(SDL_Scancode scancode, ParticlesSystem& partSystem) {
-    if (m_shapeLayoutConfigs.getWidth() > 1) {
-        if (scancode == SDL_SCANCODE_LEFT)
-            m_currShapeIndex = (m_currShapeIndex   - 1 + m_shapeLayoutConfigs.getWidth()) % m_shapeLayoutConfigs.getWidth();
-        if (scancode == SDL_SCANCODE_RIGHT)
-            m_currShapeIndex = (m_currShapeIndex   + 1 + m_shapeLayoutConfigs.getWidth()) % m_shapeLayoutConfigs.getWidth();
+    bool bHandled = false;
+    if (scancode == SDL_SCANCODE_KP_MINUS) {
+        m_params.count--;
+        bHandled = true;
     }
-    if (m_shapeLayoutConfigs.getHeight() > 1) {
-        if (scancode == SDL_SCANCODE_DOWN)
+    else if (scancode == SDL_SCANCODE_KP_PLUS) {
+        m_params.count++;
+        bHandled = true;
+    }
+    else if (scancode == SDL_SCANCODE_LEFT) {
+        m_params.intLR--;
+        bHandled = true;
+    }
+    else if (scancode == SDL_SCANCODE_RIGHT) {
+        m_params.intLR++;
+        bHandled = true;
+    }
+    else if (scancode == SDL_SCANCODE_DOWN) {
+        m_params.intUD--;
+        bHandled = true;
+    }
+    else if (scancode == SDL_SCANCODE_UP) {
+        m_params.intUD++;
+        bHandled = true;
+    }
+    //
+    if (m_shapeLayoutConfigs.getWidth() > 0) {
+        if (scancode == SDL_SCANCODE_A) {
+            m_currShapeIndex = (m_currShapeIndex - 1 + m_shapeLayoutConfigs.getWidth()) % m_shapeLayoutConfigs.getWidth();
+            m_currConfigType = ConfigType::SHAPE_LAYOUT;
+            bHandled = true;
+        }
+        if (scancode == SDL_SCANCODE_D) {
+            m_currShapeIndex = (m_currShapeIndex + 1 + m_shapeLayoutConfigs.getWidth()) % m_shapeLayoutConfigs.getWidth();
+            m_currConfigType = ConfigType::SHAPE_LAYOUT;
+            bHandled = true;
+        }
+    }
+    if (m_shapeLayoutConfigs.getHeight() > 0) {
+        if (scancode == SDL_SCANCODE_S) {
             m_currLayoutIndex = (m_currLayoutIndex - 1 + m_shapeLayoutConfigs.getHeight()) % m_shapeLayoutConfigs.getHeight();
-        if (scancode == SDL_SCANCODE_UP)
+            m_currConfigType = ConfigType::SHAPE_LAYOUT;
+            bHandled = true;
+        }
+        if (scancode == SDL_SCANCODE_W) {
             m_currLayoutIndex = (m_currLayoutIndex + 1 + m_shapeLayoutConfigs.getHeight()) % m_shapeLayoutConfigs.getHeight();
+            m_currConfigType = ConfigType::SHAPE_LAYOUT;
+            bHandled = true;
+        }
     }    
-    if (m_standaloneConfigs.size() > 1) {
-        if (scancode == SDL_SCANCODE_KP_MINUS)
+    if (m_standaloneConfigs.size() > 0) {
+        if (scancode == SDL_SCANCODE_Q) {
             m_currStandaloneIndex = (m_currStandaloneIndex - 1 + m_standaloneConfigs.size()) % m_standaloneConfigs.size();
-        if (scancode == SDL_SCANCODE_KP_PLUS)
+            m_currConfigType = ConfigType::STANDALONE;
+            bHandled = true;
+        }
+        if (scancode == SDL_SCANCODE_E) {
             m_currStandaloneIndex = (m_currStandaloneIndex + 1 + m_standaloneConfigs.size()) % m_standaloneConfigs.size();
+            m_currConfigType = ConfigType::STANDALONE;
+            bHandled = true;
+        }
     }
-    if (scancode == SDL_SCANCODE_KP_MINUS || scancode == SDL_SCANCODE_KP_PLUS)
-        m_currConfigType = ConfigType::STANDALONE;
-    else
-        m_currConfigType = ConfigType::SHAPE_LAYOUT;
-    applyTo(partSystem);
+    if (bHandled)
+        applyTo(partSystem);
 }
 
 void ConfigManager::onWheel(float delta, ParticlesSystem& partSystem, bool bNoStandardScroll) {
