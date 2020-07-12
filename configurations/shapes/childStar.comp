@@ -1,0 +1,7 @@
+vec2 shape(float t, vec2 center, float radius) {
+    float nbBranches = 5.0;
+    float branchId    = floor(t * nbBranches);
+    float branchCoord = fract(t * nbBranches);
+    float angle = branchId * 6.28 / nbBranches;
+    return center + radius * branchCoord * vec2(cos(angle), sin(angle));
+}
