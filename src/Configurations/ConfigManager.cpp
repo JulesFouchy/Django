@@ -65,6 +65,28 @@ void ConfigManager::onKeyPressed(SDL_Scancode scancode, ParticlesSystem& partSys
             m_currLayoutIndex = (m_currLayoutIndex - 1) % m_shapeLayoutConfigs.getHeight();
         if (scancode == SDL_SCANCODE_UP)
             m_currLayoutIndex = (m_currLayoutIndex + 1) % m_shapeLayoutConfigs.getHeight();
+    }    
+    if (m_standaloneConfigs.size() > 1) {
+        if (scancode == SDL_SCANCODE_KP_MINUS)
+            m_currStandaloneIndex = (m_currStandaloneIndex - 1) % m_standaloneConfigs.size();
+        if (scancode == SDL_SCANCODE_KP_PLUS)
+            m_currStandaloneIndex = (m_currStandaloneIndex + 1) % m_standaloneConfigs.size();
     }
+    if (scancode == SDL_SCANCODE_KP_MINUS || scancode == SDL_SCANCODE_KP_PLUS)
+        m_currConfigType = ConfigType::STANDALONE;
+    else
+        m_currConfigType = ConfigType::SHAPE_LAYOUT;
     get().applyTo(partSystem);
+}
+
+ConfigGPU& ConfigManager::get() {
+    switch (m_currConfigType)
+    {
+    case ConfigType::SHAPE_LAYOUT:
+        return m_shapeLayoutConfigs(m_currShapeIndex, m_currLayoutIndex);
+    case ConfigType::STANDALONE:
+        return m_standaloneConfigs[m_currStandaloneIndex];
+    default:
+        break;
+    }
 }

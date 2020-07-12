@@ -30,7 +30,7 @@ void App::onInit() {
 	m_settingsMng.get().apply(m_particlesSystem.physicsComputeShader(), m_particlesSystem, startupConfig);
 	m_particlesSystem.physicsComputeShader().unbind();
 	//
-	setCurrentConfiguration(startupConfig);
+	//setCurrentConfiguration(startupConfig);
 }
 
 void App::onLoopIteration() {

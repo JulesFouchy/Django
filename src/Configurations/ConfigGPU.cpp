@@ -27,11 +27,11 @@ void ConfigGPU::applyTo(ParticlesSystem& particlesSystem) {
     m_computeShader.get().setUniform1i("u_NbOfParticles", particlesSystem.getNbParticles());
     m_computeShader.get().setUniform1i("u_NbClusters", 3);
     m_computeShader.get().setUniform1f("u_Radius", 0.8);
-    m_computeShader.get().setUniform1f("u_Seed", 0);
-    m_computeShader.get().setUniform1f("a", 0.1);
-    m_computeShader.get().setUniform2f("v", glm::vec2(0.8, 0.7));
-    m_computeShader.get().setUniform2f("xyOff", glm::vec2(12, 14.51));
-    m_computeShader.get().setUniform1f("delta", 2);
+    m_computeShader.get().setUniform1f("u_Seed", 100.165);
+    m_computeShader.get().setUniform1f("a", 50.1);
+    m_computeShader.get().setUniform2f("v", glm::vec2(0.564, 0.7));
+    m_computeShader.get().setUniform2f("xyOff", glm::vec2(12, 154.51));
+    m_computeShader.get().setUniform1f("delta", 0.1657);
     m_computeShader.compute(particlesSystem.getNbParticles());
     m_computeShader.get().unbind();
 }
