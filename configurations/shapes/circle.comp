@@ -1,4 +1,5 @@
 uniform int u_NbOfParticles;
+uniform float u_aspectRatio;
 // Params
 uniform int u_count;
 uniform int u_intLR;

@@ -4,6 +4,7 @@
 #include "ConfigParams.h"
 
 #include "Helper/File.h"
+#include "Helper/DisplayInfos.h"
 
 ConfigGPU::ConfigGPU(ConfigGPU&& o) noexcept
     : m_computeShader(std::move(o.m_computeShader))
@@ -26,6 +27,7 @@ void ConfigGPU::initWithFilePath(const std::string& computeShaderFilePath) {
 void ConfigGPU::applyTo(ParticlesSystem& particlesSystem, const ConfigParams& params) {
     m_computeShader.get().bind();
     m_computeShader.get().setUniform1i("u_NbOfParticles", particlesSystem.getNbParticles());
+    m_computeShader.get().setUniform1f("u_aspectRatio", DisplayInfos::Ratio());
     m_computeShader.get().setUniform1i("u_count", params.count);
     m_computeShader.get().setUniform1i("u_intLR", params.intLR);
     m_computeShader.get().setUniform1i("u_intUD", params.intUD);

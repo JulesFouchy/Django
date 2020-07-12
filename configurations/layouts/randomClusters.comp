@@ -3,6 +3,7 @@
 
 // Included by the shape
 //? uniform int u_NbOfParticles;
+//? uniform float u_aspectRatio;
 //? // Params
 //? uniform int u_count;
 //? uniform int u_intLR;
@@ -35,6 +36,7 @@ void main(){
         float clusterCoord = (gid % clusterSize) / float(clusterSize);
 
         vec2 center = vec2(rand(vec2(clusterID*delta, u_Seed + xyOff.y)), rand(vec2(clusterID*delta, u_Seed + xyOff.x)));
+        center.x *= u_aspectRatio;
 
         restPos[gid] = shape(clusterCoord, center, u_wheel);
     }
