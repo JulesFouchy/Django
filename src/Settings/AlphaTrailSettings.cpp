@@ -5,12 +5,12 @@
 AlphaTrailSettings::AlphaTrailSettings()
 	: m_presets("djgTrail"), m_fullScreenVAOWithUVs(true)
 {
-	m_clearScreenPipeline.addShader(ShaderType::Vertex, "res/shaders/passVertPos.vert");
-	m_clearScreenPipeline.addShader(ShaderType::Fragment, "res/shaders/clearScreen.frag");
+	m_clearScreenPipeline.addShader(ShaderType::Vertex, "internal-shaders/passVertPos.vert");
+	m_clearScreenPipeline.addShader(ShaderType::Fragment, "internal-shaders/clearScreen.frag");
 	m_clearScreenPipeline.createProgram();
 	//
-	m_clearScreenNoResidualsPipeline.addShader(ShaderType::Vertex, "res/shaders/passVertPosAndUVs.vert");
-	m_clearScreenNoResidualsPipeline.addShader(ShaderType::Fragment, "res/shaders/clearScreenNoResiduals.frag");
+	m_clearScreenNoResidualsPipeline.addShader(ShaderType::Vertex, "internal-shaders/passVertPosAndUVs.vert");
+	m_clearScreenNoResidualsPipeline.addShader(ShaderType::Fragment, "internal-shaders/clearScreenNoResiduals.frag");
 	m_clearScreenNoResidualsPipeline.createProgram();
 }
 

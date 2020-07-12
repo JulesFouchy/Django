@@ -91,12 +91,12 @@ if (WIN32) # Copy .dll to build folder
     )
 endif()
 
-# Copy res folder after a build
+# Copy internal-shaders folder after a build
 add_custom_command(
     TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
-    ${CMAKE_SOURCE_DIR}/res/
-    $<TARGET_FILE_DIR:${PROJECT_NAME}>/res
+    ${CMAKE_SOURCE_DIR}/internal-shaders/
+    $<TARGET_FILE_DIR:${PROJECT_NAME}>/internal-shaders
 )
 # And copy settings folder
 add_custom_command(
@@ -104,6 +104,13 @@ add_custom_command(
     COMMAND ${CMAKE_COMMAND} -E copy_directory
     ${CMAKE_SOURCE_DIR}/settings/
     $<TARGET_FILE_DIR:${PROJECT_NAME}>/settings
+)
+# And copy configurations folder
+add_custom_command(
+    TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/configurations/
+    $<TARGET_FILE_DIR:${PROJECT_NAME}>/configurations
 )
 
 # Setup working directory in Visual Studio (to access the res folder) :

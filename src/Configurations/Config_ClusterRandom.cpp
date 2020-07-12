@@ -6,7 +6,7 @@
 #include "Helper/DisplayInfos.h"
 
 Config_ClusterRandom::Config_ClusterRandom()
-	: Configuration("Cluster Random"), m_computeShader("res/shaders/configClusterRandom.comp"),
+	: Configuration("Cluster Random"), m_computeShader("internal-shaders/configClusterRandom.comp"),
 	m_nbClusters(1), m_clusterShape(ClusterShape::Circle),
 	m_shapeRadius(0.2f), m_spiralRotationSpeed(15.0f),
 	m_a(43758.5453), m_v(12.9898, 78.233), m_delta(0.01f)

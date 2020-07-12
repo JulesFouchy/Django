@@ -5,7 +5,7 @@
 #include "Helper/Random.h"
 
 Config_RandomGPU::Config_RandomGPU()
-	: Configuration("Random GPU"), m_computeShader("res/shaders/configRandom.comp"), m_a(43758.5453), m_v(12.9898, 78.233), m_delta(0.01f)
+	: Configuration("Random GPU"), m_computeShader("internal-shaders/configRandom.comp"), m_a(43758.5453), m_v(12.9898, 78.233), m_delta(0.01f)
 {}
 
 void Config_RandomGPU::ImGuiParameters(ParticlesSystem& particlesSystem) {

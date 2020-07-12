@@ -14,8 +14,8 @@ App::App(SDL_Window* window)
 	  m_window(window), m_running(true)
 {
 	// Create graphics pipeline for particles
-	m_particlePipeline.addShader(ShaderType::Vertex,   "res/shaders/particle.vert");
-	m_particlePipeline.addShader(ShaderType::Fragment, "res/shaders/particle.frag");
+	m_particlePipeline.addShader(ShaderType::Vertex,   "internal-shaders/particle.vert");
+	m_particlePipeline.addShader(ShaderType::Fragment, "internal-shaders/particle.frag");
 	m_particlePipeline.createProgram();
 	//
 	onWindowResize();
@@ -26,7 +26,7 @@ App::App(SDL_Window* window)
 
 void App::onInit() {
 	m_particlesSystem.physicsComputeShader().bind();
-	Configuration& startupConfig = m_configRandomGPU;
+	Configuration& startupConfig = m_configFillScreen;
 	m_settingsMng.get().apply(m_particlesSystem.physicsComputeShader(), m_particlesSystem, startupConfig);
 	m_particlesSystem.physicsComputeShader().unbind();
 	//
@@ -130,14 +130,8 @@ void App::onEvent(const SDL_Event& e) {
 					m_currentConfig->applyTo(m_particlesSystem);
 				}
 			}
-			else if (e.key.keysym.sym == 'a')
-				setCurrentConfiguration(m_configRandomGPU);
-			else if (e.key.keysym.sym == 'q')
-				setCurrentConfiguration(m_configClusterRandom);
 			else if (e.key.keysym.sym == 'z')
 				setCurrentConfiguration(m_configFillScreen);
-			else if (e.key.keysym.sym == 'e')
-				setCurrentConfiguration(m_configCircle);
 			else if (e.key.keysym.sym == 'h' && Input::IsKeyDown(SDL_SCANCODE_LCTRL))
 				m_bShowGUI = !m_bShowGUI;
 			//else

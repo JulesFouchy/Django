@@ -43,10 +43,6 @@ private:
 
 	Configuration* m_currentConfig;
 	Config_FillScreen m_configFillScreen;
-	Config_RandomCPU m_configRandomCPU;
-	Config_RandomGPU m_configRandomGPU;
-	Config_Circle m_configCircle;
-	Config_ClusterRandom m_configClusterRandom;
 	ConfigManager m_configManager;
 
 	SettingsManager m_settingsMng;

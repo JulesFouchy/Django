@@ -12,9 +12,9 @@ ParticlesSystem::ParticlesSystem()
     : m_particlesSSBO(0, 4, GL_DYNAMIC_DRAW), // TODO check which hint is best
       m_restPositionsSSBO(1, 2, GL_STATIC_DRAW),
       m_colorsSSBO(2, 3, GL_STATIC_DRAW),
-      m_physicsShader("res/shaders/physics.comp"),
-      m_colorGradientComputeShader("res/shaders/colorGradient.comp"),
-      m_hueGradientComputeShader("res/shaders/hueGradient.comp")
+      m_physicsShader("internal-shaders/physics.comp"),
+      m_colorGradientComputeShader("internal-shaders/colorGradient.comp"),
+      m_hueGradientComputeShader("internal-shaders/hueGradient.comp")
 {
     // Vertex buffer
     GLCall(glGenBuffers(1, &m_vboID));
