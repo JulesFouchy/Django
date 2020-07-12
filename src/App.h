@@ -2,16 +2,8 @@
 
 #include "Particles/ParticlesSystem.h"
 #include "OpenGL/ShaderPipeline.h"
-
-#include "Configurations/Config_FillScreen.h"
-#include "Configurations/Config_RandomCPU.h"
-#include "Configurations/Config_RandomGPU.h"
-#include "Configurations/Config_Circle.h"
-#include "Configurations/Config_ClusterRandom.h"
 #include "Configurations/ConfigManager.h"
-
 #include "Settings/SettingsManager.h"
-
 #include "Time/Time_Realtime.h"
 
 class App {
@@ -22,8 +14,6 @@ private:
 public:
 	void onInit();
 private:
-	void setCurrentConfiguration(Configuration& newConfig);
-
 	void onLoopIteration();
 	void onEvent(const SDL_Event& e);
 
@@ -41,10 +31,7 @@ private:
 	Time_Realtime m_time;
 	ParticlesSystem m_particlesSystem;
 
-	Configuration* m_currentConfig;
-	Config_FillScreen m_configFillScreen;
 	ConfigManager m_configManager;
-
 	SettingsManager m_settingsMng;
 
 /********************

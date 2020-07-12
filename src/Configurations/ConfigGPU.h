@@ -1,21 +1,19 @@
 #pragma once
 
+#include "Configuration.h"
 #include "OpenGL/ComputeShader.h"
 
-class ParticlesSystem;
-struct ConfigParams;
-
-class ConfigGPU {
+class ConfigGPU : public Configuration {
 public:
 	ConfigGPU() = default;
 	~ConfigGPU() = default;
 	ConfigGPU(ConfigGPU&& o) noexcept;
 	void operator=(ConfigGPU&& o);
 
+	void applyTo(ParticlesSystem& particlesSystem, const ConfigParams& params) override;
+
 	void initWithSrcCode(const std::string& computeShaderSrcCode);
 	void initWithFilePath(const std::string& computeShaderFilePath);
-
-	void applyTo(ParticlesSystem& particlesSystem, const ConfigParams& params);
 
 private:
 	ComputeShader m_computeShader;

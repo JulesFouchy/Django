@@ -186,7 +186,7 @@ void ConfigManager::onWheel(float delta, ParticlesSystem& partSystem, bool bNoSt
     applyTo(partSystem);
 }
 
-ConfigGPU& ConfigManager::get() {
+Configuration& ConfigManager::get() {
     switch (m_currConfigType)
     {
     case ConfigType::SHAPE_LAYOUT:

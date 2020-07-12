@@ -3,7 +3,7 @@
 #include "Presets.h"
 
 class ParticlesSystem;
-class Configuration;
+class ConfigManager;
 struct ColorSettingsValues;
 
 struct ParticleSystemSettingsValues {
@@ -27,8 +27,8 @@ public:
 	ParticleSystemSettings();
 	~ParticleSystemSettings() = default;
 
-	void ImGui(ParticlesSystem& partSystem, Configuration& currentConfiguration, const ColorSettingsValues& colorSettings);
-	void apply(ParticlesSystem& partSystem, Configuration& currentConfiguration, const ColorSettingsValues& colorSettings);
+	void ImGui(ParticlesSystem& partSystem, ConfigManager& configManager, const ColorSettingsValues& colorSettings);
+	void apply(ParticlesSystem& partSystem, ConfigManager& configManager, const ColorSettingsValues& colorSettings);
 
 	inline unsigned int nbParticles() { return m_values.nbParticles; }
 

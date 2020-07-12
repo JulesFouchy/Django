@@ -1,9 +1,11 @@
 #include "Settings.h"
 
+#include "Configurations/ConfigManager.h"
+
 #include <cereal/archives/json.hpp>
 #include <fstream>
 
-void Settings::ImGuiWindows(ShaderPipeline& physicsCompute, ParticlesSystem& partSystem, Configuration& currentConfiguration) {
+void Settings::ImGuiWindows(ShaderPipeline& physicsCompute, ParticlesSystem& partSystem, ConfigManager& configManager) {
 	ImGui::Begin("Trail");
 		m_alphaTrailSettings.ImGui(m_colorSettings.backgroundColor());
 	ImGui::End();
@@ -17,13 +19,13 @@ void Settings::ImGuiWindows(ShaderPipeline& physicsCompute, ParticlesSystem& par
 		m_physicsSettings.ImGui(physicsCompute);
 	ImGui::End();
 	ImGui::Begin("Particles");
-		m_particleSystemSettings.ImGui(partSystem, currentConfiguration, m_colorSettings.getValues());
+		m_particleSystemSettings.ImGui(partSystem, configManager, m_colorSettings.getValues());
 	ImGui::End();
 }
 
-void Settings::apply(ShaderPipeline& physicsCompute, ParticlesSystem& partSystem, Configuration& currentConfiguration) {
+void Settings::apply(ShaderPipeline& physicsCompute, ParticlesSystem& partSystem, ConfigManager& configManager) {
 	m_windSettings.apply(physicsCompute); // must be before particleSystemSettings
-	m_particleSystemSettings.apply(partSystem, currentConfiguration, m_colorSettings.getValues());
+	m_particleSystemSettings.apply(partSystem, configManager, m_colorSettings.getValues());
 	m_alphaTrailSettings.apply(m_colorSettings.backgroundColor());
 	m_colorSettings.apply(partSystem); // must be after particleSystemSettings
 	m_physicsSettings.apply(physicsCompute);

@@ -26,11 +26,8 @@ App::App(SDL_Window* window)
 
 void App::onInit() {
 	m_particlesSystem.physicsComputeShader().bind();
-	Configuration& startupConfig = m_configFillScreen;
-	m_settingsMng.get().apply(m_particlesSystem.physicsComputeShader(), m_particlesSystem, startupConfig);
+	m_settingsMng.get().apply(m_particlesSystem.physicsComputeShader(), m_particlesSystem, m_configManager);
 	m_particlesSystem.physicsComputeShader().unbind();
-	//
-	//setCurrentConfiguration(startupConfig);
 }
 
 void App::onLoopIteration() {
@@ -51,11 +48,7 @@ void App::onLoopIteration() {
 		ImGui::Text(("FPS  : " + std::to_string(1.0f / m_time.deltaTime())).c_str());
 		ImGui::End();
 		// Settings
-		m_settingsMng.get().ImGuiWindows(m_particlesSystem.physicsComputeShader(), m_particlesSystem, *m_currentConfig);
-		// Current configuration
-		//ImGui::Begin(m_currentConfig->getName().c_str());
-		//m_currentConfig->ImGuiParameters(m_particlesSystem);
-		//ImGui::End();
+		m_settingsMng.get().ImGuiWindows(m_particlesSystem.physicsComputeShader(), m_particlesSystem, m_configManager);
 	}
 	// Send time to physics compute shader
 	m_time.update();
@@ -72,14 +65,6 @@ void App::onLoopIteration() {
 	m_settingsMng.get().getTrail().finishRendering();
 	// Update particles physics
 	m_particlesSystem.updatePositions();
-}
-
-
-void App::setCurrentConfiguration(Configuration& newConfig) {
-	//m_currentConfig = &newConfig;
-	//m_currentConfig->setup(m_settingsMng.get().getPartSystem().nbParticles());
-	//m_currentConfig->applyTo(m_particlesSystem);
-	m_configManager.applyTo(m_particlesSystem);
 }
 
 void App::onEvent(const SDL_Event& e) {
@@ -117,23 +102,14 @@ void App::onEvent(const SDL_Event& e) {
 
 
 	case SDL_KEYDOWN:
-		m_configManager.onKeyPressed(e.key.keysym.scancode, m_particlesSystem);
 		if (e.key.keysym.scancode == SDL_SCANCODE_F11)
 			switchFullScreenMode();
 		if (e.key.keysym.scancode == SDL_SCANCODE_ESCAPE && m_bFullScreen)
 			switchFullScreenMode();
 		if (!ImGui::GetIO().WantTextInput) {
-			if (e.key.keysym.scancode == SDL_SCANCODE_SPACE) {
-				if (m_currentConfig->reroll()) {
-					m_currentConfig->applyTo(m_particlesSystem);
-				}
-			}
-			else if (e.key.keysym.sym == 'z')
-				setCurrentConfiguration(m_configFillScreen);
-			else if (e.key.keysym.sym == 'h' && Input::KeyIsDown(SDL_SCANCODE_LCTRL))
+			m_configManager.onKeyPressed(e.key.keysym.scancode, m_particlesSystem);
+			if (e.key.keysym.sym == 'h' && Input::KeyIsDown(SDL_SCANCODE_LCTRL))
 				m_bShowGUI = !m_bShowGUI;
-			//else
-			//	m_currentConfig->onKeyPressed(e.key.keysym.scancode, m_particlesSystem);
 		}
 		break;
 
@@ -166,6 +142,7 @@ void App::onWindowResize() {
 	m_particlePipeline.bind();
 	m_particlePipeline.setUniform1f("u_invAspectRatio", 1.0f / DisplayInfos::Ratio());
 	glViewport(0, 0, DisplayInfos::Width(), DisplayInfos::Height());
+	m_configManager.applyTo(m_particlesSystem); // some configs depend on the aspect ratio
 	//m_particlesSystem.recomputeVBO();
 }
 
