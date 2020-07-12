@@ -2,35 +2,39 @@
 //? vec2 shape(float t, vec2 center, float radius);
 
 uniform int u_NbOfParticles;
-uniform int u_NbClusters;
-
-uniform float u_Radius;
-
+// Params
+uniform int u_count;
+uniform int u_intLR;
+uniform int u_intUD;
+uniform float u_wheel;
+uniform float u_ctrlWheel;
+uniform float u_shiftWheel;
+uniform float u_altWheel;
+//Rand
 uniform float u_Seed;
-
 uniform float a;
 uniform vec2 v;
 uniform vec2 xyOff;
 uniform float delta;
 
-layout(std430, binding=1) buffer restPositions {
-   vec2 restPos[];
-};
-
 float rand(vec2 co){
   return 2.0 * fract(sin(dot(co.xy ,v)) * a) - 1.0;
 }
+
+layout(std430, binding=1) buffer restPositions {
+   vec2 restPos[];
+};
 
 layout (local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
 void main(){
     uint gid = gl_GlobalInvocationID.x;
     if (gid < u_NbOfParticles) {
-        int clusterSize = u_NbOfParticles / u_NbClusters;
-        int clusterID = min(int(gid) / clusterSize, u_NbClusters-1);
+        int clusterSize = u_NbOfParticles / u_count;
+        int clusterID = min(int(gid) / clusterSize, u_count-1);
         float clusterCoord = (gid % clusterSize) / float(clusterSize);
 
         vec2 center = vec2(rand(vec2(clusterID*delta, u_Seed + xyOff.y)), rand(vec2(clusterID*delta, u_Seed + xyOff.x)));
 
-        restPos[gid] = shape(clusterCoord, center, u_Radius);
+        restPos[gid] = shape(clusterCoord, center, u_wheel);
     }
 }

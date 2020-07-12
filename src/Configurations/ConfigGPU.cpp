@@ -26,9 +26,14 @@ void ConfigGPU::initWithFilePath(const std::string& computeShaderFilePath) {
 void ConfigGPU::applyTo(ParticlesSystem& particlesSystem, const ConfigParams& params) {
     m_computeShader.get().bind();
     m_computeShader.get().setUniform1i("u_NbOfParticles", particlesSystem.getNbParticles());
-    m_computeShader.get().setUniform1i("u_NbClusters", params.count);
-    m_computeShader.get().setUniform1f("u_Radius", params.wheel);
-    m_computeShader.get().setUniform1f("u_Seed", params.ctrlWheel);
+    m_computeShader.get().setUniform1i("u_count", params.count);
+    m_computeShader.get().setUniform1i("u_intLR", params.intLR);
+    m_computeShader.get().setUniform1i("u_intUD", params.intUD);
+    m_computeShader.get().setUniform1f("u_wheel", params.wheel);
+    m_computeShader.get().setUniform1f("u_ctrlWheel", params.ctrlWheel);
+    m_computeShader.get().setUniform1f("u_shiftWheel", params.shiftWheel);
+    m_computeShader.get().setUniform1f("u_altWheel", params.altWheel);
+    m_computeShader.get().setUniform1f("u_Seed", 100.31f);
     m_computeShader.get().setUniform1f("a", 50.1);
     m_computeShader.get().setUniform2f("v", glm::vec2(0.564, 0.7));
     m_computeShader.get().setUniform2f("xyOff", glm::vec2(12, 154.51));
