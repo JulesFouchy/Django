@@ -63,21 +63,21 @@ void main(){
         for (int n = 0; n < u_count; ++n) {
             int id = int(floor(t * 4));
             t = fract(t * 4);
+            mat = scale(0.5) * mat;
             switch(id) {
                 case 0:
-                    mat *= sym();
+                    mat = sym() * mat;
                     break;
                 case 1:
-                    mat *= trans(0, 0.5);
+                    mat = trans(0, 0.5) * mat;
                     break;
                 case 2:
-                    mat *= trans(0.5, 0.5);
+                    mat = trans(0.5, 0.5) * mat;
                     break;
                 case 3:
-                    mat *= trans(1, 0.5) * scale(-1, -1) * sym();
+                    mat = trans(1, 0.5) * scale(-1, -1) * sym() * mat;
                     break;
             }
-            mat *= scale(0.5);
         }
         vec3 pos3 = mat * vec3(baseCurve(t), 1.0);
         pos = pos3.xy / pos3.z;
