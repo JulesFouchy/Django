@@ -31,8 +31,8 @@ void main(){
         uint col = id % nbLines;
         //
         restPos[gid] = vec2(
-            -1.0 + 2.0 * float(col) / nbLines,
-            -1.0 + 2.0 * float(row) / nbLines
+            -1.0 + 2.0 * (float(col) + 0.5) / nbLines,
+            -1.0 + 2.0 * (float(row) + 0.5) / nbLines
         );
         // ------------- Your code ends here -------------
     }

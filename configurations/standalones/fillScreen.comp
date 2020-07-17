@@ -32,8 +32,8 @@ void main(){
         uint row = id / nbCols;
         //
         restPos[gid] = vec2(
-            (-1.0 + 2.0 * float(col) / nbCols) * u_aspectRatio,
-             -1.0 + 2.0 * float(row) / nbRows
+            (-1.0 + 2.0 * (float(col) + 0.5) / nbCols) * u_aspectRatio,
+             -1.0 + 2.0 * (float(row) + 0.5) / nbRows
         );
         // ------------- Your code ends here -------------
     }
