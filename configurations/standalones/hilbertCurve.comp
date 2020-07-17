@@ -20,7 +20,23 @@ layout(std430, binding=1) buffer restPositions {
 };
 
 vec2 baseCurve(float t) {
-    return vec2(t, -(t-0.5)*(t-0.5)+0.25);
+    // triangle
+    //float h = sqrt(3) / 2; // equi trg
+    /*float h = 0.5;
+    if (t < 0.5) {
+        t *= 2;
+        return t * vec2(0.5, h);
+    }
+    else {
+        t = t * 2 - 1;
+        return (1-t) * vec2(0.5, h) + t * vec2(1, 0);
+    }*/
+    // circle
+    const float pi = 3.141593;
+    float agl = pi - t * pi;
+    return vec2(0.5, 0) + 0.5 * vec2(cos(agl), sin(agl));
+    // parabola
+    //return vec2(t, -(t-0.5)*(t-0.5)+0.25);
 }
 
 mat3 trans(float x, float y) {
