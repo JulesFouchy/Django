@@ -58,8 +58,10 @@ void App::onLoopIteration() {
 	// Send wind to physics compute shader
 	m_settingsMng.get().getWind().setWindOffset(m_particlesSystem.physicsComputeShader(), m_time.time());
 	// Send mouse to physics compute shader
-	m_particlesSystem.physicsComputeShader().setUniform2f("u_mouse", Input::GetMouseInNormalizedRatioSpace());
-	m_particlesSystem.physicsComputeShader().setUniform1i("u_bForceField", Input::IsMouseButtonDown(SDL_BUTTON_LEFT));
+	bool bForceField = Input::IsMouseButtonDown(SDL_BUTTON_LEFT) && !ImGui::GetIO().WantCaptureMouse;
+	m_particlesSystem.physicsComputeShader().setUniform1i("u_bForceField", bForceField);
+	if (bForceField)
+		m_particlesSystem.physicsComputeShader().setUniform2f("u_mouse", Input::GetMouseInNormalizedRatioSpace());
 	//
 	m_particlesSystem.physicsComputeShader().unbind();
 	// Clear screen
