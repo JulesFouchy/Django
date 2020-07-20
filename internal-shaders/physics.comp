@@ -17,6 +17,7 @@ uniform vec2 u_windOffset;
 // Mouse
 uniform vec2 u_mouse;
 uniform bool u_bForceField;
+uniform float u_burstStrength;
 
 struct particle{
     vec2 pos;
@@ -50,6 +51,11 @@ void main(){
             part[gid].pos = d < r
                 ? u_mouse + r * normalize(dl)
                 : part[gid].pos;
+        }
+        // burst
+        if (u_burstStrength > 0.0) {
+            vec2 dl = part[gid].pos - u_mouse;
+            part[gid].vel += u_burstStrength * normalize(dl);
         }
         // apply
         part[gid].vel += acc * dt;
