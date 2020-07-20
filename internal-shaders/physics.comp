@@ -4,16 +4,19 @@
 float snoise(vec2 v);
 
 uniform int u_NbOfParticles;
-
+// Physics
 uniform float dt;
 uniform float u_Stiffness;
 uniform float u_Damping;
-
+// Wind
 uniform float u_windNoisePuls;
 uniform float u_windMaxStrength;
 uniform float u_windMinStrength;
 uniform float u_windDirectionAngle;
 uniform vec2 u_windOffset;
+// Mouse
+uniform vec2 u_mouse;
+uniform bool u_bForceField;
 
 struct particle{
     vec2 pos;
@@ -39,7 +42,16 @@ void main(){
         float strength = 0.5 + 0.5 * snoise(u_windNoisePuls * part[gid].pos + u_windOffset);
         strength = strength * (u_windMaxStrength - u_windMinStrength) + u_windMinStrength;
         acc += strength * vec2(cos(agl), sin(agl));
-        //
+        // force field
+        if (u_bForceField) {
+            vec2 dl = part[gid].pos - u_mouse;
+            float d = length(dl);
+            float r = 0.3;
+            part[gid].pos = d < r
+                ? u_mouse + r * normalize(dl)
+                : part[gid].pos;
+        }
+        // apply
         part[gid].vel += acc * dt;
         part[gid].pos += part[gid].vel * dt;
     }
