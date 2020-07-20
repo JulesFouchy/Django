@@ -14,17 +14,17 @@ uniform float u_seed;
 uniform vec2 u_xySeed;
 //? float rand(float id, float seed);
 
-vec2 shape(float t, vec2 center, float radius) {
+vec2 shape(float t, vec2 center, float radius, float rotation) {
     float N = float(u_intLR);
-    float R = u_wheel;
+    float R = radius;
     float r = R * 0.5 * u_altWheel;
     //
     float id = floor(t * 2.0 * N);
     t =        fract(t * 2.0 * N);
     float r1 = (int(id) % 2 == 0) ? R : r;
     float r2 = (int(id) % 2 == 0) ? r : R;
-    float a1 = id         / (2.0 * N) * 6.28 - 3.14*0.5;
-    float a2 = (id + 1.0) / (2.0 * N) * 6.28 - 3.14*0.5;
+    float a1 = id         / (2.0 * N) * 6.28 - 3.14*0.5 + rotation;
+    float a2 = (id + 1.0) / (2.0 * N) * 6.28 - 3.14*0.5 + rotation;
     vec2 p1 = r1 * vec2(cos(a1), sin(a1));
     vec2 p2 = r2 * vec2(cos(a2), sin(a2));
     return center + mix(p1, p2, t);
