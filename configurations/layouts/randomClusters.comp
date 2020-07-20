@@ -31,6 +31,10 @@ void main(){
 
         vec2 center = vec2(rand(clusterID, u_seed + u_xySeed.y), rand(clusterID, u_seed + u_xySeed.x));
         center.x *= u_aspectRatio;
-        restPos[gid] = shape(clusterCoord, center, 0.33 * u_wheel, 6.28 * rand(clusterID, u_seed + 123.456));
+        float radiusVar = 0.15;
+        float radius = 0.33 * u_wheel * (1 + 2 * radiusVar * rand(clusterID + 789.321, u_seed + 123.456) - radiusVar);
+        center.x = clamp(center.x, -u_aspectRatio + radius, u_aspectRatio - radius);
+        center.y = clamp(center.y, -1.0 + radius, 1.0 - radius);
+        restPos[gid] = shape(clusterCoord, center, radius, 6.28 * rand(clusterID, u_seed + 123.456));
     }
 }
