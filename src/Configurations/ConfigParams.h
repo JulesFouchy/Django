@@ -1,7 +1,7 @@
 #pragma once
 
 struct ConfigParams {
-	int count = 1;
+	int count = 5;
 	int intLR = 6;
 	int intUD = 1;
 	float wheel = 1.0f;
