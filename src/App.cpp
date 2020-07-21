@@ -123,7 +123,7 @@ void App::onEvent(const SDL_Event& e) {
 		if (e.key.keysym.scancode == SDL_SCANCODE_ESCAPE && m_bFullScreen)
 			switchFullScreenMode();
 		if (!ImGui::GetIO().WantTextInput) {
-			m_configManager.onKeyPressed(e.key.keysym.scancode, m_particlesSystem);
+			m_configManager.onKeyPressed(e.key, m_particlesSystem);
 			if (e.key.keysym.sym == 'h' && Input::KeyIsDown(SDL_SCANCODE_LCTRL))
 				m_bShowGUI = !m_bShowGUI;
 		}

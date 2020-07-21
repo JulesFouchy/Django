@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ConfigGPU.h"
+#include "ConfigTextGPU.h"
 #include "ConfigParams.h"
 #include "RandomParams.h"
 
@@ -10,7 +11,8 @@ class ParticlesSystem;
 
 enum class ConfigType {
 	SHAPE_LAYOUT,
-	STANDALONE
+	STANDALONE,
+	TEXT
 };
 
 class ConfigManager {
@@ -22,10 +24,11 @@ public:
 	void Imgui(ParticlesSystem& partSystem);
 	Configuration& get();
 
-	void onKeyPressed(SDL_Scancode scancode, ParticlesSystem& partSystem);
+	void onKeyPressed(SDL_KeyboardEvent keyEvent, ParticlesSystem& partSystem);
 	void onWheel(float delta, ParticlesSystem& partSystem, bool bNoStandardScroll);
 
 private:
+	ConfigTextGPU m_textConfig;
 	Array2D<ConfigGPU> m_shapeLayoutConfigs;
 	std::vector<ConfigGPU> m_standaloneConfigs;
 	ConfigType m_currConfigType = ConfigType::SHAPE_LAYOUT;
