@@ -1,11 +1,13 @@
 #version 430
 
 uniform int u_NbOfParticles;
-uniform vec3 colorStart;
-uniform vec3 colorEnd;
+uniform float u_aspectRatio;
 
-layout(std430, binding=2) buffer colors{
-   float channels[];
+uniform int u_textEncoded;
+uniform int u_nbLetters; // excludes spaces
+
+layout(std430, binding=1) buffer restPositions {
+   vec2 restPos[];
 };
 
 layout (local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
@@ -13,10 +15,20 @@ void main(){
     uint gid = gl_GlobalInvocationID.x;
     if (gid < u_NbOfParticles) {
         float t = gid / float(u_NbOfParticles);
-        vec3 col = mix(colorStart, colorEnd, t);
-        
-        channels[3 * gid + 0] = col.r;
-        channels[3 * gid + 1] = col.g;
-        channels[3 * gid + 2] = col.b;
+        if (u_textEncoded == -1) {
+            restPos[gid] = vec2(
+                0.0,
+                0.0
+            );
+        }
+        else {
+            float N = float(u_nbLetters);
+            float id = floor(t * N);
+            t        = fract(t * N);
+            restPos[gid] = 0.1 * vec2(
+                cos(t*6.28),
+                sin(t*6.28)
+            ) + vec2(id * 0.2 - 1, 0);
+        }
     }
 }
