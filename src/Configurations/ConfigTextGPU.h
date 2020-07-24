@@ -15,7 +15,12 @@ public:
 	inline void toggleCaptureKeys() { setCaptureKeys(!m_bCaptureKeys); }
 
 private:
-	ComputeShader m_computeShader;
+	void updateSrcCode();
+
+private:
 	std::string m_text;
 	bool m_bCaptureKeys;
+
+	ComputeShader m_computeShader;
+	std::string m_srcCodeBase;
 };

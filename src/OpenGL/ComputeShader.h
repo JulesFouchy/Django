@@ -9,7 +9,7 @@ public:
 	ComputeShader(ComputeShader&& o) noexcept;
 	~ComputeShader() = default;
 	void operator=(ComputeShader&& o);
-	void initWithCode(const std::string& sourceCode);
+	void setSrcCode(const std::string& sourceCode);
 
 	void compute(unsigned int nbComputations);
 	inline ShaderPipeline& get() { return m_shader; }

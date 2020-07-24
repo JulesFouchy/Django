@@ -16,7 +16,7 @@ void ConfigGPU::operator=(ConfigGPU&& o) {
 
 void ConfigGPU::initWithSrcCode(const std::string& computeShaderSrcCode) {
     // spdlog::info(computeShaderSrcCode);
-    m_computeShader.initWithCode(computeShaderSrcCode);
+    m_computeShader.setSrcCode(computeShaderSrcCode);
     // Log::separationLine();
 }
 void ConfigGPU::initWithFilePath(const std::string& computeShaderFilePath) {

@@ -2,10 +2,14 @@
 
 #include "Particles/ParticlesSystem.h"
 #include "Helper/DisplayInfos.h"
+#include "Helper/File.h"
 
 ConfigTextGPU::ConfigTextGPU()
-	: m_computeShader("internal-shaders/textConfig.comp"), m_text("")
-{}
+	: m_text("")
+{
+	MyFile::ToString("internal-shaders/textConfig.comp", &m_srcCodeBase);
+	updateSrcCode();
+}
 
 void ConfigTextGPU::applyTo(ParticlesSystem& particlesSystem, const ConfigParams& params, const RandomParams& randParams) {
 	m_computeShader.get().bind();
@@ -33,5 +37,20 @@ bool ConfigTextGPU::onKeyPressed(SDL_KeyboardEvent keyEvent) {
 			}
 		}
 	}
-	return m_bCaptureKeys;
+	if (bHandled)
+		updateSrcCode();
+	return bHandled;
+}
+
+void ConfigTextGPU::updateSrcCode() {
+	std::string srcCode = R"V0G0N(
+#version 430
+const float radius = 0.1;
+const uint nbLetters = 5;
+const float offsets[nbLetters] = {0, 1, 2, 4, 5};
+const int letters[nbLetters] = {0, 1, 2, 3, 3};
+)V0G0N"
++ m_srcCodeBase;
+	spdlog::info(srcCode);
+	m_computeShader.setSrcCode(srcCode);
 }
