@@ -3,32 +3,241 @@
 uniform int u_NbOfParticles;
 uniform float u_aspectRatio;
 
-uniform int u_textEncoded;
-uniform int u_nbLetters; // excludes spaces
-
 layout(std430, binding=1) buffer restPositions {
    vec2 restPos[];
 };
+
+vec2 letterA(float t);
+vec2 letterB(float t);
+vec2 letterC(float t);
+vec2 letterD(float t);
+vec2 letterE(float t);
+vec2 letterF(float t);
+vec2 letterG(float t);
+vec2 letterH(float t);
+vec2 letterI(float t);
+vec2 letterJ(float t);
+vec2 letterK(float t);
+vec2 letterL(float t);
+vec2 letterM(float t);
+vec2 letterN(float t);
+vec2 letterO(float t);
+vec2 letterP(float t);
+vec2 letterQ(float t);
+vec2 letterR(float t);
+vec2 letterS(float t);
+vec2 letterT(float t);
+vec2 letterU(float t);
+vec2 letterV(float t);
+vec2 letterW(float t);
+vec2 letterX(float t);
+vec2 letterY(float t);
+vec2 letterZ(float t);
+
+const float radius = 0.1;
+const uint nbLetters = 4;
+const float offsets[nbLetters] = {0, 1, 2, 4};
+const int letters[nbLetters] = {0, 1, 2, 3};
 
 layout (local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
 void main(){
     uint gid = gl_GlobalInvocationID.x;
     if (gid < u_NbOfParticles) {
-        float t = gid / float(u_NbOfParticles);
-        if (u_textEncoded == -1) {
-            restPos[gid] = vec2(
-                0.0,
-                0.0
-            );
+        //
+        uint nbPartPerLetter = u_NbOfParticles / nbLetters;
+        uint idealNbPart = nbPartPerLetter * nbLetters;
+        uint n = gid < idealNbPart ? gid : idealNbPart - (gid - idealNbPart + 1);
+        uint id =       n / nbPartPerLetter;
+        float t = float(n % nbPartPerLetter) / nbPartPerLetter;
+        vec2 pos;
+        switch (letters[id]) {
+            case 0:
+                pos = letterA(t);
+                break;
+            case 1:
+                pos = letterB(t);
+                break;
+            case 2:
+                pos = letterC(t);
+                break;
+            case 3:
+                pos = letterD(t);
+                break;
+            case 4:
+                pos = letterE(t);
+                break;
+            case 5:
+                pos = letterF(t);
+                break;
+            case 6:
+                pos = letterG(t);
+                break;
+            case 7:
+                pos = letterH(t);
+                break;
+            case 8:
+                pos = letterI(t);
+                break;
+            case 9:
+                pos = letterJ(t);
+                break;
+            case 10:
+                pos = letterK(t);
+                break;
+            case 11:
+                pos = letterL(t);
+                break;
+            case 12:
+                pos = letterM(t);
+                break;
+            case 13:
+                pos = letterN(t);
+                break;
+            case 14:
+                pos = letterO(t);
+                break;
+            case 15:
+                pos = letterP(t);
+                break;
+            case 16:
+                pos = letterQ(t);
+                break;
+            case 17:
+                pos = letterR(t);
+                break;
+            case 18:
+                pos = letterS(t);
+                break;
+            case 19:
+                pos = letterT(t);
+                break;
+            case 20:
+                pos = letterU(t);
+                break;
+            case 21:
+                pos = letterV(t);
+                break;
+            case 22:
+                pos = letterW(t);
+                break;
+            case 23:
+                pos = letterX(t);
+                break;
+            case 24:
+                pos = letterY(t);
+                break;
+            case 25:
+                pos = letterZ(t);
+                break;
         }
-        else {
-            float N = float(u_nbLetters);
-            float id = floor(t * N);
-            t        = fract(t * N);
-            restPos[gid] = 0.1 * vec2(
-                cos(t*6.28),
-                sin(t*6.28)
-            ) + vec2(id * 0.2 - 1, 0);
-        }
+        pos *= radius;
+        pos.x += -u_aspectRatio + radius + 2.0 * radius * offsets[id] ;
+        //
+        restPos[gid] = pos;
     }
+}
+
+vec2 letterA(float t) {
+    float a = t * 6.28;
+    return vec2(cos(a), sin(a));
+}
+vec2 letterB(float t) {
+    float a = t * 6.28;
+    return vec2(cos(a), sin(a));
+}
+vec2 letterC(float t) {
+    float a = t * 6.28;
+    return vec2(cos(a), sin(a));
+}
+vec2 letterD(float t) {
+    float a = t * 6.28;
+    return vec2(cos(a), sin(a));
+}
+vec2 letterE(float t) {
+    float a = t * 6.28;
+    return vec2(cos(a), sin(a));
+}
+vec2 letterF(float t) {
+    float a = t * 6.28;
+    return vec2(cos(a), sin(a));
+}
+vec2 letterG(float t) {
+    float a = t * 6.28;
+    return vec2(cos(a), sin(a));
+}
+vec2 letterH(float t) {
+    float a = t * 6.28;
+    return vec2(cos(a), sin(a));
+}
+vec2 letterI(float t) {
+    float a = t * 6.28;
+    return vec2(cos(a), sin(a));
+}
+vec2 letterJ(float t) {
+    float a = t * 6.28;
+    return vec2(cos(a), sin(a));
+}
+vec2 letterK(float t) {
+    float a = t * 6.28;
+    return vec2(cos(a), sin(a));
+}
+vec2 letterL(float t) {
+    float a = t * 6.28;
+    return vec2(cos(a), sin(a));
+}
+vec2 letterM(float t) {
+    float a = t * 6.28;
+    return vec2(cos(a), sin(a));
+}
+vec2 letterN(float t) {
+    float a = t * 6.28;
+    return vec2(cos(a), sin(a));
+}
+vec2 letterO(float t) {
+    float a = t * 6.28;
+    return vec2(cos(a), sin(a));
+}
+vec2 letterP(float t) {
+    float a = t * 6.28;
+    return vec2(cos(a), sin(a));
+}
+vec2 letterQ(float t) {
+    float a = t * 6.28;
+    return vec2(cos(a), sin(a));
+}
+vec2 letterR(float t) {
+    float a = t * 6.28;
+    return vec2(cos(a), sin(a));
+}
+vec2 letterS(float t) {
+    float a = t * 6.28;
+    return vec2(cos(a), sin(a));
+}
+vec2 letterT(float t) {
+    float a = t * 6.28;
+    return vec2(cos(a), sin(a));
+}
+vec2 letterU(float t) {
+    float a = t * 6.28;
+    return vec2(cos(a), sin(a));
+}
+vec2 letterV(float t) {
+    float a = t * 6.28;
+    return vec2(cos(a), sin(a));
+}
+vec2 letterW(float t) {
+    float a = t * 6.28;
+    return vec2(cos(a), sin(a));
+}
+vec2 letterX(float t) {
+    float a = t * 6.28;
+    return vec2(cos(a), sin(a));
+}
+vec2 letterY(float t) {
+    float a = t * 6.28;
+    return vec2(cos(a), sin(a));
+}
+vec2 letterZ(float t) {
+    float a = t * 6.28;
+    return vec2(cos(a), sin(a));
 }
