@@ -6,7 +6,7 @@
 #include "Helper/ArrayStrigified.h"
 
 ConfigTextGPU::ConfigTextGPU()
-	: m_text("abc d")
+	: m_text("")
 {
 	MyFile::ToString("internal-shaders/textConfig.comp", &m_srcCodeBase);
 	updateSrcCode();
@@ -48,16 +48,24 @@ void ConfigTextGPU::updateSrcCode() {
 	int nbLetters = 0;
 	ArrayStrigified offsets;
 	ArrayStrigified letters;
-	for (char c : m_text) {
-		if ('a' <= c && c <= 'z') {
-			nbLetters++;
-			offsets.push(std::to_string(offset));
-			letters.push(std::to_string((int)(c - 'a')));
+	if (m_text.empty()) {
+		nbLetters = 1;
+		offsets.push("0");
+		letters.push("-1");
+	}
+	else {
+		for (char c : m_text) {
+			if ('a' <= c && c <= 'z') {
+				nbLetters++;
+				offsets.push(std::to_string(offset));
+				letters.push(std::to_string((int)(c - 'a')));
+			}
+			offset++;
 		}
-		offset++;
 	}
 	offsets.end();
 	letters.end();
+	//
 	std::string srcCode =
 "#version 430 \n"
 "const float radius = 0.1;\n"
@@ -65,6 +73,5 @@ void ConfigTextGPU::updateSrcCode() {
 "const float offsets[nbLetters] = "+ offsets.string() +";\n"
 "const int letters[nbLetters] = "+ letters.string() +";\n"
 + m_srcCodeBase;
-	spdlog::info(srcCode);
 	m_computeShader.setSrcCode(srcCode);
 }

@@ -50,6 +50,9 @@ void main(){
         float t = float(n % nbPartPerLetter) / nbPartPerLetter;
         vec2 pos;
         switch (letters[id]) {
+            case -1:
+                pos = vec2(0);
+                break;
             case 0:
                 pos = letterA(t);
                 break;
