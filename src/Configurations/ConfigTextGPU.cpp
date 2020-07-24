@@ -3,9 +3,10 @@
 #include "Particles/ParticlesSystem.h"
 #include "Helper/DisplayInfos.h"
 #include "Helper/File.h"
+#include "Helper/ArrayStrigified.h"
 
 ConfigTextGPU::ConfigTextGPU()
-	: m_text("")
+	: m_text("abc d")
 {
 	MyFile::ToString("internal-shaders/textConfig.comp", &m_srcCodeBase);
 	updateSrcCode();
@@ -43,13 +44,26 @@ bool ConfigTextGPU::onKeyPressed(SDL_KeyboardEvent keyEvent) {
 }
 
 void ConfigTextGPU::updateSrcCode() {
-	std::string srcCode = R"V0G0N(
-#version 430
-const float radius = 0.1;
-const uint nbLetters = 5;
-const float offsets[nbLetters] = {0, 1, 2, 4, 5};
-const int letters[nbLetters] = {0, 1, 2, 3, 3};
-)V0G0N"
+	int offset = 0;
+	int nbLetters = 0;
+	ArrayStrigified offsets;
+	ArrayStrigified letters;
+	for (char c : m_text) {
+		if ('a' <= c && c <= 'z') {
+			nbLetters++;
+			offsets.push(std::to_string(offset));
+			letters.push(std::to_string((int)(c - 'a')));
+		}
+		offset++;
+	}
+	offsets.end();
+	letters.end();
+	std::string srcCode =
+"#version 430 \n"
+"const float radius = 0.1;\n"
+"const uint nbLetters = " + std::to_string(nbLetters) + ";\n"
+"const float offsets[nbLetters] = "+ offsets.string() +";\n"
+"const int letters[nbLetters] = "+ letters.string() +";\n"
 + m_srcCodeBase;
 	spdlog::info(srcCode);
 	m_computeShader.setSrcCode(srcCode);
