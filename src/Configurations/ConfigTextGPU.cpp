@@ -68,7 +68,8 @@ void ConfigTextGPU::updateSrcCode() {
 	//
 	std::string srcCode =
 "#version 430 \n"
-"const float radius = 0.1;\n"
+"const float letterWidth  = 0.1; \n"
+"const float letterHeight = 0.3; \n"
 "const uint nbLetters = " + std::to_string(nbLetters) + ";\n"
 "const float offsets[nbLetters] = "+ offsets.string() +";\n"
 "const int letters[nbLetters] = "+ letters.string() +";\n"

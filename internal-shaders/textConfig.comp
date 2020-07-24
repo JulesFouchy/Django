@@ -1,5 +1,6 @@
 //? #version 430
-//? const float radius = 0.1;
+//? const float letterWidth = 0.1;
+//? const float letterHeight = 0.3;
 //? const uint nbLetters = 4;
 //? const float offsets[nbLetters] = {0, 1, 2, 4};
 //? const int letters[nbLetters] = {0, 1, 2, 3};
@@ -132,8 +133,9 @@ void main(){
                 pos = letterZ(t);
                 break;
         }
-        pos *= radius;
-        pos.x += -u_aspectRatio + radius + 2.0 * radius * offsets[id] ;
+        pos.x *= letterWidth;
+        pos.y *= letterHeight;
+        pos.x += -u_aspectRatio + 1.5 * letterWidth + 3.0 * letterWidth * offsets[id];
         //
         restPos[gid] = pos;
     }
@@ -146,21 +148,22 @@ vec2 letterA(float t) {
     switch (id) {
         case 0:
             return mix(
-                vec2(-0.25, -0.25),
+                vec2(-1, -1),
                 vec2(0, 1),
             t);
         case 1:
             return mix(
-                vec2(0.25, -0.25),
                 vec2(0, 1),
+                vec2(1, -1),
             t);
         case 2:
             return mix(
-                vec2(-0.1, 0),
-                vec2(0.1, 0),
+                vec2(-0.5, 0),
+                vec2(0.5, 0),
             t);
     }
 }
+
 vec2 letterB(float t) {
     const int nbParts = 3;
     int id = int(floor(t * nbParts));
@@ -168,21 +171,23 @@ vec2 letterB(float t) {
     switch (id) {
         case 0:
             return mix(
-                vec2(0, -1),
-                vec2(0,  1),
+                vec2(-1, -1),
+                vec2(-1,  1),
             t);
         case 1:
             float a = 3.14*0.5 - t * 3.14;
-            return 0.5 * vec2(cos(a), sin(a)) + vec2(0, 0.5);
+            return vec2(2.0 * cos(a), 0.5 * sin(a)) + vec2(-1, 0.5);
         case 2:
             a = 3.14*0.5 - t * 3.14;
-            return 0.5 * vec2(cos(a), sin(a)) + vec2(0, -0.5);
+            return vec2(2.0 * cos(a), 0.5 * sin(a)) + vec2(-1, -0.5);
     }
 }
+
 vec2 letterC(float t) {
     float a = 3.14*0.5 + t * 3.14;
-    return vec2(cos(a), sin(a));
+    return vec2(2.0 * cos(a), sin(a)) + vec2(1, 0);
 }
+
 vec2 letterD(float t) {
     const int nbParts = 2;
     int id = int(floor(t * nbParts));
@@ -190,12 +195,12 @@ vec2 letterD(float t) {
     switch (id) {
         case 0:
             return mix(
-                vec2(0, -1),
-                vec2(0,  1),
+                vec2(-1, -1),
+                vec2(-1,  1),
             t);
         case 1:
             float a = 3.14*0.5 - t * 3.14;
-            return vec2(cos(a), sin(a));
+            return vec2(2.0 * cos(a), sin(a)) + vec2(-1, 0);
     }
 }
 vec2 letterE(float t) {
