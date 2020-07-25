@@ -5,7 +5,9 @@
 void CreateConfigFromSVG(const std::string& filepath) {
 	struct NSVGimage* image;
 	image = nsvgParseFromFile(filepath.c_str(), "px", 96);
-	printf("size: %f x %f\n", image->width, image->height);
+	if (!image)
+		spdlog::warn("[CreateConfigFromSVG] Invalid file path : '{}'", filepath);
+	//printf("size: %f x %f\n", image->width, image->height);
 	// Use...
 	for (auto shape = image->shapes; shape != NULL; shape = shape->next) {
 		for (auto path = shape->paths; path != NULL; path = path->next) {

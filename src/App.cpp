@@ -30,7 +30,7 @@ void App::onInit() {
 	m_particlesSystem.physicsComputeShader().bind();
 	m_settingsMng.get().apply(m_particlesSystem.physicsComputeShader(), m_particlesSystem, m_configManager);
 	m_particlesSystem.physicsComputeShader().unbind();
-	CreateConfigFromSVG("C:/Users/Pc/Downloads/nanosvg-master/nanosvg-master/example/nano.svg");
+	CreateConfigFromSVG("C:/Users/Pc/Downloads/nanosvg-master/nanosvg-master/example/dessin.svg");
 }
 
 void App::onLoopIteration() {
