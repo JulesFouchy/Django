@@ -65,7 +65,9 @@ include_directories(
 # /////////////////////////////////////////////////////////////////////////////
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
-add_executable(${PROJECT_NAME} ${MY_SOURCES})
+add_executable(${PROJECT_NAME} ${MY_SOURCES}
+    lib/nanosvg/nanosvg.cpp # compile the nanosvg library
+)
 target_link_libraries(
     ${PROJECT_NAME}
     ${OPENGL_LIBRARIES}

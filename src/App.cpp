@@ -6,6 +6,8 @@
 #include "Helper/DisplayInfos.h"
 #include "Helper/Input.h"
 
+#include "Configurations/ConfigFromSVG.h"
+
 App::App(SDL_Window* window)
 	: m_bShowImGUIDemoWindow(false),
 	  m_bFullScreen(false),
@@ -28,6 +30,7 @@ void App::onInit() {
 	m_particlesSystem.physicsComputeShader().bind();
 	m_settingsMng.get().apply(m_particlesSystem.physicsComputeShader(), m_particlesSystem, m_configManager);
 	m_particlesSystem.physicsComputeShader().unbind();
+	CreateConfigFromSVG("C:/Users/Pc/Downloads/nanosvg-master/nanosvg-master/example/nano.svg");
 }
 
 void App::onLoopIteration() {
