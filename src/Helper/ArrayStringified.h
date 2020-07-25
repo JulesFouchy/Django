@@ -1,9 +1,9 @@
 #pragma once
 
-class ArrayStrigified {
+class ArrayStringified {
 public:
-	ArrayStrigified() = default;
-	~ArrayStrigified() = default;
+	ArrayStringified() = default;
+	~ArrayStringified() = default;
 
 	void push(const std::string& str);
 	void close();

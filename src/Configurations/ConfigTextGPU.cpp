@@ -3,7 +3,7 @@
 #include "Particles/ParticlesSystem.h"
 #include "Helper/DisplayInfos.h"
 #include "Helper/File.h"
-#include "Helper/ArrayStrigified.h"
+#include "Helper/ArrayStringified.h"
 
 ConfigTextGPU::ConfigTextGPU()
 	: m_text("")
@@ -46,8 +46,8 @@ bool ConfigTextGPU::onKeyPressed(SDL_KeyboardEvent keyEvent) {
 void ConfigTextGPU::updateSrcCode() {
 	int offset = 0;
 	int nbLetters = 0;
-	ArrayStrigified offsets;
-	ArrayStrigified letters;
+	ArrayStringified offsets;
+	ArrayStringified letters;
 	if (m_text.empty()) {
 		nbLetters = 1;
 		offsets.push("0");

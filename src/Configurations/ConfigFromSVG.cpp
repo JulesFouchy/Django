@@ -1,7 +1,7 @@
 #include "ConfigFromSVG.h"
 
 #include <nanosvg/nanosvg.h>
-#include "Helper/ArrayStrigified.h"
+#include "Helper/ArrayStringified.h"
 
 void CreateConfigFromSVG(const std::string& filepath) {
 	struct NSVGimage* image;
@@ -14,7 +14,7 @@ void CreateConfigFromSVG(const std::string& filepath) {
 		for (auto path = shape->paths; path != NULL; path = path->next) {
 			for (int i = 0; i < path->npts - 1; i += 3) {
 				float* p = &path->pts[i * 2];
-				ArrayStrigified bezier;
+				ArrayStringified bezier;
 				bezier.push("vec2(" + std::to_string(p[0] / image->height * 2.0 - 1.0) + ", " + std::to_string(p[1] / image->height * 2.0 - 1.0) + ")");
 				bezier.push("vec2(" + std::to_string(p[2] / image->height * 2.0 - 1.0) + ", " + std::to_string(p[3] / image->height * 2.0 - 1.0) + ")");
 				bezier.push("vec2(" + std::to_string(p[4] / image->height * 2.0 - 1.0) + ", " + std::to_string(p[5] / image->height * 2.0 - 1.0) + ")");
