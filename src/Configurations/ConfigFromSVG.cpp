@@ -1,6 +1,7 @@
 #include "ConfigFromSVG.h"
 
 #include <nanosvg/nanosvg.h>
+#include "Helper/ArrayStrigified.h"
 
 void CreateConfigFromSVG(const std::string& filepath) {
 	struct NSVGimage* image;

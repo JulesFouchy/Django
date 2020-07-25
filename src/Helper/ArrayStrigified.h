@@ -6,7 +6,7 @@ public:
 	~ArrayStrigified() = default;
 
 	void push(const std::string& str);
-	void end();
+	void close();
 	inline const std::string& string() const { return m_str; }
 
 private:

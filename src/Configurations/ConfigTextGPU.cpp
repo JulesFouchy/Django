@@ -63,8 +63,8 @@ void ConfigTextGPU::updateSrcCode() {
 			offset++;
 		}
 	}
-	offsets.end();
-	letters.end();
+	offsets.close();
+	letters.close();
 	//
 	std::string srcCode =
 "#version 430 \n"

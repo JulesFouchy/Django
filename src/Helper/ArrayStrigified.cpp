@@ -10,6 +10,6 @@ void ArrayStrigified::push(const std::string& str) {
 	}
 }
 
-void ArrayStrigified::end() {
+void ArrayStrigified::close() {
 	m_str += "}";
 }
