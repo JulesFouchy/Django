@@ -204,90 +204,442 @@ vec2 letterD(float t) {
     }
 }
 vec2 letterE(float t) {
-    float a = t * 6.28;
-    return vec2(cos(a), sin(a));
+    const int nbParts = 4;
+    int id = int(floor(t * nbParts));
+    t =          fract(t * nbParts);
+    switch (id) {
+        case 0:
+            return mix(
+                vec2(1, 1),
+                vec2(-1, 1),
+            t);
+        case 1:
+            return mix(
+                vec2(-1, 1),
+                vec2(-1, -1),
+            t);
+        case 2:
+            return mix(
+                vec2(-1, -1),
+                vec2(1, -1),
+            t);
+        case 3:
+            return mix(
+                vec2(-1, 0),
+                vec2(0, 0),
+            t);
+    }
 }
-vec2 letterF(float t) {
-    float a = t * 6.28;
-    return vec2(cos(a), sin(a));
+vec2 letterF(float t) {    
+    const int nbParts = 3;
+    int id = int(floor(t * nbParts));
+    t =          fract(t * nbParts);
+    switch (id) {
+        case 0:
+            return mix(
+                vec2(1, 1),
+                vec2(-1, 1),
+            t);
+        case 1:
+            return mix(
+                vec2(-1, 1),
+                vec2(-1, -1),
+            t);
+        case 2:
+            return mix(
+                vec2(-1, 0),
+                vec2(0, 0),
+            t);
+    }
 }
 vec2 letterG(float t) {
-    float a = t * 6.28;
-    return vec2(cos(a), sin(a));
+    const int nbParts = 2;
+    int id = int(floor(t * nbParts));
+    t =          fract(t * nbParts);
+    switch (id) {
+        case 0:
+            float a = 3.14*0.3 + t * 3.14 * 1.7;
+            return vec2(0.75 * cos(a), sin(a)) + vec2(-0.25, 0);
+        case 1:
+            return mix(
+                vec2(0, 0),
+                vec2(1, 0),
+            t);
+    }
 }
 vec2 letterH(float t) {
-    float a = t * 6.28;
-    return vec2(cos(a), sin(a));
+    const int nbParts = 3;
+    int id = int(floor(t * nbParts));
+    t =          fract(t * nbParts);
+    switch (id) {
+        case 0:
+            return mix(
+                vec2(-1, 1),
+                vec2(-1, -1),
+            t);
+        case 1:
+            return mix(
+                vec2(-1, 0),
+                vec2(1, 0),
+            t);
+        case 2:
+            return mix(
+                vec2(1, 1),
+                vec2(1, -1),
+            t);
+    }
 }
 vec2 letterI(float t) {
-    float a = t * 6.28;
-    return vec2(cos(a), sin(a));
+    const int nbParts = 3;
+    int id = int(floor(t * nbParts));
+    t =          fract(t * nbParts);
+    switch (id) {
+        case 0:
+            return mix(
+                vec2(-1, 1),
+                vec2(1, 1),
+            t);
+        case 1:
+            return mix(
+                vec2(0, 1),
+                vec2(0, -1),
+            t);
+        case 2:
+            return mix(
+                vec2(-1, -1),
+                vec2(1, -1),
+            t);
+    }
 }
 vec2 letterJ(float t) {
-    float a = t * 6.28;
-    return vec2(cos(a), sin(a));
+    const int nbParts = 3;
+    int id = int(floor(t * nbParts));
+    t =          fract(t * nbParts);
+    switch (id) {
+        case 0:
+            return mix(
+                vec2(-1, 1),
+                vec2(1, 1),
+            t);
+        case 1:
+            return mix(
+                vec2(0, 1),
+                vec2(0, -0.5),
+            t);
+        case 2:
+            float a = - t * 3.14;
+            return 0.5 * vec2(cos(a), sin(a)) + vec2(-0.5, -0.5);
+    }
 }
 vec2 letterK(float t) {
-    float a = t * 6.28;
-    return vec2(cos(a), sin(a));
+    const int nbParts = 3;
+    int id = int(floor(t * nbParts));
+    t =          fract(t * nbParts);
+    switch (id) {
+        case 0:
+            return mix(
+                vec2(-1, 1),
+                vec2(-1, -1),
+            t);
+        case 1:
+            return mix(
+                vec2(-1, 0),
+                vec2(1, 1),
+            t);
+        case 2:
+            return mix(
+                vec2(-1, 0),
+                vec2(1, -1),
+            t);
+    }
 }
 vec2 letterL(float t) {
-    float a = t * 6.28;
-    return vec2(cos(a), sin(a));
+    const int nbParts = 2;
+    int id = int(floor(t * nbParts));
+    t =          fract(t * nbParts);
+    switch (id) {
+        case 0:
+            return mix(
+                vec2(-1, 1),
+                vec2(-1, -1),
+            t);
+        case 1:
+            return mix(
+                vec2(-1, -1),
+                vec2(1, -1),
+            t);
+    }
 }
 vec2 letterM(float t) {
-    float a = t * 6.28;
-    return vec2(cos(a), sin(a));
+    const int nbParts = 4;
+    int id = int(floor(t * nbParts));
+    t =          fract(t * nbParts);
+    switch (id) {
+        case 0:
+            return mix(
+                vec2(-1, -1),
+                vec2(-1, 1),
+            t);
+        case 1:
+            return mix(
+                vec2(-1, 1),
+                vec2(0, 0),
+            t);
+        case 2:
+            return mix(
+                vec2(0, 0),
+                vec2(1, 1),
+            t);
+        case 3:
+            return mix(
+                vec2(1, 1),
+                vec2(1, -1),
+            t);
+    }
 }
 vec2 letterN(float t) {
-    float a = t * 6.28;
-    return vec2(cos(a), sin(a));
+    const int nbParts = 3;
+    int id = int(floor(t * nbParts));
+    t =          fract(t * nbParts);
+    switch (id) {
+        case 0:
+            return mix(
+                vec2(-1, -1),
+                vec2(-1, 1),
+            t);
+        case 1:
+            return mix(
+                vec2(-1, 1),
+                vec2(1, -1),
+            t);
+        case 2:
+            return mix(
+                vec2(1, -1),
+                vec2(1, 1),
+            t);
+    }
 }
 vec2 letterO(float t) {
     float a = t * 6.28;
     return vec2(cos(a), sin(a));
 }
 vec2 letterP(float t) {
-    float a = t * 6.28;
-    return vec2(cos(a), sin(a));
+    const int nbParts = 2;
+    int id = int(floor(t * nbParts));
+    t =          fract(t * nbParts);
+    switch (id) {
+        case 0:
+            return mix(
+                vec2(-1, -1),
+                vec2(-1, 1),
+            t);
+        case 1:
+            float a = 3.14*0.5 - t * 3.14;
+            return vec2(2.0 * cos(a), 0.5 * sin(a)) + vec2(-1, 0.5);
+    }
 }
 vec2 letterQ(float t) {
-    float a = t * 6.28;
-    return vec2(cos(a), sin(a));
+    const int nbParts = 2;
+    int id = int(floor(t * nbParts));
+    t =          fract(t * nbParts);
+    switch (id) {
+        case 0:
+            float a = t * 6.28;
+            return vec2(cos(a), sin(a));
+        case 1:
+            return mix(
+                vec2(0.3, -0.3),
+                vec2(1, -1),
+            t);
+    }
 }
 vec2 letterR(float t) {
-    float a = t * 6.28;
-    return vec2(cos(a), sin(a));
+    const int nbParts = 3;
+    int id = int(floor(t * nbParts));
+    t =          fract(t * nbParts);
+    switch (id) {
+        case 0:
+            return mix(
+                vec2(-1, -1),
+                vec2(-1, 1),
+            t);
+        case 1:
+            float a = 3.14*0.5 - t * 3.14;
+            return vec2(2.0 * cos(a), 0.5 * sin(a)) + vec2(-1, 0.5);
+        case 2:
+            return mix(
+                vec2(-1, 0),
+                vec2(1, -1),
+            t);
+    }
 }
 vec2 letterS(float t) {
-    float a = t * 6.28;
-    return vec2(cos(a), sin(a));
+    const int nbParts = 4;
+    int id = int(floor(t * nbParts));
+    t =          fract(t * nbParts);
+    switch (id) {
+        case 0:
+            return mix(
+                vec2(-1, -1),
+                vec2(0, -1),
+            t);
+        case 1:
+            float a = -3.14*0.5 + t * 3.14;
+            return vec2(cos(a), 0.5 * sin(a)) + vec2(0, -0.5);
+        case 2:
+            a = -3.14*0.5 - t * 3.14;
+            return vec2(cos(a), 0.5 * sin(a)) + vec2(0, 0.5);
+        case 3:
+            return mix(
+                vec2(0, 1),
+                vec2(1, 1),
+            t);
+    }
 }
 vec2 letterT(float t) {
-    float a = t * 6.28;
-    return vec2(cos(a), sin(a));
+    const int nbParts = 2;
+    int id = int(floor(t * nbParts));
+    t =          fract(t * nbParts);
+    switch (id) {
+        case 0:
+            return mix(
+                vec2(-1, 1),
+                vec2(1, 1),
+            t);
+        case 1:
+            return mix(
+                vec2(0, 1),
+                vec2(0, -1),
+            t);
+    }
 }
 vec2 letterU(float t) {
-    float a = t * 6.28;
-    return vec2(cos(a), sin(a));
+    const int nbParts = 3;
+    int id = int(floor(t * nbParts));
+    t =          fract(t * nbParts);
+    switch (id) {
+        case 0:
+            return mix(
+                vec2(-1, 1),
+                vec2(-1, 0),
+            t);
+        case 1:
+            float a = 3.14 + t * 3.14;
+            return vec2(cos(a), sin(a));
+        case 2:
+            return mix(
+                vec2(1, 0),
+                vec2(1, 1),
+            t);
+    }
 }
 vec2 letterV(float t) {
-    float a = t * 6.28;
-    return vec2(cos(a), sin(a));
+    const int nbParts = 2;
+    int id = int(floor(t * nbParts));
+    t =          fract(t * nbParts);
+    switch (id) {
+        case 0:
+            return mix(
+                vec2(-1, 1),
+                vec2(0, -1),
+            t);
+        case 1:
+            return mix(
+                vec2(0, -1),
+                vec2(1, 1),
+            t);
+    }
 }
 vec2 letterW(float t) {
-    float a = t * 6.28;
-    return vec2(cos(a), sin(a));
+    const int nbParts = 4;
+    int id = int(floor(t * nbParts));
+    t =          fract(t * nbParts);
+    switch (id) {
+        case 0:
+            return mix(
+                vec2(-1, 1),
+                vec2(-1, -1),
+            t);
+        case 1:
+            return mix(
+                vec2(-1, -1),
+                vec2(0, 0),
+            t);
+        case 2:
+            return mix(
+                vec2(0, 0),
+                vec2(1, -1),
+            t);
+        case 3:
+            return mix(
+                vec2(1, -1),
+                vec2(1, 1),
+            t);
+    }
 }
 vec2 letterX(float t) {
-    float a = t * 6.28;
-    return vec2(cos(a), sin(a));
+    const int nbParts = 2;
+    int id = int(floor(t * nbParts));
+    t =          fract(t * nbParts);
+    switch (id) {
+        case 0:
+            return mix(
+                vec2(-1, 1),
+                vec2(1, -1),
+            t);
+        case 1:
+            return mix(
+                vec2(1, 1),
+                vec2(-1, -1),
+            t);
+    }
 }
 vec2 letterY(float t) {
-    float a = t * 6.28;
-    return vec2(cos(a), sin(a));
+    const int nbParts = 3;
+    int id = int(floor(t * nbParts));
+    t =          fract(t * nbParts);
+    switch (id) {
+        case 0:
+            return mix(
+                vec2(-1, 1),
+                vec2(0, 0),
+            t);
+        case 1:
+            return mix(
+                vec2(0, 0),
+                vec2(1, 1),
+            t);
+        case 2:
+            return mix(
+                vec2(0, 0),
+                vec2(0, -1),
+            t);
+    }
 }
 vec2 letterZ(float t) {
-    float a = t * 6.28;
-    return vec2(cos(a), sin(a));
+    const int nbParts = 4;
+    int id = int(floor(t * nbParts));
+    t =          fract(t * nbParts);
+    switch (id) {
+        case 0:
+            return mix(
+                vec2(-1, 1),
+                vec2(1, 1),
+            t);
+        case 1:
+            return mix(
+                vec2(1, 1),
+                vec2(-1, -1),
+            t);
+        case 2:
+            return mix(
+                vec2(-1, -1),
+                vec2(1, -1),
+            t);
+        case 3:
+            return mix(
+                vec2(-0.5, 0),
+                vec2(0.5, 0),
+            t);
+    }
 }
