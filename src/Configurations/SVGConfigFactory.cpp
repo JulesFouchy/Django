@@ -3,6 +3,8 @@
 #include <nanosvg/nanosvg.h>
 #include "Helper/ArrayStringified.h"
 #include "Helper/File.h"
+#include "Helper/String.h"
+#include <fstream>
 
 std::string SVGConfigFactory::m_filepath = "";
 
@@ -56,6 +58,20 @@ bool SVGConfigFactory::CreateConfigFromSVG(const std::string& filepath) {
 		"const uint nbCurves = " + std::to_string(nbCurves) + "; \n"
 		"Bezier curves[nbCurves] = " + curves.string() + "; \n"
 		+ srcCode;
-	spdlog::info(srcCode);
+	SaveShaderFile(filepath, srcCode);
 	return true;
+}
+
+void SVGConfigFactory::SaveShaderFile(const std::string& svgFilepath, const std::string& sourceCode) {
+	std::string name = MyString::RemoveFolderHierarchy(MyString::RemoveFileExtension(svgFilepath));
+	std::string filepath = MyFile::RootDir + "/configurations/shapes/" + name + ".comp";
+	int i = 1;
+	while (MyFile::Exists(filepath)) {
+		filepath = MyFile::RootDir + "/configurations/shapes/" + name + "(" + std::to_string(i) + ").comp";
+		i++;
+	}
+	std::ofstream file;
+	file.open(filepath);
+	file << sourceCode;
+	file.close();
 }
