@@ -10,19 +10,25 @@ void SVGConfigFactory::ImGui() {
 	ImGui::InputText("SVG file", &m_filepath);
 	ImGui::SameLine();
 	if (ImGui::Button("Load")) {
-		CreateConfigFromSVG(m_filepath);
+		if (CreateConfigFromSVG(m_filepath))
+			m_filepath = "";
+		else {
+			spdlog::warn("[SVGConfigFactory::ImGui] Couldn't create configuration from file '{}'", m_filepath);
+		}
 	}
 }
 
-void SVGConfigFactory::CreateConfigFromSVG(const std::string& filepath) {
+bool SVGConfigFactory::CreateConfigFromSVG(const std::string& filepath) {
 	// Get base source code
 	std::string srcCode;
 	MyFile::ToString(MyFile::RootDir + "/internal-shaders/bezierShapeTemplate.comp", &srcCode);
 	// Open SVG file
 	struct NSVGimage* image;
 	image = nsvgParseFromFile(filepath.c_str(), "px", 96);
-	if (!image)
-		spdlog::warn("[CreateConfigFromSVG] Invalid file path : '{}'", filepath);
+	if (!image) {
+		spdlog::warn("[SVGConfigFactory::CreateConfigFromSVG] Invalid file path : '{}'", filepath);
+		return false;
+	}
 	// Get bezier curves
 	ArrayStringified curves;
 	unsigned int nbCurves = 0;
@@ -51,4 +57,5 @@ void SVGConfigFactory::CreateConfigFromSVG(const std::string& filepath) {
 		"Bezier curves[nbCurves] = " + curves.string() + "; \n"
 		+ srcCode;
 	spdlog::info(srcCode);
+	return true;
 }

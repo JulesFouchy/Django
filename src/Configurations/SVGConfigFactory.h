@@ -6,7 +6,7 @@ public:
 	static void ImGui();
 
 private:
-	static void CreateConfigFromSVG(const std::string& filepath);
+	static bool CreateConfigFromSVG(const std::string& filepath);
 
 private:
 	static std::string m_filepath;
