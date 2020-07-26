@@ -30,7 +30,6 @@ void App::onInit() {
 	m_particlesSystem.physicsComputeShader().bind();
 	m_settingsMng.get().apply(m_particlesSystem.physicsComputeShader(), m_particlesSystem, m_configManager);
 	m_particlesSystem.physicsComputeShader().unbind();
-	CreateConfigFromSVG("C:/Users/Pc/Downloads/nanosvg-master/nanosvg-master/example/0410a6ceee93079243a1a0a0be387622.svg");
 }
 
 void App::onLoopIteration() {
@@ -52,6 +51,9 @@ void App::onLoopIteration() {
 		// ImGui::Text(("FPS  : " + std::to_string(1.0f / m_time.deltaTime())).c_str());
 		// ImGui::End();
 		// Settings
+		ImGui::Begin("Load from SVG");
+		SVGConfigFactory::ImGui();
+		ImGui::End();
 		m_settingsMng.get().ImGuiWindows(m_particlesSystem.physicsComputeShader(), m_particlesSystem, m_configManager);
 		m_configManager.Imgui(m_particlesSystem);
 	}

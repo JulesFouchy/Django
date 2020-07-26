@@ -30,20 +30,8 @@ vec2 drawBezier(float t, Bezier bezier) {
          +      t*t*t             * bezier.p4;
 }
 
-layout(std430, binding=1) buffer restPositions {
-   vec2 restPos[];
-};
-
-layout (local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
-void main(){
-    uint gid = gl_GlobalInvocationID.x;
-
-    if (gid < u_NbOfParticles) {
-        uint nbPartPerCurve = u_NbOfParticles / nbCurves;
-        uint idealNbPart = nbPartPerCurve * nbCurves;
-        uint n = gid < idealNbPart ? gid : idealNbPart - (gid - idealNbPart + 1);
-        uint id =       n / nbPartPerCurve;
-        float t = float(n % nbPartPerCurve) / nbPartPerCurve;
-        restPos[gid] = u_wheel * drawBezier(t, curves[id]);
-    }
+vec2 shape(float t, vec2 center, float radius, float rotation) {
+	uint id = uint(floor(t * nbCurves));
+          t =      fract(t * nbCurves);
+    return center + radius * drawBezier(t, curves[id]);
 }

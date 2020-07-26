@@ -4,10 +4,20 @@
 #include "Helper/ArrayStringified.h"
 #include "Helper/File.h"
 
-void CreateConfigFromSVG(const std::string& filepath) {
+std::string SVGConfigFactory::m_filepath = "";
+
+void SVGConfigFactory::ImGui() {
+	ImGui::InputText("SVG file", &m_filepath);
+	ImGui::SameLine();
+	if (ImGui::Button("Load")) {
+		CreateConfigFromSVG(m_filepath);
+	}
+}
+
+void SVGConfigFactory::CreateConfigFromSVG(const std::string& filepath) {
 	// Get base source code
 	std::string srcCode;
-	MyFile::ToString(MyFile::RootDir + "/internal-shaders/bezierSplineTemplate.comp", &srcCode);
+	MyFile::ToString(MyFile::RootDir + "/internal-shaders/bezierShapeTemplate.comp", &srcCode);
 	// Open SVG file
 	struct NSVGimage* image;
 	image = nsvgParseFromFile(filepath.c_str(), "px", 96);
