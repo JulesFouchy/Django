@@ -6,7 +6,7 @@
 #include "Helper/DisplayInfos.h"
 #include "Helper/Input.h"
 
-#include "Configurations/ConfigFromSVG.h"
+#include "Configurations/SVGConfigFactory.h"
 
 App::App(SDL_Window* window)
 	: m_bShowImGUIDemoWindow(false),

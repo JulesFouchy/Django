@@ -1,4 +1,4 @@
-#include "ConfigFromSVG.h"
+#include "SVGConfigFactory.h"
 
 #include <nanosvg/nanosvg.h>
 #include "Helper/ArrayStringified.h"
