@@ -8,7 +8,7 @@
 ConfigTextGPU::ConfigTextGPU()
 	: m_text("")
 {
-	MyFile::ToString("internal-shaders/textConfig.comp", &m_srcCodeBase);
+	MyFile::ToString("internal-shaders/textConfigTemplate.comp", &m_srcCodeBase);
 	updateSrcCode();
 }
 
