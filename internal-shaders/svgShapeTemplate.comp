@@ -6,7 +6,9 @@
 //?     vec2 p4;
 //? };
 //? const uint nbCurves = 1;
-//? Bezier curves[nbCurves] = {{vec2(-1, -1), vec2(-1,  1), vec2( 0, -1), vec2( 0,  0)}};
+//? layout(std430, binding=5) buffer bezier{
+//?    Bezier curves[];
+//? };
 
 uniform int u_NbOfParticles;
 uniform float u_aspectRatio;
@@ -32,6 +34,6 @@ vec2 drawBezier(float t, Bezier bezier) {
 
 vec2 shape(float t, vec2 center, float radius, float rotation) {
 	uint id = uint(floor(t * nbCurves));
-          t =      fract(t * nbCurves);
+         t  =      fract(t * nbCurves);
     return center + radius * drawBezier(t, curves[id]);
 }

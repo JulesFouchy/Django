@@ -11,6 +11,8 @@ constexpr float SCROLL_SPEED = 0.1f;
 const std::string VERSION = "#version 430";
 
 const std::string SHAPES_FOLDER = "configurations/shapes";
+const std::string SVG_FOLDER = "configurations/svgShapes";
+const std::string SVG_TEMPLATE = "internal-shaders/svgShapeTemplate.comp";
 const std::string LAYOUTS_FOLDER = "configurations/layouts";
 const std::string STANDALONE_FOLDER = "configurations/standalones";
 const std::string RANDOM_FILE = "internal-shaders/random.glsl";
@@ -19,22 +21,43 @@ ConfigManager::ConfigManager() {
     // Get rand() source code
     std::string randSrc;
     MyFile::ToString(RANDOM_FILE, &randSrc);
+    // Get SvgShape template
+    std::string svgSrc;
+    MyFile::ToString(SVG_TEMPLATE, &svgSrc);
+    // Create all SVG SSBOs and get their buffer-binding code
+    size_t nbSVGFiles = 0;
+    for (const auto& entry : fs::directory_iterator(SVG_FOLDER))
+        nbSVGFiles++;
+    std::vector<std::string> svgssboCodes;
+    svgssboCodes.reserve(nbSVGFiles);
+    m_svgSsbos.reserve(nbSVGFiles);
+    for (const auto& entry : fs::directory_iterator(SVG_FOLDER)) {
+        m_svgSsbos.emplace_back();
+        std::string str = m_svgSsbos.back().init(entry.path().string());
+        svgssboCodes.push_back(str);
+    }
     // Get all shapes source code
     size_t nbShapesFiles = 0;
     for (const auto& entry : fs::directory_iterator(SHAPES_FOLDER))
         nbShapesFiles++;
+    size_t nbShapes = nbShapesFiles + nbSVGFiles;
     std::vector<std::string> shapesSrcCode;
-    shapesSrcCode.reserve(nbShapesFiles);
+    shapesSrcCode.reserve(nbShapes);
+        // shape
     for (const auto& entry : fs::directory_iterator(SHAPES_FOLDER)) {
         std::string str;
         MyFile::ToString(entry.path().string(), &str);
         shapesSrcCode.push_back(str);
     }
+        // svg shape
+    for (const std::string& ssboSrc : svgssboCodes) {
+        shapesSrcCode.push_back(ssboSrc + svgSrc);
+    }
     // Set Array2D size
     size_t nbLayoutsFiles = 0;
     for (const auto& entry : fs::directory_iterator(LAYOUTS_FOLDER))
         nbLayoutsFiles++;
-    m_shapeLayoutConfigs.setSize(nbShapesFiles, nbLayoutsFiles);
+    m_shapeLayoutConfigs.setSize(nbShapes, nbLayoutsFiles);
     // Create all shape-layout shaders
     size_t y = 0;
     for (const auto& entry : fs::directory_iterator(LAYOUTS_FOLDER)) {

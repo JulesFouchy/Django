@@ -4,6 +4,7 @@
 #include "ConfigTextGPU.h"
 #include "ConfigParams.h"
 #include "RandomParams.h"
+#include "SVGssbo.h"
 
 #include "Helper/Array2D.h"
 
@@ -30,6 +31,7 @@ public:
 private:
 	ConfigTextGPU m_textConfig;
 	Array2D<ConfigGPU> m_shapeLayoutConfigs;
+	std::vector<SVGssbo> m_svgSsbos;
 	std::vector<ConfigGPU> m_standaloneConfigs;
 	ConfigType m_currConfigType = ConfigType::SHAPE_LAYOUT;
 	size_t m_currShapeIndex = 0;
