@@ -2,7 +2,7 @@
 
 #include <nanosvg/nanosvg.h>
 
-int SVGssbo::s_id = 5;
+int SVGssbo::s_id = 3;
 
 SVGssbo::SVGssbo()
 	: m_id(s_id++), m_ssbo(m_id, 8, GL_STREAM_READ)
@@ -39,7 +39,7 @@ std::string SVGssbo::init(const std::string& svgFilepath) {
 	//
 	return "struct Bezier { vec2 p1; vec2 p2; vec2 p3; vec2 p4; }; \n"
 	"const uint nbCurves = " + std::to_string(data.size() / 8) +"; \n"
-	"layout(std430, binding = " + std::to_string(m_id) + ") buffer bezier { \n"
+	"layout(std430, binding = " + std::to_string(m_id) + ") restrict readonly buffer bezier { \n"
 	"	Bezier curves[]; \n"
 	"}; \n";
 }
