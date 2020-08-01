@@ -8,6 +8,10 @@ bool KeyBindings::onKeyPressed(SDL_Scancode scancode) {
 	}
 	return false;
 }
-void KeyBindings::addAction(std::function<void(void)> action) {
-	m_map[SDL_SCANCODE_A] = action;
+void KeyBindings::addAction(Action action) {
+	if (!action.name().compare("s")) {
+		m_map[SDL_SCANCODE_W] = action;
+	}
+	else
+		m_map[SDL_SCANCODE_A] = action;
 }

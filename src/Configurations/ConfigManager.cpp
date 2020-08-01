@@ -94,44 +94,62 @@ ConfigManager::ConfigManager() {
 void ConfigManager::setupKeyBindings() {
     // Shapes
     for (size_t i = 0; i < m_shapeLayoutConfigs.getWidth(); ++i) {
-        m_keyBindings.addAction([this, i]() {
-            m_currConfigType = ConfigType::SHAPE_LAYOUT;
-            m_currShapeIndex = i;
+        m_keyBindings.addAction({
+            "yi",
+            [this, i]() {
+                m_currConfigType = ConfigType::SHAPE_LAYOUT;
+                m_currShapeIndex = i;
+            }
         });
     }
     // SVG Shapes
     for (size_t i = 0; i < m_svgManager.nbSVGs(); ++i) {
-        m_keyBindings.addAction([this, i]() {
-            m_currConfigType = ConfigType::SVG_LAYOUT;
-            m_currSvgIndex = i;
+        m_keyBindings.addAction({
+            "t",
+            [this, i]() {
+                m_currConfigType = ConfigType::SVG_LAYOUT;
+                m_currSvgIndex = i;
+            }
         });
     }
     // Layouts
     for (size_t i = 0; i < m_shapeLayoutConfigs.getHeight(); ++i) {
-        m_keyBindings.addAction([this, i]() {
-            m_currConfigType = ConfigType::SVG_LAYOUT;
-            m_currLayoutIndex = i;
+        m_keyBindings.addAction({
+            "e",
+            [this, i]() {
+                m_currConfigType = ConfigType::SVG_LAYOUT;
+                m_currLayoutIndex = i;
+            }
         });
     }
     // Standalones
     for (size_t i = 0; i < m_standaloneConfigs.size(); ++i) {
-        m_keyBindings.addAction([this, i]() {
-            m_currConfigType = ConfigType::STANDALONE;
-            m_currStandaloneIndex = i;
+        m_keyBindings.addAction({
+            "s",
+            [this, i]() {
+                m_currConfigType = ConfigType::STANDALONE;
+                m_currStandaloneIndex = i;
+            }
         });
     }
     // Random
-    m_keyBindings.addAction([this]() {
-        m_randParams.seed = 10.0f * MyRand::_m1to1();
+    m_keyBindings.addAction({
+        "rad",
+        [this]() {
+            m_randParams.seed = 10.0f * MyRand::_m1to1();
+        }
     });
     // Text
-    m_keyBindings.addAction([this]() {
-        if (m_currConfigType != ConfigType::TEXT) {
-            m_currConfigType = ConfigType::TEXT;
-            m_textConfig.setCaptureKeys(true);
-        }
-        else {
-            m_textConfig.toggleCaptureKeys();
+    m_keyBindings.addAction({
+        "ee",
+        [this]() {
+            if (m_currConfigType != ConfigType::TEXT) {
+                m_currConfigType = ConfigType::TEXT;
+                m_textConfig.setCaptureKeys(true);
+            }
+            else {
+                m_textConfig.toggleCaptureKeys();
+            }
         }
     });
 }
