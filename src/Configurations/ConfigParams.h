@@ -8,4 +8,6 @@ struct ConfigParams {
 	float ctrlWheel = 5.0f;
 	float shiftWheel = 1.0f;
 	float altWheel = 1.0f;
+
+	bool onKeyPressed(SDL_Keysym key);
 };
