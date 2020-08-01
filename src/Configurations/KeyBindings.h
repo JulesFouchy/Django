@@ -1,19 +1,24 @@
 #pragma once
 
-class Action {
-public:
-	Action(std::string name, std::function<void(void)> func)
-		: m_name(name), m_func(func)
+enum class ActionType {
+	SHAPE,
+	SVG_SHAPE,
+	LAYOUT,
+	STANDALONE,
+	TEXT,
+	REROLL_RANDOM
+};
+
+struct Action {
+	std::string name;
+	ActionType type;
+	size_t index;
+
+	Action(const std::string& name, ActionType type, size_t index = -1)
+		: name(name), type(type), index(index)
 	{}
 	Action() = default;
 	~Action() = default;
-
-	inline void operator()() { m_func(); }
-	inline const std::string& name() { return m_name; }
-
-private:
-	std::string m_name;
-	std::function<void(void)> m_func;
 };
 
 class KeyBindings {
@@ -21,7 +26,7 @@ public:
 	KeyBindings() = default;
 	~KeyBindings() = default;
 
-	bool onKeyPressed(SDL_Scancode scancode);
+	Action* getAction(SDL_Scancode scancode);
 	void addAction(Action action);
 
 private:

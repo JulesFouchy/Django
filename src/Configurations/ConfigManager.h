@@ -32,6 +32,7 @@ public:
 private:
 	Configuration& get();
 	void setupKeyBindings();
+	void applyAction(const Action& action);
 
 private:
 	ConfigTextGPU m_textConfig;
