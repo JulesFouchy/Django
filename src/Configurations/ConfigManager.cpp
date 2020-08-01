@@ -12,7 +12,7 @@ const std::string VERSION = "#version 430";
 
 const std::string SHAPES_FOLDER = "configurations/shapes";
 const std::string SVG_FOLDER = "configurations/svgShapes";
-const std::string SVG_TEMPLATE = "internal-shaders/svgShapeTemplate.comp";
+const std::string SVGSHAPE_FILE = "internal-shaders/svgShape.comp";
 const std::string LAYOUTS_FOLDER = "configurations/layouts";
 const std::string STANDALONE_FOLDER = "configurations/standalones";
 const std::string RANDOM_FILE = "internal-shaders/random.glsl";
@@ -21,49 +21,38 @@ ConfigManager::ConfigManager() {
     // Get rand() source code
     std::string randSrc;
     MyFile::ToString(RANDOM_FILE, &randSrc);
-    // Get SvgShape template
+    // Get SVG Shape source code
     std::string svgSrc;
-    MyFile::ToString(SVG_TEMPLATE, &svgSrc);
-    // Create all SVG SSBOs and get their buffer-binding code
-    size_t nbSVGFiles = 0;
-    for (const auto& entry : fs::directory_iterator(SVG_FOLDER))
-        nbSVGFiles++;
-    std::vector<std::string> svgssboCodes;
-    svgssboCodes.reserve(nbSVGFiles);
-    m_svgSsbos.reserve(nbSVGFiles);
+    MyFile::ToString(SVGSHAPE_FILE, &svgSrc);
+    // Create all SVG shapes
     for (const auto& entry : fs::directory_iterator(SVG_FOLDER)) {
-        m_svgSsbos.emplace_back();
-        std::string str = m_svgSsbos.back().init(entry.path().string());
-        svgssboCodes.push_back(str);
+        m_svgManager.addSVGShape(entry.path().string());
     }
+    m_svgManager.uploadAllSVGData();
     // Get all shapes source code
     size_t nbShapesFiles = 0;
     for (const auto& entry : fs::directory_iterator(SHAPES_FOLDER))
         nbShapesFiles++;
-    size_t nbShapes = nbShapesFiles + nbSVGFiles;
     std::vector<std::string> shapesSrcCode;
-    shapesSrcCode.reserve(nbShapes);
-        // shape
+    shapesSrcCode.reserve(nbShapesFiles);
     for (const auto& entry : fs::directory_iterator(SHAPES_FOLDER)) {
         std::string str;
         MyFile::ToString(entry.path().string(), &str);
         shapesSrcCode.push_back(str);
     }
-        // svg shape
-    for (const std::string& ssboSrc : svgssboCodes) {
-        shapesSrcCode.push_back(ssboSrc + svgSrc);
-    }
-    // Set Array2D size
+    // Set Shape-Layout Array2D size and SVGShape-Layout size
     size_t nbLayoutsFiles = 0;
     for (const auto& entry : fs::directory_iterator(LAYOUTS_FOLDER))
         nbLayoutsFiles++;
-    m_shapeLayoutConfigs.setSize(nbShapes, nbLayoutsFiles);
-    // Create all shape-layout shaders
+    m_shapeLayoutConfigs.setSize(nbShapesFiles, nbLayoutsFiles);
+    m_svgManager.setNbLayouts(nbLayoutsFiles);
+    // Create all Shape-Layout and SVGShape-Layout shaders
     size_t y = 0;
     for (const auto& entry : fs::directory_iterator(LAYOUTS_FOLDER)) {
         std::string layoutSrc;
         MyFile::ToString(entry.path().string(), &layoutSrc);
         size_t x = 0;
+        // Shapes
         for (const std::string& shapeSrc : shapesSrcCode) {
             m_shapeLayoutConfigs(x, y).initWithSrcCode(
                  VERSION  + "\n" +
@@ -73,6 +62,13 @@ ConfigManager::ConfigManager() {
             );
             x++;
         }
+        // SVG shapes
+        m_svgManager.pushLayout(
+            VERSION + "\n" +
+            svgSrc + "\n" +
+            randSrc + "\n" +
+            layoutSrc
+        );
         y++;
     }
     // Create all standalone configurations
@@ -91,6 +87,51 @@ ConfigManager::ConfigManager() {
         );
         i++;
     }
+}
+
+Configuration& ConfigManager::get() {
+    switch (m_currConfigType)
+    {
+    case ConfigType::SHAPE_LAYOUT:
+        return m_shapeLayoutConfigs(m_currShapeIndex, m_currLayoutIndex);
+    case ConfigType::SVG_LAYOUT:
+        return m_svgManager.getConfig(m_currSvgIndex, m_currLayoutIndex);
+    case ConfigType::STANDALONE:
+        return m_standaloneConfigs[m_currStandaloneIndex];
+    case ConfigType::TEXT:
+        return m_textConfig;
+    default:
+        break;
+    }
+}
+
+void ConfigManager::Imgui(ParticlesSystem& partSystem) {
+    ImGui::Begin("Random");
+    if (ImGui::DragFloat("Seed", &m_randParams.seed))
+        applyTo(partSystem);
+    if (ImGui::DragFloat2("X/Y Seed", &m_randParams.xySeed[0]))
+        applyTo(partSystem);
+    ImGui::End();
+}
+
+void ConfigManager::onWheel(float delta, ParticlesSystem& partSystem, bool bNoStandardScroll) {
+    bool b = false;
+    if (Input::KeyIsDown(SDL_SCANCODE_LCTRL) || Input::KeyIsDown(SDL_SCANCODE_RCTRL)) {
+        m_params.ctrlWheel += delta * SCROLL_SPEED;
+        b = true;
+    }
+    if (Input::KeyIsDown(SDL_SCANCODE_LSHIFT) || Input::KeyIsDown(SDL_SCANCODE_RSHIFT)) {
+        m_params.shiftWheel += delta * SCROLL_SPEED;
+        b = true;
+    }
+    if (Input::KeyIsDown(SDL_SCANCODE_LALT) || Input::KeyIsDown(SDL_SCANCODE_RALT)) {
+        m_params.altWheel += delta * SCROLL_SPEED;
+        b = true;
+    }
+    if (!b && !bNoStandardScroll) {
+        m_params.wheel += delta * SCROLL_SPEED;
+    }
+    applyTo(partSystem);
 }
 
 void ConfigManager::onKeyPressed(SDL_KeyboardEvent keyEvent, ParticlesSystem& partSystem) {
@@ -194,6 +235,16 @@ void ConfigManager::onKeyPressed(SDL_KeyboardEvent keyEvent, ParticlesSystem& pa
                 bHandled = true;
             }
         }
+        if (scancode == SDL_SCANCODE_Z) {
+            m_currSvgIndex = (m_currSvgIndex - 1 + m_svgManager.nbSVGs()) % m_svgManager.nbSVGs();
+            m_currConfigType = ConfigType::SVG_LAYOUT;
+            bHandled = true;
+        }
+        if (scancode == SDL_SCANCODE_X) {
+            m_currSvgIndex = (m_currSvgIndex + 1 + m_svgManager.nbSVGs()) % m_svgManager.nbSVGs();
+            m_currConfigType = ConfigType::SVG_LAYOUT;
+            bHandled = true;
+        }
         if (m_shapeLayoutConfigs.getHeight() > 0) {
             if (scancode == SDL_SCANCODE_S) {
                 m_currLayoutIndex = (m_currLayoutIndex - 1 + m_shapeLayoutConfigs.getHeight()) % m_shapeLayoutConfigs.getHeight();
@@ -224,47 +275,4 @@ void ConfigManager::onKeyPressed(SDL_KeyboardEvent keyEvent, ParticlesSystem& pa
     }
     if (bHandled)
         applyTo(partSystem);
-}
-
-void ConfigManager::onWheel(float delta, ParticlesSystem& partSystem, bool bNoStandardScroll) {
-    bool b = false;
-    if (Input::KeyIsDown(SDL_SCANCODE_LCTRL) || Input::KeyIsDown(SDL_SCANCODE_RCTRL)) {
-        m_params.ctrlWheel += delta * SCROLL_SPEED;
-        b = true;
-    }
-    if (Input::KeyIsDown(SDL_SCANCODE_LSHIFT) || Input::KeyIsDown(SDL_SCANCODE_RSHIFT)) {
-        m_params.shiftWheel += delta * SCROLL_SPEED;
-        b = true;
-    }
-    if (Input::KeyIsDown(SDL_SCANCODE_LALT) || Input::KeyIsDown(SDL_SCANCODE_RALT)) {
-        m_params.altWheel += delta * SCROLL_SPEED;
-        b = true;
-    }
-    if (!b && !bNoStandardScroll) {
-        m_params.wheel += delta * SCROLL_SPEED;
-    }
-    applyTo(partSystem);
-}
-
-Configuration& ConfigManager::get() {
-    switch (m_currConfigType)
-    {
-    case ConfigType::SHAPE_LAYOUT:
-        return m_shapeLayoutConfigs(m_currShapeIndex, m_currLayoutIndex);
-    case ConfigType::STANDALONE:
-        return m_standaloneConfigs[m_currStandaloneIndex];
-    case ConfigType::TEXT:
-        return m_textConfig;
-    default:
-        break;
-    }
-}
-
-void ConfigManager::Imgui(ParticlesSystem& partSystem) {
-    ImGui::Begin("Random");
-    if (ImGui::DragFloat("Seed", &m_randParams.seed))
-        applyTo(partSystem);
-    if (ImGui::DragFloat2("X/Y Seed", &m_randParams.xySeed[0]))
-        applyTo(partSystem);
-    ImGui::End();
 }

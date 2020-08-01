@@ -4,6 +4,7 @@
 #include "OpenGL/ComputeShader.h"
 
 class ConfigGPU : public Configuration {
+	friend class ConfigSVGManager;
 public:
 	ConfigGPU() = default;
 	~ConfigGPU() = default;

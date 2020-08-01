@@ -6,8 +6,6 @@
 #include "Helper/DisplayInfos.h"
 #include "Helper/Input.h"
 
-#include "Configurations/SVGConfigFactory.h"
-
 App::App(SDL_Window* window)
 	: m_bShowImGUIDemoWindow(false),
 	  m_bFullScreen(false),
@@ -51,9 +49,6 @@ void App::onLoopIteration() {
 		// ImGui::Text(("FPS  : " + std::to_string(1.0f / m_time.deltaTime())).c_str());
 		// ImGui::End();
 		// Settings
-		ImGui::Begin("Load from SVG");
-		SVGConfigFactory::ImGui();
-		ImGui::End();
 		m_settingsMng.get().ImGuiWindows(m_particlesSystem.physicsComputeShader(), m_particlesSystem, m_configManager);
 		m_configManager.Imgui(m_particlesSystem);
 	}
