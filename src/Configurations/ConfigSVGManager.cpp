@@ -3,7 +3,7 @@
 #include <nanosvg/nanosvg.h>
 
 ConfigSVGManager::ConfigSVGManager()
-	: m_ssbo(3, 8, GL_STREAM_READ)
+	: m_ssbo(3, GL_STREAM_READ)
 {}
 
 Configuration& ConfigSVGManager::getConfig(size_t svgIndex, size_t layoutIndex) {

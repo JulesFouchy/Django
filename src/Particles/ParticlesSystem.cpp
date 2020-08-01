@@ -9,9 +9,9 @@
 #define REST_POS_ID 1
 
 ParticlesSystem::ParticlesSystem()
-    : m_particlesSSBO(0, 4, GL_DYNAMIC_DRAW), // TODO check which hint is best
-      m_restPositionsSSBO(1, 2, GL_STATIC_DRAW),
-      m_colorsSSBO(2, 3, GL_STATIC_DRAW),
+    : m_particlesSSBO(0, GL_DYNAMIC_DRAW), // TODO check which hint is best
+      m_restPositionsSSBO(1, GL_STATIC_DRAW),
+      m_colorsSSBO(2, GL_STATIC_DRAW),
       m_physicsShader("internal-shaders/physics.comp"),
       m_colorGradientComputeShader("internal-shaders/colorGradient.comp"),
       m_hueGradientComputeShader("internal-shaders/hueGradient.comp")
@@ -64,7 +64,7 @@ void ParticlesSystem::updatePositions() {
 }
 
 void ParticlesSystem::sendRestPositionsToGPU() {
-    m_restPositionsSSBO.uploadData(m_nbParticles, (float*)m_restPositions.data());
+    m_restPositionsSSBO.uploadData(m_nbParticles * 2, (float*)m_restPositions.data());
 }
 
 void ParticlesSystem::setNbParticles(unsigned int newNbParticles, const ColorSettingsValues& colorSettings) {
@@ -73,9 +73,9 @@ void ParticlesSystem::setNbParticles(unsigned int newNbParticles, const ColorSet
     // Rest positions
     m_restPositions.resize(m_nbParticles);
     // Resize SSBOs
-    m_particlesSSBO.uploadData(m_nbParticles, nullptr);
-    m_restPositionsSSBO.uploadData(m_nbParticles, nullptr);
-    m_colorsSSBO.uploadData(m_nbParticles, nullptr);
+    m_particlesSSBO.uploadData(m_nbParticles * 4, nullptr);
+    m_restPositionsSSBO.uploadData(m_nbParticles * 2, nullptr);
+    m_colorsSSBO.uploadData(m_nbParticles * 3, nullptr);
     // Update uniform
     m_physicsShader.get().bind();
     m_physicsShader.get().setUniform1i("u_NbOfParticles", m_nbParticles);
