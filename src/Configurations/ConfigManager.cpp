@@ -87,6 +87,53 @@ ConfigManager::ConfigManager() {
         );
         i++;
     }
+    //
+    setupKeyBindings();
+}
+
+void ConfigManager::setupKeyBindings() {
+    // Shapes
+    for (size_t i = 0; i < m_shapeLayoutConfigs.getWidth(); ++i) {
+        m_keyBindings.addAction([this, i]() {
+            m_currConfigType = ConfigType::SHAPE_LAYOUT;
+            m_currShapeIndex = i;
+        });
+    }
+    // SVG Shapes
+    for (size_t i = 0; i < m_svgManager.nbSVGs(); ++i) {
+        m_keyBindings.addAction([this, i]() {
+            m_currConfigType = ConfigType::SVG_LAYOUT;
+            m_currSvgIndex = i;
+        });
+    }
+    // Layouts
+    for (size_t i = 0; i < m_shapeLayoutConfigs.getHeight(); ++i) {
+        m_keyBindings.addAction([this, i]() {
+            m_currConfigType = ConfigType::SVG_LAYOUT;
+            m_currLayoutIndex = i;
+        });
+    }
+    // Standalones
+    for (size_t i = 0; i < m_standaloneConfigs.size(); ++i) {
+        m_keyBindings.addAction([this, i]() {
+            m_currConfigType = ConfigType::STANDALONE;
+            m_currStandaloneIndex = i;
+        });
+    }
+    // Random
+    m_keyBindings.addAction([this]() {
+        m_randParams.seed = 10.0f * MyRand::_m1to1();
+    });
+    // Text
+    m_keyBindings.addAction([this]() {
+        if (m_currConfigType != ConfigType::TEXT) {
+            m_currConfigType = ConfigType::TEXT;
+            m_textConfig.setCaptureKeys(true);
+        }
+        else {
+            m_textConfig.toggleCaptureKeys();
+        }
+    });
 }
 
 Configuration& ConfigManager::get() {
@@ -137,72 +184,9 @@ void ConfigManager::onWheel(float delta, ParticlesSystem& partSystem, bool bNoSt
 void ConfigManager::onKeyPressed(SDL_KeyboardEvent keyEvent, ParticlesSystem& partSystem) {
     SDL_Scancode scancode = keyEvent.keysym.scancode;
     bool bHandled = false;
-    // Text Configuration
-    if (scancode == SDL_SCANCODE_RETURN || scancode == SDL_SCANCODE_KP_ENTER) {
-        if (m_currConfigType != ConfigType::TEXT) {
-            m_currConfigType = ConfigType::TEXT;
-            m_textConfig.setCaptureKeys(true);
-        }
-        else {
-            m_textConfig.toggleCaptureKeys();
-        }
-        bHandled = true;
-    }
-    //
     if (m_currConfigType != ConfigType::TEXT || !m_textConfig.onKeyPressed(keyEvent)) {
         if (!m_params.onKeyPressed(keyEvent.keysym)) {
-            // Random seed
-            if (scancode == SDL_SCANCODE_SPACE) {
-                m_randParams.seed = 10.0f * MyRand::_m1to1();
-                bHandled = true;
-            }
-            //
-            if (m_shapeLayoutConfigs.getWidth() > 0) {
-                if (scancode == SDL_SCANCODE_A) {
-                    m_currShapeIndex = (m_currShapeIndex - 1 + m_shapeLayoutConfigs.getWidth()) % m_shapeLayoutConfigs.getWidth();
-                    m_currConfigType = ConfigType::SHAPE_LAYOUT;
-                    bHandled = true;
-                }
-                if (scancode == SDL_SCANCODE_D) {
-                    m_currShapeIndex = (m_currShapeIndex + 1 + m_shapeLayoutConfigs.getWidth()) % m_shapeLayoutConfigs.getWidth();
-                    m_currConfigType = ConfigType::SHAPE_LAYOUT;
-                    bHandled = true;
-                }
-            }
-            if (scancode == SDL_SCANCODE_Z) {
-                m_currSvgIndex = (m_currSvgIndex - 1 + m_svgManager.nbSVGs()) % m_svgManager.nbSVGs();
-                m_currConfigType = ConfigType::SVG_LAYOUT;
-                bHandled = true;
-            }
-            if (scancode == SDL_SCANCODE_X) {
-                m_currSvgIndex = (m_currSvgIndex + 1 + m_svgManager.nbSVGs()) % m_svgManager.nbSVGs();
-                m_currConfigType = ConfigType::SVG_LAYOUT;
-                bHandled = true;
-            }
-            if (m_shapeLayoutConfigs.getHeight() > 0) {
-                if (scancode == SDL_SCANCODE_S) {
-                    m_currLayoutIndex = (m_currLayoutIndex - 1 + m_shapeLayoutConfigs.getHeight()) % m_shapeLayoutConfigs.getHeight();
-                    m_currConfigType = ConfigType::SHAPE_LAYOUT;
-                    bHandled = true;
-                }
-                if (scancode == SDL_SCANCODE_W) {
-                    m_currLayoutIndex = (m_currLayoutIndex + 1 + m_shapeLayoutConfigs.getHeight()) % m_shapeLayoutConfigs.getHeight();
-                    m_currConfigType = ConfigType::SHAPE_LAYOUT;
-                    bHandled = true;
-                }
-            }
-            if (m_standaloneConfigs.size() > 0) {
-                if (scancode == SDL_SCANCODE_Q) {
-                    m_currStandaloneIndex = (m_currStandaloneIndex - 1 + m_standaloneConfigs.size()) % m_standaloneConfigs.size();
-                    m_currConfigType = ConfigType::STANDALONE;
-                    bHandled = true;
-                }
-                if (scancode == SDL_SCANCODE_E) {
-                    m_currStandaloneIndex = (m_currStandaloneIndex + 1 + m_standaloneConfigs.size()) % m_standaloneConfigs.size();
-                    m_currConfigType = ConfigType::STANDALONE;
-                    bHandled = true;
-                }
-            }
+            bHandled = m_keyBindings.onKeyPressed(scancode);
         }
         else {
             bHandled = true;

@@ -5,6 +5,7 @@
 #include "ConfigParams.h"
 #include "RandomParams.h"
 #include "ConfigSVGManager.h"
+#include "KeyBindings.h"
 
 #include "Helper/Array2D.h"
 
@@ -30,6 +31,7 @@ public:
 
 private:
 	Configuration& get();
+	void setupKeyBindings();
 
 private:
 	ConfigTextGPU m_textConfig;
@@ -43,4 +45,5 @@ private:
 	size_t m_currStandaloneIndex = 0;
 	ConfigParams m_params;
 	RandomParams m_randParams;
+	KeyBindings m_keyBindings;
 };
