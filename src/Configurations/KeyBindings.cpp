@@ -1,6 +1,7 @@
 #include "KeyBindings.h"
 
 bool KeyBindings::onKeyPressed(SDL_Scancode scancode) {
+	spdlog::info((int)scancode);
 	auto it = m_map.find(scancode);
 	if (it != m_map.end()) {
 		(it->second)();
@@ -9,9 +10,6 @@ bool KeyBindings::onKeyPressed(SDL_Scancode scancode) {
 	return false;
 }
 void KeyBindings::addAction(Action action) {
-	if (!action.name().compare("s")) {
-		m_map[SDL_SCANCODE_W] = action;
-	}
-	else
-		m_map[SDL_SCANCODE_A] = action;
+	if (nextAvailableKeyIdx<26)
+	m_map[keys[nextAvailableKeyIdx++]] = action;
 }
