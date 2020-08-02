@@ -138,13 +138,15 @@ void ConfigManager::applyAction(const Action& action) {
     case ActionType::SHAPE:
         m_currConfigType = ConfigType::SHAPE_LAYOUT;
         m_currShapeIndex = action.index;
+        m_bLastShapeWasSVG = false;
         break;
     case ActionType::SVG_SHAPE:
         m_currConfigType = ConfigType::SVG_LAYOUT;
         m_currSvgIndex = action.index;
+        m_bLastShapeWasSVG = true;
         break;
     case ActionType::LAYOUT:
-        m_currConfigType = ConfigType::SHAPE_LAYOUT;
+        m_currConfigType = m_bLastShapeWasSVG ? ConfigType::SVG_LAYOUT : ConfigType::SHAPE_LAYOUT;
         m_currLayoutIndex = action.index;
         break;
     case ActionType::STANDALONE:

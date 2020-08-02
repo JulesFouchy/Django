@@ -48,4 +48,5 @@ private:
 	ConfigParams m_params;
 	RandomParams m_randParams;
 	KeyBindings m_keyBindings;
+	bool m_bLastShapeWasSVG = false; // TODO initialize this according to the startup config
 };
