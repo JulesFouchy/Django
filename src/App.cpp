@@ -52,6 +52,9 @@ void App::onLoopIteration() {
 		m_settingsMng.get().ImGuiWindows(m_particlesSystem.physicsComputeShader(), m_particlesSystem, m_configManager);
 		m_configManager.Imgui(m_particlesSystem);
 	}
+	ImGui::Begin("Key Bindings");
+	m_configManager.ImGuiKeyBindings();
+	ImGui::End();
 	// Send time to physics compute shader
 	m_time.update();
 	m_particlesSystem.physicsComputeShader().setUniform1f("dt", m_time.deltaTime());

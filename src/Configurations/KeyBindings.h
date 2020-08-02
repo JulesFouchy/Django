@@ -23,11 +23,13 @@ struct Action {
 
 class KeyBindings {
 public:
-	KeyBindings() = default;
+	KeyBindings();
 	~KeyBindings() = default;
 
 	Action* getAction(SDL_Scancode scancode);
 	void addAction(Action action);
+	void setupBindings();
+	void ImGui();
 
 private:
 	bool isKeyAvailable(SDL_Scancode scancode);
@@ -36,6 +38,7 @@ private:
 
 private:
 	std::unordered_map<int, Action> m_map;
+	std::array<std::unordered_map<std::string, Action>, 5> m_allActions;
 	size_t nextAvailableKeyIdx = 0;
 	std::vector<SDL_Scancode> firstRow = {
 		SDL_SCANCODE_Q,

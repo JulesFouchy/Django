@@ -112,15 +112,8 @@ ConfigManager::ConfigManager() {
         );
         i++;
     }
-    // set other key bindings
-    m_keyBindings.addAction({
-        "Text",
-        ActionType::TEXT
-    });
-    m_keyBindings.addAction({
-        "Reroll random",
-        ActionType::REROLL_RANDOM
-    });
+    //
+    m_keyBindings.setupBindings();
 }
 
 Configuration& ConfigManager::get() {

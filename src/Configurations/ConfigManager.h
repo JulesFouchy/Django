@@ -25,6 +25,7 @@ public:
 
 	inline void applyTo(ParticlesSystem& partSystem) { get().applyTo(partSystem, m_params, m_randParams); }
 	void Imgui(ParticlesSystem& partSystem);
+	inline void ImGuiKeyBindings() { m_keyBindings.ImGui(); }
 
 	void onWheel(float delta, ParticlesSystem& partSystem, bool bNoStandardScroll);
 	void onKeyPressed(SDL_KeyboardEvent keyEvent, ParticlesSystem& partSystem);
