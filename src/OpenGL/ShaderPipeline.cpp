@@ -76,9 +76,3 @@ void ShaderPipeline::setUniform3f(const std::string& uniformName, const glm::vec
 void ShaderPipeline::setUniform3f(const std::string& uniformName, float v1, float v2, float v3) {
 	glUniform3f(getUniformLocation(uniformName), v1, v2, v3);
 }
-void ShaderPipeline::setUniform4f(const std::string& uniformName, const glm::vec4& v) {
-	glUniform4f(getUniformLocation(uniformName), v.x, v.y, v.z, v.w);
-}
-void ShaderPipeline::setUniformMat4f(const std::string& uniformName, const glm::mat4& mat) {
-	glUniformMatrix4fv(getUniformLocation(uniformName), 1, GL_FALSE, &mat[0][0]);
-}
