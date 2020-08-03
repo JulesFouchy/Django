@@ -66,7 +66,7 @@ void AlphaTrailSettings::clearScreen(float dt, const glm::vec3& bgColor) {
 			m_renderBuffer.bind();
 			m_clearScreenPipeline.bind();
 			m_clearScreenPipeline.setUniform1f("alpha", dt * m_values.alphaTrailDecay);
-			m_clearScreenPipeline.setUniform3f("backgroundColor", bgColor.x, bgColor.y, bgColor.z);
+			m_clearScreenPipeline.setUniform3f("backgroundColor", bgColor);
 			m_fullScreenVAO.bind();
 			GLCall(glDrawArrays(GL_TRIANGLES, 0, 6));
 			glClear(GL_DEPTH_BUFFER_BIT);
@@ -76,7 +76,7 @@ void AlphaTrailSettings::clearScreen(float dt, const glm::vec3& bgColor) {
 			m_renderBuffer.bind();
 			m_clearScreenNoResidualsPipeline.bind();
 			m_clearScreenNoResidualsPipeline.setUniform1f("alpha", dt * m_values.alphaTrailDecay);
-			m_clearScreenNoResidualsPipeline.setUniform3f("backgroundColor", bgColor.x, bgColor.y, bgColor.z);
+			m_clearScreenNoResidualsPipeline.setUniform3f("backgroundColor", bgColor);
 			m_clearScreenNoResidualsPipeline.setUniform1f("threshold", m_values.threshold);
 			m_clearScreenNoResidualsPipeline.setUniform1f("minAlpha", m_values.minAlpha);
 			m_textureFrameBuffer.attachTextureToSlot(1);
