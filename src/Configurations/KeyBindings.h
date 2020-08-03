@@ -40,6 +40,7 @@ private:
 	std::unordered_map<int, Action> m_map;
 	std::array<std::unordered_map<std::string, Action>, 5> m_allActions;
 	size_t nextAvailableKeyIdx = 0;
+	std::vector<SDL_Scancode> allKeys;
 	std::vector<SDL_Scancode> firstRow = {
 		SDL_SCANCODE_Q,
 		SDL_SCANCODE_W,

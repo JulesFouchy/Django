@@ -13,6 +13,13 @@ static const Action rerollRandomAction(
 KeyBindings::KeyBindings() {
 	m_allActions[ActionType_MISCELLANEOUS][textAction.name] = textAction;
 	m_allActions[ActionType_MISCELLANEOUS][rerollRandomAction.name] = rerollRandomAction;
+
+	for (SDL_Scancode key : firstRow)
+		allKeys.push_back(key);
+	for (SDL_Scancode key : secondRow)
+		allKeys.push_back(key);
+	for (SDL_Scancode key : thirdRow)
+		allKeys.push_back(key);
 }
 
 Action* KeyBindings::getAction(SDL_Scancode scancode) {
@@ -106,15 +113,18 @@ SDL_Scancode KeyBindings::findFirstFromRight(std::vector<SDL_Scancode> row) {
 void KeyBindings::ImGui() {
 	static SDL_Scancode selectedScancode = SDL_SCANCODE_UNKNOWN;
 	ImGui::Columns(2);
-	for (auto& kv : m_map) {
-		// Config name
-		ImGui::Text(kv.second.name.c_str());
-		ImGui::NextColumn();
-		// Key binding
-		if (ImGui::Selectable(SDL_GetKeyName(SDL_GetKeyFromScancode((SDL_Scancode)kv.first)), kv.first == selectedScancode)) {
-			selectedScancode = (SDL_Scancode)kv.first;
+	for (SDL_Scancode key : allKeys) {
+		auto it = m_map.find(key);
+		if (it != m_map.end()) {
+			// Config name
+			ImGui::Text(it->second.name.c_str());
+			ImGui::NextColumn();
+			// Key binding
+			if (ImGui::Selectable(SDL_GetKeyName(SDL_GetKeyFromScancode((SDL_Scancode)it->first)), it->first == selectedScancode)) {
+				selectedScancode = (SDL_Scancode)it->first;
+			}
+			ImGui::NextColumn();
 		}
-		ImGui::NextColumn();
 	}
 	ImGui::Columns(1);
 }
