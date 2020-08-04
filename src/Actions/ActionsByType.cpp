@@ -1,10 +1,10 @@
 #include "ActionsByType.h"
 
-std::unordered_map<std::string, Action>& ActionsByType::operator[](ActionType type) {
+std::unordered_map<std::string, ActionBinding*>& ActionsByType::operator[](ActionType type) {
 	return m_store[(int)type];
 }
 
-std::unordered_map<std::string, Action>& ActionsByType::operator[](int type) {
+std::unordered_map<std::string, ActionBinding*>& ActionsByType::operator[](int type) {
 	return m_store[type];
 }
 
@@ -20,14 +20,14 @@ ActionsByTypeIterator::ActionsByTypeIterator(ActionsByType& container)
 	: m_container(container), m_index(0), m_mapIt(container[0].begin())
 {}
 
-ActionsByTypeIterator::ActionsByTypeIterator(ActionsByType& container, size_t index, std::unordered_map<std::string, Action>::iterator mapIt) 
+ActionsByTypeIterator::ActionsByTypeIterator(ActionsByType& container, size_t index, std::unordered_map<std::string, ActionBinding*>::iterator mapIt)
 	: m_container(container), m_index(index), m_mapIt(mapIt)
 {}
 
-std::pair<const std::string, Action>& ActionsByTypeIterator::operator*() {
+std::pair<const std::string, ActionBinding*>& ActionsByTypeIterator::operator*() {
 	return *m_mapIt;
 }
-std::pair<const std::string, Action>* ActionsByTypeIterator::operator->() {
+std::pair<const std::string, ActionBinding*>* ActionsByTypeIterator::operator->() {
 	return m_mapIt.operator->();
 }
 void ActionsByTypeIterator::operator++() {

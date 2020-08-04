@@ -7,12 +7,15 @@ public:
 	KeyBindings();
 	~KeyBindings() = default;
 
-	Action* getAction(SDL_Scancode scancode);
+	const Action* getAction(SDL_Scancode scancode);
 	void addAction(Action action);
+	void addAction(Action action, int type);
 	void setupBindings();
 	void ImGui();
 
 private:
+	void setBinding(ActionBinding* actionBinding, SDL_Scancode scancode);
+
 	bool isKeyAvailable(SDL_Scancode scancode);
 	SDL_Scancode findFirstFromLeft(std::vector<SDL_Scancode> row);
 	SDL_Scancode findFirstFromRight(std::vector<SDL_Scancode> row);
@@ -22,8 +25,10 @@ private:
 	void ImGui_ConfigsList(bool open);
 
 private:
-	std::unordered_map<int, Action> m_boundActions;
+	std::list<ActionBinding> m_allActions; // don't use a vector because all our pointers are invalidated when memory is reallocated
+	std::unordered_map<int, ActionBinding*> m_boundActions;
 	ActionsByType m_actionsByType;
+
 	size_t nextAvailableKeyIdx = 0;
 	std::vector<SDL_Scancode> allKeys;
 	std::vector<SDL_Scancode> firstRow = {

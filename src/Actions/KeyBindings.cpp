@@ -16,8 +16,10 @@ static const Action rerollRandomAction(
 );
 
 KeyBindings::KeyBindings() {
-	m_actionsByType[ActionType_MISCELLANEOUS][textAction.name] = textAction;
-	m_actionsByType[ActionType_MISCELLANEOUS][rerollRandomAction.name] = rerollRandomAction;
+	addAction(textAction, ActionType_MISCELLANEOUS);
+	setBinding(&m_allActions.back(), SDL_SCANCODE_RETURN);
+	addAction(rerollRandomAction, ActionType_MISCELLANEOUS);
+	setBinding(&m_allActions.back(), SDL_SCANCODE_SPACE);
 
 	for (SDL_Scancode key : firstRow)
 		allKeys.push_back(key);
@@ -27,20 +29,35 @@ KeyBindings::KeyBindings() {
 		allKeys.push_back(key);
 }
 
-Action* KeyBindings::getAction(SDL_Scancode scancode) {
+const Action* KeyBindings::getAction(SDL_Scancode scancode) {
 	auto it = m_boundActions.find(scancode);
 	if (it != m_boundActions.end()) {
-		return &it->second;
+		return &it->second->action;
 	}
 	return nullptr;
 }
 
 void KeyBindings::addAction(Action action) {
-	auto& map = m_actionsByType[action.type];
+	addAction(action, (int)action.type);
+}
+
+void KeyBindings::addAction(Action action, int type) {
+	m_allActions.emplace_back(action);
+	//
+	auto& map = m_actionsByType[type];
 	if (map.find(action.name) != map.end())
-		spdlog::warn("There is already an action called '{}' and with the same type ({}) !\nNot adding this one !", action.name, action.type);
-	else
-		map[action.name] = action;
+		spdlog::warn("There is already an action called '{}' and with the same type ({}) !\nNot adding this one !", action.name, type);
+	else {
+		map[action.name] = &m_allActions.back();
+	}
+}
+
+void KeyBindings::setBinding(ActionBinding* actionBinding, SDL_Scancode scancode) {
+	actionBinding->scancode = scancode;
+	if (m_boundActions.find((int)scancode) != m_boundActions.end()) {
+		m_boundActions[scancode]->scancode = SDL_SCANCODE_UNKNOWN;
+	}
+	m_boundActions[scancode] = actionBinding;
 }
 
 void KeyBindings::setupBindings() {
@@ -48,9 +65,9 @@ void KeyBindings::setupBindings() {
 	for (const auto& kv : m_actionsByType[ActionType::LAYOUT]) {
 		SDL_Scancode scancode = findFirstFromLeft(secondRow);
 		if (scancode != SDL_SCANCODE_UNKNOWN)
-			m_boundActions[scancode] = kv.second;
+			setBinding(kv.second, scancode);
 		else
-			spdlog::warn("Couldn't give a binding to '{}' layout because there was no more room on second row !", kv.second.name);
+			spdlog::warn("Couldn't give a binding to '{}' layout because there was no more room on second row !", kv.second->action.name);
 	}
 	// Shape
 	for (const auto& kv : m_actionsByType[ActionType::SHAPE]) {
@@ -58,9 +75,9 @@ void KeyBindings::setupBindings() {
 		if (scancode == SDL_SCANCODE_UNKNOWN)
 			scancode = findFirstFromRight(secondRow);
 		if (scancode != SDL_SCANCODE_UNKNOWN)
-			m_boundActions[scancode] = kv.second;
+			setBinding(kv.second, scancode);
 		else
-			spdlog::warn("Couldn't give a binding to '{}' shape because there was no more room on first and second row !", kv.second.name);
+			spdlog::warn("Couldn't give a binding to '{}' shape because there was no more room on first and second row !", kv.second->action.name);
 	}
 	// SVG Shape
 	for (const auto& kv : m_actionsByType[ActionType::SVG_SHAPE]) {
@@ -68,9 +85,9 @@ void KeyBindings::setupBindings() {
 		if (scancode == SDL_SCANCODE_UNKNOWN)
 			scancode = findFirstFromRight(secondRow);
 		if (scancode != SDL_SCANCODE_UNKNOWN)
-			m_boundActions[scancode] = kv.second;
+			setBinding(kv.second, scancode);
 		else
-			spdlog::warn("Couldn't give a binding to '{}' svg-shape because there was no more room on first and second row !", kv.second.name);
+			spdlog::warn("Couldn't give a binding to '{}' svg-shape because there was no more room on first and second row !", kv.second->action.name);
 	}
 	// Layout
 	for (const auto& kv : m_actionsByType[ActionType::STANDALONE]) {
@@ -79,20 +96,10 @@ void KeyBindings::setupBindings() {
 			scancode = findFirstFromRight(secondRow);
 		}
 		if (scancode != SDL_SCANCODE_UNKNOWN)
-			m_boundActions[scancode] = kv.second;
+			setBinding(kv.second, scancode);
 		else
-			spdlog::warn("Couldn't give a binding to '{}' standalone because there was no more room on third and second row !", kv.second.name);
+			spdlog::warn("Couldn't give a binding to '{}' standalone because there was no more room on third and second row !", kv.second->action.name);
 	}
-	// Text
-	if (isKeyAvailable(SDL_SCANCODE_RETURN))
-		m_boundActions[SDL_SCANCODE_RETURN] = textAction;
-	else
-		spdlog::warn("Couldn't give a binding to '{}' because ENTER is already used !", textAction.name);
-	// Random reroll
-	if (isKeyAvailable(SDL_SCANCODE_SPACE))
-		m_boundActions[SDL_SCANCODE_SPACE] = rerollRandomAction;
-	else
-		spdlog::warn("Couldn't give a binding to '{}' because SPACE is already used !", rerollRandomAction.name);
 }
 
 bool KeyBindings::isKeyAvailable(SDL_Scancode scancode) {
@@ -149,10 +156,10 @@ void KeyBindings::ImGui_KeyboardRow(const std::vector<SDL_Scancode>& row, float 
 		// Config list
 		if (ImGui::BeginPopup("Config list")) {
 			for (auto it = m_actionsByType.begin(); it != m_actionsByType.end(); ++it) {
-				//SDL_Scancode cfgScancode = (SDL_Scancode)it->first;
-				const Action& action = it->second;
-				if (ImGui::Selectable(action.name.c_str(), false)) {//scancode == cfgScancode)) {
-					it->second = action;
+				SDL_Scancode cfgScancode = (SDL_Scancode)it->second->scancode;
+				const Action& action = it->second->action;
+				if (ImGui::Selectable(action.name.c_str(), scancode == cfgScancode)) {
+					setBinding(it->second, scancode);
 				}
 			}
 			/*for (auto it = m_boundActions.begin(); it != m_boundActions.end(); it++) {

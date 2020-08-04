@@ -204,7 +204,7 @@ void ConfigManager::onKeyPressed(SDL_KeyboardEvent keyEvent, ParticlesSystem& pa
     bool bHandled = false;
     if (m_currConfigType != ConfigType::TEXT || !m_textConfig.onKeyPressed(keyEvent)) {
         if (!m_params.onKeyPressed(keyEvent.keysym)) {
-            Action* action = m_keyBindings.getAction(scancode);
+            const Action* action = m_keyBindings.getAction(scancode);
             if (action) {
                 applyAction(*action);
                 bHandled = true;
