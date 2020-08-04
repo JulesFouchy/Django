@@ -1,5 +1,10 @@
 #include "KeyBindings.h"
 
+#include <imgui/imgui_internal.h>
+
+static constexpr float keySize = 55.0f;
+static constexpr float keyOffsetProp = 0.2f;
+
 constexpr int ActionType_MISCELLANEOUS = 4;
 static const Action textAction(
 	"Text",
@@ -111,6 +116,7 @@ SDL_Scancode KeyBindings::findFirstFromRight(std::vector<SDL_Scancode> row) {
 }
 
 void KeyBindings::ImGui() {
+	/*
 	static SDL_Scancode selectedScancode = SDL_SCANCODE_UNKNOWN;
 	ImGui::Columns(2);
 	for (SDL_Scancode key : allKeys) {
@@ -127,4 +133,51 @@ void KeyBindings::ImGui() {
 		}
 	}
 	ImGui::Columns(1);
+	*/
+	for (SDL_Scancode scancode : firstRow) {
+		ImGui_DrawKey(scancode);
+		ImGui::SameLine();
+	}
+	ImGui::NewLine();
+	ImGui::Spacing();
+	ImGui::Indent(keyOffsetProp * keySize);
+	for (SDL_Scancode scancode : secondRow) {
+		ImGui_DrawKey(scancode);
+		ImGui::SameLine();
+	}
+	ImGui::NewLine();
+	ImGui::Spacing();
+	ImGui::Indent(2 * keyOffsetProp * keySize);
+	for (SDL_Scancode scancode : thirdRow) {
+		ImGui_DrawKey(scancode);
+		ImGui::SameLine();
+	}
+}
+
+bool KeyBindings::ImGui_DrawKey(SDL_Scancode scancode) {
+	//
+	ImGuiStyle& style = ImGui::GetStyle();
+	//
+	ImVec2 p = ImGui::GetCursorScreenPos();
+	// Detect clic
+	ImGui::PushID((int)scancode+1294);
+	ImGui::InvisibleButton("", ImVec2(keySize, keySize));
+	bool is_active = ImGui::IsItemActive();
+	bool is_hovered = ImGui::IsItemHovered();
+
+	if (is_active) {
+		//ImVec2 mp = ImGui::GetIO().MousePos;
+		//*value_p = atan2f(center.y - mp.y, mp.x - center.x);
+	}
+
+	ImU32 col32 = ImGui::GetColorU32(is_active ? ImGuiCol_FrameBgActive : is_hovered ? ImGuiCol_FrameBgHovered : ImGuiCol_FrameBg);
+	ImU32 col32line = ImGui::GetColorU32(ImGuiCol_SliderGrabActive);
+	ImU32 col32text = ImGui::GetColorU32(ImGuiCol_Text);
+	ImDrawList* draw_list = ImGui::GetWindowDrawList();
+	float fontSize = 1.5f * draw_list->_Data->FontSize;
+	draw_list->AddRectFilled(p, ImVec2(p.x + keySize, p.y + keySize), col32, 10.0f);
+	draw_list->AddText(NULL, fontSize, ImVec2(p.x + keySize * 0.5f - fontSize * 0.25f, p.y + keySize * 0.5f - fontSize * 0.45f), col32text, SDL_GetKeyName(SDL_GetKeyFromScancode(scancode)));
+
+	ImGui::PopID();
+	return is_active;
 }

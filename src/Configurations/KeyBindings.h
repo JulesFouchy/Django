@@ -36,6 +36,8 @@ private:
 	SDL_Scancode findFirstFromLeft(std::vector<SDL_Scancode> row);
 	SDL_Scancode findFirstFromRight(std::vector<SDL_Scancode> row);
 
+	bool ImGui_DrawKey(SDL_Scancode scancode);
+
 private:
 	std::unordered_map<int, Action> m_map;
 	std::array<std::unordered_map<std::string, Action>, 5> m_allActions;
