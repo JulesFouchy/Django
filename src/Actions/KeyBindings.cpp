@@ -16,8 +16,8 @@ static const Action rerollRandomAction(
 );
 
 KeyBindings::KeyBindings() {
-	m_allActions[ActionType_MISCELLANEOUS][textAction.name] = textAction;
-	m_allActions[ActionType_MISCELLANEOUS][rerollRandomAction.name] = rerollRandomAction;
+	m_actionsByType[ActionType_MISCELLANEOUS][textAction.name] = textAction;
+	m_actionsByType[ActionType_MISCELLANEOUS][rerollRandomAction.name] = rerollRandomAction;
 
 	for (SDL_Scancode key : firstRow)
 		allKeys.push_back(key);
@@ -28,15 +28,15 @@ KeyBindings::KeyBindings() {
 }
 
 Action* KeyBindings::getAction(SDL_Scancode scancode) {
-	auto it = m_map.find(scancode);
-	if (it != m_map.end()) {
+	auto it = m_boundActions.find(scancode);
+	if (it != m_boundActions.end()) {
 		return &it->second;
 	}
 	return nullptr;
 }
 
 void KeyBindings::addAction(Action action) {
-	auto& map = m_allActions[(int)action.type];
+	auto& map = m_actionsByType[action.type];
 	if (map.find(action.name) != map.end())
 		spdlog::warn("There is already an action called '{}' and with the same type ({}) !\nNot adding this one !", action.name, action.type);
 	else
@@ -45,58 +45,58 @@ void KeyBindings::addAction(Action action) {
 
 void KeyBindings::setupBindings() {
 	// Layout
-	for (const auto& kv : m_allActions[(int)ActionType::LAYOUT]) {
+	for (const auto& kv : m_actionsByType[ActionType::LAYOUT]) {
 		SDL_Scancode scancode = findFirstFromLeft(secondRow);
 		if (scancode != SDL_SCANCODE_UNKNOWN)
-			m_map[scancode] = kv.second;
+			m_boundActions[scancode] = kv.second;
 		else
 			spdlog::warn("Couldn't give a binding to '{}' layout because there was no more room on second row !", kv.second.name);
 	}
 	// Shape
-	for (const auto& kv : m_allActions[(int)ActionType::SHAPE]) {
+	for (const auto& kv : m_actionsByType[ActionType::SHAPE]) {
 		SDL_Scancode scancode = findFirstFromLeft(firstRow);
 		if (scancode == SDL_SCANCODE_UNKNOWN)
 			scancode = findFirstFromRight(secondRow);
 		if (scancode != SDL_SCANCODE_UNKNOWN)
-			m_map[scancode] = kv.second;
+			m_boundActions[scancode] = kv.second;
 		else
 			spdlog::warn("Couldn't give a binding to '{}' shape because there was no more room on first and second row !", kv.second.name);
 	}
 	// SVG Shape
-	for (const auto& kv : m_allActions[(int)ActionType::SVG_SHAPE]) {
+	for (const auto& kv : m_actionsByType[ActionType::SVG_SHAPE]) {
 		SDL_Scancode scancode = findFirstFromLeft(firstRow);
 		if (scancode == SDL_SCANCODE_UNKNOWN)
 			scancode = findFirstFromRight(secondRow);
 		if (scancode != SDL_SCANCODE_UNKNOWN)
-			m_map[scancode] = kv.second;
+			m_boundActions[scancode] = kv.second;
 		else
 			spdlog::warn("Couldn't give a binding to '{}' svg-shape because there was no more room on first and second row !", kv.second.name);
 	}
 	// Layout
-	for (const auto& kv : m_allActions[(int)ActionType::STANDALONE]) {
+	for (const auto& kv : m_actionsByType[ActionType::STANDALONE]) {
 		SDL_Scancode scancode = findFirstFromLeft(thirdRow);
 		if (scancode == SDL_SCANCODE_UNKNOWN) {
 			scancode = findFirstFromRight(secondRow);
 		}
 		if (scancode != SDL_SCANCODE_UNKNOWN)
-			m_map[scancode] = kv.second;
+			m_boundActions[scancode] = kv.second;
 		else
 			spdlog::warn("Couldn't give a binding to '{}' standalone because there was no more room on third and second row !", kv.second.name);
 	}
 	// Text
 	if (isKeyAvailable(SDL_SCANCODE_RETURN))
-		m_map[SDL_SCANCODE_RETURN] = textAction;
+		m_boundActions[SDL_SCANCODE_RETURN] = textAction;
 	else
 		spdlog::warn("Couldn't give a binding to '{}' because ENTER is already used !", textAction.name);
 	// Random reroll
 	if (isKeyAvailable(SDL_SCANCODE_SPACE))
-		m_map[SDL_SCANCODE_SPACE] = rerollRandomAction;
+		m_boundActions[SDL_SCANCODE_SPACE] = rerollRandomAction;
 	else
 		spdlog::warn("Couldn't give a binding to '{}' because SPACE is already used !", rerollRandomAction.name);
 }
 
 bool KeyBindings::isKeyAvailable(SDL_Scancode scancode) {
-	return m_map.find(scancode) == m_map.end();
+	return m_boundActions.find(scancode) == m_boundActions.end();
 }
 
 SDL_Scancode KeyBindings::findFirstFromLeft(std::vector<SDL_Scancode> row) {
@@ -120,8 +120,8 @@ void KeyBindings::ImGui() {
 	static SDL_Scancode selectedScancode = SDL_SCANCODE_UNKNOWN;
 	ImGui::Columns(2);
 	for (SDL_Scancode key : allKeys) {
-		auto it = m_map.find(key);
-		if (it != m_map.end()) {
+		auto it = m_boundActions.find(key);
+		if (it != m_boundActions.end()) {
 			// Config name
 			ImGui::Text(it->second.name.c_str());
 			ImGui::NextColumn();
@@ -144,17 +144,24 @@ void KeyBindings::ImGui_KeyboardRow(const std::vector<SDL_Scancode>& row, float 
 	for (SDL_Scancode scancode : row) {
 		ImGui::PushID((int)scancode + 333);
 		// Key
-		if (ImGui_KeyboardKey(scancode, m_map.find(scancode) != m_map.end()))
+		if (ImGui_KeyboardKey(scancode, m_boundActions.find(scancode) != m_boundActions.end()))
 			ImGui::OpenPopup("Config list");
 		// Config list
 		if (ImGui::BeginPopup("Config list")) {
-			for (auto it = m_map.begin(); it != m_map.end(); it++) {
+			for (auto it = m_actionsByType.begin(); it != m_actionsByType.end(); ++it) {
+				//SDL_Scancode cfgScancode = (SDL_Scancode)it->first;
+				const Action& action = it->second;
+				if (ImGui::Selectable(action.name.c_str(), false)) {//scancode == cfgScancode)) {
+					it->second = action;
+				}
+			}
+			/*for (auto it = m_boundActions.begin(); it != m_boundActions.end(); it++) {
 				SDL_Scancode cfgScancode = (SDL_Scancode)it->first;
 				const Action& action = it->second;
 				if (ImGui::Selectable(action.name.c_str(), scancode == cfgScancode)) {
 					it->second = action;
 				}
-			}
+			}*/
 			ImGui::EndPopup();
 		}
 		//

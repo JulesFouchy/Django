@@ -1,25 +1,6 @@
 #pragma once
 
-enum class ActionType {
-	SHAPE,
-	SVG_SHAPE,
-	LAYOUT,
-	STANDALONE,
-	TEXT,
-	REROLL_RANDOM
-};
-
-struct Action {
-	std::string name;
-	ActionType type;
-	size_t index;
-
-	Action(const std::string& name, ActionType type, size_t index = -1)
-		: name(name), type(type), index(index)
-	{}
-	Action() = default;
-	~Action() = default;
-};
+#include "ActionsByType.h"
 
 class KeyBindings {
 public:
@@ -41,8 +22,8 @@ private:
 	void ImGui_ConfigsList(bool open);
 
 private:
-	std::unordered_map<int, Action> m_map;
-	std::array<std::unordered_map<std::string, Action>, 5> m_allActions;
+	std::unordered_map<int, Action> m_boundActions;
+	ActionsByType m_actionsByType;
 	size_t nextAvailableKeyIdx = 0;
 	std::vector<SDL_Scancode> allKeys;
 	std::vector<SDL_Scancode> firstRow = {

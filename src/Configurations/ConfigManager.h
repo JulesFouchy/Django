@@ -5,7 +5,7 @@
 #include "ConfigParams.h"
 #include "RandomParams.h"
 #include "ConfigSVGManager.h"
-#include "KeyBindings.h"
+#include "Actions/KeyBindings.h"
 
 #include "Helper/Array2D.h"
 
