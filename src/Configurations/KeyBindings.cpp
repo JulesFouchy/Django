@@ -134,27 +134,38 @@ void KeyBindings::ImGui() {
 	}
 	ImGui::Columns(1);
 	*/
-	for (SDL_Scancode scancode : firstRow) {
-		ImGui_DrawKey(scancode);
-		ImGui::SameLine();
-	}
-	ImGui::NewLine();
-	ImGui::Spacing();
-	ImGui::Indent(keyOffsetProp * keySize);
-	for (SDL_Scancode scancode : secondRow) {
-		ImGui_DrawKey(scancode);
-		ImGui::SameLine();
-	}
-	ImGui::NewLine();
-	ImGui::Spacing();
-	ImGui::Indent(2 * keyOffsetProp * keySize);
-	for (SDL_Scancode scancode : thirdRow) {
-		ImGui_DrawKey(scancode);
-		ImGui::SameLine();
-	}
+	ImGui_KeyboardRow(firstRow,  0.0f);
+	ImGui_KeyboardRow(secondRow, keyOffsetProp * keySize);
+	ImGui_KeyboardRow(thirdRow,  keyOffsetProp * keySize * 2.0f);
 }
 
-bool KeyBindings::ImGui_DrawKey(SDL_Scancode scancode) {
+void KeyBindings::ImGui_KeyboardRow(const std::vector<SDL_Scancode>& row, float indent) {
+	ImGui::Indent(indent);
+	for (SDL_Scancode scancode : row) {
+		ImGui::PushID((int)scancode + 333);
+		// Key
+		if (ImGui_KeyboardKey(scancode, m_map.find(scancode) != m_map.end()))
+			ImGui::OpenPopup("Config list");
+		// Config list
+		if (ImGui::BeginPopup("Config list")) {
+			for (auto it = m_map.begin(); it != m_map.end(); it++) {
+				SDL_Scancode cfgScancode = (SDL_Scancode)it->first;
+				const Action& action = it->second;
+				if (ImGui::Selectable(action.name.c_str(), scancode == cfgScancode)) {
+					it->second = action;
+				}
+			}
+			ImGui::EndPopup();
+		}
+		//
+		ImGui::PopID();
+		ImGui::SameLine();
+	}
+	ImGui::NewLine();
+	ImGui::Spacing();
+}
+
+bool KeyBindings::ImGui_KeyboardKey(SDL_Scancode scancode, bool hasAnActionBound) {
 	//
 	ImGuiStyle& style = ImGui::GetStyle();
 	//
@@ -170,7 +181,7 @@ bool KeyBindings::ImGui_DrawKey(SDL_Scancode scancode) {
 		//*value_p = atan2f(center.y - mp.y, mp.x - center.x);
 	}
 
-	ImU32 col32 = ImGui::GetColorU32(is_active ? ImGuiCol_FrameBgActive : is_hovered ? ImGuiCol_FrameBgHovered : ImGuiCol_FrameBg);
+	ImU32 col32 = ImGui::GetColorU32(is_active ? ImGuiCol_FrameBgActive : is_hovered ? ImGuiCol_FrameBgHovered : hasAnActionBound ? ImGuiCol_Border : ImGuiCol_FrameBg);
 	ImU32 col32line = ImGui::GetColorU32(ImGuiCol_SliderGrabActive);
 	ImU32 col32text = ImGui::GetColorU32(ImGuiCol_Text);
 	ImDrawList* draw_list = ImGui::GetWindowDrawList();
@@ -180,4 +191,7 @@ bool KeyBindings::ImGui_DrawKey(SDL_Scancode scancode) {
 
 	ImGui::PopID();
 	return is_active;
+}
+
+void KeyBindings::ImGui_ConfigsList(bool open) {
 }

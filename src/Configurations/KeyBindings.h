@@ -36,7 +36,9 @@ private:
 	SDL_Scancode findFirstFromLeft(std::vector<SDL_Scancode> row);
 	SDL_Scancode findFirstFromRight(std::vector<SDL_Scancode> row);
 
-	bool ImGui_DrawKey(SDL_Scancode scancode);
+	void ImGui_KeyboardRow(const std::vector<SDL_Scancode>& row, float indent);
+	bool ImGui_KeyboardKey(SDL_Scancode scancode, bool hasAnActionBound);
+	void ImGui_ConfigsList(bool open);
 
 private:
 	std::unordered_map<int, Action> m_map;
