@@ -162,13 +162,6 @@ void KeyBindings::ImGui_KeyboardRow(const std::vector<SDL_Scancode>& row, float 
 					setBinding(it->second, scancode);
 				}
 			}
-			/*for (auto it = m_boundActions.begin(); it != m_boundActions.end(); it++) {
-				SDL_Scancode cfgScancode = (SDL_Scancode)it->first;
-				const Action& action = it->second;
-				if (ImGui::Selectable(action.name.c_str(), scancode == cfgScancode)) {
-					it->second = action;
-				}
-			}*/
 			ImGui::EndPopup();
 		}
 		//
