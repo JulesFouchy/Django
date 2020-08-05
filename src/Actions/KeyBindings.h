@@ -5,7 +5,7 @@
 class KeyBindings {
 public:
 	KeyBindings();
-	~KeyBindings() = default;
+	~KeyBindings();
 
 	const Action* getAction(SDL_Scancode scancode);
 	void addAction(Action action);
@@ -15,6 +15,7 @@ public:
 
 private:
 	void setBinding(ActionBinding* actionBinding, SDL_Scancode scancode);
+	void serializeBindings(const std::string& filepath);
 
 	bool isKeyAvailable(SDL_Scancode scancode);
 	SDL_Scancode findFirstFromLeft(std::vector<SDL_Scancode> row);
@@ -22,7 +23,6 @@ private:
 
 	void ImGui_KeyboardRow(const std::vector<SDL_Scancode>& row, float indent);
 	bool ImGui_KeyboardKey(SDL_Scancode scancode, bool hasAnActionBound);
-	void ImGui_ConfigsList(bool open);
 
 private:
 	std::list<ActionBinding> m_allActions; // don't use a vector because all our pointers are invalidated when memory is reallocated

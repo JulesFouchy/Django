@@ -1,6 +1,11 @@
 #include "KeyBindings.h"
 
 #include <imgui/imgui_internal.h>
+#include <cereal/archives/json.hpp>
+#include <cereal/types/tuple.hpp>
+#include <fstream>
+
+#include "Constants/SettingsFolder.h"
 
 static constexpr float keySize = 55.0f;
 static constexpr float keyOffsetProp = 0.2f;
@@ -15,6 +20,29 @@ static const Action rerollRandomAction(
 	ActionType::REROLL_RANDOM
 );
 
+struct ActionIdentifierAndBinding {
+	std::string name;
+	ActionType type;
+	SDL_Scancode scancode;
+
+	ActionIdentifierAndBinding::ActionIdentifierAndBinding(const std::string& name, ActionType type, SDL_Scancode scancode)
+		: name(name), type(type), scancode(scancode)
+	{}
+
+private:
+	//Serialization
+	friend class cereal::access;
+	template <class Archive>
+	void serialize(Archive& archive)
+	{
+		archive(
+			CEREAL_NVP(name),
+			CEREAL_NVP(type),
+			CEREAL_NVP(scancode)
+		);
+	}
+};
+
 KeyBindings::KeyBindings() {
 	addAction(textAction, ActionType_MISCELLANEOUS);
 	setBinding(&m_allActions.back(), SDL_SCANCODE_RETURN);
@@ -27,6 +55,10 @@ KeyBindings::KeyBindings() {
 		allKeys.push_back(key);
 	for (SDL_Scancode key : thirdRow)
 		allKeys.push_back(key);
+}
+
+KeyBindings::~KeyBindings() {
+	serializeBindings(djg::SettingsFolder + "/lastSessionBindings.json");
 }
 
 const Action* KeyBindings::getAction(SDL_Scancode scancode) {
@@ -200,5 +232,16 @@ bool KeyBindings::ImGui_KeyboardKey(SDL_Scancode scancode, bool hasAnActionBound
 	return is_active;
 }
 
-void KeyBindings::ImGui_ConfigsList(bool open) {
+void KeyBindings::serializeBindings(const std::string& filepath) {
+	std::vector<ActionIdentifierAndBinding> boundActionsIdentifiers;
+	for (auto& kv : m_boundActions) {
+		boundActionsIdentifiers.emplace_back(kv.second->action.name, kv.second->action.type, (SDL_Scancode)kv.first);
+	}
+	std::ofstream os(filepath);
+	{
+		cereal::JSONOutputArchive archive(os);
+		archive(
+			boundActionsIdentifiers
+		);
+	}
 }
