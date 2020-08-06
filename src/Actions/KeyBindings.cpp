@@ -204,6 +204,16 @@ void KeyBindings::ImGui() {
 	ImGui_KeyboardRow(firstRow,  0.0f);
 	ImGui_KeyboardRow(secondRow, keyOffsetProp * keySize);
 	ImGui_KeyboardRow(thirdRow,  keyOffsetProp * keySize * 2.0f);
+	bool b = false;
+	for (auto it = m_allActionsByType.begin(); it != m_allActionsByType.end(); ++it) {
+		if (!hasBinding(it->second)) {
+			if (!b) {
+				ImGui::Text("Configurations without bindings : ");
+				b = true;
+			}
+			ImGui::TextDisabled(it->second->action.name.c_str());
+		}
+	}
 }
 
 void KeyBindings::ImGui_KeyboardRow(const std::vector<SDL_Scancode>& row, float indent) {
