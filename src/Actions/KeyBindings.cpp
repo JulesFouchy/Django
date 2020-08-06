@@ -86,10 +86,16 @@ void KeyBindings::addAction(Action action, int type) {
 }
 
 void KeyBindings::setBinding(ActionBinding* actionBinding, SDL_Scancode scancode) {
-	actionBinding->scancode = scancode;
+	// Erase the binding previously attached to scancode
 	if (m_boundActions.find((int)scancode) != m_boundActions.end()) {
 		m_boundActions[scancode]->scancode = SDL_SCANCODE_UNKNOWN;
 	}
+	// Erase the old binding of actionBinding
+	if (m_boundActions.find((int)actionBinding->scancode) != m_boundActions.end()) {
+		m_boundActions.erase(actionBinding->scancode);
+	}
+	// Set the new binding
+	actionBinding->scancode = scancode;
 	m_boundActions[scancode] = actionBinding;
 }
 
