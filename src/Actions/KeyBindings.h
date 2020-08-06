@@ -15,8 +15,11 @@ public:
 
 private:
 	void setBinding(ActionBinding* actionBinding, SDL_Scancode scancode);
+	void clearAllBindings();
 	void serializeBindings(const std::string& filepath);
+	void readBindingsFrom(const std::string& filepath);
 
+	bool hasBinding(const ActionBinding* actionBinding);
 	bool isKeyAvailable(SDL_Scancode scancode);
 	SDL_Scancode findFirstFromLeft(std::vector<SDL_Scancode> row);
 	SDL_Scancode findFirstFromRight(std::vector<SDL_Scancode> row);
@@ -25,9 +28,9 @@ private:
 	bool ImGui_KeyboardKey(SDL_Scancode scancode, bool hasAnActionBound);
 
 private:
-	std::list<ActionBinding> m_allActions; // don't use a vector because all our pointers are invalidated when memory is reallocated
+	std::list<ActionBinding> m_allActionsOwner; // don't use a vector because all our pointers are invalidated when memory is reallocated
+	ActionsByType m_allActionsByType;
 	std::unordered_map<int, ActionBinding*> m_boundActions;
-	ActionsByType m_actionsByType;
 
 	size_t nextAvailableKeyIdx = 0;
 	std::vector<SDL_Scancode> allKeys;

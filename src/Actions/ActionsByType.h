@@ -3,6 +3,7 @@
 #include "Action.h"
 
 static constexpr size_t nbActionTypes = 5;
+constexpr int ActionType_MISCELLANEOUS = 4;
 
 class ActionsByTypeIterator;
 
@@ -25,6 +26,8 @@ public:
 	std::unordered_map<std::string, ActionBinding*>& operator[](int type);
 	ActionsByTypeIterator begin();
 	ActionsByTypeIterator end();
+
+	ActionBinding* tryFind(const std::string& name, ActionType type);
 
 private:
 	std::array<std::unordered_map<std::string, ActionBinding*>, nbActionTypes> m_store;
