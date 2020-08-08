@@ -2,15 +2,20 @@
 
 #include "OpenGL/ComputeShader.h"
 #include "stb_image/stb_image_write.h"
+#include "Helper/File.h"
+#include "ConfigParams.h"
+#include "RandomParams.h"
 
 static constexpr int THUMBNAIL_SIZE = 256;
 static constexpr int NB_PARTICLES = 100000;
-static constexpr float RADIUS = 0.1f;
+static constexpr float RADIUS = 0.01f;
 static constexpr int SSBO_BINDING = 4;
 
 ThumbnailFactory::ThumbnailFactory()
 	: m_positionsSSBO(SSBO_BINDING, GL_DYNAMIC_DRAW)
 {
+    // Read compute shader templates
+    MyFile::ToString("internal-shaders/thumbnailShapeTemplate.comp", &m_shapeTemplateSrc);
 	// Render pipeline
 	m_renderPipeline.addShader(ShaderType::Vertex,   "internal-shaders/configThumbnail.vert");
 	m_renderPipeline.addShader(ShaderType::Fragment, "internal-shaders/configThumbnail.frag");
@@ -48,8 +53,40 @@ ThumbnailFactory::~ThumbnailFactory() {
 
 unsigned int ThumbnailFactory::createTexture(ConfigType configType, const std::string& computeShaderCode) {
     unsigned int texID = genTexture();
+    switch (configType) {
+        case ConfigType::SHAPE_LAYOUT:
+        case ConfigType::SVG_LAYOUT:
+            createAndApplyComputeShader("#version 430\n" + computeShaderCode + m_shapeTemplateSrc);
+            break;
+        case ConfigType::STANDALONE:
+            break;
+        case ConfigType::TEXT:
+            break;
+        default:
+            break;
+    }
     drawOnTexture(texID);
     return texID;
+}
+
+void ThumbnailFactory::createAndApplyComputeShader(const std::string& shaderSrc) {
+    ConfigParams params;
+    RandomParams randParams;
+    ComputeShader computeShader;
+    computeShader.setSrcCode(shaderSrc);
+    computeShader.get().bind();
+    computeShader.get().setUniform1i("u_NbOfParticles", NB_PARTICLES);
+    computeShader.get().setUniform1f("u_aspectRatio", 1.0f);
+    computeShader.get().setUniform1i("u_count", params.count);
+    computeShader.get().setUniform1i("u_intLR", params.intLR);
+    computeShader.get().setUniform1i("u_intUD", params.intUD);
+    computeShader.get().setUniform1f("u_wheel", params.wheel);
+    computeShader.get().setUniform1f("u_ctrlWheel", params.ctrlWheel);
+    computeShader.get().setUniform1f("u_shiftWheel", params.shiftWheel);
+    computeShader.get().setUniform1f("u_altWheel", params.altWheel);
+    computeShader.get().setUniform1f("u_seed", randParams.seed);
+    computeShader.get().setUniform2f("u_xySeed", randParams.xySeed);
+    computeShader.compute(NB_PARTICLES);
 }
 
 unsigned int ThumbnailFactory::genTexture() {
@@ -71,13 +108,6 @@ void ThumbnailFactory::drawOnTexture(unsigned int texID) {
     glClearColor(0, 0, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT);
     // Draw
-    std::vector<float> data;
-    data.reserve(2 * NB_PARTICLES);
-    for (int i = 0; i < NB_PARTICLES; i++) {
-        data.push_back(0.3 * cos(6.28 * i / (float)NB_PARTICLES));
-        data.push_back(0.3 * sin(6.28 * i / (float)NB_PARTICLES));
-    }
-    m_positionsSSBO.uploadData(2 * NB_PARTICLES, data.data());
     m_renderPipeline.bind();
     GLCall(glBindVertexArray(m_vaoID));
     GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, 6, NB_PARTICLES));

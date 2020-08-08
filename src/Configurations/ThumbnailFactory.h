@@ -6,8 +6,6 @@
 #include "OpenGL/SSBO.h"
 #include "OpenGL/DrawOnTextureFramebuffer.h"
 
-class ComputeShader;
-
 class ThumbnailFactory {
 public:
 	ThumbnailFactory();
@@ -19,6 +17,7 @@ public:
 	static unsigned int genTexture();
 	void drawOnTexture(unsigned int texID);
 	void saveTexture(unsigned int texID, const std::string& filepath);
+	void createAndApplyComputeShader(const std::string& shaderSrc);
 
 private:
 	ShaderPipeline m_renderPipeline;
@@ -26,4 +25,6 @@ private:
 	DrawOnTextureFramebuffer m_framebuffer;
 	unsigned int m_vaoID;
 	unsigned int m_vboID;
+
+	std::string m_shapeTemplateSrc;
 };
