@@ -11,15 +11,15 @@ namespace fs = std::filesystem;
 
 constexpr float SCROLL_SPEED = 0.1f;
 
-const std::string VERSION = "#version 430";
+static const std::string VERSION = "#version 430";
 
-const std::string SHAPES_FOLDER     = "configurations/shapes";
-const std::string SVG_FOLDER        = "configurations/svgShapes";
-const std::string LAYOUTS_FOLDER    = "configurations/layouts";
-const std::string STANDALONE_FOLDER = "configurations/standalones";
-const std::string SVG_TEMPLATE = "internal-shaders/configTemplateSVG.comp";
-const std::string STANDALONE_TEMPLATE = "internal-shaders/configTemplateStandalone.comp";
-const std::string RANDOM_FILE       = "internal-shaders/random.glsl";
+static const std::string SHAPES_FOLDER     = "configurations/shapes";
+static const std::string SVG_FOLDER        = "configurations/svgShapes";
+static const std::string LAYOUTS_FOLDER    = "configurations/layouts";
+static const std::string STANDALONE_FOLDER = "configurations/standalones";
+static const std::string SVG_TEMPLATE = "internal-shaders/configTemplateSVG.comp";
+static const std::string STANDALONE_TEMPLATE = "internal-shaders/configTemplateStandalone.comp";
+static const std::string RANDOM_FILE       = "internal-shaders/random.glsl";
 
 ConfigManager::ConfigManager() {
     ThumbnailFactory thumbnailFactory;
@@ -28,8 +28,8 @@ ConfigManager::ConfigManager() {
     MyFile::ToString(RANDOM_FILE, &randSrc);
     // Get all the template source codes
     std::string svgTemplate;
-    MyFile::ToString(SVG_TEMPLATE, &svgTemplate);
     std::string standaloneTemplate;
+    MyFile::ToString(SVG_TEMPLATE,        &svgTemplate);
     MyFile::ToString(STANDALONE_TEMPLATE, &standaloneTemplate);
     // Create all SVG shapes and set key bindings and thumbnails
     size_t i = 0;
@@ -109,12 +109,6 @@ ConfigManager::ConfigManager() {
     // Create all standalone configurations and set key bindings
     size_t nbStandaloneConfigs = 0;
     for (const auto& entry : fs::directory_iterator(STANDALONE_FOLDER)) {
-        m_keyBindings.addAction({
-            MyString::FileName(entry.path().string()),
-            (unsigned int)-1,
-            ActionType::STANDALONE,
-            nbStandaloneConfigs
-        });
         nbStandaloneConfigs++;
     }
     m_standaloneConfigs.resize(nbStandaloneConfigs);
@@ -122,12 +116,23 @@ ConfigManager::ConfigManager() {
     for (const auto& entry : fs::directory_iterator(STANDALONE_FOLDER)) {
         std::string src;
         MyFile::ToString(entry.path().string(), &src);
+        // config
         m_standaloneConfigs[i].initWithSrcCode(
             VERSION + "\n" +
             randSrc + "\n" +
             src     + "\n" +
             standaloneTemplate
         );
+        // thumbnail
+        unsigned int texID = thumbnailFactory.createTexture(ActionType::STANDALONE, randSrc + src);
+        // key bindings
+        m_keyBindings.addAction({
+            MyString::FileName(entry.path().string()),
+            texID,
+            ActionType::STANDALONE,
+            i
+        });
+        //
         i++;
     }
     //

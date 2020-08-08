@@ -6,8 +6,8 @@
 #include "Configurations/ConfigParams.h"
 #include "Configurations/RandomParams.h"
 
-static constexpr int THUMBNAIL_SIZE = 128;
-static constexpr int NB_PARTICLES = 30000;
+static constexpr int THUMBNAIL_SIZE = 256;
+static constexpr int NB_PARTICLES = 500;
 static constexpr float RADIUS = 0.03f;
 static constexpr int SSBO_BINDING = 4;
 
@@ -15,7 +15,8 @@ ThumbnailFactory::ThumbnailFactory()
 	: m_positionsSSBO(SSBO_BINDING, GL_DYNAMIC_DRAW)
 {
     // Read compute shader templates
-    MyFile::ToString("internal-shaders/thumbnailShapeTemplate.comp", &m_shapeTemplateSrc);
+    MyFile::ToString("internal-shaders/thumbnailTemplateShape.comp",      &m_shapeTemplateSrc);
+    MyFile::ToString("internal-shaders/thumbnailTemplateStandalone.comp", &m_standaloneTemplateSrc);
 	// Render pipeline
 	m_renderPipeline.addShader(ShaderType::Vertex,   "internal-shaders/configThumbnail.vert");
 	m_renderPipeline.addShader(ShaderType::Fragment, "internal-shaders/configThumbnail.frag");
@@ -62,6 +63,7 @@ unsigned int ThumbnailFactory::createTexture(ActionType actionType, const std::s
         case ActionType::LAYOUT:
             break;
         case ActionType::STANDALONE:
+            createAndApplyComputeShader("#version 430\n" + computeShaderCode + m_standaloneTemplateSrc);
             break;
         case ActionType::TEXT:
             break;
