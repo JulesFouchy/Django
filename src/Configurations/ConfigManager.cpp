@@ -13,13 +13,14 @@ constexpr float SCROLL_SPEED = 0.1f;
 
 static const std::string VERSION = "#version 430";
 
-static const std::string SHAPES_FOLDER     = "configurations/shapes";
-static const std::string SVG_FOLDER        = "configurations/svgShapes";
-static const std::string LAYOUTS_FOLDER    = "configurations/layouts";
-static const std::string STANDALONE_FOLDER = "configurations/standalones";
-static const std::string SVG_TEMPLATE = "internal-shaders/configTemplateSVG.comp";
-static const std::string STANDALONE_TEMPLATE = "internal-shaders/configTemplateStandalone.comp";
-static const std::string RANDOM_FILE       = "internal-shaders/random.glsl";
+static const std::string SHAPES_FOLDER       = "configurations/shapes";
+static const std::string SVG_FOLDER          = "configurations/svgShapes";
+static const std::string LAYOUTS_FOLDER      = "configurations/layouts";
+static const std::string STANDALONE_FOLDER   = "configurations/standalones";
+static const std::string SVG_TEMPLATE        = "internal-shaders/configTemplate_SVG.comp";
+static const std::string STANDALONE_TEMPLATE = "internal-shaders/configTemplate_Layout_and_Standalone.comp";
+static const std::string LAYOUT_TEMPLATE     = "internal-shaders/configTemplate_Layout_and_Standalone.comp";
+static const std::string RANDOM_FILE         = "internal-shaders/random.glsl";
 
 ConfigManager::ConfigManager() {
     ThumbnailFactory thumbnailFactory;
@@ -28,8 +29,10 @@ ConfigManager::ConfigManager() {
     MyFile::ToString(RANDOM_FILE, &randSrc);
     // Get all the template source codes
     std::string svgTemplate;
+    std::string layoutTemplate;
     std::string standaloneTemplate;
     MyFile::ToString(SVG_TEMPLATE,        &svgTemplate);
+    MyFile::ToString(LAYOUT_TEMPLATE,     &layoutTemplate);
     MyFile::ToString(STANDALONE_TEMPLATE, &standaloneTemplate);
     // Create all SVG shapes and set key bindings and thumbnails
     size_t i = 0;
@@ -90,10 +93,11 @@ ConfigManager::ConfigManager() {
         // Shapes
         for (const std::string& shapeSrc : shapesSrcCode) {
             m_shapeLayoutConfigs(x, y).initWithSrcCode(
-                 VERSION  + "\n" +
-                 shapeSrc + "\n" +
-                 randSrc  + "\n" +
-                 layoutSrc
+                VERSION + "\n" +
+                shapeSrc + "\n" +
+                randSrc + "\n" +
+                layoutSrc + "\n" +
+                layoutTemplate
             );
             x++;
         }

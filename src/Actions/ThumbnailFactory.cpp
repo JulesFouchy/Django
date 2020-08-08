@@ -15,8 +15,8 @@ ThumbnailFactory::ThumbnailFactory()
 	: m_positionsSSBO(SSBO_BINDING, GL_DYNAMIC_DRAW)
 {
     // Read compute shader templates
-    MyFile::ToString("internal-shaders/thumbnailTemplateShape.comp",      &m_shapeTemplateSrc);
-    MyFile::ToString("internal-shaders/thumbnailTemplateStandalone.comp", &m_standaloneTemplateSrc);
+    MyFile::ToString("internal-shaders/thumbnailTemplate_Shape.comp",      &m_shapeTemplateSrc);
+    MyFile::ToString("internal-shaders/thumbnailTemplate_Standalone.comp", &m_standaloneTemplateSrc);
 	// Render pipeline
 	m_renderPipeline.addShader(ShaderType::Vertex,   "internal-shaders/configThumbnail.vert");
 	m_renderPipeline.addShader(ShaderType::Fragment, "internal-shaders/configThumbnail.frag");
