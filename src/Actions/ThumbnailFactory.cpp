@@ -3,8 +3,8 @@
 #include "OpenGL/ComputeShader.h"
 #include "stb_image/stb_image_write.h"
 #include "Helper/File.h"
-#include "ConfigParams.h"
-#include "RandomParams.h"
+#include "Configurations/ConfigParams.h"
+#include "Configurations/RandomParams.h"
 
 static constexpr int THUMBNAIL_SIZE = 256;
 static constexpr int NB_PARTICLES = 100000;
@@ -51,16 +51,21 @@ ThumbnailFactory::~ThumbnailFactory() {
     GLCall(glDeleteVertexArrays(1, &m_vaoID));
 }
 
-unsigned int ThumbnailFactory::createTexture(ConfigType configType, const std::string& computeShaderCode) {
+unsigned int ThumbnailFactory::createTexture(ActionType actionType, const std::string& computeShaderCode) {
     unsigned int texID = genTexture();
-    switch (configType) {
-        case ConfigType::SHAPE_LAYOUT:
-        case ConfigType::SVG_LAYOUT:
+    switch (actionType) {
+        case ActionType::SHAPE:
             createAndApplyComputeShader("#version 430\n" + computeShaderCode + m_shapeTemplateSrc);
             break;
-        case ConfigType::STANDALONE:
+        case ActionType::SVG_SHAPE:
             break;
-        case ConfigType::TEXT:
+        case ActionType::LAYOUT:
+            break;
+        case ActionType::STANDALONE:
+            break;
+        case ActionType::TEXT:
+            break;
+        case ActionType::REROLL_RANDOM:
             break;
         default:
             break;

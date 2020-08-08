@@ -5,12 +5,18 @@
 #include "ConfigParams.h"
 #include "RandomParams.h"
 #include "ConfigSVGManager.h"
-#include "ConfigType.h"
 #include "Actions/KeyBindings.h"
 
 #include "Helper/Array2D.h"
 
 class ParticlesSystem;
+
+enum class ConfigType {
+	SHAPE_LAYOUT,
+	SVG_LAYOUT,
+	STANDALONE,
+	TEXT
+};
 
 class ConfigManager {
 public:

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ConfigType.h"
+#include "Action.h"
 
 #include "OpenGL/ShaderPipeline.h"
 #include "OpenGL/SSBO.h"
@@ -11,7 +11,7 @@ public:
 	ThumbnailFactory();
 	~ThumbnailFactory();
 
-	unsigned int createTexture(ConfigType configType, const std::string& computeShaderCode);
+	unsigned int createTexture(ActionType actionType, const std::string& computeShaderCode);
 
 public:
 	static unsigned int genTexture();
