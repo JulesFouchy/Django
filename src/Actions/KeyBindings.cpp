@@ -62,6 +62,9 @@ KeyBindings::KeyBindings() {
 
 KeyBindings::~KeyBindings() {
 	serializeBindings(djg::SettingsFolder + "/lastSessionBindings.json");
+	for (ActionBinding action : m_allActionsOwner) {
+		GLCall(glDeleteTextures(1, &action.action.thumbnailTextureID));
+	}
 }
 
 const Action* KeyBindings::getAction(SDL_Scancode scancode) {
