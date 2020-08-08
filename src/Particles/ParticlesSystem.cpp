@@ -55,7 +55,6 @@ ParticlesSystem::~ParticlesSystem() {
 
 void ParticlesSystem::draw() {
     GLCall(glBindVertexArray(m_vaoID));
-    //GLCall(glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_particlesSSBOid));
     GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, 6, m_nbParticles));
 }
 
