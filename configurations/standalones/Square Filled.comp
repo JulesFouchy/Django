@@ -16,8 +16,14 @@ uniform vec2 u_xySeed;
 //? float rand(float id, float seed);
 
 vec2 getPosition(uint particleID) {
+    uint nbLines = int(floor(sqrt(u_NbOfParticles)));
+    uint idealNbPart = nbLines * nbLines;
+    uint id = particleID < idealNbPart ? particleID : (particleID - (u_NbOfParticles - idealNbPart));
+    uint row = id / nbLines;
+    uint col = id % nbLines;
+    //
     return vec2(
-        rand(particleID, u_seed + u_xySeed.y),
-        rand(particleID, u_seed + u_xySeed.x)
+        -1.0 + 2.0 * (float(col) + 0.5) / nbLines,
+        -1.0 + 2.0 * (float(row) + 0.5) / nbLines
     );
 }

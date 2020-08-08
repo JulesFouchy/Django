@@ -13,21 +13,24 @@ constexpr float SCROLL_SPEED = 0.1f;
 
 const std::string VERSION = "#version 430";
 
-const std::string SHAPES_FOLDER = "configurations/shapes";
-const std::string SVG_FOLDER = "configurations/svgShapes";
-const std::string SVGSHAPE_FILE = "internal-shaders/svgShape.comp";
-const std::string LAYOUTS_FOLDER = "configurations/layouts";
+const std::string SHAPES_FOLDER     = "configurations/shapes";
+const std::string SVG_FOLDER        = "configurations/svgShapes";
+const std::string LAYOUTS_FOLDER    = "configurations/layouts";
 const std::string STANDALONE_FOLDER = "configurations/standalones";
-const std::string RANDOM_FILE = "internal-shaders/random.glsl";
+const std::string SVG_TEMPLATE = "internal-shaders/configTemplateSVG.comp";
+const std::string STANDALONE_TEMPLATE = "internal-shaders/configTemplateStandalone.comp";
+const std::string RANDOM_FILE       = "internal-shaders/random.glsl";
 
 ConfigManager::ConfigManager() {
     ThumbnailFactory thumbnailFactory;
     // Get rand() source code
     std::string randSrc;
     MyFile::ToString(RANDOM_FILE, &randSrc);
-    // Get SVG Shape source code
-    std::string svgSrc;
-    MyFile::ToString(SVGSHAPE_FILE, &svgSrc);
+    // Get all the template source codes
+    std::string svgTemplate;
+    MyFile::ToString(SVG_TEMPLATE, &svgTemplate);
+    std::string standaloneTemplate;
+    MyFile::ToString(STANDALONE_TEMPLATE, &standaloneTemplate);
     // Create all SVG shapes and set key bindings and thumbnails
     size_t i = 0;
     for (const auto& entry : fs::directory_iterator(SVG_FOLDER)) {
@@ -97,7 +100,7 @@ ConfigManager::ConfigManager() {
         // SVG shapes
         m_svgManager.pushLayout(
             VERSION + "\n" +
-            svgSrc + "\n" +
+            svgTemplate + "\n" +
             randSrc + "\n" +
             layoutSrc
         );
@@ -122,7 +125,8 @@ ConfigManager::ConfigManager() {
         m_standaloneConfigs[i].initWithSrcCode(
             VERSION + "\n" +
             randSrc + "\n" +
-            src
+            src     + "\n" +
+            standaloneTemplate
         );
         i++;
     }

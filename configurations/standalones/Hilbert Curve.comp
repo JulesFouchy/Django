@@ -15,10 +15,6 @@ uniform float u_seed;
 uniform vec2 u_xySeed;
 //? float rand(float id, float seed);
 
-layout(std430, binding=1) buffer restPositions {
-   vec2 restPos[];
-};
-
 vec2 baseCurve(float t) {
     // triangle
     //float h = sqrt(3) / 2; // equi trg
@@ -67,37 +63,31 @@ mat3 sym() {
     );
 }
 
-layout (local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
-void main(){
-    uint gid = gl_GlobalInvocationID.x;
-    if (gid < u_NbOfParticles) {
-        // ------------- Your code goes here -------------
-        float t = gid / float(u_NbOfParticles);
-        vec2 pos;
-        mat3 mat = mat3(1.0);
+vec2 getPosition(uint particleID) {
+    float t = particleID / float(u_NbOfParticles);
+    vec2 pos;
+    mat3 mat = mat3(1.0);
 
-        for (int n = 0; n < u_count; ++n) {
-            int id = int(floor(t * 4));
-            t = fract(t * 4);
-            switch(id) {
-                case 0:
-                    mat *= sym();
-                    break;
-                case 1:
-                    mat *= trans(0, 0.5);
-                    break;
-                case 2:
-                    mat *= trans(0.5, 0.5);
-                    break;
-                case 3:
-                    mat *= trans(1, 0.5) * scale(-1, -1) * sym();
-                    break;
-            }
-            mat *= scale(0.5);
+    for (int n = 0; n < u_count; ++n) {
+        int id = int(floor(t * 4));
+        t = fract(t * 4);
+        switch(id) {
+            case 0:
+                mat *= sym();
+                break;
+            case 1:
+                mat *= trans(0, 0.5);
+                break;
+            case 2:
+                mat *= trans(0.5, 0.5);
+                break;
+            case 3:
+                mat *= trans(1, 0.5) * scale(-1, -1) * sym();
+                break;
         }
-        vec3 pos3 = mat * vec3(baseCurve(t), 1.0);
-        pos = pos3.xy / pos3.z;
-        restPos[gid] = pos * 2.0 - 1.0;
-        // ------------- Your code ends here -------------
+        mat *= scale(0.5);
     }
+    vec3 pos3 = mat * vec3(baseCurve(t), 1.0);
+    pos = pos3.xy / pos3.z;
+    return pos * 2.0 - 1.0;
 }
