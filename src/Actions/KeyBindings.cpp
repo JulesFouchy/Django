@@ -13,10 +13,12 @@ static constexpr float keyOffsetProp = 0.2f;
 
 static const Action textAction(
 	"Text",
+	-1,
 	ActionType::TEXT
 );
 static const Action rerollRandomAction(
 	"Reroll random",
+	-1,
 	ActionType::REROLL_RANDOM
 );
 
@@ -183,24 +185,6 @@ SDL_Scancode KeyBindings::findFirstFromRight(std::vector<SDL_Scancode> row) {
 }
 
 void KeyBindings::ImGui() {
-	/*
-	static SDL_Scancode selectedScancode = SDL_SCANCODE_UNKNOWN;
-	ImGui::Columns(2);
-	for (SDL_Scancode key : allKeys) {
-		auto it = m_boundActions.find(key);
-		if (it != m_boundActions.end()) {
-			// Config name
-			ImGui::Text(it->second.name.c_str());
-			ImGui::NextColumn();
-			// Key binding
-			if (ImGui::Selectable(SDL_GetKeyName(SDL_GetKeyFromScancode((SDL_Scancode)it->first)), it->first == selectedScancode)) {
-				selectedScancode = (SDL_Scancode)it->first;
-			}
-			ImGui::NextColumn();
-		}
-	}
-	ImGui::Columns(1);
-	*/
 	ImGui_KeyboardRow(firstRow,  0.0f);
 	ImGui_KeyboardRow(secondRow, keyOffsetProp * keySize);
 	ImGui_KeyboardRow(thirdRow,  keyOffsetProp * keySize * 2.0f);
@@ -221,7 +205,10 @@ void KeyBindings::ImGui_KeyboardRow(const std::vector<SDL_Scancode>& row, float 
 	for (SDL_Scancode scancode : row) {
 		ImGui::PushID((int)scancode + 333);
 		// Key
-		if (ImGui_KeyboardKey(scancode, m_boundActions.find(scancode) != m_boundActions.end()))
+		auto it = m_boundActions.find(scancode);
+		bool bHasAnActionBound = it != m_boundActions.end();
+		unsigned int textureID = bHasAnActionBound ? it->second->action.thumbnailTextureID : -1;
+		if (ImGui_KeyboardKey(scancode, textureID, bHasAnActionBound))
 			ImGui::OpenPopup("Config list");
 		// Config list
 		if (ImGui::BeginPopup("Config list")) {
@@ -242,7 +229,7 @@ void KeyBindings::ImGui_KeyboardRow(const std::vector<SDL_Scancode>& row, float 
 	ImGui::Spacing();
 }
 
-bool KeyBindings::ImGui_KeyboardKey(SDL_Scancode scancode, bool hasAnActionBound) {
+bool KeyBindings::ImGui_KeyboardKey(SDL_Scancode scancode, unsigned int textureID, bool hasAnActionBound) {
 	//
 	ImGuiStyle& style = ImGui::GetStyle();
 	//
@@ -263,7 +250,14 @@ bool KeyBindings::ImGui_KeyboardKey(SDL_Scancode scancode, bool hasAnActionBound
 	ImU32 col32text = ImGui::GetColorU32(ImGuiCol_Text);
 	ImDrawList* draw_list = ImGui::GetWindowDrawList();
 	float fontSize = 1.5f * draw_list->_Data->FontSize;
-	draw_list->AddRectFilled(p, ImVec2(p.x + keySize, p.y + keySize), col32, 10.0f);
+	ImVec2 pMax = ImVec2(p.x + keySize, p.y + keySize);
+	float rounding = 10.0f;
+	if (textureID != -1) {
+		draw_list->AddImageRounded((ImTextureID)textureID, p, pMax, ImVec2(0, 1), ImVec2(1, 0), col32, rounding);
+	}
+	else {
+		draw_list->AddRectFilled(p, pMax, col32, rounding);
+	}
 	draw_list->AddText(NULL, fontSize, ImVec2(p.x + keySize * 0.5f - fontSize * 0.25f, p.y + keySize * 0.5f - fontSize * 0.45f), col32text, SDL_GetKeyName(SDL_GetKeyFromScancode(scancode)));
 
 	ImGui::PopID();

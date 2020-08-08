@@ -6,9 +6,9 @@
 #include "Configurations/ConfigParams.h"
 #include "Configurations/RandomParams.h"
 
-static constexpr int THUMBNAIL_SIZE = 256;
-static constexpr int NB_PARTICLES = 100000;
-static constexpr float RADIUS = 0.01f;
+static constexpr int THUMBNAIL_SIZE = 128;
+static constexpr int NB_PARTICLES = 30000;
+static constexpr float RADIUS = 0.03f;
 static constexpr int SSBO_BINDING = 4;
 
 ThumbnailFactory::ThumbnailFactory()

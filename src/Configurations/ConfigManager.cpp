@@ -1,5 +1,7 @@
 #include "ConfigManager.h"
 
+#include "Actions/ThumbnailFactory.h"
+
 #include <filesystem>
 namespace fs = std::filesystem;
 #include "Helper/File.h"
@@ -19,45 +21,56 @@ const std::string STANDALONE_FOLDER = "configurations/standalones";
 const std::string RANDOM_FILE = "internal-shaders/random.glsl";
 
 ConfigManager::ConfigManager() {
+    ThumbnailFactory thumbnailFactory;
     // Get rand() source code
     std::string randSrc;
     MyFile::ToString(RANDOM_FILE, &randSrc);
     // Get SVG Shape source code
     std::string svgSrc;
     MyFile::ToString(SVGSHAPE_FILE, &svgSrc);
-    // Create all SVG shapes and set key bindings
+    // Create all SVG shapes and set key bindings and thumbnails
     size_t i = 0;
     for (const auto& entry : fs::directory_iterator(SVG_FOLDER)) {
         m_svgManager.addSVGShape(entry.path().string());
+        // key bindings
         m_keyBindings.addAction({
             "SVG " + MyString::FileName(entry.path().string()),
+            (unsigned int)-1,
             ActionType::SVG_SHAPE,
             i++
         });
     }
     m_svgManager.uploadAllSVGData();
-    // Get all shapes source code and set key bindings
+    // Get all shapes source code and set key bindings and thumbnail
     size_t nbShapesFiles = 0;
     for (const auto& entry : fs::directory_iterator(SHAPES_FOLDER)) {
-        m_keyBindings.addAction({
-            "Shape " + MyString::FileName(entry.path().string()),
-            ActionType::SHAPE,
-            nbShapesFiles
-        });
         nbShapesFiles++;
     }
     std::vector<std::string> shapesSrcCode;
     shapesSrcCode.reserve(nbShapesFiles);
+    i = 0;
     for (const auto& entry : fs::directory_iterator(SHAPES_FOLDER)) {
-        std::string str;
-        MyFile::ToString(entry.path().string(), &str);
-        shapesSrcCode.push_back(str);
+        // get source code
+        std::string srcCode;
+        MyFile::ToString(entry.path().string(), &srcCode);
+        shapesSrcCode.push_back(srcCode);
+        // create thumbnail
+        unsigned int texID = thumbnailFactory.createTexture(ActionType::SHAPE, srcCode);
+        // key bindings
+        m_keyBindings.addAction({
+            "Shape " + MyString::FileName(entry.path().string()),
+            texID,
+            ActionType::SHAPE,
+            i
+        });
+        i++;
     }
     // Set Shape-Layout Array2D size and SVGShape-Layout size and set layout key bindings
     size_t nbLayoutsFiles = 0;
     for (const auto& entry : fs::directory_iterator(LAYOUTS_FOLDER)) {
         m_keyBindings.addAction({
             "Layout " + MyString::FileName(entry.path().string()),
+            (unsigned int)-1,
             ActionType::LAYOUT,
             nbLayoutsFiles
         });
@@ -95,6 +108,7 @@ ConfigManager::ConfigManager() {
     for (const auto& entry : fs::directory_iterator(STANDALONE_FOLDER)) {
         m_keyBindings.addAction({
             MyString::FileName(entry.path().string()),
+            (unsigned int)-1,
             ActionType::STANDALONE,
             nbStandaloneConfigs
         });

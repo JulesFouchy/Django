@@ -25,7 +25,7 @@ private:
 	SDL_Scancode findFirstFromRight(std::vector<SDL_Scancode> row);
 
 	void ImGui_KeyboardRow(const std::vector<SDL_Scancode>& row, float indent);
-	bool ImGui_KeyboardKey(SDL_Scancode scancode, bool hasAnActionBound);
+	bool ImGui_KeyboardKey(SDL_Scancode scancode, unsigned int textureID, bool hasAnActionBound);
 
 private:
 	std::list<ActionBinding> m_allActionsOwner; // don't use a vector because all our pointers are invalidated when memory is reallocated

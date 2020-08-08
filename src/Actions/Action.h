@@ -11,11 +11,12 @@ enum class ActionType {
 
 struct Action {
 	std::string name;
+	unsigned int thumbnailTextureID = -1;
 	ActionType type;
 	size_t index;
 
-	Action(const std::string& name, ActionType type, size_t index = -1)
-		: name(name), type(type), index(index)
+	Action(const std::string& name, unsigned int thumbnailTextureID, ActionType type, size_t index = -1)
+		: name(name), thumbnailTextureID(thumbnailTextureID), type(type), index(index)
 	{}
 	Action() = default;
 	~Action() = default;
