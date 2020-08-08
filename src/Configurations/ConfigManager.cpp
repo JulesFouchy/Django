@@ -60,9 +60,9 @@ ConfigManager::ConfigManager() {
         std::string srcCode;
         MyFile::ToString(entry.path().string(), &srcCode);
         shapesSrcCode.push_back(srcCode);
-        // create thumbnail
+        // thumbnail
         unsigned int texID = thumbnailFactory.createTexture(ActionType::SHAPE, srcCode);
-        // key bindings
+        // key binding
         m_keyBindings.addAction({
             "Shape " + MyString::FileName(entry.path().string()),
             texID,
@@ -74,12 +74,6 @@ ConfigManager::ConfigManager() {
     // Set Shape-Layout Array2D size and SVGShape-Layout size and set layout key bindings
     size_t nbLayoutsFiles = 0;
     for (const auto& entry : fs::directory_iterator(LAYOUTS_FOLDER)) {
-        m_keyBindings.addAction({
-            "Layout " + MyString::FileName(entry.path().string()),
-            (unsigned int)-1,
-            ActionType::LAYOUT,
-            nbLayoutsFiles
-        });
         nbLayoutsFiles++;
     }
     m_shapeLayoutConfigs.setSize(nbShapesFiles, nbLayoutsFiles);
@@ -89,6 +83,15 @@ ConfigManager::ConfigManager() {
     for (const auto& entry : fs::directory_iterator(LAYOUTS_FOLDER)) {
         std::string layoutSrc;
         MyFile::ToString(entry.path().string(), &layoutSrc);
+        // thumbnail
+        unsigned int texID = thumbnailFactory.createTexture(ActionType::LAYOUT, randSrc + layoutSrc);
+        // key binding
+        m_keyBindings.addAction({
+            "Layout " + MyString::FileName(entry.path().string()),
+            texID,
+            ActionType::LAYOUT,
+            y
+        });
         size_t x = 0;
         // Shapes
         for (const std::string& shapeSrc : shapesSrcCode) {
@@ -129,7 +132,7 @@ ConfigManager::ConfigManager() {
         );
         // thumbnail
         unsigned int texID = thumbnailFactory.createTexture(ActionType::STANDALONE, randSrc + src);
-        // key bindings
+        // key binding
         m_keyBindings.addAction({
             MyString::FileName(entry.path().string()),
             texID,

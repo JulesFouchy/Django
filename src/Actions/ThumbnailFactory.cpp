@@ -15,8 +15,10 @@ ThumbnailFactory::ThumbnailFactory()
 	: m_positionsSSBO(SSBO_BINDING, GL_DYNAMIC_DRAW)
 {
     // Read compute shader templates
-    MyFile::ToString("internal-shaders/thumbnailTemplate_Shape.comp",      &m_shapeTemplateSrc);
-    MyFile::ToString("internal-shaders/thumbnailTemplate_Standalone.comp", &m_standaloneTemplateSrc);
+    MyFile::ToString("internal-shaders/thumbnailTemplate_Shape.comp",         &m_shapeTemplateSrc);
+    MyFile::ToString("internal-shaders/thumbnailTemplate_Layout_before.comp", &m_layoutBeforeTemplateSrc);
+    MyFile::ToString("internal-shaders/thumbnailTemplate_Layout_after.comp",  &m_layoutAfterTemplateSrc);
+    MyFile::ToString("internal-shaders/thumbnailTemplate_Standalone.comp",    &m_standaloneTemplateSrc);
 	// Render pipeline
 	m_renderPipeline.addShader(ShaderType::Vertex,   "internal-shaders/configThumbnail.vert");
 	m_renderPipeline.addShader(ShaderType::Fragment, "internal-shaders/configThumbnail.frag");
@@ -61,6 +63,7 @@ unsigned int ThumbnailFactory::createTexture(ActionType actionType, const std::s
         case ActionType::SVG_SHAPE:
             break;
         case ActionType::LAYOUT:
+            createAndApplyComputeShader("#version 430\n" + m_layoutBeforeTemplateSrc + computeShaderCode + m_layoutAfterTemplateSrc);
             break;
         case ActionType::STANDALONE:
             createAndApplyComputeShader("#version 430\n" + computeShaderCode + m_standaloneTemplateSrc);

@@ -27,5 +27,7 @@ private:
 	unsigned int m_vboID;
 
 	std::string m_shapeTemplateSrc;
+	std::string m_layoutBeforeTemplateSrc;
+	std::string m_layoutAfterTemplateSrc;
 	std::string m_standaloneTemplateSrc;
 };
