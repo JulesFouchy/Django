@@ -236,13 +236,13 @@ void KeyBindings::ImGui() {
 				ImGui::Text("Configurations without bindings : ");
 				b = true;
 			}
-			Action& action = it->second->action;
+			ActionBinding* actionBinding = it->second;
 			float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
-			if (action.thumbnailTextureID != -1) {
-				ImGui_KeyboardKey(SDL_SCANCODE_UNKNOWN, action.thumbnailTextureID, false, false);
+			if (actionBinding->action.thumbnailTextureID != -1) {
+				ImGui_DragNDropKey(SDL_SCANCODE_UNKNOWN, actionBinding);
 			}
 			else {
-				ImGui::TextDisabled(action.name.c_str());
+				ImGui::TextDisabled(actionBinding->action.name.c_str());
 			}
 			float last_button_x2 = ImGui::GetItemRectMax().x;
 			float next_button_x2 = last_button_x2 + ImGui::GetStyle().ItemSpacing.x + KEY_SIZE;
