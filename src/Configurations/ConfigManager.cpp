@@ -109,7 +109,8 @@ ConfigManager::ConfigManager() {
             VERSION + "\n" +
             svgTemplate + "\n" +
             randSrc + "\n" +
-            layoutSrc
+            layoutSrc + "\n" +
+            layoutTemplate
         );
         y++;
     }
