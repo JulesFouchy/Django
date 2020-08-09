@@ -204,6 +204,9 @@ void KeyBindings::ImGui() {
 }
 
 void KeyBindings::ImGui_KeyboardRow(const std::vector<SDL_Scancode>& row, float indent) {
+	// Get keyboard state
+	const Uint8* keyboardState = SDL_GetKeyboardState(NULL);
+	//
 	ImGui::Indent(indent);
 	for (SDL_Scancode scancode : row) {
 		ImGui::PushID((int)scancode + 333);
@@ -211,7 +214,7 @@ void KeyBindings::ImGui_KeyboardRow(const std::vector<SDL_Scancode>& row, float 
 		auto it = m_boundActions.find(scancode);
 		bool bHasAnActionBound = it != m_boundActions.end();
 		unsigned int textureID = bHasAnActionBound ? it->second->action.thumbnailTextureID : -1;
-		if (ImGui_KeyboardKey(scancode, textureID, bHasAnActionBound))
+		if (ImGui_KeyboardKey(scancode, textureID, bHasAnActionBound, keyboardState[scancode]))
 			ImGui::OpenPopup("Config list");
 		// Config list
 		if (ImGui::BeginPopup("Config list")) {
@@ -232,7 +235,7 @@ void KeyBindings::ImGui_KeyboardRow(const std::vector<SDL_Scancode>& row, float 
 	ImGui::Spacing();
 }
 
-bool KeyBindings::ImGui_KeyboardKey(SDL_Scancode scancode, unsigned int textureID, bool hasAnActionBound) {
+bool KeyBindings::ImGui_KeyboardKey(SDL_Scancode scancode, unsigned int textureID, bool hasAnActionBound, bool isKeyPressed) {
 	//
 	ImGuiStyle& style = ImGui::GetStyle();
 	//
@@ -248,7 +251,7 @@ bool KeyBindings::ImGui_KeyboardKey(SDL_Scancode scancode, unsigned int textureI
 		//*value_p = atan2f(center.y - mp.y, mp.x - center.x);
 	}
 
-	ImU32 col32 = ImGui::GetColorU32(is_active ? ImGuiCol_FrameBgActive : is_hovered ? ImGuiCol_FrameBgHovered : hasAnActionBound ? ImGuiCol_Border : ImGuiCol_FrameBg);
+	ImU32 col32 = ImGui::GetColorU32(is_active || isKeyPressed ? ImGuiCol_FrameBgActive : is_hovered ? ImGuiCol_FrameBgHovered : hasAnActionBound ? ImGuiCol_Border : ImGuiCol_FrameBg);
 	ImU32 col32line = ImGui::GetColorU32(ImGuiCol_SliderGrabActive);
 	ImU32 col32text = ImGui::GetColorU32(ImGuiCol_Text);
 	ImDrawList* draw_list = ImGui::GetWindowDrawList();
@@ -256,6 +259,8 @@ bool KeyBindings::ImGui_KeyboardKey(SDL_Scancode scancode, unsigned int textureI
 	ImVec2 pMax = ImVec2(p.x + keySize, p.y + keySize);
 	float rounding = 10.0f;
 	if (textureID != -1) {
+		if (is_active || isKeyPressed)
+			draw_list->AddRectFilled(p, pMax, ImGui::GetColorU32(ImGuiCol_FrameBgActive), rounding);
 		draw_list->AddImageRounded((ImTextureID)textureID, p, pMax, ImVec2(0, 1), ImVec2(1, 0), col32, rounding);
 	}
 	else {
