@@ -14,7 +14,6 @@ constexpr float SCROLL_SPEED = 0.1f;
 static const std::string VERSION = "#version 430";
 
 static const std::string SHAPES_FOLDER       = "configurations/shapes";
-static const std::string SVG_FOLDER          = "configurations/svgShapes";
 static const std::string LAYOUTS_FOLDER      = "configurations/layouts";
 static const std::string STANDALONE_FOLDER   = "configurations/standalones";
 static const std::string SVG_TEMPLATE        = "internal-shaders/configTemplate_SVG.comp";
@@ -34,54 +33,71 @@ ConfigManager::ConfigManager() {
     MyFile::ToString(SVG_TEMPLATE,        &svgTemplate);
     MyFile::ToString(LAYOUT_TEMPLATE,     &layoutTemplate);
     MyFile::ToString(STANDALONE_TEMPLATE, &standaloneTemplate);
-    // SVG shapes
-    size_t i = 0;
-    for (const auto& entry : fs::directory_iterator(SVG_FOLDER)) {
-        m_svgManager.addSVGShape(entry.path().string());
-        // key bindings
-        m_keyBindings.addAction({
-            "SVG " + MyString::FileName(entry.path().string()),
-            (unsigned int)-1,
-            ActionType::SVG_SHAPE,
-            i++
-        });
-    }
-    m_svgManager.uploadAllSVGData();
-    m_svgManager.createAllThumbnails(m_keyBindings.getAllActionBindingsOfType(ActionType::SVG_SHAPE), thumbnailFactory);
-    // Get all shapes source code and set key bindings and thumbnail
+
+    // ----------------------------------
+    //     Shapes (.svg and .comp)
+    // ----------------------------------
+
     size_t nbShapesFiles = 0;
     for (const auto& entry : fs::directory_iterator(SHAPES_FOLDER)) {
-        nbShapesFiles++;
+        if (!MyString::FileExtension(entry.path().string()).compare(".comp"))
+            nbShapesFiles++;
     }
     std::vector<std::string> shapesSrcCode;
     shapesSrcCode.reserve(nbShapesFiles);
-    i = 0;
+    size_t   svgIdx = 0;
+    size_t shapeIdx = 0;
     for (const auto& entry : fs::directory_iterator(SHAPES_FOLDER)) {
-        // get source code
-        std::string srcCode;
-        MyFile::ToString(entry.path().string(), &srcCode);
-        shapesSrcCode.push_back(srcCode);
-        // thumbnail
-        unsigned int texID = thumbnailFactory.createTexture(ActionType::SHAPE, srcCode);
-        // key binding
-        m_keyBindings.addAction({
-            "Shape " + MyString::FileName(entry.path().string()),
-            texID,
-            ActionType::SHAPE,
-            i
-        });
-        i++;
+        const std::string fileExtension = MyString::FileExtension(entry.path().string());
+        // SVG Shapes
+        if (!fileExtension.compare(".svg")) {
+            // add
+            m_svgManager.addSVGShape(entry.path().string());
+            // key binding
+            m_keyBindings.addAction({
+                "Shape " + MyString::FileName(entry.path().string()),
+                (unsigned int)-1,
+                ActionType::SVG_SHAPE,
+                svgIdx++
+            });
+        }
+        // Shapes .comp
+        else if (!fileExtension.compare(".comp")) {
+            // get source code
+            std::string srcCode;
+            MyFile::ToString(entry.path().string(), &srcCode);
+            shapesSrcCode.push_back(srcCode);
+            // thumbnail
+            unsigned int texID = thumbnailFactory.createTexture(ActionType::SHAPE, srcCode);
+            // key binding
+            m_keyBindings.addAction({
+                "Shape " + MyString::FileName(entry.path().string()),
+                texID,
+                ActionType::SHAPE,
+                shapeIdx++
+            });
+        }
+        else {
+            spdlog::warn("Unknown extension for a shape file : '{}'. Can only handle '.svg' and '.comp' !", fileExtension);
+        }
     }
-    // Set Shape-Layout Array2D size and SVGShape-Layout size and set layout key bindings
+    // Finish SVG handling
+    m_svgManager.uploadAllSVGData();
+    m_svgManager.createAllThumbnails(m_keyBindings.getAllActionBindingsOfType(ActionType::SVG_SHAPE), thumbnailFactory);
+
+    // ----------------------------------
+    //             Layouts
+    // ----------------------------------
+
     size_t nbLayoutsFiles = 0;
     for (const auto& entry : fs::directory_iterator(LAYOUTS_FOLDER)) {
         nbLayoutsFiles++;
     }
     m_shapeLayoutConfigs.setSize(nbShapesFiles, nbLayoutsFiles);
     m_svgManager.setNbLayouts(nbLayoutsFiles);
-    // Create all Shape-Layout and SVGShape-Layout shaders
     size_t y = 0;
     for (const auto& entry : fs::directory_iterator(LAYOUTS_FOLDER)) {
+        // get source code
         std::string layoutSrc;
         MyFile::ToString(entry.path().string(), &layoutSrc);
         // thumbnail
@@ -115,17 +131,21 @@ ConfigManager::ConfigManager() {
         );
         y++;
     }
-    // Create all standalone configurations and set key bindings
+
+    // ----------------------------------
+    //             Standalone
+    // ----------------------------------
+
     size_t nbStandaloneConfigs = 0;
     for (const auto& entry : fs::directory_iterator(STANDALONE_FOLDER)) {
         nbStandaloneConfigs++;
     }
     m_standaloneConfigs.resize(nbStandaloneConfigs);
-    i = 0;
+    size_t i = 0;
     for (const auto& entry : fs::directory_iterator(STANDALONE_FOLDER)) {
+        // create from source code
         std::string src;
         MyFile::ToString(entry.path().string(), &src);
-        // config
         m_standaloneConfigs[i].initWithSrcCode(
             VERSION + "\n" +
             randSrc + "\n" +
@@ -139,12 +159,11 @@ ConfigManager::ConfigManager() {
             MyString::FileName(entry.path().string()),
             texID,
             ActionType::STANDALONE,
-            i
+            i++
         });
-        //
-        i++;
     }
-    //
+
+    // Setup Bindings
     m_keyBindings.setupBindings();
 }
 
