@@ -10,14 +10,16 @@ public:
 	const Action* getAction(SDL_Scancode scancode);
 	void addAction(Action action);
 	void addAction(Action action, int type);
-	void setupBindings();
+	void setupBindings(const std::string& presetFilepath);
 	void ImGui();
 	void onKeyUp(SDL_Scancode scancode);
 
 	inline std::unordered_map<std::string, ActionBinding*>& getAllActionBindingsOfType(ActionType type) { return m_allActionsByType[type]; }
 
 private:
+	void resetBindings();
 	void setBinding(ActionBinding* actionBinding, SDL_Scancode scancode);
+	void setupMiscellaneousBindings();
 	void clearAllBindings();
 	void serializeBindings(const std::string& filepath);
 	void readBindingsFrom(const std::string& filepath);

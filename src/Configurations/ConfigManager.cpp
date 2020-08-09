@@ -8,6 +8,7 @@ namespace fs = std::filesystem;
 #include "Helper/String.h"
 #include "Helper/Input.h"
 #include "Helper/Random.h"
+#include "Constants/SettingsFolder.h"
 
 constexpr float SCROLL_SPEED = 0.1f;
 
@@ -178,7 +179,7 @@ ConfigManager::ConfigManager() {
     }
 
     // Setup Bindings
-    m_keyBindings.setupBindings();
+    m_keyBindings.setupBindings(djg::SettingsFolder + "/lastSessionBindings.json");
 }
 
 Configuration& ConfigManager::get() {

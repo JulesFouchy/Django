@@ -48,9 +48,7 @@ private:
 
 KeyBindings::KeyBindings() {
 	addAction(textAction, ActionType_MISCELLANEOUS);
-	setBinding(&m_allActionsOwner.back(), SDL_SCANCODE_RETURN);
 	addAction(rerollRandomAction, ActionType_MISCELLANEOUS);
-	setBinding(&m_allActionsOwner.back(), SDL_SCANCODE_SPACE);
 
 	for (SDL_Scancode key : firstRow)
 		allKeys.push_back(key);
@@ -114,11 +112,15 @@ void KeyBindings::setBinding(ActionBinding* actionBinding, SDL_Scancode scancode
 	m_boundActions[scancode] = actionBinding;
 }
 
-void KeyBindings::setupBindings() {
-	if (MyFile::Exists(djg::SettingsFolder + "/lastSessionBindings.json")) {
-		clearAllBindings();
-		readBindingsFrom(djg::SettingsFolder + "/lastSessionBindings.json");
-	}
+void KeyBindings::resetBindings() {
+	setupBindings("");
+}
+
+void KeyBindings::setupBindings(const std::string& presetFilepath) {
+	clearAllBindings();
+	if (MyFile::Exists(presetFilepath))
+		readBindingsFrom(presetFilepath);
+	setupMiscellaneousBindings();
 	// Layout
 	for (const auto& kv : m_allActionsByType[ActionType::LAYOUT]) {
 		if (!hasBinding(kv.second)) {
@@ -173,6 +175,11 @@ void KeyBindings::clearAllBindings() {
 		setBinding(&actionBinding, SDL_SCANCODE_UNKNOWN);
 }
 
+void KeyBindings::setupMiscellaneousBindings() {
+	setBinding(m_allActionsByType[ActionType_MISCELLANEOUS][textAction.name],         SDL_SCANCODE_RETURN);
+	setBinding(m_allActionsByType[ActionType_MISCELLANEOUS][rerollRandomAction.name], SDL_SCANCODE_SPACE);
+}
+
 bool KeyBindings::hasBinding(const ActionBinding* actionBinding) {
 	return actionBinding->scancode != SDL_SCANCODE_UNKNOWN;
 }
@@ -211,6 +218,8 @@ void KeyBindings::ImGui() {
 			ImGui::TextDisabled(it->second->action.name.c_str());
 		}
 	}
+	if (ImGui::Button("Reset bindings"))
+		resetBindings();
 }
 
 void KeyBindings::ImGui_KeyboardRow(const std::vector<SDL_Scancode>& row, float indent) {
