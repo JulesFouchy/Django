@@ -4,6 +4,7 @@ bin/
 build/
 
 *.ini
-settings/lastSession.json
 
 settings/lastSessionBindings.json
+
+settings/lastSessionSettings.json

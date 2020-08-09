@@ -23,5 +23,5 @@ std::string SettingsManager::settingsFolder() {
 	return MyFile::RootDir + "/settings";
 }
 std::string SettingsManager::lastSessionFilePath() {
-	return settingsFolder() + "/lastSession.json";
+	return settingsFolder() + "/lastSessionSettings.json";
 }
