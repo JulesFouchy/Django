@@ -14,6 +14,8 @@ public:
 	void ImGui();
 	void onKeyUp(SDL_Scancode scancode);
 
+	inline std::unordered_map<std::string, ActionBinding*>& getAllActionBindingsOfType(ActionType type) { return m_allActionsByType[type]; }
+
 private:
 	void setBinding(ActionBinding* actionBinding, SDL_Scancode scancode);
 	void clearAllBindings();

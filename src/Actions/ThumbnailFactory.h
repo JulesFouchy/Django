@@ -5,6 +5,7 @@
 #include "OpenGL/ShaderPipeline.h"
 #include "OpenGL/SSBO.h"
 #include "OpenGL/DrawOnTextureFramebuffer.h"
+#include "OpenGL/ComputeShader.h"
 
 class ThumbnailFactory {
 public:
@@ -12,8 +13,9 @@ public:
 	~ThumbnailFactory();
 
 	unsigned int createTexture(ActionType actionType, const std::string& computeShaderCode);
+	unsigned int createTextureForSVG(unsigned int nbCurves, unsigned int offsetInSsbo);
 
-public:
+private:
 	static unsigned int genTexture();
 	void drawOnTexture(unsigned int texID);
 	void saveTexture(unsigned int texID, const std::string& filepath);
@@ -22,6 +24,7 @@ public:
 private:
 	ShaderPipeline m_renderPipeline;
 	SSBO m_positionsSSBO;
+	ComputeShader m_svgComputeShader;
 	DrawOnTextureFramebuffer m_framebuffer;
 	unsigned int m_vaoID;
 	unsigned int m_vboID;

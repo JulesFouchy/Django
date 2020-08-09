@@ -1,13 +1,12 @@
 #include "ThumbnailFactory.h"
 
-#include "OpenGL/ComputeShader.h"
 #include "stb_image/stb_image_write.h"
 #include "Helper/File.h"
 #include "Configurations/ConfigParams.h"
 #include "Configurations/RandomParams.h"
 
 static constexpr int THUMBNAIL_SIZE = 256;
-static constexpr int NB_PARTICLES = 500;
+static constexpr int NB_PARTICLES = 1500;
 static constexpr float RADIUS = 0.03f;
 static constexpr int SSBO_BINDING = 4;
 
@@ -19,6 +18,11 @@ ThumbnailFactory::ThumbnailFactory()
     MyFile::ToString("internal-shaders/thumbnailTemplate_Layout_before.comp", &m_layoutBeforeTemplateSrc);
     MyFile::ToString("internal-shaders/thumbnailTemplate_Layout_after.comp",  &m_layoutAfterTemplateSrc);
     MyFile::ToString("internal-shaders/thumbnailTemplate_Standalone.comp",    &m_standaloneTemplateSrc);
+    // Create SVG compute shader (it's the same shader for every SVG, so we can create it upfront)
+    std::string svgSrc;
+    MyFile::ToString("internal-shaders/thumbnailTemplate_SVG.comp", &svgSrc);
+    svgSrc += m_shapeTemplateSrc;
+    m_svgComputeShader.setSrcCode(svgSrc);
 	// Render pipeline
 	m_renderPipeline.addShader(ShaderType::Vertex,   "internal-shaders/configThumbnail.vert");
 	m_renderPipeline.addShader(ShaderType::Fragment, "internal-shaders/configThumbnail.frag");
@@ -60,8 +64,6 @@ unsigned int ThumbnailFactory::createTexture(ActionType actionType, const std::s
         case ActionType::SHAPE:
             createAndApplyComputeShader("#version 430\n" + computeShaderCode + m_shapeTemplateSrc);
             break;
-        case ActionType::SVG_SHAPE:
-            break;
         case ActionType::LAYOUT:
             createAndApplyComputeShader("#version 430\n" + m_layoutBeforeTemplateSrc + computeShaderCode + m_layoutAfterTemplateSrc);
             break;
@@ -69,12 +71,25 @@ unsigned int ThumbnailFactory::createTexture(ActionType actionType, const std::s
             createAndApplyComputeShader("#version 430\n" + computeShaderCode + m_standaloneTemplateSrc);
             break;
         case ActionType::TEXT:
-            break;
         case ActionType::REROLL_RANDOM:
-            break;
+        case ActionType::SVG_SHAPE:
         default:
-            break;
+            assert(false && "You shouldn't have called this function for this type of action !");
+            GLCall(glDeleteTextures(1, &texID));
+            return -1;
     }
+    drawOnTexture(texID);
+    return texID;
+}
+
+unsigned int ThumbnailFactory::createTextureForSVG(unsigned int nbCurves, unsigned int offsetInSsbo) {
+    unsigned int texID = genTexture();
+    m_svgComputeShader.get().bind();
+    m_svgComputeShader.get().setUniform1i("u_nbCurves", nbCurves);
+    m_svgComputeShader.get().setUniform1i("u_offsetInSsbo", offsetInSsbo);
+    m_svgComputeShader.get().setUniform1i("u_NbOfParticles", NB_PARTICLES);
+    m_svgComputeShader.get().setUniform1f("u_aspectRatio", 1.0f);
+    m_svgComputeShader.compute(NB_PARTICLES);
     drawOnTexture(texID);
     return texID;
 }

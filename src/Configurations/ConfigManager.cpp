@@ -34,7 +34,7 @@ ConfigManager::ConfigManager() {
     MyFile::ToString(SVG_TEMPLATE,        &svgTemplate);
     MyFile::ToString(LAYOUT_TEMPLATE,     &layoutTemplate);
     MyFile::ToString(STANDALONE_TEMPLATE, &standaloneTemplate);
-    // Create all SVG shapes and set key bindings and thumbnails
+    // SVG shapes
     size_t i = 0;
     for (const auto& entry : fs::directory_iterator(SVG_FOLDER)) {
         m_svgManager.addSVGShape(entry.path().string());
@@ -47,6 +47,7 @@ ConfigManager::ConfigManager() {
         });
     }
     m_svgManager.uploadAllSVGData();
+    m_svgManager.createAllThumbnails(m_keyBindings.getAllActionBindingsOfType(ActionType::SVG_SHAPE), thumbnailFactory);
     // Get all shapes source code and set key bindings and thumbnail
     size_t nbShapesFiles = 0;
     for (const auto& entry : fs::directory_iterator(SHAPES_FOLDER)) {

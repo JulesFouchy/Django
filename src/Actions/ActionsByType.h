@@ -1,23 +1,12 @@
 #pragma once
 
 #include "Action.h"
+#include "ActionBinding.h"
 
 static constexpr size_t nbActionTypes = 5;
 constexpr int ActionType_MISCELLANEOUS = 4;
 
 class ActionsByTypeIterator;
-
-struct ActionBinding {
-	Action action;
-	SDL_Scancode scancode;
-
-	ActionBinding::ActionBinding(Action action, SDL_Scancode scancode)
-		: action(action), scancode(scancode)
-	{}	
-	ActionBinding::ActionBinding(Action action)
-		: action(action), scancode(SDL_SCANCODE_UNKNOWN)
-	{}
-};
 
 class ActionsByType {
 	friend class ActionsByTypeIterator;

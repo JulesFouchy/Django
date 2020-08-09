@@ -1,5 +1,7 @@
 #include "ConfigSVGManager.h"
 
+#include "Actions/ThumbnailFactory.h"
+#include "Actions/ActionBinding.h"
 #include <nanosvg/nanosvg.h>
 
 ConfigSVGManager::ConfigSVGManager()
@@ -47,6 +49,16 @@ void ConfigSVGManager::addSVGShape(const std::string& svgFilepath) {
 	m_svgPositionsInSsbo.back().offsetInSsbo = m_previousDataSize / 8;
 	//
 	m_previousDataSize = m_data.size();
+}
+
+void ConfigSVGManager::createAllThumbnails(std::unordered_map<std::string, ActionBinding*>& svgActionBindings, ThumbnailFactory& thumbnailFactory) {
+	for (auto& kv : svgActionBindings) {
+		size_t idx = kv.second->action.index;
+		kv.second->action.thumbnailTextureID = thumbnailFactory.createTextureForSVG(
+			m_svgPositionsInSsbo[idx].nbCurves,
+			m_svgPositionsInSsbo[idx].offsetInSsbo
+		);
+	}
 }
 
 void ConfigSVGManager::uploadAllSVGData() {

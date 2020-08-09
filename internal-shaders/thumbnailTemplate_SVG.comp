@@ -1,0 +1,30 @@
+#version 430
+struct Bezier {
+    vec2 p1;
+    vec2 p2;
+    vec2 p3;
+    vec2 p4;
+};
+
+uniform int u_nbCurves;
+uniform int u_offsetInSsbo;
+
+layout(std430, binding=3) restrict readonly buffer bezier{
+   Bezier curves[];
+};
+
+uniform int u_NbOfParticles;
+uniform float u_aspectRatio;
+
+vec2 drawBezier(float t, Bezier bezier) {
+    return      (1-t)*(1-t)*(1-t) * bezier.p1
+         + 3. * (1-t)*(1-t)*t     * bezier.p2
+         + 3. * (1-t)*t*t         * bezier.p3
+         +      t*t*t             * bezier.p4;
+}
+
+vec2 shape(float t, vec2 center, float radius, float rotation) {
+	uint id = uint(floor(t * u_nbCurves));
+         t  =      fract(t * u_nbCurves);
+    return center + radius * drawBezier(t, curves[id + u_offsetInSsbo]);
+}
