@@ -316,7 +316,7 @@ void KeyBindings::ImGui_DragNDropKey(SDL_Scancode scancode, ActionBinding* actio
 		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
 		{
 			ImGui::SetDragDropPayload("KEYBOARD_KEY", &actionBinding, sizeof(ActionBinding*));
-			ImGui_KeyboardKey(scancode, textureID, (bool)actionBinding, false); // Preview
+			ImGui_KeyboardKey(SDL_SCANCODE_UNKNOWN, textureID, (bool)actionBinding, false); // Preview
 			ImGui::EndDragDropSource();
 		}
 	}
