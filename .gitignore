@@ -4,8 +4,3 @@ bin/
 build/
 
 *.ini
-
-settings/lastSession.json
-
-*.djgPhysics.json
-settings/

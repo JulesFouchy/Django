@@ -1,0 +1,109 @@
+{
+    "value0": [
+        {
+            "name": "Text",
+            "type": 4,
+            "scancode": 40
+        },
+        {
+            "name": "Shape spiral",
+            "type": 0,
+            "scancode": 24
+        },
+        {
+            "name": "SVG dessin",
+            "type": 1,
+            "scancode": 12
+        },
+        {
+            "name": "Shape polygon",
+            "type": 0,
+            "scancode": 28
+        },
+        {
+            "name": "Reroll random",
+            "type": 5,
+            "scancode": 44
+        },
+        {
+            "name": "Shape star",
+            "type": 0,
+            "scancode": 26
+        },
+        {
+            "name": "Shape childishStar",
+            "type": 0,
+            "scancode": 21
+        },
+        {
+            "name": "SVG butterfly",
+            "type": 1,
+            "scancode": 19
+        },
+        {
+            "name": "SVG drawing",
+            "type": 1,
+            "scancode": 47
+        },
+        {
+            "name": "SVG disney",
+            "type": 1,
+            "scancode": 48
+        },
+        {
+            "name": "Shape heart",
+            "type": 0,
+            "scancode": 23
+        },
+        {
+            "name": "Random",
+            "type": 3,
+            "scancode": 29
+        },
+        {
+            "name": "Square Filled",
+            "type": 3,
+            "scancode": 27
+        },
+        {
+            "name": "Hilbert Curve",
+            "type": 3,
+            "scancode": 25
+        },
+        {
+            "name": "Fill Screen",
+            "type": 3,
+            "scancode": 6
+        },
+        {
+            "name": "Hilbert Curve 2",
+            "type": 3,
+            "scancode": 5
+        },
+        {
+            "name": "Layout One Centered",
+            "type": 2,
+            "scancode": 4
+        },
+        {
+            "name": "Layout Random",
+            "type": 2,
+            "scancode": 22
+        },
+        {
+            "name": "SVG dessin-1",
+            "type": 1,
+            "scancode": 49
+        },
+        {
+            "name": "Shape circle",
+            "type": 0,
+            "scancode": 20
+        },
+        {
+            "name": "SVG 0410a6ceee93079243a1a0a0be387622",
+            "type": 1,
+            "scancode": 8
+        }
+    ]
+}

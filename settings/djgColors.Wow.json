@@ -1,0 +1,18 @@
+{
+    "value0": {
+        "bgColor.r": 0.0,
+        "bgColor.g": 0.02825832925736904,
+        "bgColor.b": 0.24019604921340943,
+        "bColorModeHueGradient": false,
+        "particlesHueStart": 0.0,
+        "particlesHueEnd": 360.0,
+        "particleSaturation": 80.0,
+        "particleValue": 80.0,
+        "particleColorStart.r": 1.0,
+        "particleColorStart.g": 0.8578431606292725,
+        "particleColorStart.b": 0.9252980947494507,
+        "particleColorEnd.r": 1.0,
+        "particleColorEnd.g": 0.44117671251296999,
+        "particleColorEnd.b": 0.0
+    }
+}
