@@ -12,7 +12,7 @@ public:
 	const Action* getAction(SDL_Scancode scancode);
 	void addAction(Action action);
 	void addAction(Action action, int type);
-	void setupBindings(const std::string& presetFilepath);
+	void setupBindings(const std::string& presetFilepath, bool clearExistingBndings = true);
 	void ImGui();
 	void onKeyUp(SDL_Scancode scancode);
 

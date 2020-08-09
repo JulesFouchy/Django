@@ -131,8 +131,9 @@ void KeyBindings::resetBindings() {
 	setupBindings("");
 }
 
-void KeyBindings::setupBindings(const std::string& presetFilepath) {
-	clearAllBindings();
+void KeyBindings::setupBindings(const std::string& presetFilepath, bool clearExistingBndings) {
+	if (clearExistingBndings)
+		clearAllBindings();
 	if (MyFile::Exists(presetFilepath))
 		readBindingsFrom(presetFilepath);
 	setupMiscellaneousBindings();
@@ -234,6 +235,10 @@ void KeyBindings::ImGui() {
 			if (!b) {
 				ImGui::Separator();
 				ImGui::Text("Configurations without bindings : ");
+				ImGui::SameLine();
+				if (ImGui::Button("Auto-distribute them")) {
+					setupBindings("", false);
+				}
 				b = true;
 			}
 			ActionBinding* actionBinding = it->second;
