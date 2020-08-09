@@ -72,7 +72,8 @@ KeyBindings::~KeyBindings() {
 }
 
 void KeyBindings::onKeyUp(SDL_Scancode scancode) {
-	m_keyReleasedLastDate[scancode] = SDL_GetTicks();
+	if (!ImGui::GetIO().WantTextInput)
+		m_keyReleasedLastDate[scancode] = SDL_GetTicks();
 }
 
 const Action* KeyBindings::getAction(SDL_Scancode scancode) {
@@ -205,21 +206,25 @@ SDL_Scancode KeyBindings::findFirstFromRight(std::vector<SDL_Scancode> row) {
 }
 
 void KeyBindings::ImGui() {
+	// Keyboard
 	ImGui_KeyboardRow(firstRow,  0.0f);
 	ImGui_KeyboardRow(secondRow, keyOffsetProp * keySize);
 	ImGui_KeyboardRow(thirdRow,  keyOffsetProp * keySize * 2.0f);
+	// List of configurations without a binding
 	bool b = false;
 	for (auto it = m_allActionsByType.begin(); it != m_allActionsByType.end(); ++it) {
 		if (!hasBinding(it->second)) {
 			if (!b) {
+				ImGui::Separator();
 				ImGui::Text("Configurations without bindings : ");
 				b = true;
 			}
 			ImGui::TextDisabled(it->second->action.name.c_str());
 		}
 	}
-	if (ImGui::Button("Reset bindings"))
-		resetBindings();
+	// Presets
+	ImGui::Separator();
+	m_presets.ImGui(*this);
 }
 
 void KeyBindings::ImGui_KeyboardRow(const std::vector<SDL_Scancode>& row, float indent) {
@@ -233,7 +238,7 @@ void KeyBindings::ImGui_KeyboardRow(const std::vector<SDL_Scancode>& row, float 
 		auto it = m_boundActions.find(scancode);
 		bool bHasAnActionBound = it != m_boundActions.end();
 		unsigned int textureID = bHasAnActionBound ? it->second->action.thumbnailTextureID : -1;
-		if (ImGui_KeyboardKey(scancode, textureID, bHasAnActionBound, keyboardState[scancode]))
+		if (ImGui_KeyboardKey(scancode, textureID, bHasAnActionBound, !ImGui::GetIO().WantTextInput && keyboardState[scancode]))
 			ImGui::OpenPopup("Config list");
 		// Config list
 		if (ImGui::BeginPopup("Config list")) {
@@ -242,6 +247,7 @@ void KeyBindings::ImGui_KeyboardRow(const std::vector<SDL_Scancode>& row, float 
 				const Action& action = it->second->action;
 				if (ImGui::Selectable(action.name.c_str(), scancode == cfgScancode)) {
 					setBinding(it->second, scancode);
+					m_presets.setPlaceholderPresetName();
 				}
 			}
 			ImGui::EndPopup();

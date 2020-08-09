@@ -1,8 +1,10 @@
 #pragma once
 
 #include "ActionsByType.h"
+#include "BindingsPresets.h"
 
 class KeyBindings {
+	friend class BindingsPresets;
 public:
 	KeyBindings();
 	~KeyBindings();
@@ -37,6 +39,7 @@ private:
 	ActionsByType m_allActionsByType;
 	std::unordered_map<int, ActionBinding*> m_boundActions;
 	Uint32* m_keyReleasedLastDate;
+	BindingsPresets m_presets;
 	size_t nextAvailableKeyIdx = 0;
 	std::vector<SDL_Scancode> allKeys;
 	std::vector<SDL_Scancode> firstRow = {
