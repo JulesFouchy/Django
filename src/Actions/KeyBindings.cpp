@@ -8,8 +8,9 @@
 
 #include "Constants/SettingsFolder.h"
 
-static constexpr float keySize = 55.0f;
-static constexpr float keyOffsetProp = 0.2f;
+static constexpr float KEY_SIZE = 55.0f;
+static constexpr float KEY_OFFSET_PROP = 0.2f;
+static constexpr float KEY_ROUNDING = 10.0f;
 
 static const Action textAction(
 	"Text",
@@ -208,20 +209,38 @@ SDL_Scancode KeyBindings::findFirstFromRight(std::vector<SDL_Scancode> row) {
 void KeyBindings::ImGui() {
 	// Keyboard
 	ImGui_KeyboardRow(firstRow,  0.0f);
-	ImGui_KeyboardRow(secondRow, keyOffsetProp * keySize);
-	ImGui_KeyboardRow(thirdRow,  keyOffsetProp * keySize * 2.0f);
+	ImGui_KeyboardRow(secondRow, KEY_OFFSET_PROP * KEY_SIZE);
+	ImGui_KeyboardRow(thirdRow,  KEY_OFFSET_PROP * KEY_SIZE * 2.0f);
+	ImGui::NewLine();
 	// List of configurations without a binding
 	bool b = false;
+	bool bSameLine = false;
 	for (auto it = m_allActionsByType.begin(); it != m_allActionsByType.end(); ++it) {
 		if (!hasBinding(it->second)) {
+			bSameLine = false;
 			if (!b) {
 				ImGui::Separator();
 				ImGui::Text("Configurations without bindings : ");
 				b = true;
 			}
-			ImGui::TextDisabled(it->second->action.name.c_str());
+			Action& action = it->second->action;
+			float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
+			if (action.thumbnailTextureID != -1) {
+				ImGui_KeyboardKey(SDL_SCANCODE_UNKNOWN, action.thumbnailTextureID, false, false);
+			}
+			else {
+				ImGui::TextDisabled(action.name.c_str());
+			}
+			float last_button_x2 = ImGui::GetItemRectMax().x;
+			float next_button_x2 = last_button_x2 + ImGui::GetStyle().ItemSpacing.x + KEY_SIZE;
+			if (next_button_x2 < window_visible_x2) {
+				ImGui::SameLine();
+				bSameLine = true;
+			}
 		}
 	}
+	if (bSameLine)
+		ImGui::NewLine(); // cancel the last SameLine that wasn't used
 	// Presets
 	ImGui::Separator();
 	m_presets.ImGui(*this);
@@ -267,22 +286,22 @@ bool KeyBindings::ImGui_KeyboardKey(SDL_Scancode scancode, unsigned int textureI
 	ImVec2 p = ImGui::GetCursorScreenPos();
 	// Detect clic
 	ImGui::PushID((int)scancode+1294);
-	ImGui::InvisibleButton("", ImVec2(keySize, keySize));
+	ImGui::InvisibleButton("", ImVec2(KEY_SIZE, KEY_SIZE));
 	bool is_active = ImGui::IsItemActive();
 	bool is_hovered = ImGui::IsItemHovered();
 
 	if (is_active) {
-		onKeyUp(scancode);
+		// onKeyUp(scancode);
 	}
 	// Color fade when key released
 	ImU32 col32;
 	ImVec4 backgroundColor = style.Colors[hasAnActionBound ? (textureID != -1 ? ImGuiCol_WindowBg : ImGuiCol_Border) : ImGuiCol_FrameBg];
 	static constexpr float ttl = 0.3f; // in seconds
 	float t = (SDL_GetTicks() - m_keyReleasedLastDate[scancode]) * 0.001f / ttl;
-	bool isKeyActiveRecently = is_active || isKeyPressed || t < 1.0f;
+	bool isKeyActiveRecently = isKeyPressed || t < 1.0f;
 	if (isKeyActiveRecently) {
 		ImVec4 activeColor = style.Colors[ImGuiCol_FrameBgActive];
-		ImVec4 frameActiveColor = is_active || isKeyPressed 
+		ImVec4 frameActiveColor = isKeyPressed 
 			? activeColor
 			: ImVec4(
 				activeColor.x * (1 - t) + backgroundColor.x * t,
@@ -302,17 +321,16 @@ bool KeyBindings::ImGui_KeyboardKey(SDL_Scancode scancode, unsigned int textureI
 	ImU32 col32text = ImGui::GetColorU32(ImGuiCol_Text);
 	ImDrawList* draw_list = ImGui::GetWindowDrawList();
 	float fontSize = 1.5f * draw_list->_Data->FontSize;
-	ImVec2 pMax = ImVec2(p.x + keySize, p.y + keySize);
-	float rounding = 10.0f;
+	ImVec2 pMax = ImVec2(p.x + KEY_SIZE, p.y + KEY_SIZE);
 	if (textureID != -1) {
 		if (isKeyActiveRecently)
-			draw_list->AddRectFilled(p, pMax, col32, rounding);
-		draw_list->AddImageRounded((ImTextureID)textureID, p, pMax, ImVec2(0, 1), ImVec2(1, 0), ImGui::GetColorU32(is_hovered ? ImGuiCol_FrameBgHovered : ImGuiCol_Border), rounding);
+			draw_list->AddRectFilled(p, pMax, col32, KEY_ROUNDING);
+		draw_list->AddImageRounded((ImTextureID)textureID, p, pMax, ImVec2(0, 1), ImVec2(1, 0), ImGui::GetColorU32(is_hovered ? ImGuiCol_FrameBgHovered : ImGuiCol_Border), KEY_ROUNDING);
 	}
 	else {
-		draw_list->AddRectFilled(p, pMax, col32, rounding);
+		draw_list->AddRectFilled(p, pMax, col32, KEY_ROUNDING);
 	}
-	draw_list->AddText(NULL, fontSize, ImVec2(p.x + keySize * 0.5f - fontSize * 0.25f, p.y + keySize * 0.5f - fontSize * 0.45f), col32text, SDL_GetKeyName(SDL_GetKeyFromScancode(scancode)));
+	draw_list->AddText(NULL, fontSize, ImVec2(p.x + KEY_SIZE * 0.5f - fontSize * 0.25f, p.y + KEY_SIZE * 0.5f - fontSize * 0.45f), col32text, SDL_GetKeyName(SDL_GetKeyFromScancode(scancode)));
 
 	ImGui::PopID();
 	return is_active;
