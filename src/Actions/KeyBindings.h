@@ -12,6 +12,7 @@ public:
 	void addAction(Action action, int type);
 	void setupBindings();
 	void ImGui();
+	void onKeyUp(SDL_Scancode scancode);
 
 private:
 	void setBinding(ActionBinding* actionBinding, SDL_Scancode scancode);
@@ -31,7 +32,7 @@ private:
 	std::list<ActionBinding> m_allActionsOwner; // don't use a vector because all our pointers are invalidated when memory is reallocated
 	ActionsByType m_allActionsByType;
 	std::unordered_map<int, ActionBinding*> m_boundActions;
-
+	Uint32* m_keyReleasedLastDate;
 	size_t nextAvailableKeyIdx = 0;
 	std::vector<SDL_Scancode> allKeys;
 	std::vector<SDL_Scancode> firstRow = {

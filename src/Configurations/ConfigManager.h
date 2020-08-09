@@ -29,6 +29,7 @@ public:
 
 	void onWheel(float delta, ParticlesSystem& partSystem, bool bNoStandardScroll);
 	void onKeyPressed(SDL_KeyboardEvent keyEvent, ParticlesSystem& partSystem);
+	inline void onKeyUp(SDL_Scancode scancode) { m_keyBindings.onKeyUp(scancode); }
 
 private:
 	Configuration& get();

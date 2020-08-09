@@ -58,13 +58,23 @@ KeyBindings::KeyBindings() {
 		allKeys.push_back(key);
 	for (SDL_Scancode key : thirdRow)
 		allKeys.push_back(key);
-}
 
+	int nbKeys;
+	SDL_GetKeyboardState(&nbKeys);
+	m_keyReleasedLastDate = new Uint32[nbKeys];
+	for (int i = 0; i < nbKeys; ++i)
+		m_keyReleasedLastDate[i] = 0;
+}
 KeyBindings::~KeyBindings() {
 	serializeBindings(djg::SettingsFolder + "/lastSessionBindings.json");
 	for (ActionBinding action : m_allActionsOwner) {
 		GLCall(glDeleteTextures(1, &action.action.thumbnailTextureID));
 	}
+	delete[] m_keyReleasedLastDate;
+}
+
+void KeyBindings::onKeyUp(SDL_Scancode scancode) {
+	m_keyReleasedLastDate[scancode] = SDL_GetTicks();
 }
 
 const Action* KeyBindings::getAction(SDL_Scancode scancode) {
@@ -247,11 +257,32 @@ bool KeyBindings::ImGui_KeyboardKey(SDL_Scancode scancode, unsigned int textureI
 	bool is_hovered = ImGui::IsItemHovered();
 
 	if (is_active) {
-		//ImVec2 mp = ImGui::GetIO().MousePos;
-		//*value_p = atan2f(center.y - mp.y, mp.x - center.x);
+		onKeyUp(scancode);
 	}
-
-	ImU32 col32 = ImGui::GetColorU32(is_active || isKeyPressed ? ImGuiCol_FrameBgActive : is_hovered ? ImGuiCol_FrameBgHovered : hasAnActionBound ? ImGuiCol_Border : ImGuiCol_FrameBg);
+	// Color fade when key released
+	ImU32 col32;
+	ImVec4 backgroundColor = style.Colors[hasAnActionBound ? (textureID != -1 ? ImGuiCol_WindowBg : ImGuiCol_Border) : ImGuiCol_FrameBg];
+	static constexpr float ttl = 0.3f; // in seconds
+	float t = (SDL_GetTicks() - m_keyReleasedLastDate[scancode]) * 0.001f / ttl;
+	bool isKeyActiveRecently = is_active || isKeyPressed || t < 1.0f;
+	if (isKeyActiveRecently) {
+		ImVec4 activeColor = style.Colors[ImGuiCol_FrameBgActive];
+		ImVec4 frameActiveColor = is_active || isKeyPressed 
+			? activeColor
+			: ImVec4(
+				activeColor.x * (1 - t) + backgroundColor.x * t,
+				activeColor.y * (1 - t) + backgroundColor.y * t,
+				activeColor.z * (1 - t) + backgroundColor.z * t,
+				activeColor.w * (1 - t) + backgroundColor.w * t
+			);
+		frameActiveColor.w *= style.Alpha;
+		col32 = ImGui::ColorConvertFloat4ToU32(frameActiveColor);
+	}
+	else {
+		backgroundColor.w *= style.Alpha;
+		col32 = is_hovered ? ImGui::GetColorU32(ImGuiCol_FrameBgHovered) : ImGui::ColorConvertFloat4ToU32(backgroundColor);
+	}
+	//
 	ImU32 col32line = ImGui::GetColorU32(ImGuiCol_SliderGrabActive);
 	ImU32 col32text = ImGui::GetColorU32(ImGuiCol_Text);
 	ImDrawList* draw_list = ImGui::GetWindowDrawList();
@@ -259,9 +290,9 @@ bool KeyBindings::ImGui_KeyboardKey(SDL_Scancode scancode, unsigned int textureI
 	ImVec2 pMax = ImVec2(p.x + keySize, p.y + keySize);
 	float rounding = 10.0f;
 	if (textureID != -1) {
-		if (is_active || isKeyPressed)
-			draw_list->AddRectFilled(p, pMax, ImGui::GetColorU32(ImGuiCol_FrameBgActive), rounding);
-		draw_list->AddImageRounded((ImTextureID)textureID, p, pMax, ImVec2(0, 1), ImVec2(1, 0), col32, rounding);
+		if (isKeyActiveRecently)
+			draw_list->AddRectFilled(p, pMax, col32, rounding);
+		draw_list->AddImageRounded((ImTextureID)textureID, p, pMax, ImVec2(0, 1), ImVec2(1, 0), ImGui::GetColorU32(is_hovered ? ImGuiCol_FrameBgHovered : ImGuiCol_Border), rounding);
 	}
 	else {
 		draw_list->AddRectFilled(p, pMax, col32, rounding);

@@ -136,7 +136,8 @@ void App::onEvent(const SDL_Event& e) {
 
 	case SDL_KEYUP:
 		if (!ImGui::GetIO().WantTextInput) {
-
+			if (!e.key.keysym.sym == 'h' || !Input::KeyIsDown(SDL_SCANCODE_LCTRL))
+				m_configManager.onKeyUp(e.key.keysym.scancode);
 		}
 		break;
 
