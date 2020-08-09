@@ -283,8 +283,14 @@ void KeyBindings::ImGui_DragNDropKey(SDL_Scancode scancode, ActionBinding* actio
 	bool isKeyPressed = keyboardState[scancode] && !ImGui::GetIO().WantTextInput;
 	// Draw Key
 	ImGui_KeyboardKey(scancode, textureID, (bool)actionBinding, isKeyPressed);
-	// Right-click to delete
 	if (actionBinding) {
+		// Name on hover for Layout actions and actions with no thumbnail
+		if (ImGui::IsItemHovered() && (actionBinding->action.type == ActionType::LAYOUT || actionBinding->action.thumbnailTextureID == -1)) {
+			ImGui::BeginTooltip();
+			ImGui::Text(actionBinding->action.name.c_str());
+			ImGui::EndTooltip();
+		}
+		// Right-click to delete
 		if (ImGui::BeginPopupContextItem("")) {
 			if (ImGui::Button("Remove binding")) {
 				setBinding(actionBinding, SDL_SCANCODE_UNKNOWN);
