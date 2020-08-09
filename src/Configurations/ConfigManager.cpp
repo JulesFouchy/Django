@@ -91,45 +91,52 @@ ConfigManager::ConfigManager() {
 
     size_t nbLayoutsFiles = 0;
     for (const auto& entry : fs::directory_iterator(LAYOUTS_FOLDER)) {
-        nbLayoutsFiles++;
+        if (!MyString::FileExtension(entry.path().string()).compare(".comp"))
+            nbLayoutsFiles++;
     }
     m_shapeLayoutConfigs.setSize(nbShapesFiles, nbLayoutsFiles);
     m_svgManager.setNbLayouts(nbLayoutsFiles);
     size_t y = 0;
     for (const auto& entry : fs::directory_iterator(LAYOUTS_FOLDER)) {
-        // get source code
-        std::string layoutSrc;
-        MyFile::ToString(entry.path().string(), &layoutSrc);
-        // thumbnail
-        unsigned int texID = thumbnailFactory.createTexture(ActionType::LAYOUT, randSrc + layoutSrc);
-        // key binding
-        m_keyBindings.addAction({
-            "Layout " + MyString::FileName(entry.path().string()),
-            texID,
-            ActionType::LAYOUT,
-            y
-        });
-        size_t x = 0;
-        // Shapes
-        for (const std::string& shapeSrc : shapesSrcCode) {
-            m_shapeLayoutConfigs(x, y).initWithSrcCode(
+        const std::string fileExtension = MyString::FileExtension(entry.path().string());
+        if (!fileExtension.compare(".comp")) {
+            // get source code
+            std::string layoutSrc;
+            MyFile::ToString(entry.path().string(), &layoutSrc);
+            // thumbnail
+            unsigned int texID = thumbnailFactory.createTexture(ActionType::LAYOUT, randSrc + layoutSrc);
+            // key binding
+            m_keyBindings.addAction({
+                "Layout " + MyString::FileName(entry.path().string()),
+                texID,
+                ActionType::LAYOUT,
+                y
+            });
+            size_t x = 0;
+            // Shapes
+            for (const std::string& shapeSrc : shapesSrcCode) {
+                m_shapeLayoutConfigs(x, y).initWithSrcCode(
+                    VERSION + "\n" +
+                    shapeSrc + "\n" +
+                    randSrc + "\n" +
+                    layoutSrc + "\n" +
+                    layoutTemplate
+                );
+                x++;
+            }
+            // SVG shapes
+            m_svgManager.pushLayout(
                 VERSION + "\n" +
-                shapeSrc + "\n" +
+                svgTemplate + "\n" +
                 randSrc + "\n" +
                 layoutSrc + "\n" +
                 layoutTemplate
             );
-            x++;
+            y++;
         }
-        // SVG shapes
-        m_svgManager.pushLayout(
-            VERSION + "\n" +
-            svgTemplate + "\n" +
-            randSrc + "\n" +
-            layoutSrc + "\n" +
-            layoutTemplate
-        );
-        y++;
+        else {
+            spdlog::warn("Unknown extension for a layout file : '{}'. Can only handle '.comp' !", fileExtension);
+        }
     }
 
     // ----------------------------------
@@ -138,29 +145,36 @@ ConfigManager::ConfigManager() {
 
     size_t nbStandaloneConfigs = 0;
     for (const auto& entry : fs::directory_iterator(STANDALONE_FOLDER)) {
-        nbStandaloneConfigs++;
+        if (!MyString::FileExtension(entry.path().string()).compare(".comp"))
+            nbStandaloneConfigs++;
     }
     m_standaloneConfigs.resize(nbStandaloneConfigs);
     size_t i = 0;
     for (const auto& entry : fs::directory_iterator(STANDALONE_FOLDER)) {
-        // create from source code
-        std::string src;
-        MyFile::ToString(entry.path().string(), &src);
-        m_standaloneConfigs[i].initWithSrcCode(
-            VERSION + "\n" +
-            randSrc + "\n" +
-            src     + "\n" +
-            standaloneTemplate
-        );
-        // thumbnail
-        unsigned int texID = thumbnailFactory.createTexture(ActionType::STANDALONE, randSrc + src);
-        // key binding
-        m_keyBindings.addAction({
-            MyString::FileName(entry.path().string()),
-            texID,
-            ActionType::STANDALONE,
-            i++
-        });
+        const std::string fileExtension = MyString::FileExtension(entry.path().string());
+        if (!fileExtension.compare(".comp")) {
+            // create from source code
+            std::string src;
+            MyFile::ToString(entry.path().string(), &src);
+            m_standaloneConfigs[i].initWithSrcCode(
+                VERSION + "\n" +
+                randSrc + "\n" +
+                src     + "\n" +
+                standaloneTemplate
+            );
+            // thumbnail
+            unsigned int texID = thumbnailFactory.createTexture(ActionType::STANDALONE, randSrc + src);
+            // key binding
+            m_keyBindings.addAction({
+                MyString::FileName(entry.path().string()),
+                texID,
+                ActionType::STANDALONE,
+                i++
+            });
+        }
+        else {
+            spdlog::warn("Unknown extension for a standalone config file : '{}'. Can only handle '.comp' !", fileExtension);
+        }
     }
 
     // Setup Bindings
