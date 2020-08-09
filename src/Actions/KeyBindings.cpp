@@ -306,6 +306,7 @@ void KeyBindings::ImGui_DragNDropKey(SDL_Scancode scancode, ActionBinding* actio
 		if (ImGui::BeginPopupContextItem("")) {
 			if (ImGui::Button("Remove binding")) {
 				setBinding(actionBinding, SDL_SCANCODE_UNKNOWN);
+				m_presets.setPlaceholderPresetName();
 			}
 			ImGui::EndPopup();
 		}
