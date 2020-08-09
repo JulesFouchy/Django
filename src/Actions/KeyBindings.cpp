@@ -283,6 +283,15 @@ void KeyBindings::ImGui_DragNDropKey(SDL_Scancode scancode, ActionBinding* actio
 	bool isKeyPressed = keyboardState[scancode] && !ImGui::GetIO().WantTextInput;
 	// Draw Key
 	ImGui_KeyboardKey(scancode, textureID, (bool)actionBinding, isKeyPressed);
+	// Right-click to delete
+	if (actionBinding) {
+		if (ImGui::BeginPopupContextItem("")) {
+			if (ImGui::Button("Remove binding")) {
+				setBinding(actionBinding, SDL_SCANCODE_UNKNOWN);
+			}
+			ImGui::EndPopup();
+		}
+	}
 	// Drag'n Drop !
 	if (actionBinding) {
 		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
