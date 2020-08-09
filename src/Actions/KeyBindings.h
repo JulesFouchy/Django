@@ -21,6 +21,7 @@ public:
 private:
 	void resetBindings();
 	void setBinding(ActionBinding* actionBinding, SDL_Scancode scancode);
+	void swapBindings(ActionBinding* actionBinding1, ActionBinding* actionBinding2);
 	void setupMiscellaneousBindings();
 	void clearAllBindings();
 	void serializeBindings(const std::string& filepath);
@@ -32,6 +33,7 @@ private:
 	SDL_Scancode findFirstFromRight(std::vector<SDL_Scancode> row);
 
 	void ImGui_KeyboardRow(const std::vector<SDL_Scancode>& row, float indent);
+	void ImGui_DragNDropKey(SDL_Scancode scancode, ActionBinding* actionBinding = nullptr);
 	bool ImGui_KeyboardKey(SDL_Scancode scancode, unsigned int textureID, bool hasAnActionBound, bool isKeyPressed);
 
 private:

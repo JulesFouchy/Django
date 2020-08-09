@@ -114,6 +114,19 @@ void KeyBindings::setBinding(ActionBinding* actionBinding, SDL_Scancode scancode
 	m_boundActions[scancode] = actionBinding;
 }
 
+void KeyBindings::swapBindings(ActionBinding* actionBinding1, ActionBinding* actionBinding2) {
+	//SDL_Scancode scancode1 = actionBinding1->scancode;
+	//SDL_Scancode scancode2 = actionBinding2->scancode;
+	//setBinding(actionBinding1, scancode2);
+	//setBinding(actionBinding2, scancode1);
+	//setBinding(actionBinding1, scancode2);
+	std::swap(actionBinding1->scancode, actionBinding2->scancode);
+	if (actionBinding1->scancode != SDL_SCANCODE_UNKNOWN)
+		m_boundActions[actionBinding1->scancode] = actionBinding1;
+	if (actionBinding2->scancode != SDL_SCANCODE_UNKNOWN)
+		m_boundActions[actionBinding2->scancode] = actionBinding2;
+}
+
 void KeyBindings::resetBindings() {
 	setupBindings("");
 }
@@ -247,36 +260,51 @@ void KeyBindings::ImGui() {
 }
 
 void KeyBindings::ImGui_KeyboardRow(const std::vector<SDL_Scancode>& row, float indent) {
-	// Get keyboard state
-	const Uint8* keyboardState = SDL_GetKeyboardState(NULL);
-	//
 	ImGui::Indent(indent);
 	for (SDL_Scancode scancode : row) {
 		ImGui::PushID((int)scancode + 333);
-		// Key
-		auto it = m_boundActions.find(scancode);
-		bool bHasAnActionBound = it != m_boundActions.end();
-		unsigned int textureID = bHasAnActionBound ? it->second->action.thumbnailTextureID : -1;
-		if (ImGui_KeyboardKey(scancode, textureID, bHasAnActionBound, !ImGui::GetIO().WantTextInput && keyboardState[scancode]))
-			ImGui::OpenPopup("Config list");
-		// Config list
-		if (ImGui::BeginPopup("Config list")) {
-			for (auto it = m_allActionsByType.begin(); it != m_allActionsByType.end(); ++it) {
-				SDL_Scancode cfgScancode = (SDL_Scancode)it->second->scancode;
-				const Action& action = it->second->action;
-				if (ImGui::Selectable(action.name.c_str(), scancode == cfgScancode)) {
-					setBinding(it->second, scancode);
-					m_presets.setPlaceholderPresetName();
-				}
-			}
-			ImGui::EndPopup();
-		}
-		//
+		ImGui_DragNDropKey(scancode);
 		ImGui::PopID();
 		ImGui::SameLine();
 	}
 	ImGui::NewLine();
 	ImGui::Spacing();
+}
+
+void KeyBindings::ImGui_DragNDropKey(SDL_Scancode scancode, ActionBinding* actionBinding) {
+	// Get key state
+	const Uint8* keyboardState = SDL_GetKeyboardState(NULL);
+	if (!actionBinding) {
+		auto it = m_boundActions.find(scancode);
+		if (it != m_boundActions.end())
+			actionBinding = it->second;
+	}
+	unsigned int textureID = actionBinding ? actionBinding->action.thumbnailTextureID : -1;
+	bool isKeyPressed = keyboardState[scancode] && !ImGui::GetIO().WantTextInput;
+	// Draw Key
+	ImGui_KeyboardKey(scancode, textureID, (bool)actionBinding, isKeyPressed);
+	// Drag'n Drop !
+	if (actionBinding) {
+		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
+		{
+			ImGui::SetDragDropPayload("KEYBOARD_KEY", &actionBinding, sizeof(ActionBinding*));
+			ImGui_KeyboardKey(scancode, textureID, (bool)actionBinding, false); // Preview
+			ImGui::EndDragDropSource();
+		}
+	}
+	if (ImGui::BeginDragDropTarget())
+	{
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("KEYBOARD_KEY"))
+		{
+			IM_ASSERT(payload->DataSize == sizeof(ActionBinding*));
+			if (actionBinding)
+				swapBindings(*((ActionBinding**)payload->Data), actionBinding);
+			else
+				setBinding(*((ActionBinding**)payload->Data), scancode);
+			m_presets.setPlaceholderPresetName();
+		}
+		ImGui::EndDragDropTarget();
+	}
 }
 
 bool KeyBindings::ImGui_KeyboardKey(SDL_Scancode scancode, unsigned int textureID, bool hasAnActionBound, bool isKeyPressed) {
