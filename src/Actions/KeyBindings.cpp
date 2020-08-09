@@ -303,12 +303,14 @@ void KeyBindings::ImGui_DragNDropKey(SDL_Scancode scancode, ActionBinding* actio
 			ImGui::EndTooltip();
 		}
 		// Right-click to delete
-		if (ImGui::BeginPopupContextItem("")) {
-			if (ImGui::Button("Remove binding")) {
-				setBinding(actionBinding, SDL_SCANCODE_UNKNOWN);
-				m_presets.setPlaceholderPresetName();
+		if (scancode != SDL_SCANCODE_UNKNOWN) {
+			if (ImGui::BeginPopupContextItem("")) {
+				if (ImGui::Button("Remove binding")) {
+					setBinding(actionBinding, SDL_SCANCODE_UNKNOWN);
+					m_presets.setPlaceholderPresetName();
+				}
+				ImGui::EndPopup();
 			}
-			ImGui::EndPopup();
 		}
 	}
 	// Drag'n Drop !
