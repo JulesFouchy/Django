@@ -3,6 +3,32 @@
 #include "ActionsByType.h"
 #include "BindingsPresets.h"
 
+struct ActionIdentifier {
+	std::string name;
+	ActionType type;
+
+	ActionIdentifier(const std::string& name, ActionType type)
+		: name(name), type(type)
+	{}
+	ActionIdentifier() = default;
+
+	bool operator==(const ActionIdentifier& o) {
+		return type == o.type && !name.compare(o.name);
+	}
+
+private:
+	//Serialization
+	friend class cereal::access;
+	template <class Archive>
+	void serialize(Archive& archive)
+	{
+		archive(
+			CEREAL_NVP(name),
+			CEREAL_NVP(type)
+		);
+	}
+};
+
 class KeyBindings {
 	friend class BindingsPresets;
 public:
@@ -25,7 +51,7 @@ private:
 	void setupMiscellaneousBindings();
 	void clearAllBindings();
 	void serializeBindings(const std::string& filepath);
-	void readBindingsFrom(const std::string& filepath);
+	std::vector<ActionIdentifier> readBindingsFrom(const std::string& filepath);
 
 	bool hasBinding(const ActionBinding* actionBinding);
 	bool isKeyAvailable(SDL_Scancode scancode);

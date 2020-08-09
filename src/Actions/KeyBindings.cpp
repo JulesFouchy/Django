@@ -24,12 +24,11 @@ static const Action rerollRandomAction(
 );
 
 struct ActionIdentifierAndBinding {
-	std::string name;
-	ActionType type;
+	ActionIdentifier actionIdentifier;
 	SDL_Scancode scancode;
 
 	ActionIdentifierAndBinding(const std::string& name, ActionType type, SDL_Scancode scancode)
-		: name(name), type(type), scancode(scancode)
+		: actionIdentifier(name, type), scancode(scancode)
 	{}
 	ActionIdentifierAndBinding() = default;
 
@@ -40,8 +39,7 @@ private:
 	void serialize(Archive& archive)
 	{
 		archive(
-			CEREAL_NVP(name),
-			CEREAL_NVP(type),
+			CEREAL_NVP(actionIdentifier),
 			CEREAL_NVP(scancode)
 		);
 	}
@@ -134,54 +132,63 @@ void KeyBindings::resetBindings() {
 void KeyBindings::setupBindings(const std::string& presetFilepath, bool clearExistingBndings) {
 	if (clearExistingBndings)
 		clearAllBindings();
+	std::vector<ActionIdentifier> ignoredActions;
 	if (MyFile::Exists(presetFilepath))
-		readBindingsFrom(presetFilepath);
+		ignoredActions = readBindingsFrom(presetFilepath);
 	setupMiscellaneousBindings();
 	// Layout
 	for (const auto& kv : m_allActionsByType[ActionType::LAYOUT]) {
-		if (!hasBinding(kv.second)) {
-			SDL_Scancode scancode = findFirstFromLeft(secondRow);
-			if (scancode != SDL_SCANCODE_UNKNOWN)
-				setBinding(kv.second, scancode);
-			else
-				spdlog::warn("Couldn't give a binding to '{}' layout because there was no more room on second row !", kv.second->action.name);
+		if (std::find(ignoredActions.begin(), ignoredActions.end(), ActionIdentifier(kv.second->action.name, kv.second->action.type)) == ignoredActions.end()) {
+			if (!hasBinding(kv.second)) {
+				SDL_Scancode scancode = findFirstFromLeft(secondRow);
+				if (scancode != SDL_SCANCODE_UNKNOWN)
+					setBinding(kv.second, scancode);
+				else
+					spdlog::warn("Couldn't give a binding to '{}' layout because there was no more room on second row !", kv.second->action.name);
+			}
 		}
 	}
 	// Shape
 	for (const auto& kv : m_allActionsByType[ActionType::SHAPE]) {
-		if (!hasBinding(kv.second)) {
-			SDL_Scancode scancode = findFirstFromLeft(firstRow);
-			if (scancode == SDL_SCANCODE_UNKNOWN)
-				scancode = findFirstFromRight(secondRow);
-			if (scancode != SDL_SCANCODE_UNKNOWN)
-				setBinding(kv.second, scancode);
-			else
-				spdlog::warn("Couldn't give a binding to '{}' shape because there was no more room on first and second row !", kv.second->action.name);
+		if (std::find(ignoredActions.begin(), ignoredActions.end(), ActionIdentifier(kv.second->action.name, kv.second->action.type)) == ignoredActions.end()) {
+			if (!hasBinding(kv.second)) {
+				SDL_Scancode scancode = findFirstFromLeft(firstRow);
+				if (scancode == SDL_SCANCODE_UNKNOWN)
+					scancode = findFirstFromRight(secondRow);
+				if (scancode != SDL_SCANCODE_UNKNOWN)
+					setBinding(kv.second, scancode);
+				else
+					spdlog::warn("Couldn't give a binding to '{}' shape because there was no more room on first and second row !", kv.second->action.name);
+			}
 		}
 	}
 	// SVG Shape
 	for (const auto& kv : m_allActionsByType[ActionType::SVG_SHAPE]) {
-		if (!hasBinding(kv.second)) {
-			SDL_Scancode scancode = findFirstFromLeft(firstRow);
-			if (scancode == SDL_SCANCODE_UNKNOWN)
-				scancode = findFirstFromRight(secondRow);
-			if (scancode != SDL_SCANCODE_UNKNOWN)
-				setBinding(kv.second, scancode);
-			else
-				spdlog::warn("Couldn't give a binding to '{}' svg-shape because there was no more room on first and second row !", kv.second->action.name);
+		if (std::find(ignoredActions.begin(), ignoredActions.end(), ActionIdentifier(kv.second->action.name, kv.second->action.type)) == ignoredActions.end()) {
+			if (!hasBinding(kv.second)) {
+				SDL_Scancode scancode = findFirstFromLeft(firstRow);
+				if (scancode == SDL_SCANCODE_UNKNOWN)
+					scancode = findFirstFromRight(secondRow);
+				if (scancode != SDL_SCANCODE_UNKNOWN)
+					setBinding(kv.second, scancode);
+				else
+					spdlog::warn("Couldn't give a binding to '{}' svg-shape because there was no more room on first and second row !", kv.second->action.name);
+			}
 		}
 	}
 	// Layout
 	for (const auto& kv : m_allActionsByType[ActionType::STANDALONE]) {
-		if (!hasBinding(kv.second)) {
-			SDL_Scancode scancode = findFirstFromLeft(thirdRow);
-			if (scancode == SDL_SCANCODE_UNKNOWN) {
-				scancode = findFirstFromRight(secondRow);
+		if (std::find(ignoredActions.begin(), ignoredActions.end(), ActionIdentifier(kv.second->action.name, kv.second->action.type)) == ignoredActions.end()) {
+			if (!hasBinding(kv.second)) {
+				SDL_Scancode scancode = findFirstFromLeft(thirdRow);
+				if (scancode == SDL_SCANCODE_UNKNOWN) {
+					scancode = findFirstFromRight(secondRow);
+				}
+				if (scancode != SDL_SCANCODE_UNKNOWN)
+					setBinding(kv.second, scancode);
+				else
+					spdlog::warn("Couldn't give a binding to '{}' standalone because there was no more room on third and second row !", kv.second->action.name);
 			}
-			if (scancode != SDL_SCANCODE_UNKNOWN)
-				setBinding(kv.second, scancode);
-			else
-				spdlog::warn("Couldn't give a binding to '{}' standalone because there was no more room on third and second row !", kv.second->action.name);
 		}
 	}
 }
@@ -386,30 +393,38 @@ bool KeyBindings::ImGui_KeyboardKey(SDL_Scancode scancode, unsigned int textureI
 
 void KeyBindings::serializeBindings(const std::string& filepath) {
 	std::vector<ActionIdentifierAndBinding> boundActionsIdentifiers;
-	for (auto& kv : m_boundActions) {
-		boundActionsIdentifiers.emplace_back(kv.second->action.name, kv.second->action.type, (SDL_Scancode)kv.first);
+	std::vector<ActionIdentifier> actionsWithNoBinding;
+	for (const ActionBinding& actionBinding : m_allActionsOwner) {
+		if (actionBinding.scancode != SDL_SCANCODE_UNKNOWN)
+			boundActionsIdentifiers.emplace_back(actionBinding.action.name, actionBinding.action.type, actionBinding.scancode);
+		else
+			actionsWithNoBinding.emplace_back(actionBinding.action.name, actionBinding.action.type);
 	}
 	std::ofstream os(filepath);
 	{
 		cereal::JSONOutputArchive archive(os);
 		archive(
-			boundActionsIdentifiers
+			boundActionsIdentifiers,
+			actionsWithNoBinding
 		);
 	}
 }
 
-void KeyBindings::readBindingsFrom(const std::string& filepath) {
+std::vector<ActionIdentifier> KeyBindings::readBindingsFrom(const std::string& filepath) {
 	std::vector<ActionIdentifierAndBinding> boundActionsIdentifiers;
+	std::vector<ActionIdentifier> actionsWithNoBinding;
 	std::ifstream is(filepath);
 	{
 		cereal::JSONInputArchive archive(is);
 		archive(
-			boundActionsIdentifiers
+			boundActionsIdentifiers,
+			actionsWithNoBinding
 		);
 	}
 	for (const auto& actionIdentifierAndBinding : boundActionsIdentifiers) {
-		if (ActionBinding* actionBinding = m_allActionsByType.tryFind(actionIdentifierAndBinding.name, actionIdentifierAndBinding.type)) {
+		if (ActionBinding* actionBinding = m_allActionsByType.tryFind(actionIdentifierAndBinding.actionIdentifier.name, actionIdentifierAndBinding.actionIdentifier.type)) {
 			setBinding(actionBinding, actionIdentifierAndBinding.scancode);
 		}
 	}
+	return actionsWithNoBinding;
 }

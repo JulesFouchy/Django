@@ -1,109 +1,152 @@
 {
     "value0": [
         {
-            "name": "Text",
-            "type": 4,
+            "actionIdentifier": {
+                "name": "Text",
+                "type": 4
+            },
             "scancode": 40
         },
         {
-            "name": "Shape circle",
-            "type": 0,
-            "scancode": 20
-        },
-        {
-            "name": "Layout One Centered",
-            "type": 2,
-            "scancode": 4
-        },
-        {
-            "name": "Reroll random",
-            "type": 5,
+            "actionIdentifier": {
+                "name": "Reroll random",
+                "type": 5
+            },
             "scancode": 44
         },
         {
-            "name": "Layout Random",
-            "type": 2,
-            "scancode": 22
-        },
-        {
-            "name": "Shape childishStar",
-            "type": 0,
-            "scancode": 26
-        },
-        {
-            "name": "Shape heart",
-            "type": 0,
-            "scancode": 21
-        },
-        {
-            "name": "Shape polygon",
-            "type": 0,
-            "scancode": 23
-        },
-        {
-            "name": "Shape spiral",
-            "type": 0,
-            "scancode": 28
-        },
-        {
-            "name": "Shape butterfly",
-            "type": 1,
+            "actionIdentifier": {
+                "name": "Shape butterfly",
+                "type": 1
+            },
             "scancode": 24
         },
         {
-            "name": "Shape disney",
-            "type": 1,
-            "scancode": 12
+            "actionIdentifier": {
+                "name": "Shape childishStar",
+                "type": 0
+            },
+            "scancode": 8
         },
         {
-            "name": "Shape dessin-1",
-            "type": 1,
+            "actionIdentifier": {
+                "name": "Shape circle",
+                "type": 0
+            },
+            "scancode": 20
+        },
+        {
+            "actionIdentifier": {
+                "name": "Shape dessin-1",
+                "type": 1
+            },
             "scancode": 18
         },
         {
-            "name": "Shape dessin",
-            "type": 1,
+            "actionIdentifier": {
+                "name": "Shape dessin",
+                "type": 1
+            },
             "scancode": 19
         },
         {
-            "name": "Shape drawing",
-            "type": 1,
+            "actionIdentifier": {
+                "name": "Shape disney",
+                "type": 1
+            },
+            "scancode": 12
+        },
+        {
+            "actionIdentifier": {
+                "name": "Shape drawing",
+                "type": 1
+            },
             "scancode": 47
         },
         {
-            "name": "Shape horse",
-            "type": 1,
+            "actionIdentifier": {
+                "name": "Shape heart",
+                "type": 0
+            },
+            "scancode": 28
+        },
+        {
+            "actionIdentifier": {
+                "name": "Shape horse",
+                "type": 1
+            },
             "scancode": 48
         },
         {
-            "name": "Random",
-            "type": 3,
-            "scancode": 29
+            "actionIdentifier": {
+                "name": "Shape polygon",
+                "type": 0
+            },
+            "scancode": 21
         },
         {
-            "name": "Hilbert Curve",
-            "type": 3,
-            "scancode": 25
+            "actionIdentifier": {
+                "name": "Shape spiral",
+                "type": 0
+            },
+            "scancode": 23
         },
         {
-            "name": "Fill Screen",
-            "type": 3,
+            "actionIdentifier": {
+                "name": "Shape star",
+                "type": 0
+            },
+            "scancode": 26
+        },
+        {
+            "actionIdentifier": {
+                "name": "Layout One Centered",
+                "type": 2
+            },
+            "scancode": 4
+        },
+        {
+            "actionIdentifier": {
+                "name": "Layout Random",
+                "type": 2
+            },
+            "scancode": 22
+        },
+        {
+            "actionIdentifier": {
+                "name": "Fill Screen",
+                "type": 3
+            },
             "scancode": 6
         },
         {
-            "name": "Square Filled",
-            "type": 3,
-            "scancode": 27
-        },
-        {
-            "name": "Hilbert Curve 2",
-            "type": 3,
+            "actionIdentifier": {
+                "name": "Hilbert Curve 2",
+                "type": 3
+            },
             "scancode": 5
         },
         {
-            "name": "Shape star",
-            "type": 0,
-            "scancode": 8
+            "actionIdentifier": {
+                "name": "Hilbert Curve",
+                "type": 3
+            },
+            "scancode": 25
+        },
+        {
+            "actionIdentifier": {
+                "name": "Random",
+                "type": 3
+            },
+            "scancode": 29
+        },
+        {
+            "actionIdentifier": {
+                "name": "Square Filled",
+                "type": 3
+            },
+            "scancode": 27
         }
-    ]
+    ],
+    "value1": []
 }
