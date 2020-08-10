@@ -3,13 +3,14 @@
 #include "Particles/ParticlesSystem.h"
 #include "Helper/DisplayInfos.h"
 #include "Helper/File.h"
-#include "Helper/ArrayStringified.h"
 
 ConfigTextGPU::ConfigTextGPU()
-	: m_text("")
+	: m_lettersSSBO(5, GL_DYNAMIC_READ), m_offsetsSSBO(6, GL_DYNAMIC_READ)
 {
-	MyFile::ToString("internal-shaders/textConfigTemplate.comp", &m_srcCodeBase);
-	updateSrcCode();
+	std::string srcCode;
+	MyFile::ToString("internal-shaders/config_Text.comp", &srcCode);
+	m_computeShader.setSrcCode(srcCode);
+	uploadData();
 }
 
 void ConfigTextGPU::applyTo(ParticlesSystem& particlesSystem, const ConfigParams& params, const RandomParams& randParams) {
@@ -17,6 +18,7 @@ void ConfigTextGPU::applyTo(ParticlesSystem& particlesSystem, const ConfigParams
 	//
 	m_computeShader.get().setUniform1i("u_NbOfParticles", particlesSystem.getNbParticles());
 	m_computeShader.get().setUniform1f("u_aspectRatio", DisplayInfos::Ratio());
+	m_computeShader.get().setUniform1i("u_nbLetters", m_letters.size());
 	//
 	m_computeShader.compute(particlesSystem.getNbParticles());
 	m_computeShader.get().unbind();
@@ -26,52 +28,35 @@ bool ConfigTextGPU::onKeyPressed(SDL_Scancode scancode, char keysym) {
 	bool bHandled = false;
 	if (m_bCaptureKeys) {
 		if (scancode == SDL_SCANCODE_BACKSPACE) {
-			if (m_text.size() > 0)
-				m_text.erase(m_text.size() - 1, 1);
+			if (m_letters.size() > 0 && m_offsets.back() == m_offset - 1) { // last character is a letter
+				m_letters.resize(m_letters.size() - 1);
+				m_offsets.resize(m_offsets.size() - 1);
+				m_offset--;
+			}
+			else if (m_offset > 0) { // last character is a space
+				m_offset--;
+			}
 			bHandled = true;
 		}
 		else {
-			if (('a' <= keysym && keysym <= 'z') || keysym == ' ') {
-				m_text += keysym;
+			if ('a' <= keysym && keysym <= 'z') {
+				m_letters.push_back(keysym - 'a');
+				m_offsets.push_back(m_offset);
+				m_offset++;
+				bHandled = true;
+			}
+			else if (keysym == ' ') {
+				m_offset++;
 				bHandled = true;
 			}
 		}
 	}
 	if (bHandled)
-		updateSrcCode();
+		uploadData();
 	return bHandled;
 }
 
-void ConfigTextGPU::updateSrcCode() {
-	int offset = 0;
-	int nbLetters = 0;
-	ArrayStringified offsets;
-	ArrayStringified letters;
-	if (m_text.empty()) {
-		nbLetters = 1;
-		offsets.push("0");
-		letters.push("-1");
-	}
-	else {
-		for (char c : m_text) {
-			if ('a' <= c && c <= 'z') {
-				nbLetters++;
-				offsets.push(std::to_string(offset));
-				letters.push(std::to_string((int)(c - 'a')));
-			}
-			offset++;
-		}
-	}
-	offsets.close();
-	letters.close();
-	//
-	std::string srcCode =
-"#version 430 \n"
-"const float letterWidth  = 0.1; \n"
-"const float letterHeight = 0.3; \n"
-"const uint nbLetters = " + std::to_string(nbLetters) + ";\n"
-"const float offsets[nbLetters] = "+ offsets.string() +";\n"
-"const int letters[nbLetters] = "+ letters.string() +";\n"
-+ m_srcCodeBase;
-	m_computeShader.setSrcCode(srcCode);
+void ConfigTextGPU::uploadData() {
+	m_lettersSSBO.uploadData(m_letters.size(), m_letters.data());
+	m_offsetsSSBO.uploadData(m_offsets.size(), m_offsets.data());
 }

@@ -1,15 +1,18 @@
-//? #version 430
-//? const float letterWidth = 0.1;
-//? const float letterHeight = 0.3;
-//? const uint nbLetters = 4;
-//? const float offsets[nbLetters] = {0, 1, 2, 4};
-//? const int letters[nbLetters] = {0, 1, 2, 3};
+#version 430
+
+const float letterWidth  = 0.1;
+const float letterHeight = 0.3;
+
+uniform int u_nbLetters;
 
 uniform int u_NbOfParticles;
 uniform float u_aspectRatio;
 
-layout(std430, binding=1) buffer restPositions {
-   vec2 restPos[];
+layout(std430, binding=5) restrict readonly buffer lettersChars{
+   int letters[];
+};
+layout(std430, binding=6) restrict readonly buffer lettersOffsets{
+   int offsets[];
 };
 
 vec2 letterA(float t);
@@ -39,105 +42,110 @@ vec2 letterX(float t);
 vec2 letterY(float t);
 vec2 letterZ(float t);
 
+layout(std430, binding=1) buffer restPositions {
+   vec2 restPos[];
+};
+
 layout (local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
 void main(){
     uint gid = gl_GlobalInvocationID.x;
     if (gid < u_NbOfParticles) {
-        //
-        uint nbPartPerLetter = u_NbOfParticles / nbLetters;
-        uint idealNbPart = nbPartPerLetter * nbLetters;
-        uint n = gid < idealNbPart ? gid : idealNbPart - (gid - idealNbPart + 1);
-        uint id =       n / nbPartPerLetter;
-        float t = float(n % nbPartPerLetter) / nbPartPerLetter;
-        vec2 pos;
-        switch (letters[id]) {
-            case -1:
-                pos = vec2(0);
-                break;
-            case 0:
-                pos = letterA(t);
-                break;
-            case 1:
-                pos = letterB(t);
-                break;
-            case 2:
-                pos = letterC(t);
-                break;
-            case 3:
-                pos = letterD(t);
-                break;
-            case 4:
-                pos = letterE(t);
-                break;
-            case 5:
-                pos = letterF(t);
-                break;
-            case 6:
-                pos = letterG(t);
-                break;
-            case 7:
-                pos = letterH(t);
-                break;
-            case 8:
-                pos = letterI(t);
-                break;
-            case 9:
-                pos = letterJ(t);
-                break;
-            case 10:
-                pos = letterK(t);
-                break;
-            case 11:
-                pos = letterL(t);
-                break;
-            case 12:
-                pos = letterM(t);
-                break;
-            case 13:
-                pos = letterN(t);
-                break;
-            case 14:
-                pos = letterO(t);
-                break;
-            case 15:
-                pos = letterP(t);
-                break;
-            case 16:
-                pos = letterQ(t);
-                break;
-            case 17:
-                pos = letterR(t);
-                break;
-            case 18:
-                pos = letterS(t);
-                break;
-            case 19:
-                pos = letterT(t);
-                break;
-            case 20:
-                pos = letterU(t);
-                break;
-            case 21:
-                pos = letterV(t);
-                break;
-            case 22:
-                pos = letterW(t);
-                break;
-            case 23:
-                pos = letterX(t);
-                break;
-            case 24:
-                pos = letterY(t);
-                break;
-            case 25:
-                pos = letterZ(t);
-                break;
+        if (u_nbLetters > 0) {
+            uint nbPartPerLetter = u_NbOfParticles / u_nbLetters;
+            uint idealNbPart = nbPartPerLetter * u_nbLetters;
+            uint n = gid < idealNbPart ? gid : idealNbPart - (gid - idealNbPart + 1);
+            uint id =       n / nbPartPerLetter;
+            float t = float(n % nbPartPerLetter) / nbPartPerLetter;
+            vec2 pos;
+            switch (letters[id]) {
+                case 0:
+                    pos = letterA(t);
+                    break;
+                case 1:
+                    pos = letterB(t);
+                    break;
+                case 2:
+                    pos = letterC(t);
+                    break;
+                case 3:
+                    pos = letterD(t);
+                    break;
+                case 4:
+                    pos = letterE(t);
+                    break;
+                case 5:
+                    pos = letterF(t);
+                    break;
+                case 6:
+                    pos = letterG(t);
+                    break;
+                case 7:
+                    pos = letterH(t);
+                    break;
+                case 8:
+                    pos = letterI(t);
+                    break;
+                case 9:
+                    pos = letterJ(t);
+                    break;
+                case 10:
+                    pos = letterK(t);
+                    break;
+                case 11:
+                    pos = letterL(t);
+                    break;
+                case 12:
+                    pos = letterM(t);
+                    break;
+                case 13:
+                    pos = letterN(t);
+                    break;
+                case 14:
+                    pos = letterO(t);
+                    break;
+                case 15:
+                    pos = letterP(t);
+                    break;
+                case 16:
+                    pos = letterQ(t);
+                    break;
+                case 17:
+                    pos = letterR(t);
+                    break;
+                case 18:
+                    pos = letterS(t);
+                    break;
+                case 19:
+                    pos = letterT(t);
+                    break;
+                case 20:
+                    pos = letterU(t);
+                    break;
+                case 21:
+                    pos = letterV(t);
+                    break;
+                case 22:
+                    pos = letterW(t);
+                    break;
+                case 23:
+                    pos = letterX(t);
+                    break;
+                case 24:
+                    pos = letterY(t);
+                    break;
+                case 25:
+                    pos = letterZ(t);
+                    break;
+            }
+            pos.x *= letterWidth;
+            pos.y *= letterHeight;
+            pos.x += -u_aspectRatio + 1.5 * letterWidth + 3.0 * letterWidth * offsets[id];
+            //
+            restPos[gid] = pos;
         }
-        pos.x *= letterWidth;
-        pos.y *= letterHeight;
-        pos.x += -u_aspectRatio + 1.5 * letterWidth + 3.0 * letterWidth * offsets[id];
-        //
-        restPos[gid] = pos;
+        else {
+            restPos[gid] = vec2(-u_aspectRatio + 1.5 * letterWidth, 0.0);
+        }
     }
 }
 

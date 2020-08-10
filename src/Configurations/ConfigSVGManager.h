@@ -29,7 +29,7 @@ public:
 	void pushLayout(const std::string& srcCode);
 
 private:
-	SSBO m_ssbo;
+	SSBO<float> m_ssbo;
 	std::vector<float> m_data;
 	size_t m_previousDataSize = 0;
 	std::vector<SVGPositionInSsbo> m_svgPositionsInSsbo;

@@ -2,6 +2,7 @@
 
 #include "Configuration.h"
 #include "OpenGL/ComputeShader.h"
+#include "OpenGL/SSBO.h"
 
 class ConfigTextGPU : public Configuration {
 public:
@@ -15,12 +16,15 @@ public:
 	inline void toggleCaptureKeys() { setCaptureKeys(!m_bCaptureKeys); }
 
 private:
-	void updateSrcCode();
+	void uploadData();
 
 private:
-	std::string m_text;
 	bool m_bCaptureKeys;
+	std::vector<int> m_letters;
+	std::vector<int> m_offsets;
+	int m_offset = 0;
 
 	ComputeShader m_computeShader;
-	std::string m_srcCodeBase;
+	SSBO<int> m_lettersSSBO;
+	SSBO<int> m_offsetsSSBO;
 };

@@ -23,7 +23,7 @@ private:
 
 private:
 	ShaderPipeline m_renderPipeline;
-	SSBO m_positionsSSBO;
+	SSBO<float> m_positionsSSBO;
 	ComputeShader m_svgComputeShader;
 	DrawOnTextureFramebuffer m_framebuffer;
 	unsigned int m_vaoID;

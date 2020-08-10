@@ -30,9 +30,9 @@ private:
 
 	std::vector<glm::vec2> m_restPositions;
 
-	SSBO m_restPositionsSSBO;
-	SSBO m_particlesSSBO;
-	SSBO m_colorsSSBO;
+	SSBO<float> m_restPositionsSSBO;
+	SSBO<float> m_particlesSSBO;
+	SSBO<float> m_colorsSSBO;
 
 	unsigned int m_vaoID;
 	unsigned int m_vboID;
