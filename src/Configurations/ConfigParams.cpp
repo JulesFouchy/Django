@@ -51,7 +51,7 @@ bool ConfigParams::onKeyPressed(SDL_Scancode scancode) {
         return true;
     // LR
     case SDL_SCANCODE_LEFT:
-        intLR--;
+        intLR = std::max(intLR-1, 1);
         return true;
     case SDL_SCANCODE_RIGHT:
         intLR++;
