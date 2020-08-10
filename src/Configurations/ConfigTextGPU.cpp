@@ -3,6 +3,7 @@
 #include "Particles/ParticlesSystem.h"
 #include "Helper/DisplayInfos.h"
 #include "Helper/File.h"
+#include "Helper/Input.h"
 
 ConfigTextGPU::ConfigTextGPU()
 	: m_lettersSSBO(5, GL_DYNAMIC_READ), m_offsetsSSBO(6, GL_DYNAMIC_READ)
@@ -28,13 +29,20 @@ bool ConfigTextGPU::onKeyPressed(SDL_Scancode scancode, char keysym) {
 	bool bHandled = false;
 	if (m_bCaptureKeys) {
 		if (scancode == SDL_SCANCODE_BACKSPACE) {
-			if (m_letters.size() > 0 && m_offsets.back() == m_offset - 1) { // last character is a letter
-				m_letters.resize(m_letters.size() - 1);
-				m_offsets.resize(m_offsets.size() - 1);
-				m_offset--;
+			if (Input::KeyIsDown(SDL_SCANCODE_LCTRL) || Input::KeyIsDown(SDL_SCANCODE_RCTRL)) { // clear everything
+				m_letters.resize(0);
+				m_offsets.resize(0);
+				m_offset = 0;
 			}
-			else if (m_offset > 0) { // last character is a space
-				m_offset--;
+			else {
+				if (m_letters.size() > 0 && m_offsets.back() == m_offset - 1) { // last character is a letter
+					m_letters.resize(m_letters.size() - 1);
+					m_offsets.resize(m_offsets.size() - 1);
+					m_offset--;
+				}
+				else if (m_offset > 0) { // last character is a space
+					m_offset--;
+				}
 			}
 			bHandled = true;
 		}
