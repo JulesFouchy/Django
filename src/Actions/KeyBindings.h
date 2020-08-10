@@ -70,6 +70,7 @@ private:
 	ActionsByType m_allActionsByType;
 	std::unordered_map<int, ActionBinding*> m_boundActions;
 	Uint32* m_keyReleasedLastDate;
+	bool m_mouseWasDraggingLastFrame = false;
 	BindingsPresets m_presets;
 	size_t nextAvailableKeyIdx = 0;
 	std::vector<SDL_Scancode> allKeys;
