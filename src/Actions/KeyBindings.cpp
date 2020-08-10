@@ -279,8 +279,10 @@ void KeyBindings::ImGui_KeyboardRow(ConfigManager& configManager, ParticlesSyste
 	for (SDL_Scancode scancode : row) {
 		ImGui::PushID((int)scancode + 333);
 		ImGui_DragNDropKey(scancode);
-		if (ImGui::IsItemDeactivated())
+		if (ImGui::IsItemDeactivated()) {
 			configManager.onKeyPressed(scancode, 0, partSystem); // pass invalid keysym (a.k.a neither a letter nor space) so that it doesn't write if text config is on
+			onKeyUp(scancode);
+		}
 		ImGui::PopID();
 		ImGui::SameLine();
 	}
