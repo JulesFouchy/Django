@@ -25,10 +25,10 @@ public:
 
 	inline void applyTo(ParticlesSystem& partSystem) { get().applyTo(partSystem, m_params, m_randParams); }
 	void Imgui(ParticlesSystem& partSystem);
-	inline void ImGuiKeyBindings() { m_keyBindings.ImGui(); }
+	inline void ImGuiKeyBindings(ParticlesSystem& partSystem) { m_keyBindings.ImGui(*this, partSystem); }
 
 	void onWheel(float delta, ParticlesSystem& partSystem, bool bNoStandardScroll);
-	void onKeyPressed(SDL_KeyboardEvent keyEvent, ParticlesSystem& partSystem);
+	void onKeyPressed(SDL_Scancode scancode, char keysym, ParticlesSystem& partSystem);
 	inline void onKeyUp(SDL_Scancode scancode) { m_keyBindings.onKeyUp(scancode); }
 
 private:

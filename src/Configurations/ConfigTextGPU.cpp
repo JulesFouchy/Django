@@ -22,18 +22,17 @@ void ConfigTextGPU::applyTo(ParticlesSystem& particlesSystem, const ConfigParams
 	m_computeShader.get().unbind();
 }
 
-bool ConfigTextGPU::onKeyPressed(SDL_KeyboardEvent keyEvent) {
+bool ConfigTextGPU::onKeyPressed(SDL_Scancode scancode, char keysym) {
 	bool bHandled = false;
 	if (m_bCaptureKeys) {
-		if (keyEvent.keysym.scancode == SDL_SCANCODE_BACKSPACE) {
+		if (scancode == SDL_SCANCODE_BACKSPACE) {
 			if (m_text.size() > 0)
 				m_text.erase(m_text.size() - 1, 1);
 			bHandled = true;
 		}
 		else {
-			char key = keyEvent.keysym.sym;
-			if (('a' <= key && key <= 'z') || key == ' ') {
-				m_text += key;
+			if (('a' <= keysym && keysym <= 'z') || keysym == ' ') {
+				m_text += keysym;
 				bHandled = true;
 			}
 		}

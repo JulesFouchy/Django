@@ -1,7 +1,7 @@
 #include "ConfigParams.h"
 
-bool ConfigParams::onKeyPressed(SDL_Keysym key) {
-    switch (key.scancode) {
+bool ConfigParams::onKeyPressed(SDL_Scancode scancode) {
+    switch (scancode) {
     // Count
     case SDL_SCANCODE_KP_MINUS:
         count--;

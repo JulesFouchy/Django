@@ -1,5 +1,8 @@
 #include "KeyBindings.h"
 
+#include "Configurations/ConfigManager.h"
+#include "Particles/ParticlesSystem.h"
+
 #include <imgui/imgui_internal.h>
 #include <cereal/archives/json.hpp>
 #include <cereal/types/tuple.hpp>
@@ -227,11 +230,11 @@ SDL_Scancode KeyBindings::findFirstFromRight(std::vector<SDL_Scancode> row) {
 	return SDL_SCANCODE_UNKNOWN;
 }
 
-void KeyBindings::ImGui() {
+void KeyBindings::ImGui(ConfigManager& configManager, ParticlesSystem& partSystem) {
 	// Keyboard
-	ImGui_KeyboardRow(firstRow,  0.0f);
-	ImGui_KeyboardRow(secondRow, KEY_OFFSET_PROP * KEY_SIZE);
-	ImGui_KeyboardRow(thirdRow,  KEY_OFFSET_PROP * KEY_SIZE * 2.0f);
+	ImGui_KeyboardRow(configManager, partSystem, firstRow,  0.0f);
+	ImGui_KeyboardRow(configManager, partSystem, secondRow, KEY_OFFSET_PROP * KEY_SIZE);
+	ImGui_KeyboardRow(configManager, partSystem, thirdRow,  KEY_OFFSET_PROP * KEY_SIZE * 2.0f);
 	ImGui::NewLine();
 	// List of configurations without a binding
 	bool b = false;
@@ -271,11 +274,13 @@ void KeyBindings::ImGui() {
 	m_presets.ImGui(*this);
 }
 
-void KeyBindings::ImGui_KeyboardRow(const std::vector<SDL_Scancode>& row, float indent) {
+void KeyBindings::ImGui_KeyboardRow(ConfigManager& configManager, ParticlesSystem& partSystem, const std::vector<SDL_Scancode>& row, float indent) {
 	ImGui::Indent(indent);
 	for (SDL_Scancode scancode : row) {
 		ImGui::PushID((int)scancode + 333);
 		ImGui_DragNDropKey(scancode);
+		if (ImGui::IsItemDeactivated())
+			configManager.onKeyPressed(scancode, 0, partSystem); // pass invalid keysym (a.k.a neither a letter nor space) so that it doesn't write if text config is on
 		ImGui::PopID();
 		ImGui::SameLine();
 	}

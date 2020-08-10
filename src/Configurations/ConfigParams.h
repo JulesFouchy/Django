@@ -9,5 +9,5 @@ struct ConfigParams {
 	float shiftWheel = 1.0f;
 	float altWheel = 1.0f;
 
-	bool onKeyPressed(SDL_Keysym key);
+	bool onKeyPressed(SDL_Scancode scancode);
 };

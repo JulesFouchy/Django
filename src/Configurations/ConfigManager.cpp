@@ -265,11 +265,10 @@ void ConfigManager::onWheel(float delta, ParticlesSystem& partSystem, bool bNoSt
     applyTo(partSystem);
 }
 
-void ConfigManager::onKeyPressed(SDL_KeyboardEvent keyEvent, ParticlesSystem& partSystem) {
-    SDL_Scancode scancode = keyEvent.keysym.scancode;
+void ConfigManager::onKeyPressed(SDL_Scancode scancode, char keysym, ParticlesSystem& partSystem) {
     bool bHandled = false;
-    if (m_currConfigType != ConfigType::TEXT || !m_textConfig.onKeyPressed(keyEvent)) {
-        if (!m_params.onKeyPressed(keyEvent.keysym)) {
+    if (m_currConfigType != ConfigType::TEXT || !m_textConfig.onKeyPressed(scancode, keysym)) {
+        if (!m_params.onKeyPressed(scancode)) {
             const Action* action = m_keyBindings.getAction(scancode);
             if (action) {
                 applyAction(*action);

@@ -52,7 +52,7 @@ void App::onLoopIteration() {
 		m_settingsMng.get().ImGuiWindows(m_particlesSystem.physicsComputeShader(), m_particlesSystem, m_configManager);
 		m_configManager.Imgui(m_particlesSystem);
 		ImGui::Begin("Key Bindings");
-		m_configManager.ImGuiKeyBindings();
+		m_configManager.ImGuiKeyBindings(m_particlesSystem);
 		ImGui::End();
 	}
 	// Send time to physics compute shader
@@ -129,7 +129,7 @@ void App::onEvent(const SDL_Event& e) {
 			if (e.key.keysym.sym == 'h' && Input::KeyIsDown(SDL_SCANCODE_LCTRL))
 				m_bShowGUI = !m_bShowGUI;
 			else {
-				m_configManager.onKeyPressed(e.key, m_particlesSystem);
+				m_configManager.onKeyPressed(e.key.keysym.scancode, e.key.keysym.sym, m_particlesSystem);
 			}
 		}
 		break;
