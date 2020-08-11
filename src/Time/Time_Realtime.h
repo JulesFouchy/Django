@@ -6,7 +6,7 @@ class Time_Realtime : public Time {
 public:
 	Time_Realtime();
 	static void Initialize();
-	virtual ~Time_Realtime() = default;
+	~Time_Realtime() = default;
 
 	float deltaTime() override;
 	float time() override;
@@ -14,7 +14,7 @@ public:
 	void update() override;
 
 private:
-	unsigned long long m_lastTime;
-	unsigned long long m_currentTime;
-	static float SDLPerformanceFrequency;
+	Uint64 m_lastTime;
+	Uint64 m_currentTime;
+	static float SDLPerformanceCounter2Seconds;
 };

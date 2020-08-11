@@ -4,7 +4,7 @@
 #include "OpenGL/ShaderPipeline.h"
 #include "Configurations/ConfigManager.h"
 #include "Settings/SettingsManager.h"
-#include "Time/Time_Realtime.h"
+#include "Time/Time.h"
 
 class App {
 private:
@@ -28,7 +28,7 @@ private:
 	bool m_bShowGUI;
 
 	ShaderPipeline m_particlePipeline;
-	Time_Realtime m_time;
+	Time* m_time;
 	ParticlesSystem m_particlesSystem;
 
 	ConfigManager m_configManager;
