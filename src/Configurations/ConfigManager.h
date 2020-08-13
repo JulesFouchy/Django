@@ -10,6 +10,7 @@
 #include "Helper/Array2D.h"
 
 class ParticlesSystem;
+class Recorder;
 
 enum class ConfigType {
 	SHAPE_LAYOUT,
@@ -25,15 +26,14 @@ public:
 
 	inline void applyTo(ParticlesSystem& partSystem) { get().applyTo(partSystem, m_params, m_randParams); }
 	void Imgui(ParticlesSystem& partSystem);
-	inline void ImGuiKeyBindings(ParticlesSystem& partSystem) { m_keyBindings.ImGui(*this, partSystem); }
+	inline void ImGuiKeyBindings(ParticlesSystem& partSystem, Recorder& recorder) { m_keyBindings.ImGui(*this, partSystem, recorder); }
 
 	void onWheel(float delta, ParticlesSystem& partSystem, bool bNoStandardScroll);
-	void onKeyPressed(SDL_Scancode scancode, char keysym, ParticlesSystem& partSystem);
+	void onKeyPressed(SDL_Scancode scancode, char keysym, ParticlesSystem& partSystem, Recorder& recorder);
 	inline void onKeyUp(SDL_Scancode scancode) { m_keyBindings.onKeyUp(scancode); }
 
 private:
 	Configuration& get();
-	void setupKeyBindings();
 	void applyAction(const Action& action);
 
 private:

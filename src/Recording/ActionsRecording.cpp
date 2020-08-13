@@ -1,10 +1,10 @@
 #include "ActionsRecording.h"
 
-void ActionsRecording::start(float time, const ActionRef& startAction) {
+void ActionsRecording::start(const ActionRef& startAction, float time) {
 	m_startAction = startAction;
 	m_startTime = time;
 }
 
-void ActionsRecording::push(float time, const ActionRef& actionRef) {
+void ActionsRecording::push(const ActionRef& actionRef, float time) {
 	m_timeline.emplace_back(actionRef, time);
 }

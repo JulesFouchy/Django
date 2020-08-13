@@ -5,13 +5,11 @@
 
 #include "Helper/DisplayInfos.h"
 #include "Helper/Input.h"
-#include "Time/Time_Realtime.h"
 
 App::App(SDL_Window* window)
 	: m_bShowImGUIDemoWindow(false),
 	  m_bFullScreen(false),
 	  m_bShowGUI(true),
-	  m_time(new Time_Realtime()),
 	  m_particlesSystem(),
 	  m_window(window), m_running(true)
 {
@@ -54,14 +52,14 @@ void App::onLoopIteration() {
 		m_settingsMng.get().ImGuiWindows(m_particlesSystem.physicsComputeShader(), m_particlesSystem, m_configManager);
 		m_configManager.Imgui(m_particlesSystem);
 		ImGui::Begin("Key Bindings");
-		m_configManager.ImGuiKeyBindings(m_particlesSystem);
+		m_configManager.ImGuiKeyBindings(m_particlesSystem, m_recorder);
 		ImGui::End();
 	}
 	// Send time to physics compute shader
-	m_time->update();
-	m_particlesSystem.physicsComputeShader().setUniform1f("dt", m_time->deltaTime());
+	m_recorder.update(); // updates time so must be called before sending it ti compute shader
+	m_particlesSystem.physicsComputeShader().setUniform1f("dt", m_recorder.time().deltaTime());
 	// Send wind to physics compute shader
-	m_settingsMng.get().getWind().setWindOffset(m_particlesSystem.physicsComputeShader(), m_time->time());
+	m_settingsMng.get().getWind().setWindOffset(m_particlesSystem.physicsComputeShader(), m_recorder.time().time());
 	// Send mouse to physics compute shader
 		// Force field
 	bool bForceField = Input::IsMouseButtonDown(SDL_BUTTON_LEFT) && !ImGui::GetIO().WantCaptureMouse;
@@ -78,7 +76,7 @@ void App::onLoopIteration() {
 	//
 	m_particlesSystem.physicsComputeShader().unbind();
 	// Clear screen
-	m_settingsMng.get().getTrail().clearScreen(m_time->deltaTime(), m_settingsMng.get().getColors().backgroundColor());
+	m_settingsMng.get().getTrail().clearScreen(m_recorder.time().deltaTime(), m_settingsMng.get().getColors().backgroundColor());
 	// Draw particles
 	m_particlePipeline.bind();
 	m_particlesSystem.draw();
@@ -131,7 +129,7 @@ void App::onEvent(const SDL_Event& e) {
 			if (e.key.keysym.sym == 'h' && Input::KeyIsDown(SDL_SCANCODE_LCTRL))
 				m_bShowGUI = !m_bShowGUI;
 			else {
-				m_configManager.onKeyPressed(e.key.keysym.scancode, e.key.keysym.sym, m_particlesSystem);
+				m_configManager.onKeyPressed(e.key.keysym.scancode, e.key.keysym.sym, m_particlesSystem, m_recorder);
 			}
 		}
 		break;

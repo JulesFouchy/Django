@@ -4,7 +4,7 @@
 #include "OpenGL/ShaderPipeline.h"
 #include "Configurations/ConfigManager.h"
 #include "Settings/SettingsManager.h"
-#include "Time/Time.h"
+#include "Recording/Recorder.h"
 
 class App {
 private:
@@ -28,11 +28,12 @@ private:
 	bool m_bShowGUI;
 
 	ShaderPipeline m_particlePipeline;
-	Time* m_time;
 	ParticlesSystem m_particlesSystem;
 
 	ConfigManager m_configManager;
 	SettingsManager m_settingsMng;
+
+	Recorder m_recorder;
 
 /********************
   * INTERNAL CODE *
