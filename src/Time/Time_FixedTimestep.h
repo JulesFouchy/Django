@@ -7,8 +7,8 @@ public:
 	Time_FixedTimestep(float fps);
 	~Time_FixedTimestep() = default;
 
-	float deltaTime() override;
-	float time() override;
+	float deltaTime() const override;
+	float time() const override;
 
 	void update() override;
 

@@ -8,8 +8,8 @@ public:
 	static void Initialize();
 	~Time_Realtime() = default;
 
-	float deltaTime() override;
-	float time() override;
+	float deltaTime() const override;
+	float time() const override;
 
 	void update() override;
 

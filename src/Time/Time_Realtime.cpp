@@ -10,11 +10,11 @@ Time_Realtime::Time_Realtime()
     : m_lastTime(SDL_GetPerformanceCounter()), m_currentTime(m_lastTime)
 {}
 
-float Time_Realtime::deltaTime() {
+float Time_Realtime::deltaTime() const {
     return (m_currentTime - m_lastTime) * SDLPerformanceCounter2Seconds;
 }
 
-float Time_Realtime::time() {
+float Time_Realtime::time() const {
 	return m_currentTime * SDLPerformanceCounter2Seconds;
 }
 

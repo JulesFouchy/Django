@@ -4,11 +4,11 @@ Time_FixedTimestep::Time_FixedTimestep(float fps)
     : m_dt(1.0f / fps)
 {}
 
-float Time_FixedTimestep::deltaTime() {
+float Time_FixedTimestep::deltaTime() const {
     return m_dt;
 }
 
-float Time_FixedTimestep::time() {
+float Time_FixedTimestep::time() const {
     return m_framesCount * m_dt;
 }
 
