@@ -16,7 +16,7 @@ public:
 	ActionsByTypeIterator begin();
 	ActionsByTypeIterator end();
 
-	ActionBinding* tryFind(const std::string& name, ActionType type);
+	ActionBinding* tryFind(const ActionRef& actionRef);
 
 private:
 	std::array<std::unordered_map<std::string, ActionBinding*>, nbActionTypes> m_store;

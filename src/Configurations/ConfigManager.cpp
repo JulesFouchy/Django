@@ -199,7 +199,7 @@ Configuration& ConfigManager::get() {
 }
 
 void ConfigManager::applyAction(const Action& action) {
-    switch (action.type)
+    switch (action.ref.type)
     {
     case ActionType::SHAPE:
         m_currConfigType = ConfigType::SHAPE_LAYOUT;

@@ -1,22 +1,14 @@
 #pragma once
 
-enum class ActionType {
-	SHAPE,
-	SVG_SHAPE,
-	LAYOUT,
-	STANDALONE,
-	TEXT,
-	REROLL_RANDOM
-};
+#include "ActionRef.h"
 
 struct Action {
-	std::string name;
+	ActionRef ref;
 	unsigned int thumbnailTextureID = -1;
-	ActionType type;
 	size_t index;
 
 	Action(const std::string& name, unsigned int thumbnailTextureID, ActionType type, size_t index = -1)
-		: name(name), thumbnailTextureID(thumbnailTextureID), type(type), index(index)
+		: ref(name, type), thumbnailTextureID(thumbnailTextureID), index(index)
 	{}
 	Action() = default;
 	~Action() = default;

@@ -1,152 +1,152 @@
 {
-    "value0": [
+    "boundActionsRefs": [
         {
-            "actionIdentifier": {
+            "actionRef": {
                 "name": "Text",
                 "type": 4
             },
             "scancode": 40
         },
         {
-            "actionIdentifier": {
+            "actionRef": {
                 "name": "Reroll random",
                 "type": 5
             },
             "scancode": 44
         },
         {
-            "actionIdentifier": {
+            "actionRef": {
                 "name": "Shape butterfly",
                 "type": 1
             },
             "scancode": 24
         },
         {
-            "actionIdentifier": {
+            "actionRef": {
                 "name": "Shape childishStar",
                 "type": 0
             },
             "scancode": 8
         },
         {
-            "actionIdentifier": {
+            "actionRef": {
                 "name": "Shape circle",
                 "type": 0
             },
             "scancode": 20
         },
         {
-            "actionIdentifier": {
+            "actionRef": {
                 "name": "Shape dessin-1",
                 "type": 1
             },
-            "scancode": 18
+            "scancode": 48
         },
         {
-            "actionIdentifier": {
+            "actionRef": {
                 "name": "Shape dessin",
                 "type": 1
             },
             "scancode": 19
         },
         {
-            "actionIdentifier": {
+            "actionRef": {
                 "name": "Shape disney",
                 "type": 1
             },
             "scancode": 12
         },
         {
-            "actionIdentifier": {
+            "actionRef": {
                 "name": "Shape drawing",
                 "type": 1
             },
             "scancode": 47
         },
         {
-            "actionIdentifier": {
+            "actionRef": {
                 "name": "Shape heart",
                 "type": 0
             },
             "scancode": 28
         },
         {
-            "actionIdentifier": {
+            "actionRef": {
                 "name": "Shape horse",
                 "type": 1
             },
-            "scancode": 48
+            "scancode": 18
         },
         {
-            "actionIdentifier": {
+            "actionRef": {
                 "name": "Shape polygon",
                 "type": 0
             },
-            "scancode": 21
+            "scancode": 26
         },
         {
-            "actionIdentifier": {
+            "actionRef": {
                 "name": "Shape spiral",
                 "type": 0
             },
             "scancode": 23
         },
         {
-            "actionIdentifier": {
+            "actionRef": {
                 "name": "Shape star",
                 "type": 0
             },
-            "scancode": 26
+            "scancode": 21
         },
         {
-            "actionIdentifier": {
+            "actionRef": {
                 "name": "Layout One Centered",
                 "type": 2
             },
             "scancode": 4
         },
         {
-            "actionIdentifier": {
+            "actionRef": {
                 "name": "Layout Random",
                 "type": 2
             },
             "scancode": 22
         },
         {
-            "actionIdentifier": {
+            "actionRef": {
                 "name": "Fill Screen",
                 "type": 3
             },
             "scancode": 6
         },
         {
-            "actionIdentifier": {
+            "actionRef": {
                 "name": "Hilbert Curve 2",
                 "type": 3
             },
             "scancode": 5
         },
         {
-            "actionIdentifier": {
+            "actionRef": {
                 "name": "Hilbert Curve",
                 "type": 3
             },
             "scancode": 25
         },
         {
-            "actionIdentifier": {
+            "actionRef": {
                 "name": "Random",
                 "type": 3
             },
             "scancode": 29
         },
         {
-            "actionIdentifier": {
+            "actionRef": {
                 "name": "Square Filled",
                 "type": 3
             },
             "scancode": 27
         }
     ],
-    "value1": []
+    "actionsWithNoBinding": []
 }

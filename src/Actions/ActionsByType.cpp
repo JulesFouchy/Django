@@ -8,13 +8,13 @@ std::unordered_map<std::string, ActionBinding*>& ActionsByType::operator[](int t
 	return m_store[type];
 }
 
-ActionBinding* ActionsByType::tryFind(const std::string& name, ActionType type) {
+ActionBinding* ActionsByType::tryFind(const ActionRef& actionRef) {
 	int typeAsInt;
-	if (type == ActionType::REROLL_RANDOM || type == ActionType::TEXT)
+	if (actionRef.type == ActionType::REROLL_RANDOM || actionRef.type == ActionType::TEXT)
 		typeAsInt = ActionType_MISCELLANEOUS;
 	else
-		typeAsInt = (int)type;
-	auto it = m_store[typeAsInt].find(name);
+		typeAsInt = (int)actionRef.type;
+	auto it = m_store[typeAsInt].find(actionRef.name);
 	if (it != m_store[typeAsInt].end())
 		return it->second;
 	else
