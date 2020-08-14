@@ -1,20 +1,32 @@
 #pragma once
 
-#include "ActionsRecording.h"
-#include "Time/Time.h"
+#include "State.h"
+#include "ActionTimestamp.h"
+#include "Clock/Clock.h"
+
+class ConfigManager;
 
 class Recorder {
 public:
 	Recorder();
 	~Recorder() = default;
 
+	void ImGui(const ConfigManager& configManager);
 	void onAction(const ActionRef& actionRef);
 
-	inline const Time& time() const { return *m_time; }
+	inline const Clock& clock() const { return *m_clock; }
 	void update();
 
 private:
-	std::unique_ptr<Time> m_time;
+	float timeSinceStart();
+	void startRecording(const ConfigRef& currentConfigAsAction);
+	void stopRecording();
+
+private:
+	std::unique_ptr<Clock> m_clock;
 	bool m_bRecording = false;
-	ActionsRecording m_actionsRecording;
+
+	float m_startTime;
+	State m_startState;
+	std::vector<ActionTimestamp> m_actionsTimeline;
 };

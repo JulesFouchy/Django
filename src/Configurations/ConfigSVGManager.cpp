@@ -3,6 +3,7 @@
 #include "Actions/ThumbnailFactory.h"
 #include "Actions/ActionBinding.h"
 #include <nanosvg/nanosvg.h>
+#include "Helper/String.h"
 
 ConfigSVGManager::ConfigSVGManager()
 	: m_ssbo(3, GL_STREAM_READ)
@@ -17,6 +18,10 @@ Configuration& ConfigSVGManager::getConfig(size_t svgIndex, size_t layoutIndex) 
 	return config;
 }
 
+std::string ConfigSVGManager::getConfigName(size_t svgIndex, size_t layoutIndex) const {
+	return m_svgNames[svgIndex] + m_layoutConfigs[layoutIndex].getName();
+}
+
 void ConfigSVGManager::addSVGShape(const std::string& svgFilepath) {
 	// Open SVG file
 	struct NSVGimage* image;
@@ -24,6 +29,8 @@ void ConfigSVGManager::addSVGShape(const std::string& svgFilepath) {
 	if (!image) {
 		spdlog::warn("[ConfigSVGManager::addSVGShape] Invalid file path : {}", svgFilepath);
 	}
+	// Store the name
+	m_svgNames.push_back(MyString::FileName(svgFilepath));
 	// Get bezier curves
 	for (auto shape = image->shapes; shape != NULL; shape = shape->next) {
 		for (auto path = shape->paths; path != NULL; path = path->next) {
@@ -70,7 +77,7 @@ void ConfigSVGManager::setNbLayouts(size_t size) {
 	m_layoutConfigs.reserve(size);
 }
 
-void ConfigSVGManager::pushLayout(const std::string& srcCode) {
-	m_layoutConfigs.emplace_back();
+void ConfigSVGManager::pushLayout(const std::string& layoutName, const std::string& srcCode) {
+	m_layoutConfigs.emplace_back(" SVG " + layoutName);
 	m_layoutConfigs.back().initWithSrcCode(srcCode);
 }

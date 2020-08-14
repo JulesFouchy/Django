@@ -5,7 +5,7 @@
 
 #include <debug_break/debug_break.h>
 
-#include "Time/Time_Realtime.h"
+#include "Clock/Clock_Realtime.h"
 
 #ifdef _WIN32
 	#define _CRTDBG_MAP_ALLOC
@@ -98,7 +98,7 @@ int main(int argc, char *argv[]) {
 
 		// ------ Initialize our own classes
 
-		Time_Realtime::Initialize();
+		Clock_Realtime::Initialize();
 		App::Initialize(window);
 
 		// ------ Actual App

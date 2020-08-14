@@ -6,7 +6,7 @@
 #include "Helper/Input.h"
 
 ConfigTextGPU::ConfigTextGPU()
-	: m_lettersSSBO(5, GL_DYNAMIC_READ), m_offsetsSSBO(6, GL_DYNAMIC_READ)
+	: Configuration("Text"), m_lettersSSBO(5, GL_DYNAMIC_READ), m_offsetsSSBO(6, GL_DYNAMIC_READ)
 {
 	std::string srcCode;
 	MyFile::ToString("internal-shaders/config_Text.comp", &srcCode);

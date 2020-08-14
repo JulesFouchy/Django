@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Time.h"
+#include "Clock.h"
 
-class Time_FixedTimestep : public Time {
+class Clock_FixedTimestep : public Clock {
 public:
-	Time_FixedTimestep(float fps);
-	~Time_FixedTimestep() = default;
+	Clock_FixedTimestep(float fps);
+	~Clock_FixedTimestep() = default;
 
 	float deltaTime() const override;
 	float time() const override;

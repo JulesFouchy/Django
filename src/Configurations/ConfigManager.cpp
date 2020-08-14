@@ -46,7 +46,9 @@ ConfigManager::ConfigManager() {
             nbShapesFiles++;
     }
     std::vector<std::string> shapesSrcCode;
+    std::vector<std::string> shapesName;
     shapesSrcCode.reserve(nbShapesFiles);
+    shapesName.reserve(nbShapesFiles);
     size_t   svgIdx = 0;
     size_t shapeIdx = 0;
     for (const auto& entry : fs::directory_iterator(SHAPES_FOLDER)) {
@@ -69,6 +71,8 @@ ConfigManager::ConfigManager() {
             std::string srcCode;
             MyFile::ToString(entry.path().string(), &srcCode);
             shapesSrcCode.push_back(srcCode);
+            // name
+            shapesName.push_back(MyString::FileName(entry.path().string()));
             // thumbnail
             unsigned int texID = thumbnailFactory.createTexture(ActionType::SHAPE, srcCode);
             // key binding
@@ -102,6 +106,7 @@ ConfigManager::ConfigManager() {
     for (const auto& entry : fs::directory_iterator(LAYOUTS_FOLDER)) {
         const std::string fileExtension = MyString::FileExtension(entry.path().string());
         if (!fileExtension.compare(".comp")) {
+            const std::string layoutName = MyString::FileName(entry.path().string());
             // get source code
             std::string layoutSrc;
             MyFile::ToString(entry.path().string(), &layoutSrc);
@@ -116,10 +121,11 @@ ConfigManager::ConfigManager() {
             });
             size_t x = 0;
             // Shapes
-            for (const std::string& shapeSrc : shapesSrcCode) {
+            for (size_t k = 0; k < shapesSrcCode.size(); ++k) {
+                m_shapeLayoutConfigs(x, y).setName(shapesName[k] + layoutName);
                 m_shapeLayoutConfigs(x, y).initWithSrcCode(
                     VERSION + "\n" +
-                    shapeSrc + "\n" +
+                    shapesSrcCode[k] + "\n" +
                     randSrc + "\n" +
                     layoutSrc + "\n" +
                     layoutTemplate
@@ -128,6 +134,7 @@ ConfigManager::ConfigManager() {
             }
             // SVG shapes
             m_svgManager.pushLayout(
+                layoutName,
                 VERSION + "\n" +
                 svgTemplate + "\n" +
                 randSrc + "\n" +
@@ -154,6 +161,7 @@ ConfigManager::ConfigManager() {
     size_t i = 0;
     for (const auto& entry : fs::directory_iterator(STANDALONE_FOLDER)) {
         const std::string fileExtension = MyString::FileExtension(entry.path().string());
+        const std::string fileName = MyString::FileName(entry.path().string());
         if (!fileExtension.compare(".comp")) {
             // create from source code
             std::string src;
@@ -164,11 +172,13 @@ ConfigManager::ConfigManager() {
                 src     + "\n" +
                 standaloneTemplate
             );
+            // name
+            m_standaloneConfigs[i].setName(fileName);
             // thumbnail
             unsigned int texID = thumbnailFactory.createTexture(ActionType::STANDALONE, randSrc + src);
             // key binding
             m_keyBindings.addAction({
-                MyString::FileName(entry.path().string()),
+                fileName,
                 texID,
                 ActionType::STANDALONE,
                 i++
@@ -181,6 +191,10 @@ ConfigManager::ConfigManager() {
 
     // Setup Bindings
     m_keyBindings.setupBindings(djg::SettingsFolder + "/lastSessionBindings.json");
+}
+
+const Configuration& ConfigManager::get() const {
+    return get();
 }
 
 Configuration& ConfigManager::get() {
@@ -286,4 +300,13 @@ void ConfigManager::onKeyPressed(SDL_Scancode scancode, char keysym, ParticlesSy
     }
     if (bHandled)
         applyTo(partSystem);
+}
+
+ConfigRef ConfigManager::getCurrentConfigRef() const {
+    if (m_currConfigType == ConfigType::SVG_LAYOUT) {
+        return { m_svgManager.getConfigName(m_currSvgIndex, m_currLayoutIndex), ConfigType::SVG_LAYOUT };
+    }
+    else {
+        return { get().getName(), m_currConfigType };
+    }
 }

@@ -57,9 +57,9 @@ void App::onLoopIteration() {
 	}
 	// Send time to physics compute shader
 	m_recorder.update(); // updates time so must be called before sending it ti compute shader
-	m_particlesSystem.physicsComputeShader().setUniform1f("dt", m_recorder.time().deltaTime());
+	m_particlesSystem.physicsComputeShader().setUniform1f("dt", m_recorder.clock().deltaTime());
 	// Send wind to physics compute shader
-	m_settingsMng.get().getWind().setWindOffset(m_particlesSystem.physicsComputeShader(), m_recorder.time().time());
+	m_settingsMng.get().getWind().setWindOffset(m_particlesSystem.physicsComputeShader(), m_recorder.clock().time());
 	// Send mouse to physics compute shader
 		// Force field
 	bool bForceField = Input::IsMouseButtonDown(SDL_BUTTON_LEFT) && !ImGui::GetIO().WantCaptureMouse;
@@ -76,7 +76,7 @@ void App::onLoopIteration() {
 	//
 	m_particlesSystem.physicsComputeShader().unbind();
 	// Clear screen
-	m_settingsMng.get().getTrail().clearScreen(m_recorder.time().deltaTime(), m_settingsMng.get().getColors().backgroundColor());
+	m_settingsMng.get().getTrail().clearScreen(m_recorder.clock().deltaTime(), m_settingsMng.get().getColors().backgroundColor());
 	// Draw particles
 	m_particlePipeline.bind();
 	m_particlesSystem.draw();

@@ -7,6 +7,9 @@ class ConfigGPU : public Configuration {
 	friend class ConfigSVGManager;
 public:
 	ConfigGPU() = default;
+	ConfigGPU(const std::string& name)
+		: Configuration(name)
+	{}
 	~ConfigGPU() = default;
 	ConfigGPU(ConfigGPU&& o) noexcept;
 	void operator=(ConfigGPU&& o);

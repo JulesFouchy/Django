@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ConfigRef.h"
 #include "ConfigGPU.h"
 #include "ConfigTextGPU.h"
 #include "ConfigParams.h"
@@ -11,13 +12,6 @@
 
 class ParticlesSystem;
 class Recorder;
-
-enum class ConfigType {
-	SHAPE_LAYOUT,
-	SVG_LAYOUT,
-	STANDALONE,
-	TEXT
-};
 
 class ConfigManager {
 public:
@@ -32,7 +26,10 @@ public:
 	void onKeyPressed(SDL_Scancode scancode, char keysym, ParticlesSystem& partSystem, Recorder& recorder);
 	inline void onKeyUp(SDL_Scancode scancode) { m_keyBindings.onKeyUp(scancode); }
 
+	ConfigRef getCurrentConfigRef() const;
+
 private:
+	const Configuration& get() const;
 	Configuration& get();
 	void applyAction(const Action& action);
 
