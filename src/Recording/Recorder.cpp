@@ -33,7 +33,7 @@ void Recorder::update() {
 	m_clock->update();
 }
 
-void Recorder::ImGui(const ConfigManager& configManager) {
+void Recorder::ImGui(ConfigManager& configManager) {
 	if (!m_bRecording) {
 		if (ImGui::Button("Start")) {
 			startRecording(configManager.getCurrentConfigRef());

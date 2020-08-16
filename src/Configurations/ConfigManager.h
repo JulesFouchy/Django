@@ -26,10 +26,9 @@ public:
 	void onKeyPressed(SDL_Scancode scancode, char keysym, ParticlesSystem& partSystem, Recorder& recorder);
 	inline void onKeyUp(SDL_Scancode scancode) { m_keyBindings.onKeyUp(scancode); }
 
-	ConfigRef getCurrentConfigRef() const;
+	ConfigRef getCurrentConfigRef();
 
 private:
-	const Configuration& get() const;
 	Configuration& get();
 	void applyAction(const Action& action);
 

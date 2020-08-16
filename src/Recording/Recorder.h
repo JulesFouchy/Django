@@ -11,7 +11,7 @@ public:
 	Recorder();
 	~Recorder() = default;
 
-	void ImGui(const ConfigManager& configManager);
+	void ImGui(ConfigManager& configManager);
 	void onAction(const ActionRef& actionRef);
 
 	inline const Clock& clock() const { return *m_clock; }

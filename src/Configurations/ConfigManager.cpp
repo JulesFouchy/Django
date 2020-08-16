@@ -193,10 +193,6 @@ ConfigManager::ConfigManager() {
     m_keyBindings.setupBindings(djg::SettingsFolder + "/lastSessionBindings.json");
 }
 
-const Configuration& ConfigManager::get() const {
-    return get();
-}
-
 Configuration& ConfigManager::get() {
     switch (m_currConfigType)
     {
@@ -302,7 +298,7 @@ void ConfigManager::onKeyPressed(SDL_Scancode scancode, char keysym, ParticlesSy
         applyTo(partSystem);
 }
 
-ConfigRef ConfigManager::getCurrentConfigRef() const {
+ConfigRef ConfigManager::getCurrentConfigRef() {
     if (m_currConfigType == ConfigType::SVG_LAYOUT) {
         return { m_svgManager.getConfigName(m_currSvgIndex, m_currLayoutIndex), ConfigType::SVG_LAYOUT };
     }
