@@ -18,8 +18,12 @@ Configuration& ConfigSVGManager::getConfig(size_t svgIndex, size_t layoutIndex) 
 	return config;
 }
 
-std::string ConfigSVGManager::getConfigName(size_t svgIndex, size_t layoutIndex) const {
-	return m_svgNames[svgIndex] + m_layoutConfigs[layoutIndex].getName();
+const std::string& ConfigSVGManager::getSVGName(size_t svgIndex) const {
+	return m_svgNames[svgIndex];
+}
+
+const std::string& ConfigSVGManager::getLayoutName(size_t layoutIndex) const {
+	return m_layoutConfigs[layoutIndex].getLayoutName();
 }
 
 void ConfigSVGManager::addSVGShape(const std::string& svgFilepath) {
@@ -78,6 +82,6 @@ void ConfigSVGManager::setNbLayouts(size_t size) {
 }
 
 void ConfigSVGManager::pushLayout(const std::string& layoutName, const std::string& srcCode) {
-	m_layoutConfigs.emplace_back(" SVG " + layoutName);
+	m_layoutConfigs.emplace_back("SVG", layoutName);
 	m_layoutConfigs.back().initWithSrcCode(srcCode);
 }

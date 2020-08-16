@@ -59,7 +59,7 @@ ConfigManager::ConfigManager() {
             m_svgManager.addSVGShape(entry.path().string());
             // key binding
             m_keyBindings.addAction({
-                "Shape " + MyString::FileName(entry.path().string()),
+                MyString::FileName(entry.path().string()),
                 (unsigned int)-1,
                 ActionType::SVG_SHAPE,
                 svgIdx++
@@ -77,7 +77,7 @@ ConfigManager::ConfigManager() {
             unsigned int texID = thumbnailFactory.createTexture(ActionType::SHAPE, srcCode);
             // key binding
             m_keyBindings.addAction({
-                "Shape " + MyString::FileName(entry.path().string()),
+                MyString::FileName(entry.path().string()),
                 texID,
                 ActionType::SHAPE,
                 shapeIdx++
@@ -114,7 +114,7 @@ ConfigManager::ConfigManager() {
             unsigned int texID = thumbnailFactory.createTexture(ActionType::LAYOUT, randSrc + layoutSrc);
             // key binding
             m_keyBindings.addAction({
-                "Layout " + MyString::FileName(entry.path().string()),
+                MyString::FileName(entry.path().string()),
                 texID,
                 ActionType::LAYOUT,
                 y
@@ -122,7 +122,8 @@ ConfigManager::ConfigManager() {
             size_t x = 0;
             // Shapes
             for (size_t k = 0; k < shapesSrcCode.size(); ++k) {
-                m_shapeLayoutConfigs(x, y).setName(shapesName[k] + layoutName);
+                m_shapeLayoutConfigs(x, y).setName(shapesName[k]);
+                m_shapeLayoutConfigs(x, y).setLayoutName(layoutName);
                 m_shapeLayoutConfigs(x, y).initWithSrcCode(
                     VERSION + "\n" +
                     shapesSrcCode[k] + "\n" +
@@ -231,19 +232,23 @@ void ConfigManager::applyAction(const Action& action) {
         m_currStandaloneIndex = action.index;
         break;
     case ActionType::TEXT:
-        if (m_currConfigType != ConfigType::TEXT) {
-            m_currConfigType = ConfigType::TEXT;
-            m_textConfig.setCaptureKeys(true);
-        }
-        else {
-            m_textConfig.toggleCaptureKeys();
-        }
+        setCurrentConfigAsText();
         break;
     case ActionType::REROLL_RANDOM:
         m_randParams.seed = 10.0f * MyRand::_m1to1();
         break;
     default:
         break;
+    }
+}
+
+void ConfigManager::setCurrentConfigAsText() {
+    if (m_currConfigType != ConfigType::TEXT) {
+        m_currConfigType = ConfigType::TEXT;
+        m_textConfig.setCaptureKeys(true);
+    }
+    else {
+        m_textConfig.toggleCaptureKeys();
     }
 }
 
@@ -299,10 +304,60 @@ void ConfigManager::onKeyPressed(SDL_Scancode scancode, char keysym, ParticlesSy
 }
 
 ConfigRef ConfigManager::getCurrentConfigRef() {
-    if (m_currConfigType == ConfigType::SVG_LAYOUT) {
-        return { m_svgManager.getConfigName(m_currSvgIndex, m_currLayoutIndex), ConfigType::SVG_LAYOUT };
+    switch (m_currConfigType) {
+    case ConfigType::SHAPE_LAYOUT:
+        return {
+            m_shapeLayoutConfigs(m_currShapeIndex, m_currLayoutIndex).getName(),
+            m_shapeLayoutConfigs(m_currShapeIndex, m_currLayoutIndex).getLayoutName(),
+            ConfigType::SHAPE_LAYOUT
+        };
+        break;
+    case ConfigType::SVG_LAYOUT:
+        return {
+            m_svgManager.getSVGName(m_currSvgIndex),
+            m_svgManager.getLayoutName(m_currLayoutIndex),
+            ConfigType::SVG_LAYOUT
+        };
+        break;
+    case ConfigType::STANDALONE:
+        return {
+            m_standaloneConfigs[m_currStandaloneIndex].getName(),
+            ConfigType::STANDALONE
+        };
+        break;
+    case ConfigType::TEXT:
+        return {
+            m_textConfig.getName(),
+            ConfigType::TEXT
+        };
+        break;
+    }
+}
+
+void ConfigManager::applyActionRef(const ActionRef& actionRef) {
+    if (const Action* action = m_keyBindings.getActionByRef(actionRef)) {
+        applyAction(*action);
     }
     else {
-        return { get().getName(), m_currConfigType };
+        spdlog::warn("Couldn't find the action '{}' of type {}", actionRef.name, actionRef.type);
+    }
+}
+
+void ConfigManager::applyConfigRef(const ConfigRef& configRef) {
+    switch (configRef.type) {
+    case ConfigType::SHAPE_LAYOUT:
+        applyActionRef({ configRef.mainName,   ActionType::SHAPE });
+        applyActionRef({ configRef.layoutName, ActionType::LAYOUT });
+        break;
+    case ConfigType::SVG_LAYOUT:
+        applyActionRef({ configRef.mainName,   ActionType::SVG_SHAPE });
+        applyActionRef({ configRef.layoutName, ActionType::LAYOUT });
+        break;
+    case ConfigType::STANDALONE:
+        applyActionRef({ configRef.mainName, ActionType::STANDALONE });
+        break;
+    case ConfigType::TEXT:
+        setCurrentConfigAsText();
+        break;
     }
 }

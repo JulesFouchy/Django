@@ -444,3 +444,11 @@ std::vector<ActionRef> KeyBindings::readBindingsFrom(const std::string& filepath
 	}
 	return actionsWithNoBinding;
 }
+
+const Action* KeyBindings::getActionByRef(const ActionRef& actionRef) const {
+	for (const ActionBinding& actionBinding : m_allActionsOwner) {
+		if (actionBinding.action.ref == actionRef)
+			return &actionBinding.action;
+	}
+	return nullptr;
+}

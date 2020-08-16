@@ -52,11 +52,11 @@ void App::onLoopIteration() {
 		ImGui::End();
 		// Recording
 		ImGui::Begin("Recording");
-		m_recordingManager.ImGui(m_configManager);
+		m_recordingManager.ImGui(m_configManager, m_particlesSystem);
 		ImGui::End();
 	}
 	// Send time to physics compute shader
-	m_recordingManager.update(); // updates time so must be called before sending it ti compute shader
+	m_recordingManager.update(m_configManager, m_particlesSystem); // updates time so must be called before sending it ti compute shader
 	m_particlesSystem.physicsComputeShader().setUniform1f("dt", m_recordingManager.clock().deltaTime());
 	// Send wind to physics compute shader
 	m_settingsMng.get().getWind().setWindOffset(m_particlesSystem.physicsComputeShader(), m_recordingManager.clock().time());

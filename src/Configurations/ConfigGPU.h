@@ -7,8 +7,11 @@ class ConfigGPU : public Configuration {
 	friend class ConfigSVGManager;
 public:
 	ConfigGPU() = default;
+	ConfigGPU(const std::string& mainName, const std::string& layoutName)
+		: Configuration(mainName, layoutName)
+	{}
 	ConfigGPU(const std::string& name)
-		: Configuration(name)
+		: ConfigGPU(name, "")
 	{}
 	~ConfigGPU() = default;
 	ConfigGPU(ConfigGPU&& o) noexcept;

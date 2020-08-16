@@ -19,7 +19,8 @@ public:
 	~ConfigSVGManager() = default;
 
 	Configuration& getConfig(size_t svgIndex, size_t layoutIndex);
-	std::string getConfigName(size_t svgIndex, size_t layoutIndex) const;
+	const std::string& getSVGName(size_t svgIndex) const;
+	const std::string& getLayoutName(size_t layoutIndex) const;
 	inline size_t nbSVGs() { return m_svgPositionsInSsbo.size(); }
 
 	void addSVGShape(const std::string& svgFilepath);

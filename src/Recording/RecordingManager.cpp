@@ -3,13 +3,13 @@
 #include "Actions/ActionRef.h"
 #include "Clock/Clock_Realtime.h"
 #include "Configurations/ConfigManager.h"
+#include "Particles/ParticlesSystem.h"
 
 RecordingManager::RecordingManager()
 	: m_clock(std::make_unique<Clock_Realtime>())
 {}
 
 void RecordingManager::startRecording(const ConfigRef& currentConfigRef) {
-	m_bRecording = true;
 	m_startTime = m_clock->time();
 	// Create new recording
 	m_recordings.emplace_back(currentConfigRef);
@@ -17,15 +17,15 @@ void RecordingManager::startRecording(const ConfigRef& currentConfigRef) {
 }
 
 void RecordingManager::stopRecording() {
-	m_bRecording = false;
+	m_currRecordingIdx = -1;
 }
 
 Recording* RecordingManager::currentRecording() {
-	return m_bRecording ? &m_recordings[m_currRecordingIdx] : nullptr;
+	return isRecording() ? &m_recordings[m_currRecordingIdx] : nullptr;
 }
 
 float RecordingManager::timeSinceStart() {
-	assert(m_bRecording);
+	assert(isRecording() || isPlaying());
 	return m_clock->time() - m_startTime;
 }
 
@@ -35,12 +35,38 @@ void RecordingManager::onAction(const ActionRef& actionRef) {
 	}
 }
 
-void RecordingManager::update() {
+void RecordingManager::update(ConfigManager& configManager, ParticlesSystem& partSystem) {
 	m_clock->update();
+	if (isPlaying())
+		updatePlaying(configManager, partSystem);
 }
 
-void RecordingManager::ImGui(ConfigManager& configManager) {
-	if (!m_bRecording) {
+bool RecordingManager::isRecording() {
+	return m_currRecordingIdx != -1;
+}
+
+bool RecordingManager::isPlaying() {
+	return m_currPlayingIdx != -1;
+}
+
+void RecordingManager::startPlaying(ConfigManager& configManager, ParticlesSystem& partSystem) {
+	m_startTime = m_clock->time();
+	m_currPlayingIdx = 0;
+	if (!m_recordings[m_currPlayingIdx].startPlaying(configManager, partSystem))
+		stopPlaying();
+}
+
+void RecordingManager::updatePlaying(ConfigManager& configManager, ParticlesSystem& partSystem) {
+	if (!m_recordings[m_currPlayingIdx].updatePlaying(timeSinceStart(), configManager, partSystem))
+		stopPlaying();
+}
+
+void RecordingManager::stopPlaying() {
+	m_currPlayingIdx = -1;
+}
+
+void RecordingManager::ImGui(ConfigManager& configManager, ParticlesSystem& partSystem) {
+	if (!isRecording()) {
 		if (ImGui::Button("Start")) {
 			startRecording(configManager.getCurrentConfigRef());
 		}
@@ -48,6 +74,16 @@ void RecordingManager::ImGui(ConfigManager& configManager) {
 	else {
 		if (ImGui::Button("Stop")) {
 			stopRecording();
+		}
+	}
+	if (!isPlaying()) {
+		if (ImGui::Button("Play")) {
+			startPlaying(configManager, partSystem);
+		}
+	}
+	else {
+		if (ImGui::Button("Stop playing")) {
+			stopPlaying();
 		}
 	}
 }

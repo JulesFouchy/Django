@@ -27,10 +27,13 @@ public:
 	inline void onKeyUp(SDL_Scancode scancode) { m_keyBindings.onKeyUp(scancode); }
 
 	ConfigRef getCurrentConfigRef();
+	void applyActionRef(const ActionRef& actionRef);
+	void applyConfigRef(const ConfigRef& configRef);
 
 private:
 	Configuration& get();
 	void applyAction(const Action& action);
+	void setCurrentConfigAsText();
 
 private:
 	ConfigTextGPU m_textConfig;

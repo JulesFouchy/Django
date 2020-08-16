@@ -11,7 +11,7 @@ struct ActionRef {
 	{}
 	ActionRef() = default;
 
-	bool operator==(const ActionRef& o) {
+	bool operator==(const ActionRef& o) const {
 		return type == o.type && !name.compare(o.name);
 	}
 

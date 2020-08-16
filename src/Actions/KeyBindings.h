@@ -22,6 +22,8 @@ public:
 
 	inline std::unordered_map<std::string, ActionBinding*>& getAllActionBindingsOfType(ActionType type) { return m_allActionsByType[type]; }
 
+	const Action* getActionByRef(const ActionRef& actionRef) const;
+
 private:
 	void resetBindings();
 	void setBinding(ActionBinding* actionBinding, SDL_Scancode scancode);

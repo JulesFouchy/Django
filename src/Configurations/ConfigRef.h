@@ -4,11 +4,15 @@
 
 struct ConfigRef {
 	ConfigRef() = default;
-	ConfigRef(const std::string& name, ConfigType type)
-		: name(name), type(type)
+	ConfigRef(const std::string& mainName, const std::string& layoutName, ConfigType type)
+		: mainName(mainName), layoutName(layoutName), type(type)
+	{}
+	ConfigRef(const std::string & name, ConfigType type)
+		: ConfigRef(name, "", type)
 	{}
 
-	std::string name;
+	std::string mainName;
+	std::string layoutName; // only for SHAPE-LAYOUT and SVG-LAYOUT
 	ConfigType type;
 
 private:
@@ -18,7 +22,8 @@ private:
 	void serialize(Archive& archive)
 	{
 		archive(
-			CEREAL_NVP(name),
+			CEREAL_NVP(mainName),
+			CEREAL_NVP(layoutName),
 			CEREAL_NVP(type)
 		);
 	}
