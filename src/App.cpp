@@ -43,16 +43,16 @@ void App::onLoopIteration() {
 		if (m_bShowImGUIDemoWindow) // Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
 			ImGui::ShowDemoWindow(&m_bShowImGUIDemoWindow);
 #endif
-		// Time
-		// ImGui::Begin("Time");
-		// ImGui::Text(("time : " + std::to_string(m_time.time())).c_str());
-		// ImGui::Text(("FPS  : " + std::to_string(1.0f / m_time.deltaTime())).c_str());
-		// ImGui::End();
 		// Settings
 		m_settingsMng.get().ImGuiWindows(m_particlesSystem.physicsComputeShader(), m_particlesSystem, m_configManager);
 		m_configManager.Imgui(m_particlesSystem);
+		// Key bindings
 		ImGui::Begin("Key Bindings");
 		m_configManager.ImGuiKeyBindings(m_particlesSystem, m_recorder);
+		ImGui::End();
+		// Recording
+		ImGui::Begin("Recording");
+		m_recorder.ImGui(m_configManager);
 		ImGui::End();
 	}
 	// Send time to physics compute shader
