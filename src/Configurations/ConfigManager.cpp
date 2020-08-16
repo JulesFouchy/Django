@@ -1,7 +1,7 @@
 #include "ConfigManager.h"
 
 #include "Actions/ThumbnailFactory.h"
-#include "Recording/Recorder.h"
+#include "Recording/RecordingManager.h"
 
 #include <filesystem>
 namespace fs = std::filesystem;
@@ -276,14 +276,14 @@ void ConfigManager::onWheel(float delta, ParticlesSystem& partSystem, bool bNoSt
     applyTo(partSystem);
 }
 
-void ConfigManager::onKeyPressed(SDL_Scancode scancode, char keysym, ParticlesSystem& partSystem, Recorder& recorder) {
+void ConfigManager::onKeyPressed(SDL_Scancode scancode, char keysym, ParticlesSystem& partSystem, RecordingManager& recordingManager) {
     bool bHandled = false;
     if (m_currConfigType != ConfigType::TEXT || !m_textConfig.onKeyPressed(scancode, keysym)) {
         if (!m_params.onKeyPressed(scancode)) {
             const Action* action = m_keyBindings.getAction(scancode);
             if (action) {
                 applyAction(*action);
-                recorder.onAction(action->ref);
+                recordingManager.onAction(action->ref);
                 bHandled = true;
             }
         }

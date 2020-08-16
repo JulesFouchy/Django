@@ -11,7 +11,7 @@
 #include "Helper/Array2D.h"
 
 class ParticlesSystem;
-class Recorder;
+class RecordingManager;
 
 class ConfigManager {
 public:
@@ -20,10 +20,10 @@ public:
 
 	inline void applyTo(ParticlesSystem& partSystem) { get().applyTo(partSystem, m_params, m_randParams); }
 	void Imgui(ParticlesSystem& partSystem);
-	inline void ImGuiKeyBindings(ParticlesSystem& partSystem, Recorder& recorder) { m_keyBindings.ImGui(*this, partSystem, recorder); }
+	inline void ImGuiKeyBindings(ParticlesSystem& partSystem, RecordingManager& recordingManager) { m_keyBindings.ImGui(*this, partSystem, recordingManager); }
 
 	void onWheel(float delta, ParticlesSystem& partSystem, bool bNoStandardScroll);
-	void onKeyPressed(SDL_Scancode scancode, char keysym, ParticlesSystem& partSystem, Recorder& recorder);
+	void onKeyPressed(SDL_Scancode scancode, char keysym, ParticlesSystem& partSystem, RecordingManager& recordingManager);
 	inline void onKeyUp(SDL_Scancode scancode) { m_keyBindings.onKeyUp(scancode); }
 
 	ConfigRef getCurrentConfigRef();

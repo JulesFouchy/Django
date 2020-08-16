@@ -1,15 +1,14 @@
 #pragma once
 
-#include "State.h"
-#include "ActionTimestamp.h"
 #include "Clock/Clock.h"
+#include "Recording.h"
 
 class ConfigManager;
 
-class Recorder {
+class RecordingManager {
 public:
-	Recorder();
-	~Recorder() = default;
+	RecordingManager();
+	~RecordingManager() = default;
 
 	void ImGui(ConfigManager& configManager);
 	void onAction(const ActionRef& actionRef);
@@ -21,12 +20,13 @@ private:
 	float timeSinceStart();
 	void startRecording(const ConfigRef& currentConfigAsAction);
 	void stopRecording();
+	Recording* currentRecording();
 
 private:
 	std::unique_ptr<Clock> m_clock;
-	bool m_bRecording = false;
-
 	float m_startTime;
-	State m_startState;
-	std::vector<ActionTimestamp> m_actionsTimeline;
+
+	bool m_bRecording = false;
+	std::vector<Recording> m_recordings;
+	size_t m_currRecordingIdx = -1;
 };

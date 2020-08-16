@@ -4,7 +4,7 @@
 #include "OpenGL/ShaderPipeline.h"
 #include "Configurations/ConfigManager.h"
 #include "Settings/SettingsManager.h"
-#include "Recording/Recorder.h"
+#include "Recording/RecordingManager.h"
 
 class App {
 private:
@@ -33,7 +33,7 @@ private:
 	ConfigManager m_configManager;
 	SettingsManager m_settingsMng;
 
-	Recorder m_recorder;
+	RecordingManager m_recordingManager;
 
 /********************
   * INTERNAL CODE *

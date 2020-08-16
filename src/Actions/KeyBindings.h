@@ -5,7 +5,7 @@
 
 class ConfigManager;
 class ParticlesSystem;
-class Recorder;
+class RecordingManager;
 
 class KeyBindings {
 	friend class BindingsPresets;
@@ -17,7 +17,7 @@ public:
 	void addAction(Action action);
 	void addAction(Action action, int type);
 	void setupBindings(const std::string& presetFilepath, bool clearExistingBndings = true);
-	void ImGui(ConfigManager& configManager, ParticlesSystem& partSystem, Recorder& recorder);
+	void ImGui(ConfigManager& configManager, ParticlesSystem& partSystem, RecordingManager& recordingManager);
 	void onKeyUp(SDL_Scancode scancode);
 
 	inline std::unordered_map<std::string, ActionBinding*>& getAllActionBindingsOfType(ActionType type) { return m_allActionsByType[type]; }
@@ -36,7 +36,7 @@ private:
 	SDL_Scancode findFirstFromLeft(std::vector<SDL_Scancode> row);
 	SDL_Scancode findFirstFromRight(std::vector<SDL_Scancode> row);
 
-	void ImGui_KeyboardRow(ConfigManager& configManager, ParticlesSystem& partSystem, Recorder& recorder, const std::vector<SDL_Scancode>& row, float indent);
+	void ImGui_KeyboardRow(ConfigManager& configManager, ParticlesSystem& partSystem, RecordingManager& recordingManager, const std::vector<SDL_Scancode>& row, float indent);
 	void ImGui_DragNDropKey(SDL_Scancode scancode, ActionBinding* actionBinding = nullptr);
 	bool ImGui_KeyboardKey(SDL_Scancode scancode, unsigned int textureID, bool hasAnActionBound, bool isKeyPressed);
 

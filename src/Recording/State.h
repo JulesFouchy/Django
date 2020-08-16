@@ -3,7 +3,9 @@
 #include "Configurations/ConfigRef.h"
 
 struct State {
-	State() = default;
+	State(const ConfigRef& configRef)
+		: configRef(configRef)
+	{}
 
 	ConfigRef configRef;
 
