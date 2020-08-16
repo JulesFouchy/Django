@@ -38,4 +38,6 @@ private:
 	size_t m_currRecordingIdx = -1;
 
 	size_t m_currPlayingIdx = -1;
+
+	size_t m_selectedRecordingIdx = -1;
 };

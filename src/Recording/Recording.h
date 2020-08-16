@@ -17,8 +17,11 @@ public:
 	// Returns true iff we should keep playing the recording
 	bool updatePlaying(float time, ConfigManager& configManager, ParticlesSystem& partSystem);
 
+	inline const std::string& name() const { return m_name; }
+
 private:
 	State m_startState;
 	std::vector<ActionTimestamp> m_actionsTimeline;
 	size_t m_nextActionIdx;
+	std::string m_name;
 };

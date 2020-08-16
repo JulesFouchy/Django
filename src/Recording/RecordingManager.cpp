@@ -51,7 +51,7 @@ bool RecordingManager::isPlaying() {
 
 void RecordingManager::startPlaying(ConfigManager& configManager, ParticlesSystem& partSystem) {
 	m_startTime = m_clock->time();
-	m_currPlayingIdx = 0;
+	m_currPlayingIdx = m_selectedRecordingIdx;
 	if (!m_recordings[m_currPlayingIdx].startPlaying(configManager, partSystem))
 		stopPlaying();
 }
@@ -66,6 +66,7 @@ void RecordingManager::stopPlaying() {
 }
 
 void RecordingManager::ImGui(ConfigManager& configManager, ParticlesSystem& partSystem) {
+	// Recording
 	if (!isRecording()) {
 		if (ImGui::Button("Start")) {
 			startRecording(configManager.getCurrentConfigRef());
@@ -76,6 +77,7 @@ void RecordingManager::ImGui(ConfigManager& configManager, ParticlesSystem& part
 			stopRecording();
 		}
 	}
+	// Playing
 	if (!isPlaying()) {
 		if (ImGui::Button("Play")) {
 			startPlaying(configManager, partSystem);
@@ -85,5 +87,10 @@ void RecordingManager::ImGui(ConfigManager& configManager, ParticlesSystem& part
 		if (ImGui::Button("Stop playing")) {
 			stopPlaying();
 		}
+	}
+	// Recordings list
+	for (size_t i = 0; i < m_recordings.size(); ++i) {
+		if (ImGui::Selectable(m_recordings[i].name().c_str(), i == m_selectedRecordingIdx))
+			m_selectedRecordingIdx = i;
 	}
 }

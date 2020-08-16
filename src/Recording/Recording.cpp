@@ -1,9 +1,10 @@
 #include "Recording.h"
 
 #include "Configurations/ConfigManager.h"
+#include "Helper/Time.h"
 
 Recording::Recording(const ConfigRef& initialConfiguration)
-	: m_startState(initialConfiguration)
+	: m_startState(initialConfiguration), m_name(MyTime::AsString())
 {}
 
 void Recording::onAction(const ActionRef& actionRef, float timestamp) {
