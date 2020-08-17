@@ -80,21 +80,25 @@ bool MyImGui::Timeline(const char* label, float* timeInSec, float duration) {
 		bActive |= abs(mouseClickPos.x - p.x - size.x * 0.5) < size.x * 0.5
 			    && abs(mouseClickPos.y - p.y - size.y * 0.5) < size.y * 0.5;
 	}
+	//
+	bool bMouseInsideXBounds = abs(mousePos.x - p.x - size.x * 0.5) < size.x * 0.5;
 
 	const float filledWidth = size.x * (*timeInSec)/duration;
 	// Draw Progress
-    window->DrawList->AddRectFilled(p, ImVec2(p.x + filledWidth, p.y + size.y), ImGui::GetColorU32(ImGuiCol_FrameBg), 25);
+	if (bMouseInsideXBounds)
+		window->DrawList->AddRectFilled(p, ImVec2(p.x + filledWidth, p.y + size.y), ImGui::GetColorU32(ImGuiCol_FrameBg), 25);
 	// Draw Background
     window->DrawList->AddRectFilled(p, ImVec2(p.x + size.x,      p.y + size.y), ImGui::GetColorU32(ImGuiCol_FrameBgActive), 25);
 	// Cursor
 	if (bHovered || bActive) {
 		// Draw line
-		if (abs(mousePos.x - p.x - size.x * 0.5) < size.x * 0.5) {
+		if (bMouseInsideXBounds) {
 			window->DrawList->AddLine(ImVec2(mousePos.x, p.y), ImVec2(mousePos.x, p.y + size.y), ImGui::GetColorU32(ImGuiCol_Text));
 		}
 		// Show time
 		ImGui::BeginTooltip();
 		float t = duration * (mousePos.x - p.x) / size.x;
+		t = std::min(std::max(t, 0.0f), duration);
 		ImGui::Text("%.0fs", t);
 		ImGui::EndTooltip();
 		// Modify time
