@@ -12,6 +12,10 @@ float Clock_FixedTimestep::time() const {
     return m_framesCount * m_dt;
 }
 
+void Clock_FixedTimestep::setTime(float newTime) {
+    m_framesCount = round(newTime / m_dt);
+}
+
 void Clock_FixedTimestep::update() {
     m_framesCount++;
 }

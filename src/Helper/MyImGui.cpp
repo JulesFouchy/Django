@@ -69,14 +69,27 @@ bool MyImGui::Timeline(const char* label, float* timeInSec, float duration) {
     size.x -= style.FramePadding.x * 2;
 	// Detect clic
 	ImGui::InvisibleButton(label, size);
-	bool is_active = ImGui::IsItemActive();
-	bool is_hovered = ImGui::IsItemHovered();
+	bool bActive = ImGui::IsItemActive();
+	const ImVec2& mousePos = ImGui::GetIO().MousePos;
+	bool bHovered = abs(mousePos.x - p.x - size.x*0.5) < size.x*0.5
+		         && abs(mousePos.y - p.y - size.y*0.5) < size.y*0.5;
 
-	const float filledWidth = size.x * (*timeInSec) / duration;
-	// Progress
+	const float filledWidth = size.x * (*timeInSec)/duration;
+	// Draw Progress
     window->DrawList->AddRectFilled(p, ImVec2(p.x + filledWidth, p.y + size.y), ImGui::GetColorU32(ImGuiCol_FrameBg), 25);
-	// Background
+	// Draw Background
     window->DrawList->AddRectFilled(p, ImVec2(p.x + size.x,      p.y + size.y), ImGui::GetColorU32(ImGuiCol_FrameBgActive), 25);
-
-	return true;
+	// Cursor
+	if (bHovered) {
+		window->DrawList->AddLine(ImVec2(mousePos.x, p.y), ImVec2(mousePos.x, p.y + size.y), ImGui::GetColorU32(ImGuiCol_Text));
+		ImGui::BeginTooltip();
+		float t = duration * (mousePos.x - p.x) / size.x;
+		ImGui::Text("%.0fs", t);
+		ImGui::EndTooltip();
+		// On click
+		if (bActive) {
+			*timeInSec = t;
+		}
+	}
+	return bActive;
 }

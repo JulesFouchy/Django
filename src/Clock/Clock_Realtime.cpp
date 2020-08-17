@@ -7,7 +7,7 @@ void Clock_Realtime::Initialize() {
 }
 
 Clock_Realtime::Clock_Realtime()
-    : m_lastTime(SDL_GetPerformanceCounter()), m_currentTime(m_lastTime)
+    : m_lastTime(SDL_GetPerformanceCounter()), m_currentTime(m_lastTime), m_offsetWithSDLTime(m_lastTime * SDLPerformanceCounter2Seconds)
 {}
 
 float Clock_Realtime::deltaTime() const {
@@ -15,7 +15,11 @@ float Clock_Realtime::deltaTime() const {
 }
 
 float Clock_Realtime::time() const {
-	return m_currentTime * SDLPerformanceCounter2Seconds;
+	return m_currentTime * SDLPerformanceCounter2Seconds - m_offsetWithSDLTime;
+}
+
+void Clock_Realtime::setTime(float newTime) {
+    m_offsetWithSDLTime += time() - newTime;
 }
 
 void Clock_Realtime::update(){

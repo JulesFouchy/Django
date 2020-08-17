@@ -97,7 +97,10 @@ void RecordingManager::ImGui(ConfigManager& configManager, ParticlesSystem& part
 	else {
 		// Timeline
 		float t = timeSinceStart();
-		MyImGui::Timeline("", &t, currentlyPlaying().totalDuration());
+		if (MyImGui::Timeline("", &t, currentlyPlaying().totalDuration())) {
+			m_clock->setTime(m_startTime + t);
+			currentlyPlaying().setTime(t, configManager, partSystem);
+		}
 		// Stop playing
 		if (ImGui::Button("Stop playing")) {
 			stopPlaying();
