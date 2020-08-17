@@ -69,10 +69,17 @@ bool MyImGui::Timeline(const char* label, float* timeInSec, float duration) {
     size.x -= style.FramePadding.x * 2;
 	// Detect clic
 	ImGui::InvisibleButton(label, size);
-	bool bActive = ImGui::IsItemActive();
 	const ImVec2& mousePos = ImGui::GetIO().MousePos;
-	bool bHovered = abs(mousePos.x - p.x - size.x*0.5) < size.x*0.5
-		         && abs(mousePos.y - p.y - size.y*0.5) < size.y*0.5;
+	// Hovered
+	bool bHovered = abs(mousePos.x - p.x - size.x * 0.5) < size.x * 0.5
+		         && abs(mousePos.y - p.y - size.y * 0.5) < size.y * 0.5;
+	// Active
+	bool bActive = ImGui::IsItemActive();
+	if (ImGui::IsMouseDragging(ImGuiMouseButton_Left)) {
+		const ImVec2& mouseClickPos = *ImGui::GetIO().MouseClickedPos;
+		bActive |= abs(mouseClickPos.x - p.x - size.x * 0.5) < size.x * 0.5
+			    && abs(mouseClickPos.y - p.y - size.y * 0.5) < size.y * 0.5;
+	}
 
 	const float filledWidth = size.x * (*timeInSec)/duration;
 	// Draw Progress
@@ -80,13 +87,17 @@ bool MyImGui::Timeline(const char* label, float* timeInSec, float duration) {
 	// Draw Background
     window->DrawList->AddRectFilled(p, ImVec2(p.x + size.x,      p.y + size.y), ImGui::GetColorU32(ImGuiCol_FrameBgActive), 25);
 	// Cursor
-	if (bHovered) {
-		window->DrawList->AddLine(ImVec2(mousePos.x, p.y), ImVec2(mousePos.x, p.y + size.y), ImGui::GetColorU32(ImGuiCol_Text));
+	if (bHovered || bActive) {
+		// Draw line
+		if (abs(mousePos.x - p.x - size.x * 0.5) < size.x * 0.5) {
+			window->DrawList->AddLine(ImVec2(mousePos.x, p.y), ImVec2(mousePos.x, p.y + size.y), ImGui::GetColorU32(ImGuiCol_Text));
+		}
+		// Show time
 		ImGui::BeginTooltip();
 		float t = duration * (mousePos.x - p.x) / size.x;
 		ImGui::Text("%.0fs", t);
 		ImGui::EndTooltip();
-		// On click
+		// Modify time
 		if (bActive) {
 			*timeInSec = t;
 		}
