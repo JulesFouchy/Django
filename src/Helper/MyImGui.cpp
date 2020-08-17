@@ -97,13 +97,21 @@ bool MyImGui::Timeline(const char* label, float* timeInSec, float duration) {
 		}
 		// Show time
 		ImGui::BeginTooltip();
-		float t = duration * (mousePos.x - p.x) / size.x;
-		t = std::min(std::max(t, 0.0f), duration);
-		ImGui::Text("%.0fs", t);
+		float time = duration * (mousePos.x - p.x) / size.x;
+		uint32_t t = (uint32_t)std::min(std::max(time, 0.0f), duration);
+		if (duration < 60.0f) {
+			ImGui::Text("%us", t);
+		}
+		else if (duration < 3600.0f) {
+			ImGui::Text("%um%02us", t / 60, t % 60);
+		}
+		else {
+			ImGui::Text("%uh%02um%02us", t / 3600, (t % 3600) / 60, t % 60);
+		}
 		ImGui::EndTooltip();
 		// Modify time
 		if (bActive) {
-			*timeInSec = t;
+			*timeInSec = time;
 		}
 	}
 	return bActive;
