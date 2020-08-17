@@ -76,27 +76,32 @@ void RecordingManager::stopPlaying() {
 void RecordingManager::ImGui(ConfigManager& configManager, ParticlesSystem& partSystem) {
 	// Recording
 	if (!isRecording()) {
+		// Start recording
 		if (ImGui::Button("Start")) {
 			startRecording(configManager.getCurrentConfigRef());
 		}
 	}
 	else {
+		// Stop recording
 		if (ImGui::Button("Stop")) {
 			stopRecording();
 		}
 	}
 	// Playing
 	if (!isPlaying()) {
+		// Start playing
 		if (ImGui::Button("Play")) {
 			startPlaying(configManager, partSystem);
 		}
 	}
 	else {
+		// Timeline
+		float t = timeSinceStart();
+		MyImGui::Timeline("", &t, currentlyPlaying().totalDuration());
+		// Stop playing
 		if (ImGui::Button("Stop playing")) {
 			stopPlaying();
 		}
-		float t = timeSinceStart();
-		MyImGui::Timeline("", &t, currentlyPlaying().totalDuration());
 	}
 	// Recordings list
 	for (size_t i = 0; i < m_recordings.size(); ++i) {
