@@ -83,10 +83,9 @@ bool MyImGui::Timeline(const char* label, float* timeInSec, float duration) {
 	//
 	bool bMouseInsideXBounds = abs(mousePos.x - p.x - size.x * 0.5) < size.x * 0.5;
 
-	const float filledWidth = size.x * (*timeInSec)/duration;
+	const float filledWidth = size.x * std::min(std::max((*timeInSec)/duration, 0.0f), 1.0f);
 	// Draw Progress
-	if (bMouseInsideXBounds)
-		window->DrawList->AddRectFilled(p, ImVec2(p.x + filledWidth, p.y + size.y), ImGui::GetColorU32(ImGuiCol_FrameBg), 25);
+	window->DrawList->AddRectFilled(p, ImVec2(p.x + filledWidth, p.y + size.y), ImGui::GetColorU32(ImGuiCol_FrameBg), 25);
 	// Draw Background
     window->DrawList->AddRectFilled(p, ImVec2(p.x + size.x,      p.y + size.y), ImGui::GetColorU32(ImGuiCol_FrameBgActive), 25);
 	// Cursor
@@ -103,10 +102,10 @@ bool MyImGui::Timeline(const char* label, float* timeInSec, float duration) {
 			ImGui::Text("%us", t);
 		}
 		else if (duration < 3600.0f) {
-			ImGui::Text("%um%02us", t / 60, t % 60);
+			ImGui::Text("%um %02us", t / 60, t % 60);
 		}
 		else {
-			ImGui::Text("%uh%02um%02us", t / 3600, (t % 3600) / 60, t % 60);
+			ImGui::Text("%uh %02um %02us", t / 3600, (t % 3600) / 60, t % 60);
 		}
 		ImGui::EndTooltip();
 		// Modify time
