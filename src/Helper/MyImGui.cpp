@@ -53,3 +53,30 @@ bool MyImGui::AngleWheel(const char* label, float* value_p, float thickness, flo
 
 	return is_active;
 }
+
+// Thanks to https://github.com/ocornut/imgui/issues/1901
+bool MyImGui::Timeline(const char* label, float* timeInSec, float duration) {
+    ImGuiWindow* window = ImGui::GetCurrentWindow();
+    if (window->SkipItems)
+        return false;
+
+    ImGuiContext& g = *GImGui;
+    const ImGuiStyle& style = g.Style;
+    const ImGuiID id = window->GetID(label);
+
+	ImVec2 p = ImGui::GetCursorScreenPos();
+    ImVec2 size = ImVec2(250, 15);
+    size.x -= style.FramePadding.x * 2;
+	// Detect clic
+	ImGui::InvisibleButton(label, size);
+	bool is_active = ImGui::IsItemActive();
+	bool is_hovered = ImGui::IsItemHovered();
+
+	const float filledWidth = size.x * (*timeInSec) / duration;
+	// Progress
+    window->DrawList->AddRectFilled(p, ImVec2(p.x + filledWidth, p.y + size.y), ImGui::GetColorU32(ImGuiCol_FrameBg), 25);
+	// Background
+    window->DrawList->AddRectFilled(p, ImVec2(p.x + size.x,      p.y + size.y), ImGui::GetColorU32(ImGuiCol_FrameBgActive), 25);
+
+	return true;
+}

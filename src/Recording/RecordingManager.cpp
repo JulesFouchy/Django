@@ -4,6 +4,7 @@
 #include "Clock/Clock_Realtime.h"
 #include "Configurations/ConfigManager.h"
 #include "Particles/ParticlesSystem.h"
+#include "Helper/MyImGui.h"
 
 RecordingManager::RecordingManager()
 	: m_clock(std::make_unique<Clock_Realtime>())
@@ -17,11 +18,18 @@ void RecordingManager::startRecording(const ConfigRef& currentConfigRef) {
 }
 
 void RecordingManager::stopRecording() {
+	m_selectedRecordingIdx = m_currRecordingIdx;
 	m_currRecordingIdx = -1;
 }
 
-Recording* RecordingManager::currentRecording() {
-	return isRecording() ? &m_recordings[m_currRecordingIdx] : nullptr;
+Recording& RecordingManager::currentlyRecording() {
+	assert(isRecording());
+	return m_recordings[m_currRecordingIdx];
+}
+
+Recording& RecordingManager::currentlyPlaying() {
+	assert(isPlaying());
+	return m_recordings[m_currPlayingIdx];
 }
 
 float RecordingManager::timeSinceStart() {
@@ -30,8 +38,8 @@ float RecordingManager::timeSinceStart() {
 }
 
 void RecordingManager::onAction(const ActionRef& actionRef) {
-	if (Recording* recording = currentRecording()) {
-		recording->onAction(actionRef, timeSinceStart());
+	if (isRecording()) {
+		currentlyRecording().onAction(actionRef, timeSinceStart());
 	}
 }
 
@@ -87,6 +95,8 @@ void RecordingManager::ImGui(ConfigManager& configManager, ParticlesSystem& part
 		if (ImGui::Button("Stop playing")) {
 			stopPlaying();
 		}
+		float t = timeSinceStart();
+		MyImGui::Timeline("", &t, currentlyPlaying().totalDuration());
 	}
 	// Recordings list
 	for (size_t i = 0; i < m_recordings.size(); ++i) {

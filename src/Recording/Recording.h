@@ -17,6 +17,7 @@ public:
 	// Returns true iff we should keep playing the recording
 	bool updatePlaying(float time, ConfigManager& configManager, ParticlesSystem& partSystem);
 
+	inline float totalDuration() const { return m_actionsTimeline.back().time; } // TODO update me onec we have other timelines
 	inline const std::string& name() const { return m_name; }
 
 private:
