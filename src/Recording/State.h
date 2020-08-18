@@ -6,6 +6,7 @@ struct State {
 	State(const ConfigRef& configRef)
 		: configRef(configRef)
 	{}
+	State() = default;
 
 	ConfigRef configRef;
 
@@ -16,7 +17,7 @@ private:
 	void serialize(Archive& archive)
 	{
 		archive(
-			CEREAL_NVP(configRef),
+			CEREAL_NVP(configRef)
 		);
 	}
 };

@@ -5,6 +5,7 @@
 #include "Configurations/ConfigManager.h"
 #include "Particles/ParticlesSystem.h"
 #include "Helper/MyImGui.h"
+#include "Helper/File.h"
 
 RecordingManager::RecordingManager()
 	: m_clock(std::make_unique<Clock_Realtime>())
@@ -18,6 +19,7 @@ void RecordingManager::startRecording(const ConfigRef& currentConfigRef) {
 }
 
 void RecordingManager::stopRecording() {
+	currentlyRecording().serialize(MyFile::RootDir + "/recordings");
 	m_selectedRecordingIdx = m_currRecordingIdx;
 	m_currRecordingIdx = -1;
 }

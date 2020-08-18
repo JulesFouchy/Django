@@ -50,5 +50,5 @@ std::string MyTime::AsString() {
 	std::string minute = std::to_string(ltm->tm_min);
 	std::string second = std::to_string(ltm->tm_sec);
 
-	return year + "_" + month + "_" + day + "_" + hour + "h:" + minute + "m:" + second + "s";
+	return year + "_" + month + "_" + day + "__" + hour + "h" + minute + "m" + second + "s";
 }

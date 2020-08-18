@@ -9,6 +9,7 @@ class ParticlesSystem;
 class Recording {
 public:
 	Recording(const ConfigRef& initialConfiguration);
+	Recording(const std::string& filepath);
 	~Recording() = default;
 
 	void onAction(const ActionRef& actionRef, float timestamp);
@@ -19,9 +20,13 @@ public:
 	inline float totalDuration() const { return m_actionsTimeline.back().time; } // TODO update me onec we have other timelines
 	inline const std::string& name() const { return m_name; }
 
+	void serialize(const std::string& folderPath);
+
 private:
 	void applyConfig(const ConfigRef& configRef, ConfigManager& configManager, ParticlesSystem& partSystem);
 	void applyAction(size_t idx,                 ConfigManager& configManager, ParticlesSystem& partSystem);
+
+	void deserialize(const std::string& filepath);
 
 private:
 	State m_startState;
