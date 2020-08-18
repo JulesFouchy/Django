@@ -31,6 +31,8 @@ private:
 	bool isRecording();
 	bool isPlaying();
 
+	void serializeRecording(Recording& recording);
+
 private:
 	std::unique_ptr<Clock> m_clock;
 	float m_startTime;

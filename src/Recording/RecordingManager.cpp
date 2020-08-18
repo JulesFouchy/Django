@@ -19,7 +19,7 @@ void RecordingManager::startRecording(const ConfigRef& currentConfigRef) {
 }
 
 void RecordingManager::stopRecording() {
-	currentlyRecording().serialize(MyFile::RootDir + "/recordings");
+	serializeRecording(currentlyRecording());
 	m_selectedRecordingIdx = m_currRecordingIdx;
 	m_currRecordingIdx = -1;
 }
@@ -73,6 +73,13 @@ void RecordingManager::updatePlaying(ConfigManager& configManager, ParticlesSyst
 
 void RecordingManager::stopPlaying() {
 	m_currPlayingIdx = -1;
+}
+
+void RecordingManager::serializeRecording(Recording& recording) {
+	const std::string& folderPath = MyFile::RootDir + "/recordings";
+	if (!MyFile::Exists(folderPath))
+		std::filesystem::create_directory(folderPath);
+	recording.serialize(folderPath);
 }
 
 void RecordingManager::ImGui(ConfigManager& configManager, ParticlesSystem& partSystem) {
