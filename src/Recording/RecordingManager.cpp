@@ -9,7 +9,12 @@
 
 RecordingManager::RecordingManager()
 	: m_clock(std::make_unique<Clock_Realtime>())
-{}
+{
+	for (auto& entry : std::filesystem::directory_iterator(MyFile::RootDir + "/recordings")) {
+		m_recordings.emplace_back(entry.path().string());
+	}
+	m_selectedRecordingIdx = m_recordings.size() - 1;
+}
 
 void RecordingManager::startRecording(const ConfigRef& currentConfigRef) {
 	m_startTime = m_clock->time();
