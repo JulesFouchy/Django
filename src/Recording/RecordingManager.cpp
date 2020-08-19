@@ -123,7 +123,9 @@ void RecordingManager::ImGui(ConfigManager& configManager, ParticlesSystem& part
 	}
 	// Recordings list
 	for (size_t i = 0; i < m_recordings.size(); ++i) {
-		if (ImGui::Selectable(m_recordings[i].name().c_str(), i == m_selectedRecordingIdx))
-			m_selectedRecordingIdx = i;
+		if (i != m_currRecordingIdx) {
+			if (ImGui::Selectable(m_recordings[i].name().c_str(), i == m_selectedRecordingIdx))
+				m_selectedRecordingIdx = i;
+		}
 	}
 }
