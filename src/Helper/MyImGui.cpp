@@ -100,6 +100,9 @@ bool MyImGui::Timeline(const char* label, float* timeInSec, float duration, floa
 	window->DrawList->AddRectFilled(p, ImVec2(p.x + filledWidth, p.y + size.y), ImGui::GetColorU32(ImGuiCol_FrameBg), 25);
 	// Draw Background
     window->DrawList->AddRectFilled(p, ImVec2(p.x + size.x,      p.y + size.y), ImGui::GetColorU32(ImGuiCol_FrameBgActive), 25);
+	// Show total duration
+	ImGui::SameLine();
+	TextHourMinSec(duration, duration);
 	// Cursor
 	if (bHovered || bActive) {
 		// Draw line
