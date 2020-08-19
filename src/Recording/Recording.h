@@ -17,7 +17,7 @@ public:
 	bool updatePlaying(float time, ConfigManager& configManager, ParticlesSystem& partSystem); // Returns true iff we should keep playing the recording
 
 	bool setTime(float newTime, ConfigManager& configManager, ParticlesSystem& partSystem); // Returns true iff we should keep playing the recording
-	inline float totalDuration() const { return m_actionsTimeline.back().time; } // TODO update me onec we have other timelines
+	inline float totalDuration() const { return m_actionsTimeline.size() > 0 ? m_actionsTimeline.back().time : 0.0f; } // TODO update me onec we have other timelines
 	inline const std::string& name() const { return m_name; }
 
 	void serialize(const std::string& folderPath);

@@ -22,8 +22,6 @@ private:
 	void startRecording(const ConfigRef& currentConfigAsAction);
 	void stopRecording();
 	void setSelectedRecording(size_t idx);
-	Recording& currentlyRecording();
-	Recording& currentlyPlaying();
 
 	void startPlaying (ConfigManager& configManager, ParticlesSystem& partSystem);
 	void updatePlaying(ConfigManager& configManager, ParticlesSystem& partSystem);
@@ -31,6 +29,10 @@ private:
 
 	bool isRecording();
 	bool isPlaying();
+	bool hasARecordSelected();
+	Recording& currentlyRecording();
+	Recording& currentlyPlaying();
+	Recording& currentlySelected();
 
 	void serializeRecording(Recording& recording);
 

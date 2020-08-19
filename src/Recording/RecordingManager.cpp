@@ -38,16 +38,6 @@ void RecordingManager::setSelectedRecording(size_t idx) {
 	m_selectedRecordingIdx = idx;
 }
 
-Recording& RecordingManager::currentlyRecording() {
-	assert(isRecording());
-	return m_recordings[m_currRecordingIdx];
-}
-
-Recording& RecordingManager::currentlyPlaying() {
-	assert(isPlaying());
-	return m_recordings[m_selectedRecordingIdx];
-}
-
 float RecordingManager::timeSinceStart() {
 	assert(isRecording() || isPlaying());
 	return m_clock->time() - m_startTime;
@@ -68,9 +58,24 @@ void RecordingManager::update(ConfigManager& configManager, ParticlesSystem& par
 bool RecordingManager::isRecording() {
 	return m_currRecordingIdx != -1;
 }
-
 bool RecordingManager::isPlaying() {
 	return m_bIsPlaying;
+}
+bool RecordingManager::hasARecordSelected() {
+	return m_selectedRecordingIdx != -1;
+}
+
+Recording& RecordingManager::currentlyRecording() {
+	assert(isRecording());
+	return m_recordings[m_currRecordingIdx];
+}
+Recording& RecordingManager::currentlyPlaying() {
+	assert(isPlaying());
+	return m_recordings[m_selectedRecordingIdx];
+}
+Recording& RecordingManager::currentlySelected() {
+	assert(hasARecordSelected());
+	return m_recordings[m_selectedRecordingIdx];
 }
 
 void RecordingManager::startPlaying(ConfigManager& configManager, ParticlesSystem& partSystem) {
@@ -116,21 +121,28 @@ void RecordingManager::ImGui(ConfigManager& configManager, ParticlesSystem& part
 		if (ImGui::Button("Play")) {
 			startPlaying(configManager, partSystem);
 		}
+		// Timeline
+		if (hasARecordSelected()) {
+			float t = 0.0f;
+			MyImGui::Timeline("", &t, currentlySelected().totalDuration());
+		}
 	}
 	// If playing
 	else {
 		// Disabled recording
 		//MyImGui::ButtonDisabled("Record", "Cannot record while replaying");
-		// Timeline
-		float t = timeSinceStart();
-		if (MyImGui::Timeline("", &t, currentlyPlaying().totalDuration())) {
-			m_clock->setTime(m_startTime + t);
-			if (!currentlyPlaying().setTime(t, configManager, partSystem))
-				stopPlaying();
-		}
 		// Stop playing
 		if (ImGui::Button("Stop playing")) {
 			stopPlaying();
+		}
+		else { // Can only work if we are still playing
+			// Timeline
+			float t = timeSinceStart();
+			if (MyImGui::Timeline("", &t, currentlyPlaying().totalDuration())) {
+				m_clock->setTime(m_startTime + t);
+				if (!currentlyPlaying().setTime(t, configManager, partSystem))
+					stopPlaying();
+			}
 		}
 	}
 	// Recordings list
