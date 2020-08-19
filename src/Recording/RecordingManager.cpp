@@ -97,27 +97,30 @@ void RecordingManager::serializeRecording(Recording& recording) {
 }
 
 void RecordingManager::ImGui(ConfigManager& configManager, ParticlesSystem& partSystem) {
-	// Recording
-	if (!isRecording()) {
-		// Start recording
-		if (ImGui::Button("Start")) {
-			startRecording(configManager.getCurrentConfigRef());
-		}
-	}
-	else {
-		// Stop recording
-		if (ImGui::Button("Stop")) {
-			stopRecording();
-		}
-	}
-	// Playing
+	// If Not Playing
 	if (!isPlaying()) {
+		// Recording
+		if (!isRecording()) {
+			// Start recording
+			if (ImGui::Button("Record")) {
+				startRecording(configManager.getCurrentConfigRef());
+			}
+		}
+		else {
+			// Stop recording
+			if (ImGui::Button("Stop recording")) {
+				stopRecording();
+			}
+		}
 		// Start playing
 		if (ImGui::Button("Play")) {
 			startPlaying(configManager, partSystem);
 		}
 	}
+	// If playing
 	else {
+		// Disabled recording
+		//MyImGui::ButtonDisabled("Record", "Cannot record while replaying");
 		// Timeline
 		float t = timeSinceStart();
 		if (MyImGui::Timeline("", &t, currentlyPlaying().totalDuration())) {
