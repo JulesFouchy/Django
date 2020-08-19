@@ -29,6 +29,15 @@ void RecordingManager::stopRecording() {
 	m_currRecordingIdx = -1;
 }
 
+void RecordingManager::setSelectedRecording(size_t idx) {
+	if (isRecording())
+		stopRecording();
+	if (isPlaying())
+		stopPlaying();
+	assert(m_selectedRecordingIdx != idx);
+	m_selectedRecordingIdx = idx;
+}
+
 Recording& RecordingManager::currentlyRecording() {
 	assert(isRecording());
 	return m_recordings[m_currRecordingIdx];
@@ -36,7 +45,7 @@ Recording& RecordingManager::currentlyRecording() {
 
 Recording& RecordingManager::currentlyPlaying() {
 	assert(isPlaying());
-	return m_recordings[m_currPlayingIdx];
+	return m_recordings[m_selectedRecordingIdx];
 }
 
 float RecordingManager::timeSinceStart() {
@@ -61,23 +70,23 @@ bool RecordingManager::isRecording() {
 }
 
 bool RecordingManager::isPlaying() {
-	return m_currPlayingIdx != -1;
+	return m_bIsPlaying;
 }
 
 void RecordingManager::startPlaying(ConfigManager& configManager, ParticlesSystem& partSystem) {
 	m_startTime = m_clock->time();
-	m_currPlayingIdx = m_selectedRecordingIdx;
-	if (!m_recordings[m_currPlayingIdx].startPlaying(configManager, partSystem))
+	m_bIsPlaying = true;
+	if (!m_recordings[m_selectedRecordingIdx].startPlaying(configManager, partSystem))
 		stopPlaying();
 }
 
 void RecordingManager::updatePlaying(ConfigManager& configManager, ParticlesSystem& partSystem) {
-	if (!m_recordings[m_currPlayingIdx].updatePlaying(timeSinceStart(), configManager, partSystem))
+	if (!currentlyPlaying().updatePlaying(timeSinceStart(), configManager, partSystem))
 		stopPlaying();
 }
 
 void RecordingManager::stopPlaying() {
-	m_currPlayingIdx = -1;
+	m_bIsPlaying = false;
 }
 
 void RecordingManager::serializeRecording(Recording& recording) {
@@ -124,8 +133,12 @@ void RecordingManager::ImGui(ConfigManager& configManager, ParticlesSystem& part
 	// Recordings list
 	for (size_t i = 0; i < m_recordings.size(); ++i) {
 		if (i != m_currRecordingIdx) {
-			if (ImGui::Selectable(m_recordings[i].name().c_str(), i == m_selectedRecordingIdx))
-				m_selectedRecordingIdx = i;
+			bool bIsSelectedRecording = i == m_selectedRecordingIdx;
+			if (ImGui::Selectable(m_recordings[i].name().c_str(), bIsSelectedRecording)) {
+				if (!bIsSelectedRecording) {
+					setSelectedRecording(i);
+				}
+			}
 		}
 	}
 }

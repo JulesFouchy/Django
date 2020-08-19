@@ -21,6 +21,7 @@ private:
 	float timeSinceStart();
 	void startRecording(const ConfigRef& currentConfigAsAction);
 	void stopRecording();
+	void setSelectedRecording(size_t idx);
 	Recording& currentlyRecording();
 	Recording& currentlyPlaying();
 
@@ -39,6 +40,6 @@ private:
 
 	std::vector<Recording> m_recordings;
 	size_t m_currRecordingIdx = -1;
-	size_t m_currPlayingIdx = -1;
+	bool m_bIsPlaying = false;
 	size_t m_selectedRecordingIdx = -1;
 };
