@@ -54,6 +54,19 @@ bool MyImGui::AngleWheel(const char* label, float* value_p, float thickness, flo
 	return is_active;
 }
 
+void MyImGui::TextHourMinSec(float timeInSec, float totalDuration) {
+	uint32_t t = (uint32_t)timeInSec;
+	if (totalDuration < 60.0f) {
+		ImGui::Text("%us", t);
+	}
+	else if (totalDuration < 3600.0f) {
+		ImGui::Text("%um %02us", t / 60, t % 60);
+	}
+	else {
+		ImGui::Text("%uh %02um %02us", t / 3600, (t % 3600) / 60, t % 60);
+	}
+}
+
 // Thanks to https://github.com/ocornut/imgui/issues/1901
 bool MyImGui::Timeline(const char* label, float* timeInSec, float duration, float maxWidthInPx) {
     ImGuiWindow* window = ImGui::GetCurrentWindow();
@@ -96,16 +109,8 @@ bool MyImGui::Timeline(const char* label, float* timeInSec, float duration, floa
 		// Show time
 		ImGui::BeginTooltip();
 		float time = duration * (mousePos.x - p.x) / size.x;
-		uint32_t t = (uint32_t)std::min(std::max(time, 0.0f), duration);
-		if (duration < 60.0f) {
-			ImGui::Text("%us", t);
-		}
-		else if (duration < 3600.0f) {
-			ImGui::Text("%um %02us", t / 60, t % 60);
-		}
-		else {
-			ImGui::Text("%uh %02um %02us", t / 3600, (t % 3600) / 60, t % 60);
-		}
+		time = std::min(std::max(time, 0.0f), duration);
+		TextHourMinSec(time, duration);
 		ImGui::EndTooltip();
 		// Modify time
 		if (bActive) {
