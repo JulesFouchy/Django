@@ -55,7 +55,7 @@ bool MyImGui::AngleWheel(const char* label, float* value_p, float thickness, flo
 }
 
 // Thanks to https://github.com/ocornut/imgui/issues/1901
-bool MyImGui::Timeline(const char* label, float* timeInSec, float duration) {
+bool MyImGui::Timeline(const char* label, float* timeInSec, float duration, float maxWidthInPx) {
     ImGuiWindow* window = ImGui::GetCurrentWindow();
     if (window->SkipItems)
         return false;
@@ -65,8 +65,7 @@ bool MyImGui::Timeline(const char* label, float* timeInSec, float duration) {
     const ImGuiID id = window->GetID(label);
 
 	ImVec2 p = ImGui::GetCursorScreenPos();
-    ImVec2 size = ImVec2(250, 15);
-    size.x -= style.FramePadding.x * 2;
+    ImVec2 size = ImVec2(std::min(maxWidthInPx, ImGui::GetWindowContentRegionWidth()), 15);
 	// Detect clic
 	ImGui::InvisibleButton(label, size);
 	const ImVec2& mousePos = ImGui::GetIO().MousePos;
