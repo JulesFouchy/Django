@@ -53,6 +53,7 @@ void RecordingManager::update(ConfigManager& configManager, ParticlesSystem& par
 	m_clock->update();
 	if (isPlaying())
 		updatePlaying(configManager, partSystem);
+	m_bDraggingOnTheTimeline = false; // Resets every frame. It is set by the ImGui() method before the call to update()
 }
 
 bool RecordingManager::isRecording() {
@@ -86,7 +87,8 @@ void RecordingManager::startPlaying(ConfigManager& configManager, ParticlesSyste
 }
 
 void RecordingManager::updatePlaying(ConfigManager& configManager, ParticlesSystem& partSystem) {
-	if (!currentlyPlaying().updatePlaying(timeSinceStart(), configManager, partSystem))
+	if (!currentlyPlaying().updatePlaying(timeSinceStart(), configManager, partSystem)
+	 && !m_bDraggingOnTheTimeline) // Prevent the playing from stopping just because we dragged the time cursor outside of the timeline
 		stopPlaying();
 }
 
@@ -140,13 +142,13 @@ void RecordingManager::ImGui(ConfigManager& configManager, ParticlesSystem& part
 		if (ImGui::Button("Stop playing")) {
 			stopPlaying();
 		}
-		else { // Can only work if we are still playing
+		else { // Would crash if we stopped playing during this frame
 			// Timeline
 			float t = timeSinceStart();
 			if (MyImGui::Timeline("", &t, currentlyPlaying().totalDuration())) {
 				m_clock->setTime(m_startTime + t);
-				if (!currentlyPlaying().setTime(t, configManager, partSystem))
-					stopPlaying();
+				currentlyPlaying().setTime(t, configManager, partSystem);
+				m_bDraggingOnTheTimeline = true;
 			}
 		}
 	}

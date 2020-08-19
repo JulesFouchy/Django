@@ -44,4 +44,6 @@ private:
 	size_t m_currRecordingIdx = -1;
 	bool m_bIsPlaying = false;
 	size_t m_selectedRecordingIdx = -1;
+
+	bool m_bDraggingOnTheTimeline = false;
 };

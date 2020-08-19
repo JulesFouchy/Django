@@ -24,15 +24,20 @@ bool Recording::startPlaying(ConfigManager& configManager, ParticlesSystem& part
 }
 
 bool Recording::updatePlaying(float time, ConfigManager& configManager, ParticlesSystem& partSystem) {
-	while (m_actionsTimeline[m_nextActionIdx].time < time) {
-		// Apply action
-		applyAction(m_nextActionIdx, configManager, partSystem);
-		// Move to next action
-		m_nextActionIdx++;
-		if (m_nextActionIdx >= m_actionsTimeline.size())
-			return false;
+	if (m_nextActionIdx < m_actionsTimeline.size()) {
+		while (m_actionsTimeline[m_nextActionIdx].time < time) {
+			// Apply action
+			applyAction(m_nextActionIdx, configManager, partSystem);
+			// Move to next action
+			m_nextActionIdx++;
+			if (m_nextActionIdx >= m_actionsTimeline.size())
+				return false;
+		}
+		return true;
 	}
-	return true;
+	else {
+		return false;
+	}
 }
 
 bool Recording::setTime(float newTime, ConfigManager& configManager, ParticlesSystem& partSystem) {
