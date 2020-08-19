@@ -118,8 +118,13 @@ void RecordingManager::ImGui(ConfigManager& configManager, ParticlesSystem& part
 			}
 		}
 		// Start playing
-		if (ImGui::Button("Play")) {
-			startPlaying(configManager, partSystem);
+		if (!isRecording()) {
+			if (ImGui::Button("Play")) {
+				startPlaying(configManager, partSystem);
+			}
+		}
+		else {
+			MyImGui::ButtonDisabled("Play", "Cannot play while recording a clip");
 		}
 		// Timeline
 		if (hasARecordSelected()) {
