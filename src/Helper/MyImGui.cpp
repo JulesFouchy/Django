@@ -115,3 +115,14 @@ bool MyImGui::Timeline(const char* label, float* timeInSec, float duration) {
 	}
 	return bActive;
 }
+
+void MyImGui::ButtonDisabled(const char* label, const char* reasonForDisabling) {
+	ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyle().Colors[ImGuiCol_TextDisabled]);
+	ImGui::ButtonEx(label, ImVec2(0, 0), ImGuiButtonFlags_Disabled);
+	ImGui::PopStyleColor();
+	if (ImGui::IsItemHovered()) {
+		ImGui::BeginTooltip();
+		ImGui::Text(reasonForDisabling);
+		ImGui::EndTooltip();
+	}
+}

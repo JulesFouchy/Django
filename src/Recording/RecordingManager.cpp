@@ -130,7 +130,7 @@ void RecordingManager::ImGui(ConfigManager& configManager, ParticlesSystem& part
 	// If playing
 	else {
 		// Disabled recording
-		//MyImGui::ButtonDisabled("Record", "Cannot record while replaying");
+		MyImGui::ButtonDisabled("Record", "Cannot record while playing a clip");
 		// Stop playing
 		if (ImGui::Button("Stop playing")) {
 			stopPlaying();
