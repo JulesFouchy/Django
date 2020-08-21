@@ -110,13 +110,13 @@ void RecordingManager::ImGui(ConfigManager& configManager, ParticlesSystem& part
 		// Recording
 		if (!isRecording()) {
 			// Start recording
-			if (MyImGui::ButtonWithIcon(Textures::Record())) {
+			if (MyImGui::ButtonWithIcon(Textures::Record(), ImVec4(1, 0, 0, 1))) {
 				startRecording(configManager.getCurrentConfigRef());
 			}
 		}
 		else {
 			// Stop recording
-			if (MyImGui::ButtonWithIcon(Textures::Recording())) {
+			if (MyImGui::ButtonWithIcon(Textures::Record(), ImVec4(1, 0, 0, 1), ImVec4(1, 0.2, 0.2, 1))) {
 				stopRecording();
 			}
 		}

@@ -145,17 +145,17 @@ void MyImGui::ButtonDisabled(const char* label, const char* reasonForDisabling) 
 static constexpr int BUTTON_ICON_SIZE = 24;
 static constexpr int BUTTON_FRAME_PADDING = 2;
 
-bool MyImGui::ButtonWithIcon(unsigned int texID) {
-	return ImGui::ImageButton((ImTextureID)texID, ImVec2(BUTTON_ICON_SIZE, BUTTON_ICON_SIZE), ImVec2(0, 0), ImVec2(1, 1), BUTTON_FRAME_PADDING);
+bool MyImGui::ButtonWithIcon(unsigned int texID, const ImVec4& tintColor, const ImVec4& backgroundColor) {
+	return ImGui::ImageButton((ImTextureID)texID, ImVec2(BUTTON_ICON_SIZE, BUTTON_ICON_SIZE), ImVec2(0, 0), ImVec2(1, 1), BUTTON_FRAME_PADDING, backgroundColor, tintColor);
 }
 
 void MyImGui::ButtonWithIconDisabled(unsigned int texID, const char* reasonForDisabling) {
 	const ImVec4 grey = ImVec4(0.35, 0.35, 0.35, 1);
-	ImageFramed(texID, ImVec2(BUTTON_ICON_SIZE, BUTTON_ICON_SIZE), BUTTON_FRAME_PADDING, grey, grey);
+	ImageFramed(texID, ImVec2(BUTTON_ICON_SIZE, BUTTON_ICON_SIZE), BUTTON_FRAME_PADDING, grey, ImVec4(0, 0, 0, 1), grey);
 	Tooltip(reasonForDisabling);
 }
 
-void MyImGui::ImageFramed(unsigned int texID, const ImVec2& size, int frameThickness, const ImVec4& frameColor, const ImVec4& tintColor) {
+void MyImGui::ImageFramed(unsigned int texID, const ImVec2& size, int frameThickness, const ImVec4& frameColor, const ImVec4& backgroundColor, const ImVec4& tintColor) {
 	ImGuiWindow* window = ImGui::GetCurrentWindow();
 	if (window->SkipItems)
 		return;
@@ -180,5 +180,6 @@ void MyImGui::ImageFramed(unsigned int texID, const ImVec2& size, int frameThick
 	const ImU32 frameCol = frameColor.w > 0.0f ? ImGui::GetColorU32(frameColor) : ImGui::GetColorU32(ImGuiCol_Button);
 	ImGui::RenderNavHighlight(bb, id);
 	ImGui::RenderFrame(bb.Min, bb.Max, frameCol, true, ImClamp((float)ImMin(padding.x, padding.y), 0.0f, style.FrameRounding));
+	ImGui::RenderFrame(image_bb.Min, image_bb.Max, ImGui::GetColorU32(backgroundColor), true, ImClamp((float)ImMin(padding.x, padding.y), 0.0f, style.FrameRounding));
 	window->DrawList->AddImage((ImTextureID)texID, image_bb.Min, image_bb.Max, ImVec2(0, 0), ImVec2(1, 1), ImGui::GetColorU32(tintColor));
 }

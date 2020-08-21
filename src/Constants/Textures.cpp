@@ -6,20 +6,17 @@
 unsigned int Textures::m_playID      = -1;
 unsigned int Textures::m_pauseID     = -1;
 unsigned int Textures::m_recordID    = -1;
-unsigned int Textures::m_recordingID = -1;
 
 void Textures::_LoadAll() {
 	m_playID      = LoadTexture("icons/play.png");
 	m_pauseID     = LoadTexture("icons/pause.png");
 	m_recordID    = LoadTexture("icons/record.png");
-	m_recordingID = LoadTexture("icons/recording.png");
 }
 
 void Textures::_DestroyAll() {
 	DestroyTexture(m_playID);
 	DestroyTexture(m_pauseID);
 	DestroyTexture(m_recordID);
-	DestroyTexture(m_recordingID);
 }
 
 unsigned int Textures::LoadTexture(const std::string& filepath) {
