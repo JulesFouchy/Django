@@ -110,19 +110,20 @@ void RecordingManager::ImGui(ConfigManager& configManager, ParticlesSystem& part
 		// Recording
 		if (!isRecording()) {
 			// Start recording
-			if (ImGui::ImageButton((ImTextureID)Textures::Record(), ImVec2(Textures::ICON_SIZE, Textures::ICON_SIZE))) {
+			if (MyImGui::ButtonWithIcon(Textures::Record())) {
 				startRecording(configManager.getCurrentConfigRef());
 			}
 		}
 		else {
 			// Stop recording
-			if (ImGui::ImageButton((ImTextureID)Textures::Recording(), ImVec2(Textures::ICON_SIZE, Textures::ICON_SIZE))) {
+			if (MyImGui::ButtonWithIcon(Textures::Recording())) {
 				stopRecording();
 			}
 		}
+		ImGui::SameLine();
 		// Start playing
 		if (!isRecording()) {
-			if (ImGui::Button("Play")) {
+			if (MyImGui::ButtonWithIcon(Textures::Play())) {
 				startPlaying(configManager, partSystem);
 			}
 		}

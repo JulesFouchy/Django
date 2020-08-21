@@ -2,8 +2,6 @@
 
 class Textures {
 public:
-	static int ICON_SIZE;
-
 	static inline unsigned int Play()      { return m_playID; }
 	static inline unsigned int Pause()     { return m_pauseID; }
 	static inline unsigned int Record()    { return m_recordID; }

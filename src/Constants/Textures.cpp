@@ -3,8 +3,6 @@
 #include <stb_image/stb_image.h>
 #include "Debugging/glException.h"
 
-int Textures::ICON_SIZE = 32;
-
 unsigned int Textures::m_playID      = -1;
 unsigned int Textures::m_pauseID     = -1;
 unsigned int Textures::m_recordID    = -1;

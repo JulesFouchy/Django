@@ -7,4 +7,5 @@ namespace MyImGui {
 	void TextHourMinSec(float timeInSec, float totalDuration = std::numeric_limits<float>::max());
 	bool Timeline(const char* label, float* timeInSec, float duration, float maxWidthInPx = 325.0f);
 	void ButtonDisabled(const char* label, const char* reasonForDisabling = "Currently disabled");
+	bool ButtonWithIcon(unsigned int texID);
 }

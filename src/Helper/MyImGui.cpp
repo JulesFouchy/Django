@@ -134,3 +134,9 @@ void MyImGui::ButtonDisabled(const char* label, const char* reasonForDisabling) 
 		ImGui::EndTooltip();
 	}
 }
+
+static constexpr int ICON_SIZE = 24;
+
+bool MyImGui::ButtonWithIcon(unsigned int texID) {
+	return ImGui::ImageButton((ImTextureID)texID, ImVec2(ICON_SIZE, ICON_SIZE), ImVec2(0, 0), ImVec2(1, 1), 2);
+}
