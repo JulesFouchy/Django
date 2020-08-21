@@ -128,7 +128,7 @@ void RecordingManager::ImGui(ConfigManager& configManager, ParticlesSystem& part
 			}
 		}
 		else {
-			MyImGui::ButtonDisabled("Play", "Cannot play while recording a clip");
+			MyImGui::ButtonWithIconDisabled(Textures::Play(), "Cannot play while recording a clip");
 		}
 		// Timeline
 		if (hasARecordSelected()) {
@@ -139,9 +139,10 @@ void RecordingManager::ImGui(ConfigManager& configManager, ParticlesSystem& part
 	// If playing
 	else {
 		// Disabled recording
-		MyImGui::ButtonDisabled("Record", "Cannot record while playing a clip");
+		MyImGui::ButtonWithIconDisabled(Textures::Record(), "Cannot record while playing a clip");
+		ImGui::SameLine();
 		// Stop playing
-		if (ImGui::Button("Stop playing")) {
+		if (MyImGui::ButtonWithIcon(Textures::Pause())) {
 			stopPlaying();
 		}
 		else { // Would crash if we stopped playing during this frame

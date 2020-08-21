@@ -1,5 +1,8 @@
 #include "MyImGui.h"
 
+#ifndef IMGUI_DEFINE_MATH_OPERATORS
+#define IMGUI_DEFINE_MATH_OPERATORS
+#endif
 #include <imgui/imgui_internal.h>
 
 bool MyImGui::SliderFloatWithExtensibleRange(const char* label, float* v, float* vMin, float* vMax, float speed, const char* format, float power) {
@@ -123,20 +126,59 @@ bool MyImGui::Timeline(const char* label, float* timeInSec, float duration, floa
 	return bActive;
 }
 
+void MyImGui::Tooltip(const char* text) {
+	if (ImGui::IsItemHovered()) {
+		ImGui::BeginTooltip();
+		ImGui::Text(text);
+		ImGui::EndTooltip();
+	}
+}
+
 void MyImGui::ButtonDisabled(const char* label, const char* reasonForDisabling) {
 	ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyle().Colors[ImGuiCol_FrameBg]);
 	ImGui::PushStyleColor(ImGuiCol_Text,   ImGui::GetStyle().Colors[ImGuiCol_TextDisabled]);
 	ImGui::ButtonEx(label, ImVec2(0, 0), ImGuiButtonFlags_Disabled);
 	ImGui::PopStyleColor(2);
-	if (ImGui::IsItemHovered()) {
-		ImGui::BeginTooltip();
-		ImGui::Text(reasonForDisabling);
-		ImGui::EndTooltip();
-	}
+	Tooltip(reasonForDisabling);
 }
 
-static constexpr int ICON_SIZE = 24;
+static constexpr int BUTTON_ICON_SIZE = 24;
+static constexpr int BUTTON_FRAME_PADDING = 2;
 
 bool MyImGui::ButtonWithIcon(unsigned int texID) {
-	return ImGui::ImageButton((ImTextureID)texID, ImVec2(ICON_SIZE, ICON_SIZE), ImVec2(0, 0), ImVec2(1, 1), 2);
+	return ImGui::ImageButton((ImTextureID)texID, ImVec2(BUTTON_ICON_SIZE, BUTTON_ICON_SIZE), ImVec2(0, 0), ImVec2(1, 1), BUTTON_FRAME_PADDING);
+}
+
+void MyImGui::ButtonWithIconDisabled(unsigned int texID, const char* reasonForDisabling) {
+	const ImVec4 grey = ImVec4(0.35, 0.35, 0.35, 1);
+	ImageFramed(texID, ImVec2(BUTTON_ICON_SIZE, BUTTON_ICON_SIZE), BUTTON_FRAME_PADDING, grey, grey);
+	Tooltip(reasonForDisabling);
+}
+
+void MyImGui::ImageFramed(unsigned int texID, const ImVec2& size, int frameThickness, const ImVec4& frameColor, const ImVec4& tintColor) {
+	ImGuiWindow* window = ImGui::GetCurrentWindow();
+	if (window->SkipItems)
+		return;
+
+	ImGuiContext& g = *GImGui;
+	const ImGuiStyle& style = g.Style;
+
+	// Default to using texture ID as ID. User can still push string/integer prefixes.
+	// We could hash the size/uv to create a unique ID but that would prevent the user from animating UV.
+	ImGui::PushID((void*)(intptr_t)texID);
+	const ImGuiID id = window->GetID("#image");
+	ImGui::PopID();
+
+	const ImVec2 padding = (frameThickness >= 0) ? ImVec2((float)frameThickness, (float)frameThickness) : style.FramePadding;
+	const ImRect bb(window->DC.CursorPos, window->DC.CursorPos + size + padding * 2);
+	const ImRect image_bb(window->DC.CursorPos + padding, window->DC.CursorPos + padding + size);
+	ImGui::ItemSize(bb);
+	if (!ImGui::ItemAdd(bb, id))
+		return;
+
+	// Render
+	const ImU32 frameCol = frameColor.w > 0.0f ? ImGui::GetColorU32(frameColor) : ImGui::GetColorU32(ImGuiCol_Button);
+	ImGui::RenderNavHighlight(bb, id);
+	ImGui::RenderFrame(bb.Min, bb.Max, frameCol, true, ImClamp((float)ImMin(padding.x, padding.y), 0.0f, style.FrameRounding));
+	window->DrawList->AddImage((ImTextureID)texID, image_bb.Min, image_bb.Max, ImVec2(0, 0), ImVec2(1, 1), ImGui::GetColorU32(tintColor));
 }
