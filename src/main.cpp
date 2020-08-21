@@ -6,6 +6,7 @@
 #include <debug_break/debug_break.h>
 
 #include "Clock/Clock_Realtime.h"
+#include "Constants/Textures.h"
 
 #ifdef _WIN32
 	#define _CRTDBG_MAP_ALLOC
@@ -99,6 +100,7 @@ int main(int argc, char *argv[]) {
 		// ------ Initialize our own classes
 
 		Clock_Realtime::Initialize();
+		Textures::_LoadAll();
 		App::Initialize(window);
 
 		// ------ Actual App
@@ -109,6 +111,7 @@ int main(int argc, char *argv[]) {
 
 		// ------ Shutdown
 		App::ShutDown();
+		Textures::_DestroyAll();
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplSDL2_Shutdown();
 		ImGui::DestroyContext();

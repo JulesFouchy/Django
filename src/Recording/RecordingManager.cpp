@@ -6,6 +6,7 @@
 #include "Particles/ParticlesSystem.h"
 #include "Helper/MyImGui.h"
 #include "Helper/File.h"
+#include "Constants/Textures.h"
 
 RecordingManager::RecordingManager()
 	: m_clock(std::make_unique<Clock_Realtime>())
@@ -109,13 +110,13 @@ void RecordingManager::ImGui(ConfigManager& configManager, ParticlesSystem& part
 		// Recording
 		if (!isRecording()) {
 			// Start recording
-			if (ImGui::Button("Record")) {
+			if (ImGui::ImageButton((ImTextureID)Textures::Record(), ImVec2(Textures::ICON_SIZE, Textures::ICON_SIZE))) {
 				startRecording(configManager.getCurrentConfigRef());
 			}
 		}
 		else {
 			// Stop recording
-			if (ImGui::Button("Stop recording")) {
+			if (ImGui::ImageButton((ImTextureID)Textures::Recording(), ImVec2(Textures::ICON_SIZE, Textures::ICON_SIZE))) {
 				stopRecording();
 			}
 		}
