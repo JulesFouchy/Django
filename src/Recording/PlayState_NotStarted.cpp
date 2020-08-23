@@ -1,6 +1,7 @@
 #include "PlayState_NotStarted.h"
 
 #include "PlayState_Play.h"
+#include "PlayState_Pause.h"
 
 #include "Helper/MyImGui.h"
 #include "Constants/Textures.h"
@@ -23,6 +24,15 @@ void PlayState_NotStarted::ImGui(Record* selectedRecord, float time, RecordPlaye
 		if (MyImGui::ButtonWithIcon(Textures::Play())) {
 			m_record.startPlaying(configManager, partSystem, recordManager);
 			recordPlayer.setState<PlayState_Play>(m_record, time);
+			bStateChanged = true;
+		}
+	}
+	if (!bStateChanged) {
+		// Timeline
+		float t = 0.0f;
+		if (MyImGui::Timeline("", &t, m_record.totalDuration())) {
+			m_record.setTime(t, configManager, partSystem, recordManager);
+			recordPlayer.setState<PlayState_Pause>(m_record, t);
 		}
 	}
 }
