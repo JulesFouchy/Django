@@ -132,11 +132,6 @@ void RecordManager::ImGui(ConfigManager& configManager, ParticlesSystem& partSys
 		else {
 			MyImGui::ButtonWithIconDisabled(Textures::Play(), "Cannot play while recording a clip");
 		}
-		// Timeline
-		if (hasARecordSelected()) {
-			float t = 0.0f;
-			MyImGui::Timeline("", &t, currentlySelected().totalDuration());
-		}
 	}
 	// If playing
 	else {
@@ -147,14 +142,17 @@ void RecordManager::ImGui(ConfigManager& configManager, ParticlesSystem& partSys
 		if (MyImGui::ButtonWithIcon(Textures::Pause())) {
 			stopPlaying();
 		}
-		else { // Would crash if we stopped playing during this frame
-			// Timeline
-			float t = timeSinceStart();
-			if (MyImGui::Timeline("", &t, currentlyPlaying().totalDuration())) {
-				m_clock->setTime(m_startTime + t);
-				currentlyPlaying().setTime(t, configManager, partSystem);
-				m_bDraggingOnTheTimeline = true;
-			}
+	}
+	// Timeline
+	if (hasARecordSelected()) {
+		float t =              isPlaying() ? timeSinceStart()                   : 0.0f;
+		const float duration = isPlaying() ? currentlyPlaying().totalDuration() : currentlySelected().totalDuration();
+		if (MyImGui::Timeline("", &t, duration)) {
+			if (!isPlaying())
+				startPlaying(configManager, partSystem);
+			m_clock->setTime(m_startTime + t);
+			currentlyPlaying().setTime(t, configManager, partSystem);
+			m_bDraggingOnTheTimeline = true;
 		}
 	}
 	// Records list
