@@ -73,7 +73,7 @@ void MyImGui::TimeFormatedHMS(float timeInSec, float totalDuration) {
 }
 
 // Thanks to https://github.com/ocornut/imgui/issues/1901
-bool MyImGui::Timeline(const char* label, float* timeInSec, float duration, float maxWidthInPx) {
+bool MyImGui::Timeline(const char* label, float* timeInSec, float duration, bool bShowCurrentTime, float maxWidthInPx) {
     ImGuiWindow* window = ImGui::GetCurrentWindow();
     if (window->SkipItems)
         return false;
@@ -105,8 +105,12 @@ bool MyImGui::Timeline(const char* label, float* timeInSec, float duration, floa
 	window->DrawList->AddRectFilled(p, ImVec2(p.x + filledWidth, p.y + size.y), ImGui::GetColorU32(ImGuiCol_FrameBg), 25);
 	// Draw Background
     window->DrawList->AddRectFilled(p, ImVec2(p.x + size.x,      p.y + size.y), ImGui::GetColorU32(ImGuiCol_FrameBgActive), 25);
-	// Show total duration
+	// Show time
 	ImGui::SameLine();
+	if (bShowCurrentTime) {
+		TimeFormatedHMS(*timeInSec, duration);
+		ImGui::SameLine(); ImGui::Text("/"); ImGui::SameLine();
+	}
 	TimeFormatedHMS(duration);
 	// Cursor
 	if (bHovered || bActive) {
@@ -114,7 +118,7 @@ bool MyImGui::Timeline(const char* label, float* timeInSec, float duration, floa
 		if (bMouseInsideXBounds) {
 			window->DrawList->AddLine(ImVec2(mousePos.x, p.y), ImVec2(mousePos.x, p.y + size.y), ImGui::GetColorU32(ImGuiCol_Text));
 		}
-		// Show time
+		// Show time at cursor
 		ImGui::BeginTooltip();
 		float time = duration * (mousePos.x - p.x) / size.x;
 		time = std::min(std::max(time, 0.0f), duration);
