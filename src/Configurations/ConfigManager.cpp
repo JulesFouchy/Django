@@ -1,7 +1,7 @@
 #include "ConfigManager.h"
 
 #include "Actions/ThumbnailFactory.h"
-#include "Recording/RecordingManager.h"
+#include "Recording/RecordManager.h"
 
 #include <filesystem>
 namespace fs = std::filesystem;

@@ -2,7 +2,7 @@
 
 #include "Configurations/ConfigManager.h"
 #include "Particles/ParticlesSystem.h"
-#include "Recording/RecordingManager.h"
+#include "Recording/RecordManager.h"
 
 #include <imgui/imgui_internal.h>
 #include <cereal/archives/json.hpp>

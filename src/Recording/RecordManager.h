@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Clock/Clock.h"
-#include "Recording.h"
+#include "Record.h"
 
 class ConfigManager;
 class ParticlesSystem;
