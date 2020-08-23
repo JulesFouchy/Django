@@ -5,12 +5,18 @@
 #include <cereal/archives/json.hpp>
 #include <fstream>
 
-Record::Record(const ConfigRef& initialConfiguration)
-	: m_startState(initialConfiguration), m_name(MyTime::AsString())
-{}
+Record::Record(const ConfigRef& initialConfiguration) {
+	init(initialConfiguration);
+}
 
 Record::Record(const std::string& filepath) {
 	deserialize(filepath);
+}
+
+void Record::init(const ConfigRef& initialConfiguration) {
+	m_startState = State(initialConfiguration);
+	m_name = MyTime::AsString();
+	m_actionsTimeline.clear();
 }
 
 void Record::onAction(const ActionRef& actionRef, float timestamp) {

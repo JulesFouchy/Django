@@ -6,32 +6,30 @@
 #include "Particles/ParticlesSystem.h"
 #include "Helper/MyImGui.h"
 #include "Helper/File.h"
-#include "RecState_Idle.h"
+#include "Constants/FolderPath.h"
 
 RecordManager::RecordManager()
-	: m_clock(std::make_unique<Clock_Realtime>()), m_folderPath(MyFile::RootDir + "/records")
+	: m_clock(std::make_unique<Clock_Realtime>())
 {
-	setState<RecState_Idle>();
 	// Load records
-	if (MyFile::Exists(folderPath())) {
-		for (auto& entry : std::filesystem::directory_iterator(folderPath())) {
+	if (MyFile::Exists(FolderPath::Records)) {
+		for (auto& entry : std::filesystem::directory_iterator(FolderPath::Records)) {
 			m_records.emplace_back(entry.path().string());
 		}
 	}
 	m_selectedRecordIdx = m_records.size() - 1;
 }
 
-RecordManager::~RecordManager() {
-	setState<RecState_Idle>(); // Make sure the recording ends properly
-}
-
 void RecordManager::ImGui(ConfigManager& configManager, ParticlesSystem& partSystem) {
-	m_recState->ImGui(configManager, partSystem);
+	if (m_recorder.ImGui(configManager.getCurrentConfigRef(), m_clock->time())) // finished recording
+		m_records.push_back(m_recorder.getRecord());
+	m_recordPlayer.ImGui(hasARecordSelected() ? &selectedRecord() : nullptr, *m_clock, configManager, partSystem);
+	ImGuiRecordsList();
 }
 
 void RecordManager::update(ConfigManager& configManager, ParticlesSystem& partSystem) {
 	m_clock->update();
-	m_recState->update(configManager, partSystem);
+	m_recordPlayer.update(m_clock->time(), configManager, partSystem);
 }
 
 void RecordManager::ImGuiRecordsList() {

@@ -8,9 +8,11 @@ class ParticlesSystem;
 
 class Record {
 public:
+	Record() = default;
 	Record(const ConfigRef& initialConfiguration);
 	Record(const std::string& filepath);
 	~Record() = default;
+	void init(const ConfigRef& initialConfiguration);
 
 	void onAction(const ActionRef& actionRef, float timestamp);
 	bool startPlaying(ConfigManager& configManager, ParticlesSystem& partSystem);              // Returns true iff we should keep playing the record
