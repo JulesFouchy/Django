@@ -57,7 +57,9 @@ bool MyImGui::AngleWheel(const char* label, float* value_p, float thickness, flo
 	return is_active;
 }
 
-void MyImGui::TextHourMinSec(float timeInSec, float totalDuration) {
+void MyImGui::TimeFormatedHMS(float timeInSec, float totalDuration) {
+	if (totalDuration == 0.0f)
+		totalDuration = timeInSec;
 	uint32_t t = (uint32_t)timeInSec;
 	if (totalDuration < 60.0f) {
 		ImGui::Text("%us", t);
@@ -105,7 +107,7 @@ bool MyImGui::Timeline(const char* label, float* timeInSec, float duration, floa
     window->DrawList->AddRectFilled(p, ImVec2(p.x + size.x,      p.y + size.y), ImGui::GetColorU32(ImGuiCol_FrameBgActive), 25);
 	// Show total duration
 	ImGui::SameLine();
-	TextHourMinSec(duration, duration);
+	TimeFormatedHMS(duration);
 	// Cursor
 	if (bHovered || bActive) {
 		// Draw line
@@ -116,7 +118,7 @@ bool MyImGui::Timeline(const char* label, float* timeInSec, float duration, floa
 		ImGui::BeginTooltip();
 		float time = duration * (mousePos.x - p.x) / size.x;
 		time = std::min(std::max(time, 0.0f), duration);
-		TextHourMinSec(time, duration);
+		TimeFormatedHMS(time, duration);
 		ImGui::EndTooltip();
 		// Modify time
 		if (bActive) {

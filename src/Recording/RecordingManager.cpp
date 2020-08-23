@@ -164,6 +164,11 @@ void RecordingManager::ImGui(ConfigManager& configManager, ParticlesSystem& part
 					setSelectedRecording(i);
 				}
 			}
+			if (ImGui::IsItemHovered()) {
+				ImGui::BeginTooltip();
+				MyImGui::TimeFormatedHMS(m_recordings[i].totalDuration());
+				ImGui::EndTooltip();
+			}
 		}
 	}
 }
