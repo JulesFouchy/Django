@@ -5,17 +5,20 @@
 
 unsigned int Textures::m_playID      = -1;
 unsigned int Textures::m_pauseID     = -1;
+unsigned int Textures::m_stopID      = -1;
 unsigned int Textures::m_recordID    = -1;
 
 void Textures::_LoadAll() {
 	m_playID      = LoadTexture("icons/play.png");
 	m_pauseID     = LoadTexture("icons/pause.png");
+	m_stopID      = LoadTexture("icons/stop.png");
 	m_recordID    = LoadTexture("icons/record.png");
 }
 
 void Textures::_DestroyAll() {
 	DestroyTexture(m_playID);
 	DestroyTexture(m_pauseID);
+	DestroyTexture(m_stopID);
 	DestroyTexture(m_recordID);
 }
 

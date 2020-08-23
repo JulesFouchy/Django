@@ -4,6 +4,7 @@ class Textures {
 public:
 	static inline unsigned int Play()      { return m_playID; }
 	static inline unsigned int Pause()     { return m_pauseID; }
+	static inline unsigned int Stop()      { return m_stopID; }
 	static inline unsigned int Record()    { return m_recordID; }
 
 	static void _LoadAll();
@@ -16,5 +17,6 @@ private:
 private:
 	static unsigned int m_playID;
 	static unsigned int m_pauseID;
+	static unsigned int m_stopID;
 	static unsigned int m_recordID;
 };
