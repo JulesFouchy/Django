@@ -6,13 +6,12 @@
 #include "Constants/Textures.h"
 #include "RecordPlayer.h"
 #include "Record.h"
-#include "Clock/Clock.h"
 
 PlayState_NotStarted::PlayState_NotStarted(Record& record)
 	: m_record(record)
 {}
 
-void PlayState_NotStarted::ImGui(Record* selectedRecord, Clock& clock, RecordPlayer& recordPlayer, ConfigManager& configManager, ParticlesSystem& partSystem, RecordManager& recordManager) {
+void PlayState_NotStarted::ImGui(Record* selectedRecord, float time, RecordPlayer& recordPlayer, ConfigManager& configManager, ParticlesSystem& partSystem, RecordManager& recordManager) {
 	bool bStateChanged = false;
 	// Change record
 	if (selectedRecord != &m_record) {
@@ -23,7 +22,7 @@ void PlayState_NotStarted::ImGui(Record* selectedRecord, Clock& clock, RecordPla
 		// Play
 		if (MyImGui::ButtonWithIcon(Textures::Play())) {
 			m_record.startPlaying(configManager, partSystem, recordManager);
-			recordPlayer.setState<PlayState_Play>(m_record, clock.time());
+			recordPlayer.setState<PlayState_Play>(m_record, time);
 		}
 	}
 }

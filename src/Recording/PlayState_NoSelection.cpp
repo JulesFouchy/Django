@@ -6,7 +6,7 @@
 #include "Helper/MyImGui.h"
 #include "Constants/Textures.h"
 
-void PlayState_NoSelection::ImGui(Record* selectedRecord, Clock& clock, RecordPlayer& recordPlayer, ConfigManager& configManager, ParticlesSystem& partSystem, RecordManager& recordManager) {
+void PlayState_NoSelection::ImGui(Record* selectedRecord, float time, RecordPlayer& recordPlayer, ConfigManager& configManager, ParticlesSystem& partSystem, RecordManager& recordManager) {
 	MyImGui::ButtonWithIconDisabled(Textures::Play(), "No record selected");
 	if (selectedRecord)
 		recordPlayer.setState<PlayState_NotStarted>(*selectedRecord);

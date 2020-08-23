@@ -7,7 +7,6 @@
 #include "RecordPlayer.h"
 #include "Helper/MyImGui.h"
 #include "Constants/Textures.h"
-#include "Clock/Clock.h"
 
 PlayState_Play::PlayState_Play(Record& record, float startTime)
 	: m_record(record), m_startTime(startTime)
@@ -21,7 +20,7 @@ void PlayState_Play::update(float time, RecordPlayer& recordPlayer, ConfigManage
 	m_bDraggingOnTheTimeline = false; // Reset every frame. It is set by the ImGui() method before the call to update()
 }
 
-void PlayState_Play::ImGui(Record* selectedRecord, Clock& clock, RecordPlayer& recordPlayer, ConfigManager& configManager, ParticlesSystem& partSystem, RecordManager& recordManager) {
+void PlayState_Play::ImGui(Record* selectedRecord, float time, RecordPlayer& recordPlayer, ConfigManager& configManager, ParticlesSystem& partSystem, RecordManager& recordManager) {
 	bool bStateChanged = false;
 	// Change record
 	if (selectedRecord != &m_record) {
@@ -31,7 +30,7 @@ void PlayState_Play::ImGui(Record* selectedRecord, Clock& clock, RecordPlayer& r
 	if (!bStateChanged) {
 		// Pause
 		if (MyImGui::ButtonWithIcon(Textures::Pause())) {
-			recordPlayer.setState<PlayState_Pause>(m_record, clock.time() - m_startTime);
+			recordPlayer.setState<PlayState_Pause>(m_record, time - m_startTime);
 			bStateChanged = true;
 		}
 	}
@@ -45,9 +44,9 @@ void PlayState_Play::ImGui(Record* selectedRecord, Clock& clock, RecordPlayer& r
 	}
 	if (!bStateChanged) {
 		// Timeline
-		float t = clock.time() - m_startTime;
+		float t = time - m_startTime;
 		if (MyImGui::Timeline("", &t, m_record.totalDuration())) {
-			m_startTime = clock.time() - t;
+			m_startTime = time - t;
 			m_record.setTime(t, configManager, partSystem, recordManager);
 			m_bDraggingOnTheTimeline = true;
 		}
