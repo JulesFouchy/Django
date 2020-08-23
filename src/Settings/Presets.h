@@ -6,7 +6,7 @@ namespace fs = std::filesystem;
 #include <fstream>
 #include "Helper/String.h"
 #include "Helper/File.h"
-#include "Constants/SettingsFolder.h"
+#include "Constants/FolderPath.h"
 
 template <typename T>
 struct Preset {
@@ -19,10 +19,10 @@ class Presets {
 public:
 	Presets(const char* fileExtension)
 		: m_fileExtension(fileExtension + std::string(".")),
-		m_savePresetAs(findPlaceholderName(djg::SettingsFolder)),
+		m_savePresetAs(findPlaceholderName(FolderPath::Settings)),
 		m_nameAvailable(true)
 	{
-		loadPresetsFrom(djg::SettingsFolder);
+		loadPresetsFrom(FolderPath::Settings);
 		setToPlaceholderSetting();
 	}
 	~Presets() = default;
@@ -42,7 +42,7 @@ public:
 		}
 		if (m_nameAvailable) {
 			if (ImGui::Button("Save settings")) {
-				savePresetTo(*settingValues, djg::SettingsFolder);
+				savePresetTo(*settingValues, FolderPath::Settings);
 			}
 			ImGui::SameLine();
 			ImGui::Text("as");
@@ -53,7 +53,7 @@ public:
 		ImGui::SameLine();
 		ImGui::PushID(138571);
 		if (ImGui::InputText("", &m_savePresetAs)) {
-			m_nameAvailable = !MyFile::Exists(djg::SettingsFolder + "/" + m_fileExtension + m_savePresetAs + ".json");
+			m_nameAvailable = !MyFile::Exists(FolderPath::Settings + "/" + m_fileExtension + m_savePresetAs + ".json");
 		}
 		ImGui::PopID();
 		return b;

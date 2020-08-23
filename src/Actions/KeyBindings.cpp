@@ -10,7 +10,7 @@
 #include <fstream>
 #include "Helper/File.h"
 
-#include "Constants/SettingsFolder.h"
+#include "Constants/FolderPath.h"
 
 static constexpr float KEY_SIZE = 55.0f;
 static constexpr float KEY_OFFSET_PROP = 0.2f;
@@ -70,7 +70,7 @@ KeyBindings::KeyBindings() {
 		m_keyReleasedLastDate[i] = 0;
 }
 KeyBindings::~KeyBindings() {
-	serializeBindings(djg::SettingsFolder + "/lastSessionBindings.json");
+	serializeBindings(FolderPath::Settings + "/lastSessionBindings.json");
 	for (ActionBinding action : m_allActionsOwner) {
 		GLCall(glDeleteTextures(1, &action.action.thumbnailTextureID));
 	}

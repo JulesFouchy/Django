@@ -8,7 +8,7 @@ namespace fs = std::filesystem;
 #include <fstream>
 #include "Helper/String.h"
 #include "Helper/File.h"
-#include "Constants/SettingsFolder.h"
+#include "Constants/FolderPath.h"
 
 
 BindingsPresets::BindingsPresets()
@@ -16,8 +16,8 @@ BindingsPresets::BindingsPresets()
 	m_nameAvailable(true)
 {
 	loadPresets();
-	if (MyFile::Exists(djg::SettingsFolder + "/lastSessionBindingsPreset.json")) {
-		std::ifstream is(djg::SettingsFolder + "/lastSessionBindingsPreset.json");
+	if (MyFile::Exists(FolderPath::Settings + "/lastSessionBindingsPreset.json")) {
+		std::ifstream is(FolderPath::Settings + "/lastSessionBindingsPreset.json");
 		{
 			cereal::JSONInputArchive archive(is);
 			archive(
@@ -31,7 +31,7 @@ BindingsPresets::BindingsPresets()
 }
 
 BindingsPresets::~BindingsPresets() {
-	std::ofstream os(djg::SettingsFolder + "/lastSessionBindingsPreset.json");
+	std::ofstream os(FolderPath::Settings + "/lastSessionBindingsPreset.json");
 	{
 		cereal::JSONOutputArchive archive(os);
 		archive(
@@ -41,7 +41,7 @@ BindingsPresets::~BindingsPresets() {
 }
 
 std::string BindingsPresets::getFullPath(const std::string& name) {
-	return djg::SettingsFolder + "/djgBindings." + name + ".json";
+	return FolderPath::Settings + "/djgBindings." + name + ".json";
 }
 
 void BindingsPresets::ImGui(KeyBindings& keyBindings) {
@@ -107,7 +107,7 @@ std::string BindingsPresets::findPlaceholderName() {
 }
 
 void BindingsPresets::loadPresets() {
-	for (const auto& entry : fs::directory_iterator(djg::SettingsFolder)) {
+	for (const auto& entry : fs::directory_iterator(FolderPath::Settings)) {
 		if (!MyString::FileName(MyString::FileName(entry.path().string())).compare("djgBindings"))
 			m_presets.emplace_back(entry.path().string());
 	}
