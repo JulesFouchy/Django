@@ -9,8 +9,8 @@
 #include "Record.h"
 #include "Clock/Clock.h"
 
-PlayState_Pause::PlayState_Pause(Record& record, float startTime)
-	: m_record(record), m_startTime(startTime)
+PlayState_Pause::PlayState_Pause(Record& record, float timeSinceStart)
+	: m_record(record), m_timeSinceStart(timeSinceStart)
 {}
 
 void PlayState_Pause::ImGui(Record* selectedRecord, Clock& clock, RecordPlayer& recordPlayer, ConfigManager& configManager, ParticlesSystem& partSystem, RecordManager& recordManager) {
@@ -23,8 +23,7 @@ void PlayState_Pause::ImGui(Record* selectedRecord, Clock& clock, RecordPlayer& 
 	if (!bStateChanged) {
 		// Play
 		if (MyImGui::ButtonWithIcon(Textures::Play())) {
-			clock.setTime(m_startTime);
-			recordPlayer.setState<PlayState_Play>(m_record, m_startTime);
+			recordPlayer.setState<PlayState_Play>(m_record, clock.time() - m_timeSinceStart);
 			bStateChanged = true;
 		}
 	}
@@ -38,11 +37,8 @@ void PlayState_Pause::ImGui(Record* selectedRecord, Clock& clock, RecordPlayer& 
 	}
 	if (!bStateChanged) {
 		// Timeline
-		float t = 0.0f;
-		const float duration = m_record.totalDuration();
-		if (MyImGui::Timeline("", &t, duration)) {
-			clock.setTime(m_startTime + t);
-			m_record.setTime(t, configManager, partSystem, recordManager);
+		if (MyImGui::Timeline("", &m_timeSinceStart, m_record.totalDuration())) {
+			m_record.setTime(m_timeSinceStart, configManager, partSystem, recordManager);
 		}
 	}
 }

@@ -31,7 +31,7 @@ void PlayState_Play::ImGui(Record* selectedRecord, Clock& clock, RecordPlayer& r
 	if (!bStateChanged) {
 		// Pause
 		if (MyImGui::ButtonWithIcon(Textures::Pause())) {
-			recordPlayer.setState<PlayState_Pause>(m_record, m_startTime);
+			recordPlayer.setState<PlayState_Pause>(m_record, clock.time() - m_startTime);
 			bStateChanged = true;
 		}
 	}
@@ -46,9 +46,8 @@ void PlayState_Play::ImGui(Record* selectedRecord, Clock& clock, RecordPlayer& r
 	if (!bStateChanged) {
 		// Timeline
 		float t = clock.time() - m_startTime;
-		const float duration = m_record.totalDuration();
-		if (MyImGui::Timeline("", &t, duration)) {
-			clock.setTime(m_startTime + t);
+		if (MyImGui::Timeline("", &t, m_record.totalDuration())) {
+			m_startTime = clock.time() - t;
 			m_record.setTime(t, configManager, partSystem, recordManager);
 			m_bDraggingOnTheTimeline = true;
 		}
