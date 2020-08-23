@@ -13,26 +13,22 @@ PlayState_NotStarted::PlayState_NotStarted(Record& record)
 {}
 
 void PlayState_NotStarted::ImGui(Record* selectedRecord, float time, RecordPlayer& recordPlayer, ConfigManager& configManager, ParticlesSystem& partSystem, RecordManager& recordManager) {
-	bool bStateChanged = false;
+	std::function<void()> changeState = [](){};
 	// Change record
 	if (selectedRecord != &m_record) {
-		recordPlayer.setState<PlayState_NotStarted>(*selectedRecord);
-		bStateChanged = true;
+		changeState = [&](){ recordPlayer.setState<PlayState_NotStarted>(*selectedRecord); };
 	}
-	if (!bStateChanged) {
-		// Play
-		if (MyImGui::ButtonWithIcon(Textures::Play())) {
-			m_record.startPlaying(configManager, partSystem, recordManager);
-			recordPlayer.setState<PlayState_Play>(m_record, time);
-			bStateChanged = true;
-		}
+	// Play
+	if (MyImGui::ButtonWithIcon(Textures::Play())) {
+		m_record.startPlaying(configManager, partSystem, recordManager);
+		changeState = [&](){ recordPlayer.setState<PlayState_Play>(m_record, time); };
 	}
-	if (!bStateChanged) {
-		// Timeline
-		float t = 0.0f;
-		if (MyImGui::Timeline("", &t, m_record.totalDuration())) {
-			m_record.setTime(t, configManager, partSystem, recordManager);
-			recordPlayer.setState<PlayState_Pause>(m_record, t);
-		}
+	// Timeline
+	float t = 0.0f;
+	if (MyImGui::Timeline("", &t, m_record.totalDuration())) {
+		m_record.setTime(t, configManager, partSystem, recordManager);
+		recordPlayer.setState<PlayState_Pause>(m_record, t);
 	}
+	//
+	changeState(); // Apply the state change at the end, otherwise we get deleted and we can't finish the ImGui
 }
