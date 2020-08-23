@@ -23,13 +23,13 @@ RecordManager::RecordManager()
 void RecordManager::ImGui(ConfigManager& configManager, ParticlesSystem& partSystem) {
 	if (m_recorder.ImGui(configManager.getCurrentConfigRef(), m_clock->time())) // finished recording
 		m_records.push_back(m_recorder.getRecord());
-	m_recordPlayer.ImGui(hasARecordSelected() ? &selectedRecord() : nullptr, *m_clock, configManager, partSystem);
+	m_recordPlayer.ImGui(hasARecordSelected() ? &selectedRecord() : nullptr, *m_clock, configManager, partSystem, *this);
 	ImGuiRecordsList();
 }
 
 void RecordManager::update(ConfigManager& configManager, ParticlesSystem& partSystem) {
 	m_clock->update();
-	m_recordPlayer.update(m_clock->time(), configManager, partSystem);
+	m_recordPlayer.update(m_clock->time(), configManager, partSystem, *this);
 }
 
 void RecordManager::ImGuiRecordsList() {

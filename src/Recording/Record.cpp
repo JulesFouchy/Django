@@ -23,17 +23,17 @@ void Record::onAction(const ActionRef& actionRef, float timestamp) {
 	m_actionsTimeline.emplace_back(actionRef, timestamp);
 }
 
-bool Record::startPlaying(ConfigManager& configManager, ParticlesSystem& partSystem) {
-	applyConfig(m_startState.configRef, configManager, partSystem);
+bool Record::startPlaying(ConfigManager& configManager, ParticlesSystem& partSystem, RecordManager& recordManager) {
+	applyConfig(m_startState.configRef, configManager, partSystem, recordManager);
 	m_nextActionIdx = 0;
 	return m_actionsTimeline.size() != 0;
 }
 
-bool Record::updatePlaying(float time, ConfigManager& configManager, ParticlesSystem& partSystem) {
+bool Record::updatePlaying(float time, ConfigManager& configManager, ParticlesSystem& partSystem, RecordManager& recordManager) {
 	if (m_nextActionIdx < m_actionsTimeline.size()) {
 		while (m_actionsTimeline[m_nextActionIdx].time < time) {
 			// Apply action
-			applyAction(m_nextActionIdx, configManager, partSystem);
+			applyAction(m_nextActionIdx, configManager, partSystem, recordManager);
 			// Move to next action
 			m_nextActionIdx++;
 			if (m_nextActionIdx >= m_actionsTimeline.size())
@@ -46,14 +46,14 @@ bool Record::updatePlaying(float time, ConfigManager& configManager, ParticlesSy
 	}
 }
 
-bool Record::setTime(float newTime, ConfigManager& configManager, ParticlesSystem& partSystem) {
+bool Record::setTime(float newTime, ConfigManager& configManager, ParticlesSystem& partSystem, RecordManager& recordManager) {
 	// No actions
 	if (m_actionsTimeline.size() == 0)
 		return false;
 	// Time is bigger than duration
 	else if (m_actionsTimeline.back().time < newTime) {
 		// Apply last action
-		applyAction(m_actionsTimeline.size() - 1, configManager, partSystem);
+		applyAction(m_actionsTimeline.size() - 1, configManager, partSystem, recordManager);
 		//
 		return false;
 	}
@@ -66,22 +66,22 @@ bool Record::setTime(float newTime, ConfigManager& configManager, ParticlesSyste
 		}
 		// Apply state
 		if (i != 0) {
-			applyAction(i - 1, configManager, partSystem);
+			applyAction(i - 1, configManager, partSystem, recordManager);
 		}
 		else {
-			applyConfig(m_startState.configRef, configManager, partSystem);
+			applyConfig(m_startState.configRef, configManager, partSystem, recordManager);
 		}
 		m_nextActionIdx = i;
 	}
 }
 
-void Record::applyConfig(const ConfigRef& configRef, ConfigManager& configManager, ParticlesSystem& partSystem) {
-	configManager.applyConfigRef(configRef);
+void Record::applyConfig(const ConfigRef& configRef, ConfigManager& configManager, ParticlesSystem& partSystem, RecordManager& recordManager) {
+	configManager.applyConfigRef(configRef, recordManager);
 	configManager.applyTo(partSystem);
 }
 
-void Record::applyAction(size_t idx, ConfigManager& configManager, ParticlesSystem& partSystem) {
-	configManager.applyActionRef(m_actionsTimeline[idx].actionRef);
+void Record::applyAction(size_t idx, ConfigManager& configManager, ParticlesSystem& partSystem, RecordManager& recordManager) {
+	configManager.applyActionRef(m_actionsTimeline[idx].actionRef, recordManager);
 	configManager.applyTo(partSystem);
 }
 

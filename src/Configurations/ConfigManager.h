@@ -27,12 +27,12 @@ public:
 	inline void onKeyUp(SDL_Scancode scancode) { m_keyBindings.onKeyUp(scancode); }
 
 	ConfigRef getCurrentConfigRef();
-	void applyActionRef(const ActionRef& actionRef);
-	void applyConfigRef(const ConfigRef& configRef);
+	void applyActionRef(const ActionRef& actionRef, RecordManager& recordManager);
+	void applyConfigRef(const ConfigRef& configRef, RecordManager& recordManager);
 
 private:
 	Configuration& get();
-	void applyAction(const Action& action);
+	void applyAction(const Action& action, RecordManager& recordManager);
 	void setCurrentConfigAsText();
 
 private:

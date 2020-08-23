@@ -210,7 +210,8 @@ Configuration& ConfigManager::get() {
     }
 }
 
-void ConfigManager::applyAction(const Action& action) {
+void ConfigManager::applyAction(const Action& action, RecordManager& recordManager) {
+    recordManager.onAction(action.ref);
     switch (action.ref.type)
     {
     case ActionType::SHAPE:
@@ -287,8 +288,7 @@ void ConfigManager::onKeyPressed(SDL_Scancode scancode, char keysym, ParticlesSy
         if (!m_params.onKeyPressed(scancode)) {
             const Action* action = m_keyBindings.getAction(scancode);
             if (action) {
-                applyAction(*action);
-                recordManager.onAction(action->ref);
+                applyAction(*action, recordManager);
                 bHandled = true;
             }
         }
@@ -334,27 +334,27 @@ ConfigRef ConfigManager::getCurrentConfigRef() {
     }
 }
 
-void ConfigManager::applyActionRef(const ActionRef& actionRef) {
+void ConfigManager::applyActionRef(const ActionRef& actionRef, RecordManager& recordManager) {
     if (const Action* action = m_keyBindings.getActionByRef(actionRef)) {
-        applyAction(*action);
+        applyAction(*action, recordManager);
     }
     else {
         spdlog::warn("Couldn't find the action '{}' of type {}", actionRef.name, actionRef.type);
     }
 }
 
-void ConfigManager::applyConfigRef(const ConfigRef& configRef) {
+void ConfigManager::applyConfigRef(const ConfigRef& configRef, RecordManager& recordManager) {
     switch (configRef.type) {
     case ConfigType::SHAPE_LAYOUT:
-        applyActionRef({ configRef.mainName,   ActionType::SHAPE });
-        applyActionRef({ configRef.layoutName, ActionType::LAYOUT });
+        applyActionRef({ configRef.mainName,   ActionType::SHAPE }, recordManager);
+        applyActionRef({ configRef.layoutName, ActionType::LAYOUT }, recordManager);
         break;
     case ConfigType::SVG_LAYOUT:
-        applyActionRef({ configRef.mainName,   ActionType::SVG_SHAPE });
-        applyActionRef({ configRef.layoutName, ActionType::LAYOUT });
+        applyActionRef({ configRef.mainName,   ActionType::SVG_SHAPE }, recordManager);
+        applyActionRef({ configRef.layoutName, ActionType::LAYOUT }, recordManager);
         break;
     case ConfigType::STANDALONE:
-        applyActionRef({ configRef.mainName, ActionType::STANDALONE });
+        applyActionRef({ configRef.mainName, ActionType::STANDALONE }, recordManager);
         break;
     case ConfigType::TEXT:
         setCurrentConfigAsText();

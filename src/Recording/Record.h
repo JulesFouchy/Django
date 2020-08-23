@@ -5,6 +5,7 @@
 
 class ConfigManager;
 class ParticlesSystem;
+class RecordManager;
 
 class Record {
 public:
@@ -15,18 +16,18 @@ public:
 	void init(const ConfigRef& initialConfiguration);
 
 	void onAction(const ActionRef& actionRef, float timestamp);
-	bool startPlaying(ConfigManager& configManager, ParticlesSystem& partSystem);              // Returns true iff we should keep playing the record
-	bool updatePlaying(float time, ConfigManager& configManager, ParticlesSystem& partSystem); // Returns true iff we should keep playing the record
+	bool startPlaying(             ConfigManager& configManager, ParticlesSystem& partSystem, RecordManager& recordManager); // Returns true iff we should keep playing the record
+	bool updatePlaying(float time, ConfigManager& configManager, ParticlesSystem& partSystem, RecordManager& recordManager); // Returns true iff we should keep playing the record
 
-	bool setTime(float newTime, ConfigManager& configManager, ParticlesSystem& partSystem);    // Returns true iff we should keep playing the record
+	bool setTime(float newTime,    ConfigManager& configManager, ParticlesSystem& partSystem, RecordManager& recordManager); // Returns true iff we should keep playing the record
 	inline float totalDuration() const { return m_actionsTimeline.size() > 0 ? m_actionsTimeline.back().time : 0.0f; } // TODO update me onec we have other timelines
 	inline const std::string& name() const { return m_name; }
 
 	void serialize(const std::string& folderPath);
 
 private:
-	void applyConfig(const ConfigRef& configRef, ConfigManager& configManager, ParticlesSystem& partSystem);
-	void applyAction(size_t idx,                 ConfigManager& configManager, ParticlesSystem& partSystem);
+	void applyConfig(const ConfigRef& configRef, ConfigManager& configManager, ParticlesSystem& partSystem, RecordManager& recordManager);
+	void applyAction(size_t idx,                 ConfigManager& configManager, ParticlesSystem& partSystem, RecordManager& recordManager);
 
 	void deserialize(const std::string& filepath);
 
