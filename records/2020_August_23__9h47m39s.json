@@ -1,0 +1,67 @@
+{
+    "m_startState": {
+        "configRef": {
+            "mainName": "childishStar",
+            "layoutName": "One Centered",
+            "type": 0
+        }
+    },
+    "m_actionsTimeline": [
+        {
+            "actionRef": {
+                "name": "star",
+                "type": 0
+            },
+            "time": 2.5625
+        },
+        {
+            "actionRef": {
+                "name": "One Centered",
+                "type": 2
+            },
+            "time": 3.9375
+        },
+        {
+            "actionRef": {
+                "name": "One Centered",
+                "type": 2
+            },
+            "time": 5.875
+        },
+        {
+            "actionRef": {
+                "name": "Random",
+                "type": 2
+            },
+            "time": 6.25
+        },
+        {
+            "actionRef": {
+                "name": "star",
+                "type": 0
+            },
+            "time": 8.5
+        },
+        {
+            "actionRef": {
+                "name": "childishStar",
+                "type": 0
+            },
+            "time": 9.375
+        },
+        {
+            "actionRef": {
+                "name": "One Centered",
+                "type": 2
+            },
+            "time": 11.875
+        },
+        {
+            "actionRef": {
+                "name": "heart",
+                "type": 0
+            },
+            "time": 12.4375
+        }
+    ]
+}

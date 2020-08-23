@@ -5,25 +5,25 @@
 #include <cereal/archives/json.hpp>
 #include <fstream>
 
-Recording::Recording(const ConfigRef& initialConfiguration)
+Record::Record(const ConfigRef& initialConfiguration)
 	: m_startState(initialConfiguration), m_name(MyTime::AsString())
 {}
 
-Recording::Recording(const std::string& filepath) {
+Record::Record(const std::string& filepath) {
 	deserialize(filepath);
 }
 
-void Recording::onAction(const ActionRef& actionRef, float timestamp) {
+void Record::onAction(const ActionRef& actionRef, float timestamp) {
 	m_actionsTimeline.emplace_back(actionRef, timestamp);
 }
 
-bool Recording::startPlaying(ConfigManager& configManager, ParticlesSystem& partSystem) {
+bool Record::startPlaying(ConfigManager& configManager, ParticlesSystem& partSystem) {
 	applyConfig(m_startState.configRef, configManager, partSystem);
 	m_nextActionIdx = 0;
 	return m_actionsTimeline.size() != 0;
 }
 
-bool Recording::updatePlaying(float time, ConfigManager& configManager, ParticlesSystem& partSystem) {
+bool Record::updatePlaying(float time, ConfigManager& configManager, ParticlesSystem& partSystem) {
 	if (m_nextActionIdx < m_actionsTimeline.size()) {
 		while (m_actionsTimeline[m_nextActionIdx].time < time) {
 			// Apply action
@@ -40,7 +40,7 @@ bool Recording::updatePlaying(float time, ConfigManager& configManager, Particle
 	}
 }
 
-bool Recording::setTime(float newTime, ConfigManager& configManager, ParticlesSystem& partSystem) {
+bool Record::setTime(float newTime, ConfigManager& configManager, ParticlesSystem& partSystem) {
 	// No actions
 	if (m_actionsTimeline.size() == 0)
 		return false;
@@ -69,17 +69,17 @@ bool Recording::setTime(float newTime, ConfigManager& configManager, ParticlesSy
 	}
 }
 
-void Recording::applyConfig(const ConfigRef& configRef, ConfigManager& configManager, ParticlesSystem& partSystem) {
+void Record::applyConfig(const ConfigRef& configRef, ConfigManager& configManager, ParticlesSystem& partSystem) {
 	configManager.applyConfigRef(configRef);
 	configManager.applyTo(partSystem);
 }
 
-void Recording::applyAction(size_t idx, ConfigManager& configManager, ParticlesSystem& partSystem) {
+void Record::applyAction(size_t idx, ConfigManager& configManager, ParticlesSystem& partSystem) {
 	configManager.applyActionRef(m_actionsTimeline[idx].actionRef);
 	configManager.applyTo(partSystem);
 }
 
-void Recording::serialize(const std::string& folderPath) {
+void Record::serialize(const std::string& folderPath) {
 	std::ofstream os(folderPath + "/" + m_name + ".json");
 	{
 		cereal::JSONOutputArchive archive(os);
@@ -90,7 +90,7 @@ void Recording::serialize(const std::string& folderPath) {
 	}
 }
 
-void Recording::deserialize(const std::string& filepath) {
+void Record::deserialize(const std::string& filepath) {
 	std::ifstream is(filepath);
 	{
 		cereal::JSONInputArchive archive(is);

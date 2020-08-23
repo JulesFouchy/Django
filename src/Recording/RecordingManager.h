@@ -6,10 +6,10 @@
 class ConfigManager;
 class ParticlesSystem;
 
-class RecordingManager {
+class RecordManager {
 public:
-	RecordingManager();
-	~RecordingManager() = default;
+	RecordManager();
+	~RecordManager() = default;
 
 	void ImGui(ConfigManager& configManager, ParticlesSystem& partSystem);
 	void onAction(const ActionRef& actionRef);
@@ -19,9 +19,11 @@ public:
 
 private:
 	float timeSinceStart();
+
 	void startRecording(const ConfigRef& currentConfigAsAction);
 	void stopRecording();
-	void setSelectedRecording(size_t idx);
+
+	void setSelectedRecord(size_t idx);
 
 	void startPlaying (ConfigManager& configManager, ParticlesSystem& partSystem);
 	void updatePlaying(ConfigManager& configManager, ParticlesSystem& partSystem);
@@ -30,20 +32,20 @@ private:
 	bool isRecording();
 	bool isPlaying();
 	bool hasARecordSelected();
-	Recording& currentlyRecording();
-	Recording& currentlyPlaying();
-	Recording& currentlySelected();
+	Record& currentlyRecording();
+	Record& currentlyPlaying();
+	Record& currentlySelected();
 
-	void serializeRecording(Recording& recording);
+	void serializeRecord(Record& record);
 
 private:
 	std::unique_ptr<Clock> m_clock;
 	float m_startTime;
 
-	std::vector<Recording> m_recordings;
+	std::vector<Record> m_records;
 	size_t m_currRecordingIdx = -1;
 	bool m_bIsPlaying = false;
-	size_t m_selectedRecordingIdx = -1;
+	size_t m_selectedRecordIdx = -1;
 
 	bool m_bDraggingOnTheTimeline = false;
 };

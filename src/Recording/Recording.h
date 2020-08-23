@@ -6,17 +6,17 @@
 class ConfigManager;
 class ParticlesSystem;
 
-class Recording {
+class Record {
 public:
-	Recording(const ConfigRef& initialConfiguration);
-	Recording(const std::string& filepath);
-	~Recording() = default;
+	Record(const ConfigRef& initialConfiguration);
+	Record(const std::string& filepath);
+	~Record() = default;
 
 	void onAction(const ActionRef& actionRef, float timestamp);
-	bool startPlaying(ConfigManager& configManager, ParticlesSystem& partSystem);              // Returns true iff we should keep playing the recording
-	bool updatePlaying(float time, ConfigManager& configManager, ParticlesSystem& partSystem); // Returns true iff we should keep playing the recording
+	bool startPlaying(ConfigManager& configManager, ParticlesSystem& partSystem);              // Returns true iff we should keep playing the record
+	bool updatePlaying(float time, ConfigManager& configManager, ParticlesSystem& partSystem); // Returns true iff we should keep playing the record
 
-	bool setTime(float newTime, ConfigManager& configManager, ParticlesSystem& partSystem); // Returns true iff we should keep playing the recording
+	bool setTime(float newTime, ConfigManager& configManager, ParticlesSystem& partSystem);    // Returns true iff we should keep playing the record
 	inline float totalDuration() const { return m_actionsTimeline.size() > 0 ? m_actionsTimeline.back().time : 0.0f; } // TODO update me onec we have other timelines
 	inline const std::string& name() const { return m_name; }
 

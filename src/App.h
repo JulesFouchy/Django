@@ -33,7 +33,7 @@ private:
 	ConfigManager m_configManager;
 	SettingsManager m_settingsMng;
 
-	RecordingManager m_recordingManager;
+	RecordManager m_recordManager;
 
 /********************
   * INTERNAL CODE *

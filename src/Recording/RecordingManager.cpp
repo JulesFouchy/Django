@@ -8,103 +8,105 @@
 #include "Helper/File.h"
 #include "Constants/Textures.h"
 
-RecordingManager::RecordingManager()
+RecordManager::RecordManager()
 	: m_clock(std::make_unique<Clock_Realtime>())
 {
-	for (auto& entry : std::filesystem::directory_iterator(MyFile::RootDir + "/recordings")) {
-		m_recordings.emplace_back(entry.path().string());
+	if (MyFile::Exists(MyFile::RootDir + "/records")) {
+		for (auto& entry : std::filesystem::directory_iterator(MyFile::RootDir + "/records")) {
+			m_records.emplace_back(entry.path().string());
+		}
 	}
-	m_selectedRecordingIdx = m_recordings.size() - 1;
+	m_selectedRecordIdx = m_records.size() - 1;
 }
 
-void RecordingManager::startRecording(const ConfigRef& currentConfigRef) {
+void RecordManager::startRecording(const ConfigRef& currentConfigRef) {
 	m_startTime = m_clock->time();
-	// Create new recording
-	m_recordings.emplace_back(currentConfigRef);
-	m_currRecordingIdx = m_recordings.size() - 1;
+	// Create new record
+	m_records.emplace_back(currentConfigRef);
+	m_currRecordingIdx = m_records.size() - 1;
 }
 
-void RecordingManager::stopRecording() {
-	serializeRecording(currentlyRecording());
-	m_selectedRecordingIdx = m_currRecordingIdx;
+void RecordManager::stopRecording() {
+	serializeRecord(currentlyRecording());
+	m_selectedRecordIdx = m_currRecordingIdx;
 	m_currRecordingIdx = -1;
 }
 
-void RecordingManager::setSelectedRecording(size_t idx) {
+void RecordManager::setSelectedRecord(size_t idx) {
 	if (isRecording())
 		stopRecording();
 	if (isPlaying())
 		stopPlaying();
-	assert(m_selectedRecordingIdx != idx);
-	m_selectedRecordingIdx = idx;
+	assert(m_selectedRecordIdx != idx);
+	m_selectedRecordIdx = idx;
 }
 
-float RecordingManager::timeSinceStart() {
+float RecordManager::timeSinceStart() {
 	assert(isRecording() || isPlaying());
 	return m_clock->time() - m_startTime;
 }
 
-void RecordingManager::onAction(const ActionRef& actionRef) {
+void RecordManager::onAction(const ActionRef& actionRef) {
 	if (isRecording()) {
 		currentlyRecording().onAction(actionRef, timeSinceStart());
 	}
 }
 
-void RecordingManager::update(ConfigManager& configManager, ParticlesSystem& partSystem) {
+void RecordManager::update(ConfigManager& configManager, ParticlesSystem& partSystem) {
 	m_clock->update();
 	if (isPlaying())
 		updatePlaying(configManager, partSystem);
 	m_bDraggingOnTheTimeline = false; // Resets every frame. It is set by the ImGui() method before the call to update()
 }
 
-bool RecordingManager::isRecording() {
+bool RecordManager::isRecording() {
 	return m_currRecordingIdx != -1;
 }
-bool RecordingManager::isPlaying() {
+bool RecordManager::isPlaying() {
 	return m_bIsPlaying;
 }
-bool RecordingManager::hasARecordSelected() {
-	return m_selectedRecordingIdx != -1;
+bool RecordManager::hasARecordSelected() {
+	return m_selectedRecordIdx != -1;
 }
 
-Recording& RecordingManager::currentlyRecording() {
+Record& RecordManager::currentlyRecording() {
 	assert(isRecording());
-	return m_recordings[m_currRecordingIdx];
+	return m_records[m_currRecordingIdx];
 }
-Recording& RecordingManager::currentlyPlaying() {
+Record& RecordManager::currentlyPlaying() {
 	assert(isPlaying());
-	return m_recordings[m_selectedRecordingIdx];
+	return m_records[m_selectedRecordIdx];
 }
-Recording& RecordingManager::currentlySelected() {
+Record& RecordManager::currentlySelected() {
 	assert(hasARecordSelected());
-	return m_recordings[m_selectedRecordingIdx];
+	return m_records[m_selectedRecordIdx];
 }
 
-void RecordingManager::startPlaying(ConfigManager& configManager, ParticlesSystem& partSystem) {
+void RecordManager::startPlaying(ConfigManager& configManager, ParticlesSystem& partSystem) {
 	m_startTime = m_clock->time();
 	m_bIsPlaying = true;
-	if (!m_recordings[m_selectedRecordingIdx].startPlaying(configManager, partSystem))
+	if (!m_records[m_selectedRecordIdx].startPlaying(configManager, partSystem))
 		stopPlaying();
 }
 
-void RecordingManager::updatePlaying(ConfigManager& configManager, ParticlesSystem& partSystem) {
+void RecordManager::updatePlaying(ConfigManager& configManager, ParticlesSystem& partSystem) {
 	if (!currentlyPlaying().updatePlaying(timeSinceStart(), configManager, partSystem)
 	 && !m_bDraggingOnTheTimeline) // Prevent the playing from stopping just because we dragged the time cursor outside of the timeline
 		stopPlaying();
 }
 
-void RecordingManager::stopPlaying() {
+void RecordManager::stopPlaying() {
 	m_bIsPlaying = false;
 }
 
-void RecordingManager::serializeRecording(Recording& recording) {
-	const std::string& folderPath = MyFile::RootDir + "/recordings";
+void RecordManager::serializeRecord(Record& record) {
+	const std::string& folderPath = MyFile::RootDir + "/records";
 	if (!MyFile::Exists(folderPath))
 		std::filesystem::create_directory(folderPath);
-	recording.serialize(folderPath);
+	record.serialize(folderPath);
 }
 
-void RecordingManager::ImGui(ConfigManager& configManager, ParticlesSystem& partSystem) {
+void RecordManager::ImGui(ConfigManager& configManager, ParticlesSystem& partSystem) {
 	// If Not Playing
 	if (!isPlaying()) {
 		// Recording
@@ -138,7 +140,7 @@ void RecordingManager::ImGui(ConfigManager& configManager, ParticlesSystem& part
 	}
 	// If playing
 	else {
-		// Disabled recording
+		// Recording disabled
 		MyImGui::ButtonWithIconDisabled(Textures::Record(), "Cannot record while playing a clip");
 		ImGui::SameLine();
 		// Stop playing
@@ -155,18 +157,18 @@ void RecordingManager::ImGui(ConfigManager& configManager, ParticlesSystem& part
 			}
 		}
 	}
-	// Recordings list
-	for (size_t i = 0; i < m_recordings.size(); ++i) {
+	// Records list
+	for (size_t i = 0; i < m_records.size(); ++i) {
 		if (i != m_currRecordingIdx) {
-			bool bIsSelectedRecording = i == m_selectedRecordingIdx;
-			if (ImGui::Selectable(m_recordings[i].name().c_str(), bIsSelectedRecording)) {
+			bool bIsSelectedRecording = i == m_selectedRecordIdx;
+			if (ImGui::Selectable(m_records[i].name().c_str(), bIsSelectedRecording)) {
 				if (!bIsSelectedRecording) {
-					setSelectedRecording(i);
+					setSelectedRecord(i);
 				}
 			}
 			if (ImGui::IsItemHovered()) {
 				ImGui::BeginTooltip();
-				MyImGui::TimeFormatedHMS(m_recordings[i].totalDuration());
+				MyImGui::TimeFormatedHMS(m_records[i].totalDuration());
 				ImGui::EndTooltip();
 			}
 		}

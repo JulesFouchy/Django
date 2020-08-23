@@ -48,18 +48,18 @@ void App::onLoopIteration() {
 		m_configManager.Imgui(m_particlesSystem);
 		// Key bindings
 		ImGui::Begin("Key Bindings");
-		m_configManager.ImGuiKeyBindings(m_particlesSystem, m_recordingManager);
+		m_configManager.ImGuiKeyBindings(m_particlesSystem, m_recordManager);
 		ImGui::End();
 		// Recording
 		ImGui::Begin("Recording");
-		m_recordingManager.ImGui(m_configManager, m_particlesSystem); // must be called before m_recordingManager.update()
+		m_recordManager.ImGui(m_configManager, m_particlesSystem); // must be called before m_recordManager.update()
 		ImGui::End();
 	}
 	// Send time to physics compute shader
-	m_recordingManager.update(m_configManager, m_particlesSystem); // updates time so must be called before sending it to compute shader // must be called after it's ImGui() because the latter is responsible for setting m_bDraggingOnTheTimeline
-	m_particlesSystem.physicsComputeShader().setUniform1f("dt", m_recordingManager.clock().deltaTime());
+	m_recordManager.update(m_configManager, m_particlesSystem); // updates time so must be called before sending it to compute shader // must be called after it's ImGui() because the latter is responsible for setting m_bDraggingOnTheTimeline
+	m_particlesSystem.physicsComputeShader().setUniform1f("dt", m_recordManager.clock().deltaTime());
 	// Send wind to physics compute shader
-	m_settingsMng.get().getWind().setWindOffset(m_particlesSystem.physicsComputeShader(), m_recordingManager.clock().time());
+	m_settingsMng.get().getWind().setWindOffset(m_particlesSystem.physicsComputeShader(), m_recordManager.clock().time());
 	// Send mouse to physics compute shader
 		// Force field
 	bool bForceField = Input::IsMouseButtonDown(SDL_BUTTON_LEFT) && !ImGui::GetIO().WantCaptureMouse;
@@ -76,7 +76,7 @@ void App::onLoopIteration() {
 	//
 	m_particlesSystem.physicsComputeShader().unbind();
 	// Clear screen
-	m_settingsMng.get().getTrail().clearScreen(m_recordingManager.clock().deltaTime(), m_settingsMng.get().getColors().backgroundColor());
+	m_settingsMng.get().getTrail().clearScreen(m_recordManager.clock().deltaTime(), m_settingsMng.get().getColors().backgroundColor());
 	// Draw particles
 	m_particlePipeline.bind();
 	m_particlesSystem.draw();
@@ -129,7 +129,7 @@ void App::onEvent(const SDL_Event& e) {
 			if (e.key.keysym.sym == 'h' && Input::KeyIsDown(SDL_SCANCODE_LCTRL))
 				m_bShowGUI = !m_bShowGUI;
 			else {
-				m_configManager.onKeyPressed(e.key.keysym.scancode, e.key.keysym.sym, m_particlesSystem, m_recordingManager);
+				m_configManager.onKeyPressed(e.key.keysym.scancode, e.key.keysym.sym, m_particlesSystem, m_recordManager);
 			}
 		}
 		break;

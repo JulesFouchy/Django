@@ -234,11 +234,11 @@ SDL_Scancode KeyBindings::findFirstFromRight(std::vector<SDL_Scancode> row) {
 	return SDL_SCANCODE_UNKNOWN;
 }
 
-void KeyBindings::ImGui(ConfigManager& configManager, ParticlesSystem& partSystem, RecordingManager& recordingManager) {
+void KeyBindings::ImGui(ConfigManager& configManager, ParticlesSystem& partSystem, RecordManager& recordManager) {
 	// Keyboard
-	ImGui_KeyboardRow(configManager, partSystem, recordingManager, firstRow,  0.0f);
-	ImGui_KeyboardRow(configManager, partSystem, recordingManager, secondRow, KEY_OFFSET_PROP * KEY_SIZE);
-	ImGui_KeyboardRow(configManager, partSystem, recordingManager, thirdRow,  KEY_OFFSET_PROP * KEY_SIZE * 2.0f);
+	ImGui_KeyboardRow(configManager, partSystem, recordManager, firstRow,  0.0f);
+	ImGui_KeyboardRow(configManager, partSystem, recordManager, secondRow, KEY_OFFSET_PROP * KEY_SIZE);
+	ImGui_KeyboardRow(configManager, partSystem, recordManager, thirdRow,  KEY_OFFSET_PROP * KEY_SIZE * 2.0f);
 	ImGui::NewLine();
 	// List of configurations without a binding
 	bool b = false;
@@ -280,13 +280,13 @@ void KeyBindings::ImGui(ConfigManager& configManager, ParticlesSystem& partSyste
 	m_mouseWasDraggingLastFrame = ImGui::IsMouseDragging(0);
 }
 
-void KeyBindings::ImGui_KeyboardRow(ConfigManager& configManager, ParticlesSystem& partSystem, RecordingManager& recordingManager, const std::vector<SDL_Scancode>& row, float indent) {
+void KeyBindings::ImGui_KeyboardRow(ConfigManager& configManager, ParticlesSystem& partSystem, RecordManager& recordManager, const std::vector<SDL_Scancode>& row, float indent) {
 	ImGui::Indent(indent);
 	for (SDL_Scancode scancode : row) {
 		ImGui::PushID((int)scancode + 333);
 		ImGui_DragNDropKey(scancode);
 		if (ImGui::IsItemDeactivated() && !m_mouseWasDraggingLastFrame) {
-			configManager.onKeyPressed(scancode, 0, partSystem, recordingManager); // pass invalid keysym (a.k.a neither a letter nor space) so that it doesn't write if text config is on
+			configManager.onKeyPressed(scancode, 0, partSystem, recordManager); // pass invalid keysym (a.k.a neither a letter nor space) so that it doesn't write if text config is on
 			onKeyUp(scancode);
 		}
 		ImGui::PopID();
