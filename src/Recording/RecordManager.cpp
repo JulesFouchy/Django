@@ -12,28 +12,42 @@ RecordManager::RecordManager()
 	: m_clock(std::make_unique<Clock_Realtime>()), m_folderPath(MyFile::RootDir + "/records")
 {
 	setState<RecState_Idle>();
-	//
+	// Load records
 	if (MyFile::Exists(folderPath())) {
 		for (auto& entry : std::filesystem::directory_iterator(folderPath())) {
 			m_records.emplace_back(entry.path().string());
 		}
 	}
-	//
 	m_selectedRecordIdx = m_records.size() - 1;
 }
 
 RecordManager::~RecordManager() {
-	setState<RecState_Idle>();
+	setState<RecState_Idle>(); // Make sure the recording ends properly
 }
 
-void RecordManager::setSelectedRecord(size_t idx) {
-	assert(m_selectedRecordIdx != idx);
-	m_selectedRecordIdx = idx;
+void RecordManager::ImGui(ConfigManager& configManager, ParticlesSystem& partSystem) {
+	m_recState->ImGui(configManager, partSystem);
 }
 
 void RecordManager::update(ConfigManager& configManager, ParticlesSystem& partSystem) {
 	m_clock->update();
 	m_recState->update(configManager, partSystem);
+}
+
+void RecordManager::ImGuiRecordsList() {
+	for (size_t i = 0; i < m_records.size(); ++i) {
+		bool bIsSelectedRecording = i == m_selectedRecordIdx;
+		if (ImGui::Selectable(m_records[i].name().c_str(), bIsSelectedRecording)) {
+			if (!bIsSelectedRecording) {
+				setSelectedRecord(i);
+			}
+		}
+		if (ImGui::IsItemHovered()) {
+			ImGui::BeginTooltip();
+			MyImGui::TimeFormatedHMS(m_records[i].totalDuration());
+			ImGui::EndTooltip();
+		}
+	}
 }
 
 bool RecordManager::hasARecordSelected() {
@@ -43,23 +57,7 @@ Record& RecordManager::selectedRecord() {
 	assert(hasARecordSelected());
 	return m_records[m_selectedRecordIdx];
 }
-
-void RecordManager::ImGui(ConfigManager& configManager, ParticlesSystem& partSystem) {
-	m_recState->ImGui(configManager, partSystem);
-	// Records list
-	for (size_t i = 0; i < m_records.size(); ++i) {
-		//if (i != m_currRecordingIdx) {
-			bool bIsSelectedRecording = i == m_selectedRecordIdx;
-			if (ImGui::Selectable(m_records[i].name().c_str(), bIsSelectedRecording)) {
-				if (!bIsSelectedRecording) {
-					setSelectedRecord(i);
-				}
-			}
-			if (ImGui::IsItemHovered()) {
-				ImGui::BeginTooltip();
-				MyImGui::TimeFormatedHMS(m_records[i].totalDuration());
-				ImGui::EndTooltip();
-			}
-		//}
-	}
+void RecordManager::setSelectedRecord(size_t idx) {
+	assert(m_selectedRecordIdx != idx);
+	m_selectedRecordIdx = idx;
 }

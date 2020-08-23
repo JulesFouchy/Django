@@ -9,10 +9,6 @@
 #include "Helper/MyImGui.h"
 #include "Constants/Textures.h"
 
-void RecState_Idle::update(ConfigManager& configManager, ParticlesSystem& partSystem) {
-	// R.updateClock();
-}
-
 void RecState_Idle::ImGui(ConfigManager& configManager, ParticlesSystem& partSystem) {
 	bool bStateChanged = false;
 	// Start recording
@@ -29,6 +25,9 @@ void RecState_Idle::ImGui(ConfigManager& configManager, ParticlesSystem& partSys
 				bStateChanged = true;
 			}
 		}
+		else {
+			MyImGui::ButtonWithIconDisabled(Textures::Play(), "No record selected");
+		}
 	}
 	if (!bStateChanged) {
 		// Timeline
@@ -37,7 +36,12 @@ void RecState_Idle::ImGui(ConfigManager& configManager, ParticlesSystem& partSys
 			const float duration = R.selectedRecord().totalDuration();
 			if (MyImGui::Timeline("", &t, duration)) {
 				R.setState<RecState_Playing>(R.selectedRecord(), configManager, partSystem);
+				bStateChanged = true;
 			}
 		}
+	}
+	if (!bStateChanged) {
+		// Records list
+		R.ImGuiRecordsList();
 	}
 }

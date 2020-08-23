@@ -10,7 +10,6 @@ public:
 	RecState_Recording(RecordManager& recManager, const ConfigRef& currentConfigRef);
 	~RecState_Recording();
 
-	void update(ConfigManager& configManager, ParticlesSystem& partSystem) override;
 	void ImGui (ConfigManager& configManager, ParticlesSystem& partSystem) override;
 	void onAction(const ActionRef& actionRef) override;
 

@@ -12,9 +12,9 @@ public:
 	{}
 	virtual ~RecState() = default;
 
-	virtual void update(ConfigManager& configManager, ParticlesSystem& partSystem) = 0;
+	virtual void update(ConfigManager& configManager, ParticlesSystem& partSystem) {};
 	virtual void ImGui (ConfigManager& configManager, ParticlesSystem& partSystem) = 0;
-	virtual void onAction(const ActionRef& actionRef) {};
+	virtual void onAction(const ActionRef& actionRef)                              {};
 
 protected:
 	RecordManager& R;

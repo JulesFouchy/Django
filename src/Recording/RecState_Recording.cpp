@@ -13,8 +13,8 @@
 
 RecState_Recording::RecState_Recording(RecordManager& recManager, const ConfigRef& currentConfigRef)
 	: RecState(recManager),
-	m_startTime (R.m_clock->time()),
-	m_record    (R.m_records.emplace_back(currentConfigRef))
+	m_startTime(R.m_clock->time()),
+	m_record(R.m_records.emplace_back(currentConfigRef))
 {}
 
 RecState_Recording::~RecState_Recording() {
@@ -22,10 +22,6 @@ RecState_Recording::~RecState_Recording() {
 	if (!MyFile::Exists(R.folderPath()))
 		std::filesystem::create_directory(R.folderPath());
 	m_record.serialize(R.folderPath());
-}
-
-void RecState_Recording::update(ConfigManager& configManager, ParticlesSystem& partSystem) {
-
 }
 
 void RecState_Recording::ImGui(ConfigManager& configManager, ParticlesSystem& partSystem) {

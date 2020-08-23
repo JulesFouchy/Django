@@ -19,8 +19,8 @@ void RecState_Playing::update(ConfigManager& configManager, ParticlesSystem& par
 	if (!m_record.updatePlaying(timeSinceStart(), configManager, partSystem)
 	&&  !m_bDraggingOnTheTimeline) // Prevent the playing from stopping just because we dragged the time cursor outside of the timeline
 		R.setState<RecState_Idle>();
-	// Reset. It is set by the ImGui() method before the call to update()
-	m_bDraggingOnTheTimeline = false;
+	//
+	m_bDraggingOnTheTimeline = false; // Reset every frame. It is set by the ImGui() method before the call to update()
 }
 
 void RecState_Playing::ImGui(ConfigManager& configManager, ParticlesSystem& partSystem) {
@@ -42,6 +42,8 @@ void RecState_Playing::ImGui(ConfigManager& configManager, ParticlesSystem& part
 			m_record.setTime(t, configManager, partSystem);
 			m_bDraggingOnTheTimeline = true;
 		}
+		// Records list
+		R.ImGuiRecordsList();
 	}
 }
 
