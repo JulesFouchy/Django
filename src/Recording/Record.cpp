@@ -51,7 +51,7 @@ bool Record::setTime(float newTime, ConfigManager& configManager, ParticlesSyste
 	if (m_actionsTimeline.size() == 0)
 		return false;
 	// Time is bigger than duration
-	else if (m_actionsTimeline.back().time < newTime) {
+	else if (m_actionsTimeline.back().time <= newTime) {
 		// Apply last action
 		applyAction(m_actionsTimeline.size() - 1, configManager, partSystem, recordManager);
 		//
@@ -59,19 +59,13 @@ bool Record::setTime(float newTime, ConfigManager& configManager, ParticlesSyste
 	}
 	// There is still some duration left
 	else {
-		// Find
-		size_t i = 0;
-		while (m_actionsTimeline[i].time < newTime) { // TODO could use dichotomic search since the vector is sorted
-			i++;
+		applyConfig(m_startState.configRef, configManager, partSystem, recordManager);
+		m_nextActionIdx = 0;
+		while (m_actionsTimeline[m_nextActionIdx].time < newTime) {
+			applyAction(m_nextActionIdx, configManager, partSystem, recordManager);
+			m_nextActionIdx++;
 		}
-		// Apply state
-		if (i != 0) {
-			applyAction(i - 1, configManager, partSystem, recordManager);
-		}
-		else {
-			applyConfig(m_startState.configRef, configManager, partSystem, recordManager);
-		}
-		m_nextActionIdx = i;
+		return true;
 	}
 }
 
