@@ -4,6 +4,7 @@
 #include "Record.h"
 #include "Recorder.h"
 #include "RecordPlayer.h"
+#include "FrameExporter.h"
 
 class ConfigManager;
 class ParticlesSystem;
@@ -18,6 +19,7 @@ public:
 	inline void onAction(const ActionRef& actionRef) { m_recorder.onAction(actionRef, m_clock->time()); }
 
 	inline const Clock& clock() const { return *m_clock; }
+	inline FrameExporter& exporter() { return m_exporter; }
 
 private:
 	void ImGuiRecordsList();
@@ -33,4 +35,6 @@ private:
 	RecordPlayer m_recordPlayer;
 	std::vector<Record> m_records;
 	size_t m_selectedRecordIdx = -1;
+
+	FrameExporter m_exporter;
 };

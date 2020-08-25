@@ -54,6 +54,10 @@ void App::onLoopIteration() {
 		ImGui::Begin("Recording");
 		m_recordManager.ImGui(m_configManager, m_particlesSystem); // must be called before m_recordManager.update()
 		ImGui::End();
+		// Exporter
+		ImGui::Begin("Export");
+		m_recordManager.exporter().ImGui();
+		ImGui::End();
 	}
 	// Send time to physics compute shader
 	m_recordManager.update(m_configManager, m_particlesSystem); // updates time so must be called before sending it to compute shader // must be called after it's ImGui() because the latter is responsible for setting m_bDraggingOnTheTimeline
@@ -75,6 +79,13 @@ void App::onLoopIteration() {
 		m_particlesSystem.physicsComputeShader().setUniform2f("u_mouse", Input::GetMouseInNormalizedRatioSpace());
 	//
 	m_particlesSystem.physicsComputeShader().unbind();
+	// ---------------------
+	// ----- RENDERING -----
+	// ---------------------
+	FrameExporter& exporter = m_recordManager.exporter();
+	if (exporter.isExporting()) {
+		exporter.getReadyForFrame();
+	}
 	// Clear screen
 	m_settingsMng.get().getTrail().clearScreen(m_recordManager.clock().deltaTime(), m_settingsMng.get().getColors().backgroundColor());
 	// Draw particles
@@ -82,6 +93,13 @@ void App::onLoopIteration() {
 	m_particlesSystem.draw();
 	// Blit render buffer to screen if needed
 	m_settingsMng.get().getTrail().finishRendering();
+	//
+	if (exporter.isExporting()) {
+		exporter.exportFrame();
+	}
+	// ----------------------------
+	// ----- end of RENDERING -----
+	// ----------------------------
 	// Update particles physics
 	m_particlesSystem.updatePositions();
 }
