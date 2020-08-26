@@ -3,11 +3,12 @@
 #include "Configurations/ConfigRef.h"
 
 struct State {
-	State(const ConfigRef& configRef)
-		: configRef(configRef)
+	State(float timestamp, const ConfigRef& configRef)
+		: timestamp(timestamp), configRef(configRef)
 	{}
 	State() = default;
 
+	float timestamp;
 	ConfigRef configRef;
 
 private:
@@ -17,6 +18,7 @@ private:
 	void serialize(Archive& archive)
 	{
 		archive(
+			CEREAL_NVP(timestamp),
 			CEREAL_NVP(configRef)
 		);
 	}

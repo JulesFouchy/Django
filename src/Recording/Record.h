@@ -10,16 +10,17 @@ class RecordManager;
 class Record {
 public:
 	Record() = default;
-	Record(const ConfigRef& initialConfiguration);
+	Record(float timestamp, const ConfigRef& initialConfiguration);
 	Record(const std::string& filepath);
 	~Record() = default;
-	void init(const ConfigRef& initialConfiguration);
+	void init(float timestamp, const ConfigRef& initialConfiguration);
 
 	void onAction(const ActionRef& actionRef, float timestamp);
 	bool startPlaying(             ConfigManager& configManager, ParticlesSystem& partSystem, RecordManager& recordManager); // Returns true iff we should keep playing the record
 	bool updatePlaying(float time, ConfigManager& configManager, ParticlesSystem& partSystem, RecordManager& recordManager); // Returns true iff we should keep playing the record
 
 	bool setTime(float newTime,    ConfigManager& configManager, ParticlesSystem& partSystem, RecordManager& recordManager); // Returns true iff we should keep playing the record
+	inline float initialTime() const { return m_startState.timestamp; }
 	inline float totalDuration() const { return m_actionsTimeline.size() > 0 ? m_actionsTimeline.back().time : 0.0f; } // TODO update me onec we have other timelines
 	inline const std::string& name() const { return m_name; }
 

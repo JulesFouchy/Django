@@ -19,7 +19,7 @@ void FrameExporter::startExporting(Record& selectedRecord, Renderer& renderer, s
 	renderer.attachRenderbuffer(m_renderBuffer);
 	m_frameCount = 0;
 	m_maxNbDigitsOfFrameCount = std::ceil(std::log10(selectedRecord.totalDuration() * m_fps));
-	clock = std::make_unique<Clock_FixedTimestep>(m_fps);
+	clock = std::make_unique<Clock_FixedTimestep>(m_fps, selectedRecord.initialTime());
 	m_bIsExporting = true;
 }
 

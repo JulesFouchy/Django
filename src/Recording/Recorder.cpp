@@ -16,7 +16,7 @@ void Recorder::onAction(const ActionRef& actionRef, float time) {
 }
 
 void Recorder::start(const ConfigRef& currentConfigRef, float time) {
-	m_record.init(currentConfigRef);
+	m_record.init(time, currentConfigRef);
 	m_startTime = time;
 	m_bIsRecording = true;
 }
