@@ -4,6 +4,7 @@
 
 class Record;
 class Renderer;
+class Clock;
 
 class FrameExporter {
 public:
@@ -12,16 +13,16 @@ public:
 
 	inline bool isExporting() { return m_bIsExporting; }
 	void exportFrame();
-	void ImGui(Record* selectedRecord, Renderer& renderer);
+	void ImGui(Record* selectedRecord, Renderer& renderer, std::unique_ptr<Clock>& clock);
 
 private:
-	void startExporting(Record& selectedRecord, Renderer& renderer);
-	void stopExporting(Renderer& renderer);
+	void startExporting(Record& selectedRecord, Renderer& renderer, std::unique_ptr<Clock>& clock);
+	void stopExporting(Renderer& renderer, std::unique_ptr<Clock>& clock);
 
 private:
-	int m_width  = 100;
-	int m_height = 100;
-	unsigned int m_fps = 30;
+	int m_width  = 600;
+	int m_height = 600;
+	float m_fps = 30.0f;
 	std::string m_exportFolderPath;
 	std::string m_prefix = "";
 

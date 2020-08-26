@@ -19,6 +19,7 @@ public:
 	inline void onAction(const ActionRef& actionRef) { m_recorder.onAction(actionRef, m_clock->time()); }
 
 	inline const Clock& clock() const { return *m_clock; }
+	inline std::unique_ptr<Clock>& clockPtrRef() { return m_clock; }
 	inline FrameExporter& exporter() { return m_exporter; }
 	inline Record* potentialSelectedRecord() { return hasARecordSelected() ? &selectedRecord() : nullptr; }
 

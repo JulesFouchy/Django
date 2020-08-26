@@ -56,7 +56,7 @@ void App::onLoopIteration() {
 		ImGui::End();
 		// Exporter
 		ImGui::Begin("Export");
-		m_recordManager.exporter().ImGui(m_recordManager.potentialSelectedRecord(), m_renderer);
+		m_recordManager.exporter().ImGui(m_recordManager.potentialSelectedRecord(), m_renderer, m_recordManager.clockPtrRef());
 		ImGui::End();
 	}
 	// Send time to physics compute shader

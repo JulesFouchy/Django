@@ -6,21 +6,25 @@
 #include "Helper/File.h"
 #include "Renderer.h"
 #include "Record.h"
+#include "Clock/Clock_FixedTimestep.h"
+#include "Clock/Clock_Realtime.h"
 
 FrameExporter::FrameExporter()
 	: m_exportFolderPath(FolderPath::Exports)
 {}
 
-void FrameExporter::startExporting(Record& selectedRecord, Renderer& renderer) {
+void FrameExporter::startExporting(Record& selectedRecord, Renderer& renderer, std::unique_ptr<Clock>& clock) {
 	MyFile::CreateFolderIfDoesntExist(m_exportFolderPath);
 	m_renderBuffer.setSize(m_width, m_height);
 	renderer.attachRenderbuffer(m_renderBuffer);
 	m_frameCount = 0;
 	m_maxNbDigitsOfFrameCount = std::ceil(std::log10(selectedRecord.totalDuration() * m_fps));
+	clock = std::make_unique<Clock_FixedTimestep>(m_fps);
 	m_bIsExporting = true;
 }
 
-void FrameExporter::stopExporting(Renderer& renderer) {
+void FrameExporter::stopExporting(Renderer& renderer, std::unique_ptr<Clock>& clock) {
+	clock = std::make_unique<Clock_Realtime>();
 	renderer.detachRenderBuffer();
 	m_bIsExporting = false;
 }
@@ -37,15 +41,15 @@ void FrameExporter::exportFrame() {
 	m_frameCount++;
 }
 
-void FrameExporter::ImGui(Record* selectedRecord, Renderer& renderer) {
+void FrameExporter::ImGui(Record* selectedRecord, Renderer& renderer, std::unique_ptr<Clock>& clock) {
 	if (selectedRecord) {
 		if (!m_bIsExporting) {
 			if (ImGui::Button("Export"))
-				startExporting(*selectedRecord, renderer);
+				startExporting(*selectedRecord, renderer, clock);
 		}
 		else {
 			if (ImGui::Button("Stop exporting"))
-				stopExporting(renderer);
+				stopExporting(renderer, clock);
 		}
 	}
 }
