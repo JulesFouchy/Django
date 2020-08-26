@@ -40,21 +40,3 @@ void FrameExporter::exportFrame() {
 	m_renderBuffer.unbind();
 	m_frameCount++;
 }
-
-bool FrameExporter::ImGui(Record* selectedRecord, Renderer& renderer, std::unique_ptr<Clock>& clock, const glm::vec3& bgColor) {
-	if (selectedRecord) {
-		if (!m_bIsExporting) {
-			if (ImGui::Button("Export")) {
-				startExporting(*selectedRecord, renderer, clock, bgColor);
-				return true;
-			}
-		}
-		else {
-			if (ImGui::Button("Stop exporting")) {
-				stopExporting(renderer, clock);
-				return true;
-			}
-		}
-	}
-	return false;
-}

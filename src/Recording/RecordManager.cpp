@@ -7,6 +7,8 @@
 #include "Helper/MyImGui.h"
 #include "Helper/File.h"
 #include "Constants/FolderPath.h"
+#include "PlayState_NotStarted.h"
+#include "PlayState_Play.h"
 
 RecordManager::RecordManager()
 	: m_clock(std::make_unique<Clock_Realtime>())
@@ -20,11 +22,35 @@ RecordManager::RecordManager()
 	m_selectedRecordIdx = m_records.size() - 1;
 }
 
-void RecordManager::ImGui(ConfigManager& configManager, ParticlesSystem& partSystem) {
+bool RecordManager::ImGui(ConfigManager& configManager, ParticlesSystem& partSystem, Renderer& renderer, std::unique_ptr<Clock>& clock, const glm::vec3& bgColor) {
+	// Exporter
+	bool b = false;
+	if (hasARecordSelected()) {
+		if (!m_exporter.isExporting()) {
+			if (ImGui::Button("Export")) {
+				m_exporter.startExporting(selectedRecord(), renderer, clock, bgColor);
+				selectedRecord().startPlaying(configManager, partSystem, *this);
+				m_recordPlayer.setState<PlayState_Play>(selectedRecord(), clock->time());
+				b = true;
+			}
+		}
+		else {
+			if (ImGui::Button("Stop exporting")) {
+				m_exporter.stopExporting(renderer, clock);
+				m_recordPlayer.setState<PlayState_NotStarted>(selectedRecord());
+				b = true;
+			}
+		}
+	}
+	// Recorder
 	if (m_recorder.ImGui(configManager.getCurrentConfigRef(), m_clock->time())) // finished recording
 		m_records.push_back(m_recorder.getRecord());
+	// Record player
 	m_recordPlayer.ImGui(potentialSelectedRecord(), m_clock->time(), configManager, partSystem, *this);
+	// Records list
 	ImGuiRecordsList();
+	//
+	return b;
 }
 
 void RecordManager::update(ConfigManager& configManager, ParticlesSystem& partSystem) {

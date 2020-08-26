@@ -13,9 +13,7 @@ public:
 
 	inline bool isExporting() { return m_bIsExporting; }
 	void exportFrame();
-	bool ImGui(Record* selectedRecord, Renderer& renderer, std::unique_ptr<Clock>& clock, const glm::vec3& bgColor); // returns true iff the render target has changed (i.e. we started or stopped recording)
 
-private:
 	void startExporting(Record& selectedRecord, Renderer& renderer, std::unique_ptr<Clock>& clock, const glm::vec3& bgColor);
 	void stopExporting(Renderer& renderer, std::unique_ptr<Clock>& clock);
 

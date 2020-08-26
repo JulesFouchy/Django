@@ -15,7 +15,7 @@ public:
 	~RecordManager() = default;
 
 	void update(ConfigManager& configManager, ParticlesSystem& partSystem);
-	void ImGui (ConfigManager& configManager, ParticlesSystem& partSystem);
+	bool ImGui (ConfigManager& configManager, ParticlesSystem& partSystem, Renderer& renderer, std::unique_ptr<Clock>& clock, const glm::vec3& bgColor); // returns true iff the render target has changed (i.e. we started or stopped exporting)
 	inline void onAction(const ActionRef& actionRef) { m_recorder.onAction(actionRef, m_clock->time()); }
 
 	inline const Clock& clock() const { return *m_clock; }

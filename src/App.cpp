@@ -52,11 +52,7 @@ void App::onLoopIteration() {
 		ImGui::End();
 		// Recording
 		ImGui::Begin("Recording");
-		m_recordManager.ImGui(m_configManager, m_particlesSystem); // must be called before m_recordManager.update()
-		ImGui::End();
-		// Exporter
-		ImGui::Begin("Export");
-		if (m_recordManager.exporter().ImGui(m_recordManager.potentialSelectedRecord(), m_renderer, m_recordManager.clockPtrRef(), m_settingsMng.get().getColors().backgroundColor()))
+		if (m_recordManager.ImGui(m_configManager, m_particlesSystem, m_renderer, m_recordManager.clockPtrRef(), m_settingsMng.get().getColors().backgroundColor())) // must be called before m_recordManager.update()
 			onRenderTargetModified();
 		ImGui::End();
 	}
