@@ -18,10 +18,11 @@ public:
 	void stopExporting(Renderer& renderer, std::unique_ptr<Clock>& clock);
 
 	bool update(Renderer& renderer, std::unique_ptr<Clock>& clock); // returns true iff we stopped exporting
+	void ImGui();
 
 private:
-	int m_width  = 100;
-	int m_height = 100;
+	unsigned int m_width  = 100;
+	unsigned int m_height = 100;
 	float m_fps = 25.0f;
 	float m_durationAfterLastAction = 3.0f;
 	std::string m_exportFolderPath;

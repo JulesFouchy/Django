@@ -42,6 +42,8 @@ bool RecordManager::ImGui(ConfigManager& configManager, ParticlesSystem& partSys
 			}
 		}
 	}
+	m_exporter.ImGui();
+	ImGui::Separator();
 	// Recorder
 	if (m_recorder.ImGui(configManager.getCurrentConfigRef(), m_clock->time())) // finished recording
 		m_records.push_back(m_recorder.getRecord());

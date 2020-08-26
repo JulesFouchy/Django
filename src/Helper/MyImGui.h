@@ -11,4 +11,5 @@ namespace MyImGui {
 	bool ButtonWithIcon(unsigned int texID, const ImVec4& tintColor = ImVec4(1, 1, 1, 1), const ImVec4& backgroundColor = ImVec4(0, 0, 0, 1));
 	void ButtonWithIconDisabled(unsigned int texID, const char* reasonForDisabling = "Currently disabled");
 	void ImageFramed(unsigned int texID, const ImVec2& size, int frameThickness = -1, const ImVec4& frameColor = ImVec4(0, 0, 0, 0), const ImVec4& backgroundColor = ImVec4(0, 0, 0, 1), const ImVec4& tintColor = ImVec4(1, 1, 1, 1));
+	bool InputUInt(const char* label, unsigned int* value_p);
 }

@@ -4,6 +4,7 @@
 #include <stb_image/stb_image_write.h>
 #include "Helper/String.h"
 #include "Helper/File.h"
+#include "Helper/MyImGui.h"
 #include "Renderer.h"
 #include "Record.h"
 #include "Clock/Clock_FixedTimestep.h"
@@ -51,4 +52,15 @@ bool FrameExporter::update(Renderer& renderer, std::unique_ptr<Clock>& clock) {
 		}
 	}
 	return false;
+}
+
+void FrameExporter::ImGui() {
+	ImGui::Text("Resolution : "); ImGui::SameLine();
+	ImGui::PushItemWidth(50);
+	MyImGui::InputUInt("W", &m_width); ImGui::SameLine();
+	MyImGui::InputUInt("H", &m_height);
+	ImGui::PopItemWidth();
+	ImGui::InputFloat("FPS", &m_fps);
+	ImGui::InputFloat("Duration after last action", &m_durationAfterLastAction);
+	ImGui::InputText("Export to", &m_exportFolderPath);
 }

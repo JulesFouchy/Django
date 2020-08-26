@@ -189,3 +189,7 @@ void MyImGui::ImageFramed(unsigned int texID, const ImVec2& size, int frameThick
 	ImGui::RenderFrame(image_bb.Min, image_bb.Max, ImGui::GetColorU32(backgroundColor), true, ImClamp((float)ImMin(padding.x, padding.y), 0.0f, style.FrameRounding));
 	window->DrawList->AddImage((ImTextureID)texID, image_bb.Min, image_bb.Max, ImVec2(0, 0), ImVec2(1, 1), ImGui::GetColorU32(tintColor));
 }
+
+bool MyImGui::InputUInt(const char* label, unsigned int* value_p) {
+	return ImGui::InputScalar(label, ImGuiDataType_U32, value_p, NULL, NULL, "%u");
+}
