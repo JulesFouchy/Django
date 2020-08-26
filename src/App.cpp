@@ -57,7 +57,7 @@ void App::onLoopIteration() {
 		// Exporter
 		ImGui::Begin("Export");
 		if (m_recordManager.exporter().ImGui(m_recordManager.potentialSelectedRecord(), m_renderer, m_recordManager.clockPtrRef()))
-			onRenderTargetChange();
+			onRenderTargetModified();
 		ImGui::End();
 	}
 	// Send time to physics compute shader
@@ -176,10 +176,10 @@ void App::onWindowResize() {
 	DisplayInfos::RefreshSize(m_window);
 	glViewport(0, 0, DisplayInfos::Width(), DisplayInfos::Height());
 	m_renderer.onWindowResize(DisplayInfos::Width(), DisplayInfos::Height());
-	onRenderTargetChange();
+	onRenderTargetModified();
 }
 
-void App::onRenderTargetChange() {
+void App::onRenderTargetModified() {
 	m_particlePipeline.bind();
 	m_particlePipeline.setUniform1f("u_invAspectRatio", 1.0f / m_renderer.aspectRatio());
 	m_configManager.applyTo(m_particlesSystem); // some configs depend on the aspect ratio 
