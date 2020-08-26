@@ -35,16 +35,19 @@ public:
 	AlphaTrailSettings();
 	~AlphaTrailSettings() = default;
 
-	void apply(const glm::vec3& bgColor);
+	void apply();
 	void ImGui(const glm::vec3& bgColor);
 
 	void clearScreen(float dt, const glm::vec3& bgColor);
 	void finishRendering();
 
-	inline void setSize(unsigned int width, unsigned int height) { m_renderBuffer.setSize(width, height); m_textureFrameBuffer.setSize(width, height); }
+	void setSize(unsigned int width, unsigned int height);
+	void attachOffscreenRenderbuffer(RenderBuffer& renderBuffer);
+	void detachOffscreenRenderBuffer();
 
 private:
 	void clearRenderBuffer(const glm::vec3& bgColor);
+	RenderBuffer& renderBuffer();
 
 private:
 	AlphaTrailSettingsValues m_values;
@@ -54,7 +57,8 @@ private:
 	ShaderPipeline m_clearScreenNoResidualsPipeline;
 	QuadVAO m_fullScreenVAO;
 	QuadVAO m_fullScreenVAOWithUVs;
-	RenderBuffer m_renderBuffer;
+	RenderBuffer m_renderBuffer; // used to then blit on screen (prevents visual artifacts when applying alpha trail)
+	RenderBuffer* m_targetRenderBuffer; // used if we want to render on this render buffer instead of screen e.g. when exporting high res images
 	TextureFrameBuffer m_textureFrameBuffer;
 
 private:

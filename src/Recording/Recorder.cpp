@@ -24,8 +24,7 @@ void Recorder::start(const ConfigRef& currentConfigRef, float time) {
 void Recorder::stop() {
 	m_bIsRecording = false;
 	// Serialize record
-	if (!MyFile::Exists(FolderPath::Records))
-		std::filesystem::create_directory(FolderPath::Records);
+	MyFile::CreateFolderIfDoesntExist(FolderPath::Records);
 	m_record.serialize(FolderPath::Records);
 }
 

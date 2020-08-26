@@ -56,7 +56,7 @@ void App::onLoopIteration() {
 		ImGui::End();
 		// Exporter
 		ImGui::Begin("Export");
-		m_recordManager.exporter().ImGui();
+		m_recordManager.exporter().ImGui(m_recordManager.potentialSelectedRecord(), m_settingsMng.get().getTrail());
 		ImGui::End();
 	}
 	// Send time to physics compute shader
@@ -82,10 +82,6 @@ void App::onLoopIteration() {
 	// ---------------------
 	// ----- RENDERING -----
 	// ---------------------
-	FrameExporter& exporter = m_recordManager.exporter();
-	if (exporter.isExporting()) {
-		exporter.getReadyForFrame();
-	}
 	// Clear screen
 	m_settingsMng.get().getTrail().clearScreen(m_recordManager.clock().deltaTime(), m_settingsMng.get().getColors().backgroundColor());
 	// Draw particles
@@ -93,10 +89,9 @@ void App::onLoopIteration() {
 	m_particlesSystem.draw();
 	// Blit render buffer to screen if needed
 	m_settingsMng.get().getTrail().finishRendering();
-	//
-	if (exporter.isExporting()) {
-		exporter.exportFrame();
-	}
+	// Export
+	if (m_recordManager.exporter().isExporting())
+		m_recordManager.exporter().exportFrame();
 	// ----------------------------
 	// ----- end of RENDERING -----
 	// ----------------------------

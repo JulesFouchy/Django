@@ -12,6 +12,9 @@ public:
 	void blitToScreen();
 	void blitTo(FrameBuffer& frameBuffer);
 
+	inline unsigned int width()  const { return m_width; }
+	inline unsigned int height() const { return m_height; }
+
 protected:
 	inline unsigned int getFrameBufferId() { return m_frameBufferId; }
 

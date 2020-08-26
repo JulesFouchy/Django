@@ -29,3 +29,8 @@ void MyFile::ToString(const std::string& filepath, std::string* dst) {
     );
     stream.close();
 }
+
+void MyFile::CreateFolderIfDoesntExist(const std::string& folderPath) {
+    if (!Exists(folderPath))
+        std::filesystem::create_directory(folderPath);
+}

@@ -20,6 +20,7 @@ public:
 
 	inline const Clock& clock() const { return *m_clock; }
 	inline FrameExporter& exporter() { return m_exporter; }
+	inline Record* potentialSelectedRecord() { return hasARecordSelected() ? &selectedRecord() : nullptr; }
 
 private:
 	void ImGuiRecordsList();

@@ -2,23 +2,25 @@
 
 #include "OpenGL/RenderBuffer.h"
 
+class Record;
+class AlphaTrailSettings;
+
 class FrameExporter {
 public:
 	FrameExporter();
 	~FrameExporter() = default;
 
-	void ImGui();
 	inline bool isExporting() { return m_bIsExporting; }
-	void getReadyForFrame();
 	void exportFrame();
+	void ImGui(Record* selectedRecord, AlphaTrailSettings& renderer);
 
 private:
-	void startExporting(float recordDuration);
-	void stopExporting();
+	void startExporting(Record& selectedRecord, AlphaTrailSettings& renderer);
+	void stopExporting(AlphaTrailSettings& renderer);
 
 private:
-	int m_width  = 1920;
-	int m_height = 1080;
+	int m_width  = 100;
+	int m_height = 100;
 	unsigned int m_fps = 30;
 	std::string m_exportFolderPath;
 	std::string m_prefix = "";
