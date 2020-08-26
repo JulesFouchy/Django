@@ -11,6 +11,7 @@ App::App(SDL_Window* window)
 	  m_bFullScreen(false),
 	  m_bShowGUI(true),
 	  m_particlesSystem(),
+	  m_renderer([this](){onRenderTargetModified();}),
 	  m_window(window), m_running(true)
 {
 	// Create graphics pipeline for particles
@@ -52,13 +53,11 @@ void App::onLoopIteration() {
 		ImGui::End();
 		// Recording
 		ImGui::Begin("Recording");
-		if (m_recordManager.ImGui(m_configManager, m_particlesSystem, m_renderer, m_recordManager.clockPtrRef(), m_settingsMng.get().getColors().backgroundColor())) // must be called before m_recordManager.update()
-			onRenderTargetModified();
+		m_recordManager.ImGui(m_configManager, m_particlesSystem, m_renderer, m_recordManager.clockPtrRef(), m_settingsMng.get().getColors().backgroundColor()); // must be called before m_recordManager.update()
 		ImGui::End();
 	}
 	// Send time to physics compute shader
-	if (m_recordManager.update(m_configManager, m_particlesSystem, m_renderer)) // updates time so must be called before sending it to compute shader // must be called after it's ImGui() because the latter is responsible for setting m_bDraggingOnTheTimeline
-		onRenderTargetModified();
+	m_recordManager.update(m_configManager, m_particlesSystem, m_renderer); // updates time so must be called before sending it to compute shader // must be called after it's ImGui() because the latter is responsible for setting m_bDraggingOnTheTimeline
 	m_particlesSystem.physicsComputeShader().setUniform1f("dt", m_recordManager.clock().deltaTime());
 	// Send wind to physics compute shader
 	m_settingsMng.get().getWind().setWindOffset(m_particlesSystem.physicsComputeShader(), m_recordManager.clock().time());

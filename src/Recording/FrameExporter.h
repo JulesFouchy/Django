@@ -17,7 +17,7 @@ public:
 	void startExporting(Record& selectedRecord, Renderer& renderer, std::unique_ptr<Clock>& clock, const glm::vec3& bgColor);
 	void stopExporting(Renderer& renderer, std::unique_ptr<Clock>& clock);
 
-	bool update(Renderer& renderer, std::unique_ptr<Clock>& clock); // returns true iff we stopped exporting
+	void update(Renderer& renderer, std::unique_ptr<Clock>& clock);
 	void ImGui();
 
 private:

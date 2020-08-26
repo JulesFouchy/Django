@@ -9,7 +9,7 @@ struct AlphaTrailSettingsValues;
 
 class Renderer {
 public:
-	Renderer();
+	Renderer(std::function<void()> renderTargetChangeCallback);
 	~Renderer() = default;
 
 	void onRenderBegin(float dt, const glm::vec3& bgColor, const AlphaTrailSettingsValues& alphaTrail);
@@ -39,4 +39,6 @@ private:
 
 	ShaderPipeline m_clearScreenPipeline;
 	ShaderPipeline m_clearScreenNoResidualsPipeline;
+
+	std::function<void()> m_renderTargetChangeCallback;
 };

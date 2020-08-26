@@ -3,8 +3,8 @@
 #include "Settings/AlphaTrailSettings.h"
 #include "Helper/DisplayInfos.h"
 
-Renderer::Renderer()
-	: m_fullScreenVAOWithUVs(true)
+Renderer::Renderer(std::function<void()> renderTargetChangeCallback)
+	: m_fullScreenVAOWithUVs(true), m_renderTargetChangeCallback(renderTargetChangeCallback)
 {
 	m_clearScreenPipeline.addShader(ShaderType::Vertex,   "internal-shaders/passVertPos.vert");
 	m_clearScreenPipeline.addShader(ShaderType::Fragment, "internal-shaders/clearScreen.frag");
@@ -69,12 +69,16 @@ void Renderer::attachRenderbuffer(RenderBuffer& renderBuffer, const glm::vec3& b
 	m_targetRenderBuffer = &renderBuffer;
 	m_textureFrameBuffer.setSize(renderBuffer.width(), renderBuffer.height());
 	clearRenderBuffer(bgColor);
+	DisplayInfos::SetRenderTargetAspectRatio(aspectRatio());
+	m_renderTargetChangeCallback();
 }
 
 void Renderer::detachRenderBuffer() {
 	assert(hasRenderBufferAttached());
 	m_targetRenderBuffer = nullptr;
 	m_textureFrameBuffer.setSize(m_screenSizeRenderBuffer.width(), m_screenSizeRenderBuffer.height());
+	DisplayInfos::SetRenderTargetAspectRatio(aspectRatio());
+	m_renderTargetChangeCallback();
 }
 
 void Renderer::clearRenderBuffer(const glm::vec3& clearColor) {

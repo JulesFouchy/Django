@@ -44,14 +44,12 @@ void FrameExporter::exportFrame() {
 	m_frameCount++;
 }
 
-bool FrameExporter::update(Renderer& renderer, std::unique_ptr<Clock>& clock) {
+void FrameExporter::update(Renderer& renderer, std::unique_ptr<Clock>& clock) {
 	if (isExporting()) {
 		if (clock->time() > m_timeExportStops) {
 			stopExporting(renderer, clock);
-			return true;
 		}
 	}
-	return false;
 }
 
 void FrameExporter::ImGui() {
