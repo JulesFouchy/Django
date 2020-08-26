@@ -4,24 +4,24 @@
 #include <stb_image/stb_image_write.h>
 #include "Helper/String.h"
 #include "Helper/File.h"
-#include "Settings/AlphaTrailSettings.h"
+#include "Renderer.h"
 #include "Record.h"
 
 FrameExporter::FrameExporter()
 	: m_exportFolderPath(FolderPath::Exports)
 {}
 
-void FrameExporter::startExporting(Record& selectedRecord, AlphaTrailSettings& renderer) {
+void FrameExporter::startExporting(Record& selectedRecord, Renderer& renderer) {
 	MyFile::CreateFolderIfDoesntExist(m_exportFolderPath);
 	m_renderBuffer.setSize(m_width, m_height);
-	renderer.attachOffscreenRenderbuffer(m_renderBuffer);
+	renderer.attachRenderbuffer(m_renderBuffer);
 	m_frameCount = 0;
 	m_maxNbDigitsOfFrameCount = std::ceil(std::log10(selectedRecord.totalDuration() * m_fps));
 	m_bIsExporting = true;
 }
 
-void FrameExporter::stopExporting(AlphaTrailSettings& renderer) {
-	renderer.detachOffscreenRenderBuffer();
+void FrameExporter::stopExporting(Renderer& renderer) {
+	renderer.detachRenderBuffer();
 	m_bIsExporting = false;
 }
 
@@ -37,7 +37,7 @@ void FrameExporter::exportFrame() {
 	m_frameCount++;
 }
 
-void FrameExporter::ImGui(Record* selectedRecord, AlphaTrailSettings& renderer) {
+void FrameExporter::ImGui(Record* selectedRecord, Renderer& renderer) {
 	if (selectedRecord) {
 		if (!m_bIsExporting) {
 			if (ImGui::Button("Export"))

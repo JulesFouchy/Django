@@ -44,7 +44,7 @@ void App::onLoopIteration() {
 			ImGui::ShowDemoWindow(&m_bShowImGUIDemoWindow);
 #endif
 		// Settings
-		m_settingsMng.get().ImGuiWindows(m_particlesSystem.physicsComputeShader(), m_particlesSystem, m_configManager);
+		m_settingsMng.get().ImGuiWindows(m_particlesSystem.physicsComputeShader(), m_particlesSystem, m_configManager, m_renderer);
 		m_configManager.Imgui(m_particlesSystem);
 		// Key bindings
 		ImGui::Begin("Key Bindings");
@@ -56,7 +56,7 @@ void App::onLoopIteration() {
 		ImGui::End();
 		// Exporter
 		ImGui::Begin("Export");
-		m_recordManager.exporter().ImGui(m_recordManager.potentialSelectedRecord(), m_settingsMng.get().getTrail());
+		m_recordManager.exporter().ImGui(m_recordManager.potentialSelectedRecord(), m_renderer);
 		ImGui::End();
 	}
 	// Send time to physics compute shader
@@ -83,12 +83,12 @@ void App::onLoopIteration() {
 	// ----- RENDERING -----
 	// ---------------------
 	// Clear screen
-	m_settingsMng.get().getTrail().clearScreen(m_recordManager.clock().deltaTime(), m_settingsMng.get().getColors().backgroundColor());
+	m_renderer.onRenderBegin(m_recordManager.clock().deltaTime(), m_settingsMng.get().getColors().backgroundColor(), m_settingsMng.get().getTrail().getValues());
 	// Draw particles
 	m_particlePipeline.bind();
 	m_particlesSystem.draw();
 	// Blit render buffer to screen if needed
-	m_settingsMng.get().getTrail().finishRendering();
+	m_renderer.onRenderEnd(m_settingsMng.get().getTrail().getValues());
 	// Export
 	if (m_recordManager.exporter().isExporting())
 		m_recordManager.exporter().exportFrame();
@@ -173,12 +173,11 @@ void App::onEvent(const SDL_Event& e) {
 
 void App::onWindowResize() {
 	DisplayInfos::RefreshSize(m_window);
-	m_settingsMng.get().getTrail().setSize(DisplayInfos::Width(), DisplayInfos::Height());
+	m_renderer.onWindowResize(DisplayInfos::Width(), DisplayInfos::Height());
 	m_particlePipeline.bind();
 	m_particlePipeline.setUniform1f("u_invAspectRatio", 1.0f / DisplayInfos::Ratio());
 	glViewport(0, 0, DisplayInfos::Width(), DisplayInfos::Height());
 	m_configManager.applyTo(m_particlesSystem); // some configs depend on the aspect ratio
-	//m_particlesSystem.recomputeVBO();
 }
 
 void App::switchFullScreenMode(){

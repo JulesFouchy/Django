@@ -3,7 +3,7 @@
 #include "OpenGL/RenderBuffer.h"
 
 class Record;
-class AlphaTrailSettings;
+class Renderer;
 
 class FrameExporter {
 public:
@@ -12,11 +12,11 @@ public:
 
 	inline bool isExporting() { return m_bIsExporting; }
 	void exportFrame();
-	void ImGui(Record* selectedRecord, AlphaTrailSettings& renderer);
+	void ImGui(Record* selectedRecord, Renderer& renderer);
 
 private:
-	void startExporting(Record& selectedRecord, AlphaTrailSettings& renderer);
-	void stopExporting(AlphaTrailSettings& renderer);
+	void startExporting(Record& selectedRecord, Renderer& renderer);
+	void stopExporting(Renderer& renderer);
 
 private:
 	int m_width  = 100;

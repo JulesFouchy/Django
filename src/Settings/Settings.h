@@ -11,7 +11,7 @@ public:
 	Settings() = default;
 	~Settings() = default;
 
-	void ImGuiWindows(ShaderPipeline& physicsCompute, ParticlesSystem& partSystem, ConfigManager& configManager);
+	void ImGuiWindows(ShaderPipeline& physicsCompute, ParticlesSystem& partSystem, ConfigManager& configManager, Renderer& renderer);
 	void apply(ShaderPipeline& physicsCompute, ParticlesSystem& partSystem, ConfigManager& configManager);
 
 	void serializeTo(const std::string& filePath);

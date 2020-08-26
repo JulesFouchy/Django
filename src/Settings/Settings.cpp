@@ -5,9 +5,9 @@
 #include <cereal/archives/json.hpp>
 #include <fstream>
 
-void Settings::ImGuiWindows(ShaderPipeline& physicsCompute, ParticlesSystem& partSystem, ConfigManager& configManager) {
+void Settings::ImGuiWindows(ShaderPipeline& physicsCompute, ParticlesSystem& partSystem, ConfigManager& configManager, Renderer& renderer) {
 	ImGui::Begin("Trail");
-		m_alphaTrailSettings.ImGui(m_colorSettings.backgroundColor());
+		m_alphaTrailSettings.ImGui(m_colorSettings.backgroundColor(), renderer);
 	ImGui::End();
 	ImGui::Begin("Colors");
 		m_colorSettings.ImGui(partSystem);

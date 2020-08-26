@@ -1,8 +1,8 @@
 {
     "value0": {
-        "bAlphaTrail": true,
+        "bEnabled": true,
         "bFixResiduals": false,
-        "alphaTrailDecay": 20.0,
+        "decay": 20.0,
         "threshold": 0.2329999953508377,
         "minAlpha": 0.1120000034570694
     }

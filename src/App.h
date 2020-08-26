@@ -5,6 +5,7 @@
 #include "Configurations/ConfigManager.h"
 #include "Settings/SettingsManager.h"
 #include "Recording/RecordManager.h"
+#include "Renderer.h"
 
 class App {
 private:
@@ -34,6 +35,8 @@ private:
 	SettingsManager m_settingsMng;
 
 	RecordManager m_recordManager;
+
+	Renderer m_renderer;
 
 /********************
   * INTERNAL CODE *
