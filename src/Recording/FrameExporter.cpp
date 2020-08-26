@@ -18,7 +18,9 @@ void FrameExporter::startExporting(Record& selectedRecord, Renderer& renderer, s
 	m_renderBuffer.setSize(m_width, m_height);
 	renderer.attachRenderbuffer(m_renderBuffer, bgColor);
 	m_frameCount = 0;
-	m_maxNbDigitsOfFrameCount = std::ceil(std::log10(selectedRecord.totalDuration() * m_fps));
+	float totalExportDuration = selectedRecord.totalDuration() + m_durationAfterLastAction;
+	m_timeExportStops = selectedRecord.initialTime() + totalExportDuration;
+	m_maxNbDigitsOfFrameCount = std::ceil(std::log10(totalExportDuration * m_fps));
 	clock = std::make_unique<Clock_FixedTimestep>(m_fps, selectedRecord.initialTime());
 	m_bIsExporting = true;
 }
@@ -39,4 +41,14 @@ void FrameExporter::exportFrame() {
 	delete[] data;
 	m_renderBuffer.unbind();
 	m_frameCount++;
+}
+
+bool FrameExporter::update(Renderer& renderer, std::unique_ptr<Clock>& clock) {
+	if (isExporting()) {
+		if (clock->time() > m_timeExportStops) {
+			stopExporting(renderer, clock);
+			return true;
+		}
+	}
+	return false;
 }

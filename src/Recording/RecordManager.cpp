@@ -53,9 +53,10 @@ bool RecordManager::ImGui(ConfigManager& configManager, ParticlesSystem& partSys
 	return b;
 }
 
-void RecordManager::update(ConfigManager& configManager, ParticlesSystem& partSystem) {
+bool RecordManager::update(ConfigManager& configManager, ParticlesSystem& partSystem, Renderer& renderer) {
 	m_clock->update();
 	m_recordPlayer.update(m_clock->time(), configManager, partSystem, *this);
+	return m_exporter.update(renderer, m_clock);
 }
 
 void RecordManager::ImGuiRecordsList() {

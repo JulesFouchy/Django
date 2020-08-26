@@ -57,7 +57,8 @@ void App::onLoopIteration() {
 		ImGui::End();
 	}
 	// Send time to physics compute shader
-	m_recordManager.update(m_configManager, m_particlesSystem); // updates time so must be called before sending it to compute shader // must be called after it's ImGui() because the latter is responsible for setting m_bDraggingOnTheTimeline
+	if (m_recordManager.update(m_configManager, m_particlesSystem, m_renderer)) // updates time so must be called before sending it to compute shader // must be called after it's ImGui() because the latter is responsible for setting m_bDraggingOnTheTimeline
+		onRenderTargetModified();
 	m_particlesSystem.physicsComputeShader().setUniform1f("dt", m_recordManager.clock().deltaTime());
 	// Send wind to physics compute shader
 	m_settingsMng.get().getWind().setWindOffset(m_particlesSystem.physicsComputeShader(), m_recordManager.clock().time());
