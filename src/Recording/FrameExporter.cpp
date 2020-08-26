@@ -13,10 +13,10 @@ FrameExporter::FrameExporter()
 	: m_exportFolderPath(FolderPath::Exports)
 {}
 
-void FrameExporter::startExporting(Record& selectedRecord, Renderer& renderer, std::unique_ptr<Clock>& clock) {
+void FrameExporter::startExporting(Record& selectedRecord, Renderer& renderer, std::unique_ptr<Clock>& clock, const glm::vec3& bgColor) {
 	MyFile::CreateFolderIfDoesntExist(m_exportFolderPath);
 	m_renderBuffer.setSize(m_width, m_height);
-	renderer.attachRenderbuffer(m_renderBuffer);
+	renderer.attachRenderbuffer(m_renderBuffer, bgColor);
 	m_frameCount = 0;
 	m_maxNbDigitsOfFrameCount = std::ceil(std::log10(selectedRecord.totalDuration() * m_fps));
 	clock = std::make_unique<Clock_FixedTimestep>(m_fps, selectedRecord.initialTime());
@@ -41,11 +41,11 @@ void FrameExporter::exportFrame() {
 	m_frameCount++;
 }
 
-bool FrameExporter::ImGui(Record* selectedRecord, Renderer& renderer, std::unique_ptr<Clock>& clock) {
+bool FrameExporter::ImGui(Record* selectedRecord, Renderer& renderer, std::unique_ptr<Clock>& clock, const glm::vec3& bgColor) {
 	if (selectedRecord) {
 		if (!m_bIsExporting) {
 			if (ImGui::Button("Export")) {
-				startExporting(*selectedRecord, renderer, clock);
+				startExporting(*selectedRecord, renderer, clock, bgColor);
 				return true;
 			}
 		}

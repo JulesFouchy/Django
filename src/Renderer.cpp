@@ -64,10 +64,11 @@ void Renderer::onWindowResize(unsigned int width, unsigned int height) {
 	DisplayInfos::SetRenderTargetAspectRatio(aspectRatio());
 }
 
-void Renderer::attachRenderbuffer(RenderBuffer& renderBuffer) {
+void Renderer::attachRenderbuffer(RenderBuffer& renderBuffer, const glm::vec3& bgColor) {
 	assert(!hasRenderBufferAttached());
 	m_targetRenderBuffer = &renderBuffer;
 	m_textureFrameBuffer.setSize(renderBuffer.width(), renderBuffer.height());
+	clearRenderBuffer(bgColor);
 }
 
 void Renderer::detachRenderBuffer() {

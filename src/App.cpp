@@ -21,7 +21,7 @@ App::App(SDL_Window* window)
 	onWindowResize();
 	glEnable(GL_DEPTH_TEST);
 	// glEnable(GL_BLEND); // This is already handled by Alpha Trail Settings
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 }
 
 void App::onInit() {
@@ -56,7 +56,7 @@ void App::onLoopIteration() {
 		ImGui::End();
 		// Exporter
 		ImGui::Begin("Export");
-		if (m_recordManager.exporter().ImGui(m_recordManager.potentialSelectedRecord(), m_renderer, m_recordManager.clockPtrRef()))
+		if (m_recordManager.exporter().ImGui(m_recordManager.potentialSelectedRecord(), m_renderer, m_recordManager.clockPtrRef(), m_settingsMng.get().getColors().backgroundColor()))
 			onRenderTargetModified();
 		ImGui::End();
 	}

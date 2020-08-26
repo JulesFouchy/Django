@@ -16,7 +16,7 @@ public:
 	void onRenderEnd(const AlphaTrailSettingsValues& alphaTrail);
 
 	void onWindowResize(unsigned int width, unsigned int height);
-	void attachRenderbuffer(RenderBuffer& renderBuffer);
+	void attachRenderbuffer(RenderBuffer& renderBuffer, const glm::vec3& bgColor);
 	void detachRenderBuffer();
 
 	void clearRenderBuffer(const glm::vec3& clearColor);
