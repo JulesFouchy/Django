@@ -10,6 +10,7 @@ public:
 	void bind();
 	void unbind();
 	void blitToScreen();
+	void blitToScreenWithCareToAspectRatio();
 	void blitTo(FrameBuffer& frameBuffer);
 
 	inline unsigned int width()  const { return m_width; }

@@ -39,6 +39,30 @@ void FrameBuffer::blitToScreen() {
 	GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
 }
 
+void FrameBuffer::blitToScreenWithCareToAspectRatio() {
+	GLCall(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0));
+	GLCall(glBindFramebuffer(GL_READ_FRAMEBUFFER, m_frameBufferId));
+	// Gray background
+	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+	// Fit frame buffer as well as possible
+	float ratio = aspectRatio();
+	if (ratio < DisplayInfos::ScreenAspectRatio()) {
+		// Fit height
+		float halfW = DisplayInfos::Height() * ratio * 0.5f;
+		float c = DisplayInfos::Width() * 0.5f;
+		GLCall(glBlitFramebuffer(0, 0, m_width, m_height, c - halfW, 0, c + halfW, DisplayInfos::Height(), GL_COLOR_BUFFER_BIT, GL_LINEAR));
+	}
+	else {
+		// Fit width
+		float halfH = DisplayInfos::Width() / ratio * 0.5f;
+		float c = DisplayInfos::Height() * 0.5f;
+		GLCall(glBlitFramebuffer(0, 0, m_width, m_height, 0, c - halfH, DisplayInfos::Width(), c + halfH, GL_COLOR_BUFFER_BIT, GL_LINEAR));
+	}
+	//
+	GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
+}
+
 void FrameBuffer::blitTo(FrameBuffer& frameBuffer) {
 	GLCall(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, frameBuffer.getFrameBufferId()));
 	GLCall(glBindFramebuffer(GL_READ_FRAMEBUFFER, m_frameBufferId));

@@ -53,7 +53,10 @@ void Renderer::onRenderBegin(float dt, const glm::vec3& bgColor, const AlphaTrai
 
 void Renderer::onRenderEnd(const AlphaTrailSettingsValues& alphaTrail) {
 	if (alphaTrail.bEnabled || m_targetRenderBuffer) {
-		renderBuffer().blitToScreen();
+		if (m_targetRenderBuffer)
+			renderBuffer().blitToScreenWithCareToAspectRatio();
+		else
+			renderBuffer().blitToScreen();
 	}
 }
 
