@@ -41,15 +41,20 @@ void FrameExporter::exportFrame() {
 	m_frameCount++;
 }
 
-void FrameExporter::ImGui(Record* selectedRecord, Renderer& renderer, std::unique_ptr<Clock>& clock) {
+bool FrameExporter::ImGui(Record* selectedRecord, Renderer& renderer, std::unique_ptr<Clock>& clock) {
 	if (selectedRecord) {
 		if (!m_bIsExporting) {
-			if (ImGui::Button("Export"))
+			if (ImGui::Button("Export")) {
 				startExporting(*selectedRecord, renderer, clock);
+				return true;
+			}
 		}
 		else {
-			if (ImGui::Button("Stop exporting"))
+			if (ImGui::Button("Stop exporting")) {
 				stopExporting(renderer, clock);
+				return true;
+			}
 		}
 	}
+	return false;
 }

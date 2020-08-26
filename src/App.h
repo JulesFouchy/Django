@@ -19,6 +19,7 @@ private:
 	void onEvent(const SDL_Event& e);
 
 	void onWindowResize();
+	void onRenderTargetChange();
 	void switchFullScreenMode();
 
 	void beforeShutDown();

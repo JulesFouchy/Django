@@ -56,7 +56,8 @@ void App::onLoopIteration() {
 		ImGui::End();
 		// Exporter
 		ImGui::Begin("Export");
-		m_recordManager.exporter().ImGui(m_recordManager.potentialSelectedRecord(), m_renderer, m_recordManager.clockPtrRef());
+		if (m_recordManager.exporter().ImGui(m_recordManager.potentialSelectedRecord(), m_renderer, m_recordManager.clockPtrRef()))
+			onRenderTargetChange();
 		ImGui::End();
 	}
 	// Send time to physics compute shader
@@ -173,11 +174,15 @@ void App::onEvent(const SDL_Event& e) {
 
 void App::onWindowResize() {
 	DisplayInfos::RefreshSize(m_window);
-	m_renderer.onWindowResize(DisplayInfos::Width(), DisplayInfos::Height());
-	m_particlePipeline.bind();
-	m_particlePipeline.setUniform1f("u_invAspectRatio", 1.0f / DisplayInfos::Ratio());
 	glViewport(0, 0, DisplayInfos::Width(), DisplayInfos::Height());
-	m_configManager.applyTo(m_particlesSystem); // some configs depend on the aspect ratio
+	m_renderer.onWindowResize(DisplayInfos::Width(), DisplayInfos::Height());
+	onRenderTargetChange();
+}
+
+void App::onRenderTargetChange() {
+	m_particlePipeline.bind();
+	m_particlePipeline.setUniform1f("u_invAspectRatio", 1.0f / m_renderer.aspectRatio());
+	m_configManager.applyTo(m_particlesSystem); // some configs depend on the aspect ratio 
 }
 
 void App::switchFullScreenMode(){

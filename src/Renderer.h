@@ -23,9 +23,11 @@ public:
 	void drawFullScreen();
 	void drawFullScreenWithUVs();
 
+	float aspectRatio() const;
+
 private:
 	RenderBuffer& renderBuffer();
-	inline bool hasRenderBufferAttached() { return (bool)m_targetRenderBuffer; }
+	inline bool hasRenderBufferAttached() const { return (bool)m_targetRenderBuffer; }
 
 private:
 	RenderBuffer m_screenSizeRenderBuffer;        // used to then blit on screen (prevents visual artifacts when applying alpha trail)

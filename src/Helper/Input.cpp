@@ -18,7 +18,7 @@ glm::vec2 Input::GetMouseInNormalizedRatioSpace() {
 	pos /= DisplayInfos::Height();
 	pos.y = 1.0f - pos.y;
 	pos *= 2.0f;
-	pos -= glm::vec2(DisplayInfos::Ratio(), 1.0f);
+	pos -= glm::vec2(DisplayInfos::ScreenAspectRatio(), 1.0f);
 	return pos;
 }
 

@@ -18,7 +18,7 @@ void ConfigTextGPU::applyTo(ParticlesSystem& particlesSystem, const ConfigParams
 	m_computeShader.get().bind();
 	//
 	m_computeShader.get().setUniform1i("u_NbOfParticles", particlesSystem.getNbParticles());
-	m_computeShader.get().setUniform1f("u_aspectRatio", DisplayInfos::Ratio());
+	m_computeShader.get().setUniform1f("u_aspectRatio", DisplayInfos::RenderTargetAspectRatio());
 	m_computeShader.get().setUniform1i("u_nbLetters", m_letters.size());
 	//
 	m_computeShader.compute(particlesSystem.getNbParticles());

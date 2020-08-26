@@ -1,6 +1,7 @@
 #include "Renderer.h"
 
 #include "Settings/AlphaTrailSettings.h"
+#include "Helper/DisplayInfos.h"
 
 Renderer::Renderer()
 	: m_fullScreenVAOWithUVs(true)
@@ -60,6 +61,7 @@ void Renderer::onWindowResize(unsigned int width, unsigned int height) {
 	m_screenSizeRenderBuffer.setSize(width, height);
 	if (!hasRenderBufferAttached())
 		m_textureFrameBuffer.setSize(width, height);
+	DisplayInfos::SetRenderTargetAspectRatio(aspectRatio());
 }
 
 void Renderer::attachRenderbuffer(RenderBuffer& renderBuffer) {
@@ -89,4 +91,8 @@ void Renderer::drawFullScreen() {
 void Renderer::drawFullScreenWithUVs() {
 	m_fullScreenVAOWithUVs.bind();
 	GLCall(glDrawArrays(GL_TRIANGLES, 0, 6));
+}
+
+float Renderer::aspectRatio() const {
+	return m_targetRenderBuffer ? m_targetRenderBuffer->aspectRatio() : m_screenSizeRenderBuffer.aspectRatio();
 }

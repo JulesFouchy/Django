@@ -13,7 +13,7 @@ public:
 
 	inline bool isExporting() { return m_bIsExporting; }
 	void exportFrame();
-	void ImGui(Record* selectedRecord, Renderer& renderer, std::unique_ptr<Clock>& clock);
+	bool ImGui(Record* selectedRecord, Renderer& renderer, std::unique_ptr<Clock>& clock); // returns true iff the render target has changed (i.e. we started or stopped recording)
 
 private:
 	void startExporting(Record& selectedRecord, Renderer& renderer, std::unique_ptr<Clock>& clock);
