@@ -16,7 +16,7 @@ public:
 
 	void update(ConfigManager& configManager, ParticlesSystem& partSystem, Renderer& renderer);
 	void ImGui (ConfigManager& configManager, ParticlesSystem& partSystem, Renderer& renderer, std::unique_ptr<Clock>& clock, const glm::vec3& bgColor);
-	inline void onAction(const ActionRef& actionRef) { m_recorder.onAction(actionRef, m_clock->time()); }
+	inline void onEvent(const Event& event) { m_recorder.onEvent(event, m_clock->time()); }
 
 	inline const Clock& clock() const { return *m_clock; }
 	inline std::unique_ptr<Clock>& clockPtrRef() { return m_clock; }

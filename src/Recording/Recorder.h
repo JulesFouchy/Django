@@ -10,7 +10,7 @@ public:
 	Recorder() = default;
 	~Recorder();
 
-	void onAction(const ActionRef& actionRef, float time);
+	void onEvent(const Event& event, float time);
 	bool ImGui(const ConfigRef& currentConfigRef, float time);
 
 	inline const Record& getRecord() { return m_record; }

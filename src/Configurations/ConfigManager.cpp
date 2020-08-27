@@ -2,6 +2,7 @@
 
 #include "Actions/ThumbnailFactory.h"
 #include "Recording/RecordManager.h"
+#include "Recording/Event.h"
 
 #include <filesystem>
 namespace fs = std::filesystem;
@@ -211,7 +212,7 @@ Configuration& ConfigManager::get() {
 }
 
 void ConfigManager::applyAction(const Action& action, RecordManager& recordManager) {
-    recordManager.onAction(action.ref);
+    recordManager.onEvent(Event(action.ref));
     switch (action.ref.type)
     {
     case ActionType::SHAPE:

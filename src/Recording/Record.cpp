@@ -16,27 +16,27 @@ Record::Record(const std::string& filepath) {
 void Record::init(float timestamp, const ConfigRef& initialConfiguration) {
 	m_startState = State(timestamp, initialConfiguration);
 	m_name = MyTime::AsString();
-	m_actionsTimeline.clear();
+	m_eventsTimeline.clear();
 }
 
-void Record::onAction(const ActionRef& actionRef, float timestamp) {
-	m_actionsTimeline.emplace_back(actionRef, timestamp);
+void Record::recordEvent(const Event& event, float timestamp) {
+	m_eventsTimeline.emplace_back(event, timestamp);
 }
 
 bool Record::startPlaying(ConfigManager& configManager, ParticlesSystem& partSystem, RecordManager& recordManager) {
 	applyConfig(m_startState.configRef, configManager, partSystem, recordManager);
 	m_nextActionIdx = 0;
-	return m_actionsTimeline.size() != 0;
+	return m_eventsTimeline.size() != 0;
 }
 
 bool Record::updatePlaying(float time, ConfigManager& configManager, ParticlesSystem& partSystem, RecordManager& recordManager) {
-	if (m_nextActionIdx < m_actionsTimeline.size()) {
-		while (m_actionsTimeline[m_nextActionIdx].time < time) {
+	if (m_nextActionIdx < m_eventsTimeline.size()) {
+		while (m_eventsTimeline[m_nextActionIdx].time < time) {
 			// Apply action
 			applyAction(m_nextActionIdx, configManager, partSystem, recordManager);
 			// Move to next action
 			m_nextActionIdx++;
-			if (m_nextActionIdx >= m_actionsTimeline.size())
+			if (m_nextActionIdx >= m_eventsTimeline.size())
 				return false;
 		}
 		return true;
@@ -48,12 +48,12 @@ bool Record::updatePlaying(float time, ConfigManager& configManager, ParticlesSy
 
 bool Record::setTime(float newTime, ConfigManager& configManager, ParticlesSystem& partSystem, RecordManager& recordManager) {
 	// No actions
-	if (m_actionsTimeline.size() == 0)
+	if (m_eventsTimeline.size() == 0)
 		return false;
 	// Time is bigger than duration
-	else if (m_actionsTimeline.back().time <= newTime) {
+	else if (m_eventsTimeline.back().time <= newTime) {
 		// Apply last action
-		applyAction(m_actionsTimeline.size() - 1, configManager, partSystem, recordManager);
+		applyAction(m_eventsTimeline.size() - 1, configManager, partSystem, recordManager);
 		//
 		return false;
 	}
@@ -61,7 +61,7 @@ bool Record::setTime(float newTime, ConfigManager& configManager, ParticlesSyste
 	else {
 		applyConfig(m_startState.configRef, configManager, partSystem, recordManager);
 		m_nextActionIdx = 0;
-		while (m_actionsTimeline[m_nextActionIdx].time < newTime) {
+		while (m_eventsTimeline[m_nextActionIdx].time < newTime) {
 			applyAction(m_nextActionIdx, configManager, partSystem, recordManager);
 			m_nextActionIdx++;
 		}
@@ -75,7 +75,7 @@ void Record::applyConfig(const ConfigRef& configRef, ConfigManager& configManage
 }
 
 void Record::applyAction(size_t idx, ConfigManager& configManager, ParticlesSystem& partSystem, RecordManager& recordManager) {
-	configManager.applyActionRef(m_actionsTimeline[idx].actionRef, recordManager);
+	configManager.applyActionRef(m_eventsTimeline[idx].event.getActionRef(), recordManager);
 	configManager.applyTo(partSystem);
 }
 
@@ -85,7 +85,7 @@ void Record::serialize(const std::string& folderPath) {
 		cereal::JSONOutputArchive archive(os);
 		archive(
 			CEREAL_NVP(m_startState),
-			CEREAL_NVP(m_actionsTimeline)
+			CEREAL_NVP(m_eventsTimeline)
 		);
 	}
 }
@@ -96,7 +96,7 @@ void Record::deserialize(const std::string& filepath) {
 		cereal::JSONInputArchive archive(is);
 		archive(
 			CEREAL_NVP(m_startState),
-			CEREAL_NVP(m_actionsTimeline)
+			CEREAL_NVP(m_eventsTimeline)
 		);
 	}
 	m_name = MyString::FileName(filepath);
