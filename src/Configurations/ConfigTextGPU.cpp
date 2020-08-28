@@ -14,14 +14,14 @@ ConfigTextGPU::ConfigTextGPU()
 	uploadData();
 }
 
-void ConfigTextGPU::applyTo(ParticlesSystem& particlesSystem, const ConfigParams& params, const RandomParams& randParams) {
+void ConfigTextGPU::applyTo(ParticleSystem& particleSystem, const ConfigParams& params, const RandomParams& randParams) {
 	m_computeShader.get().bind();
 	//
-	m_computeShader.get().setUniform1i("u_NbOfParticles", particlesSystem.getNbParticles());
+	m_computeShader.get().setUniform1i("u_NbOfParticles", particleSystem.getNbParticles());
 	m_computeShader.get().setUniform1f("u_aspectRatio", DisplayInfos::RenderTargetAspectRatio());
 	m_computeShader.get().setUniform1i("u_nbLetters", m_letters.size());
 	//
-	m_computeShader.compute(particlesSystem.getNbParticles());
+	m_computeShader.compute(particleSystem.getNbParticles());
 	m_computeShader.get().unbind();
 }
 

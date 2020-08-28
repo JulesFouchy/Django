@@ -6,11 +6,11 @@ ColorSettings::ColorSettings()
 	: m_presets("djgColors")
 {}
 
-void ColorSettings::apply(ParticlesSystem& partSystem) {
-	applyParticlesColors(partSystem);
+void ColorSettings::apply(StateModifier& stateModifier) {
+	//stateModifier.setParticleColors();
 }
 
-void ColorSettings::ImGui(ParticlesSystem& partSystem) {
+void ColorSettings::ImGui(StateModifier& stateModifier) {
 	bool b = false;
 	bool bColorsChanged = false;
 	// Background
@@ -70,16 +70,12 @@ void ColorSettings::ImGui(ParticlesSystem& partSystem) {
 	//
 	if (bColorsChanged) {
 		b = true;
-		applyParticlesColors(partSystem);
+		apply(stateModifier);
 	}
 	//
 	if (m_presets.ImGui(&m_values)) {
-		apply(partSystem);
+		apply(stateModifier);
 	}
 	if (b)
 		m_presets.setToPlaceholderSetting();
-}
-
-void ColorSettings::applyParticlesColors(ParticlesSystem& partSystem) {
-	partSystem.setParticlesColors(m_values);
 }

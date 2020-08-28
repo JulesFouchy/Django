@@ -10,10 +10,10 @@ RecordPlayer::RecordPlayer() {
 	setState<PlayState_NoSelection>();
 }
 
-void RecordPlayer::update(float time, ConfigManager& configManager, ParticlesSystem& partSystem, RecordManager& recordManager) {
-	m_playState->update(time, *this, configManager, partSystem, recordManager);
+void RecordPlayer::update(float time, StateModifier& stateModifier) {
+	m_playState->update(time, *this, stateModifier);
 }
 
-void RecordPlayer::ImGui(Record* selectedRecord, float time, ConfigManager& configManager, ParticlesSystem& partSystem, RecordManager& recordManager) {
-	m_playState->ImGui(selectedRecord, time, *this, configManager, partSystem, recordManager);
+void RecordPlayer::ImGui(Record* selectedRecord, float time, StateModifier& stateModifier) {
+	m_playState->ImGui(selectedRecord, time, *this, stateModifier);
 }

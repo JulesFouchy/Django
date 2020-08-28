@@ -10,9 +10,9 @@ Recorder::~Recorder() {
 		stop();
 }
 
-void Recorder::onEvent(const Event& event, float time) {
+void Recorder::onStateChange(const StateChange& stateChange, float time) {
 	if (isRecording())
-		m_record.recordEvent(event, time - m_startTime);
+		m_record.recordStateChange(stateChange, time - m_startTime);
 }
 
 void Recorder::start(const ConfigRef& currentConfigRef, float time) {

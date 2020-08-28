@@ -6,17 +6,16 @@
 #include "RecordPlayer.h"
 #include "FrameExporter.h"
 
-class ConfigManager;
-class ParticlesSystem;
+class StateModifier;
 
 class RecordManager {
 public:
 	RecordManager();
 	~RecordManager() = default;
 
-	void update(ConfigManager& configManager, ParticlesSystem& partSystem, Renderer& renderer);
-	void ImGui (ConfigManager& configManager, ParticlesSystem& partSystem, Renderer& renderer, std::unique_ptr<Clock>& clock, const glm::vec3& bgColor);
-	inline void onEvent(const Event& event) { m_recorder.onEvent(event, m_clock->time()); }
+	void update(StateModifier& stateModifier);
+	void ImGui (std::unique_ptr<Clock>& clock, StateModifier& stateModifier);
+	inline void onStateChange(const StateChange& stateChange) { m_recorder.onStateChange(stateChange, m_clock->time()); }
 
 	inline const Clock& clock() const { return *m_clock; }
 	inline std::unique_ptr<Clock>& clockPtrRef() { return m_clock; }

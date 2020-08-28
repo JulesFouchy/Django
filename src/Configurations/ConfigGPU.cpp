@@ -25,10 +25,10 @@ void ConfigGPU::initWithFilePath(const std::string& computeShaderFilePath) {
     initWithSrcCode(src);
 }
 
-void ConfigGPU::applyTo(ParticlesSystem& particlesSystem, const ConfigParams& params, const RandomParams& randParams) {
+void ConfigGPU::applyTo(ParticleSystem& particleSystem, const ConfigParams& params, const RandomParams& randParams) {
     m_computeShader.get().bind();
     //
-    m_computeShader.get().setUniform1i("u_NbOfParticles", particlesSystem.getNbParticles());
+    m_computeShader.get().setUniform1i("u_NbOfParticles", particleSystem.getNbParticles());
     m_computeShader.get().setUniform1f("u_aspectRatio", DisplayInfos::RenderTargetAspectRatio());
     m_computeShader.get().setUniform1i("u_count", params.count);
     m_computeShader.get().setUniform1i("u_intLR", params.intLR);
@@ -40,6 +40,6 @@ void ConfigGPU::applyTo(ParticlesSystem& particlesSystem, const ConfigParams& pa
     m_computeShader.get().setUniform1f("u_seed", randParams.seed);
     m_computeShader.get().setUniform2f("u_xySeed", randParams.xySeed);
     //
-    m_computeShader.compute(particlesSystem.getNbParticles());
+    m_computeShader.compute(particleSystem.getNbParticles());
     m_computeShader.get().unbind();
 }

@@ -3,6 +3,7 @@
 #include "Presets.h"
 
 class ShaderPipeline;
+class StateModifier;
 
 struct WindSettingsValues {
 	float noiseFrequency = 0.319f;
@@ -45,16 +46,16 @@ public:
 	WindSettings();
 	~WindSettings() = default;
 
-	void apply(ShaderPipeline& physicsCompute);
-	void ImGui(ShaderPipeline& physicsCompute);
+	void apply(StateModifier& stateModifier);
+	void ImGui(StateModifier& stateModifier);
 
 	void setWindOffset(ShaderPipeline& physicsCompute, float time);
 
 private:
-	void setNoiseFrequency(ShaderPipeline& physicsCompute);
-	void setMaxStrength(ShaderPipeline& physicsCompute);
-	void setMinStrength(ShaderPipeline& physicsCompute);
-	void setDirection(ShaderPipeline& physicsCompute);
+	void setNoiseFrequency(StateModifier& stateModifier);
+	void setMaxStrength(StateModifier& stateModifier);
+	void setMinStrength(StateModifier& stateModifier);
+	void setDirection(StateModifier& stateModifier);
 
 private:
 	WindSettingsValues m_values;

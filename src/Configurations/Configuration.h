@@ -1,6 +1,6 @@
 #pragma once
 
-class ParticlesSystem;
+class ParticleSystem;
 struct ConfigParams;
 struct RandomParams;
 
@@ -16,7 +16,7 @@ public:
 
 	virtual ~Configuration() = default;
 
-	virtual void applyTo(ParticlesSystem& particlesSystem, const ConfigParams& params, const RandomParams& randParams) = 0;
+	virtual void applyTo(ParticleSystem& particleSystem, const ConfigParams& params, const RandomParams& randParams) = 0;
 
 	inline const std::string& getName()       const { return m_mainName; }
 	inline const std::string& getLayoutName() const { return m_layoutName; }

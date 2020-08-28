@@ -7,7 +7,7 @@ public:
 	PlayState_NotStarted(Record& record);
 	~PlayState_NotStarted() = default;
 
-	void ImGui (Record* selectedRecord, float time, RecordPlayer& recordPlayer, ConfigManager& configManager, ParticlesSystem& partSystem, RecordManager& recordManager) override;
+	void ImGui (Record* selectedRecord, float time, RecordPlayer& recordPlayer, StateModifier& stateModifier) override;
 
 private:
 	Record& m_record;

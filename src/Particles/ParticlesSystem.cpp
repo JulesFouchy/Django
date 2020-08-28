@@ -8,7 +8,7 @@
 #define ACTUAL_POS_ID 0
 #define REST_POS_ID 1
 
-ParticlesSystem::ParticlesSystem()
+ParticleSystem::ParticleSystem()
     : m_particlesSSBO(0, GL_DYNAMIC_DRAW), // TODO check which hint is best
       m_restPositionsSSBO(1, GL_STATIC_DRAW),
       m_colorsSSBO(2, GL_STATIC_DRAW),
@@ -31,7 +31,7 @@ ParticlesSystem::ParticlesSystem()
     GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
 }
 
-void ParticlesSystem::recomputeVBO(float partRadiusRelToHeight) {
+void ParticleSystem::recomputeVBO(float partRadiusRelToHeight) {
     float radius = partRadiusRelToHeight;
     float halfW = radius;
     float halfH = radius;
@@ -48,25 +48,25 @@ void ParticlesSystem::recomputeVBO(float partRadiusRelToHeight) {
     GLCall(glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW));
 }
 
-ParticlesSystem::~ParticlesSystem() {
+ParticleSystem::~ParticleSystem() {
     GLCall(glDeleteBuffers(1, &m_vboID));
     GLCall(glDeleteVertexArrays(1, &m_vaoID));
 }
 
-void ParticlesSystem::draw() {
+void ParticleSystem::draw() {
     GLCall(glBindVertexArray(m_vaoID));
     GLCall(glDrawArraysInstanced(GL_TRIANGLES, 0, 6, m_nbParticles));
 }
 
-void ParticlesSystem::updatePositions() {
+void ParticleSystem::updatePositions() {
     m_physicsShader.compute(m_nbParticles);
 }
 
-void ParticlesSystem::sendRestPositionsToGPU() {
+void ParticleSystem::sendRestPositionsToGPU() {
     m_restPositionsSSBO.uploadData(m_nbParticles * 2, (float*)m_restPositions.data());
 }
 
-void ParticlesSystem::setNbParticles(unsigned int newNbParticles, const ColorSettingsValues& colorSettings) {
+void ParticleSystem::setNbParticles(unsigned int newNbParticles, const ColorSettingsValues& colorSettings) {
     // Set
     m_nbParticles = newNbParticles;
     // Rest positions
@@ -89,7 +89,7 @@ void ParticlesSystem::setNbParticles(unsigned int newNbParticles, const ColorSet
     setParticlesColors(colorSettings);
 }
 
-void ParticlesSystem::setParticlesColors(const ColorSettingsValues& colorSettings) {
+void ParticleSystem::setParticlesColors(const ColorSettingsValues& colorSettings) {
     // Hue gradient mode
     if (colorSettings.bColorModeHueGradient) {
         m_hueGradientComputeShader.get().bind();

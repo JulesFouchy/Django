@@ -10,8 +10,8 @@ App::App(SDL_Window* window)
 	: m_bShowImGUIDemoWindow(false),
 	  m_bFullScreen(false),
 	  m_bShowGUI(true),
-	  m_particlesSystem(),
 	  m_renderer([this](){onRenderTargetModified();}),
+	  m_stateModifier(m_particleSystem, m_settingsManager, m_configManager, m_renderer, m_recordManager),
 	  m_window(window), m_running(true)
 {
 	// Create graphics pipeline for particles
@@ -26,13 +26,11 @@ App::App(SDL_Window* window)
 }
 
 void App::onInit() {
-	m_particlesSystem.physicsComputeShader().bind();
-	m_settingsMng.get().apply(m_particlesSystem.physicsComputeShader(), m_particlesSystem, m_configManager);
-	m_particlesSystem.physicsComputeShader().unbind();
+	m_stateModifier.applyAllSettings();
 }
 
 void App::onLoopIteration() {
-	m_particlesSystem.physicsComputeShader().bind();
+	m_particleSystem.physicsComputeShader().bind();
 	// ImGui windows
 	if (m_bShowGUI) {
 #ifndef NDEBUG
@@ -45,47 +43,47 @@ void App::onLoopIteration() {
 			ImGui::ShowDemoWindow(&m_bShowImGUIDemoWindow);
 #endif
 		// Settings
-		m_settingsMng.get().ImGuiWindows(m_particlesSystem.physicsComputeShader(), m_particlesSystem, m_configManager, m_renderer);
-		m_configManager.Imgui(m_particlesSystem);
+		m_stateModifier.settingsManager().get().ImGuiWindows(m_stateModifier);
+		m_configManager.Imgui(m_stateModifier);
 		// Key bindings
 		ImGui::Begin("Key Bindings");
-		m_configManager.ImGuiKeyBindings(m_particlesSystem, m_recordManager);
+		m_configManager.ImGuiKeyBindings(m_stateModifier);
 		ImGui::End();
 		// Recording
 		ImGui::Begin("Recording");
-		m_recordManager.ImGui(m_configManager, m_particlesSystem, m_renderer, m_recordManager.clockPtrRef(), m_settingsMng.get().getColors().backgroundColor()); // must be called before m_recordManager.update()
+		m_recordManager.ImGui(m_recordManager.clockPtrRef(), m_stateModifier); // must be called before m_recordManager.update()
 		ImGui::End();
 	}
 	// Send time to physics compute shader
-	m_recordManager.update(m_configManager, m_particlesSystem, m_renderer); // updates time so must be called before sending it to compute shader // must be called after it's ImGui() because the latter is responsible for setting m_bDraggingOnTheTimeline
-	m_particlesSystem.physicsComputeShader().setUniform1f("dt", m_recordManager.clock().deltaTime());
+	m_recordManager.update(m_stateModifier); // updates time so must be called before sending it to compute shader // must be called after it's ImGui() because the latter is responsible for setting m_bDraggingOnTheTimeline
+	m_particleSystem.physicsComputeShader().setUniform1f("dt", m_recordManager.clock().deltaTime());
 	// Send wind to physics compute shader
-	m_settingsMng.get().getWind().setWindOffset(m_particlesSystem.physicsComputeShader(), m_recordManager.clock().time());
+	m_settingsManager.get().getWind().setWindOffset(m_particleSystem.physicsComputeShader(), m_recordManager.clock().time());
 	// Send mouse to physics compute shader
 		// Force field
 	bool bForceField = Input::IsMouseButtonDown(SDL_BUTTON_LEFT) && !ImGui::GetIO().WantCaptureMouse;
-	m_particlesSystem.physicsComputeShader().setUniform1i("u_bForceField", bForceField);
+	m_particleSystem.physicsComputeShader().setUniform1i("u_bForceField", bForceField);
 		// Burst
 	bool bImpulse = ImGui::IsMouseReleased(ImGuiMouseButton_Right);
 	if (bImpulse)
-		m_particlesSystem.physicsComputeShader().setUniform1f("u_burstStrength", pow(25.0f * ImGui::GetIO().MouseDownDurationPrev[ImGuiMouseButton_Right], 0.8f));
+		m_particleSystem.physicsComputeShader().setUniform1f("u_burstStrength", pow(25.0f * ImGui::GetIO().MouseDownDurationPrev[ImGuiMouseButton_Right], 0.8f));
 	else
-		m_particlesSystem.physicsComputeShader().setUniform1f("u_burstStrength", -1.0f);
+		m_particleSystem.physicsComputeShader().setUniform1f("u_burstStrength", -1.0f);
 		//
 	if (bForceField || bImpulse)
-		m_particlesSystem.physicsComputeShader().setUniform2f("u_mouse", Input::GetMouseInNormalizedRatioSpace());
+		m_particleSystem.physicsComputeShader().setUniform2f("u_mouse", Input::GetMouseInNormalizedRatioSpace());
 	//
-	m_particlesSystem.physicsComputeShader().unbind();
+	m_particleSystem.physicsComputeShader().unbind();
 	// ---------------------
 	// ----- RENDERING -----
 	// ---------------------
 	// Clear screen
-	m_renderer.onRenderBegin(m_recordManager.clock().deltaTime(), m_settingsMng.get().getColors().backgroundColor(), m_settingsMng.get().getTrail().getValues());
+	m_renderer.onRenderBegin(m_recordManager.clock().deltaTime(), m_settingsManager.get().getColors().backgroundColor(), m_settingsManager.get().getTrail().getValues());
 	// Draw particles
 	m_particlePipeline.bind();
-	m_particlesSystem.draw();
+	m_particleSystem.draw();
 	// Blit render buffer to screen if needed
-	m_renderer.onRenderEnd(m_settingsMng.get().getTrail().getValues());
+	m_renderer.onRenderEnd(m_settingsManager.get().getTrail().getValues());
 	// Export
 	if (m_recordManager.exporter().isExporting())
 		m_recordManager.exporter().exportFrame();
@@ -93,7 +91,7 @@ void App::onLoopIteration() {
 	// ----- end of RENDERING -----
 	// ----------------------------
 	// Update particles physics
-	m_particlesSystem.updatePositions();
+	m_particleSystem.updatePositions();
 }
 
 void App::onEvent(const SDL_Event& e) {
@@ -106,7 +104,7 @@ void App::onEvent(const SDL_Event& e) {
 		break;
 
 	case SDL_MOUSEWHEEL:
-		m_configManager.onWheel(e.wheel.y, m_particlesSystem, ImGui::GetIO().WantCaptureMouse);
+		m_configManager.onWheel(e.wheel.y, m_particleSystem, ImGui::GetIO().WantCaptureMouse);
 		break;
 
 	case SDL_MOUSEBUTTONDOWN:
@@ -139,7 +137,7 @@ void App::onEvent(const SDL_Event& e) {
 			if (e.key.keysym.sym == 'h' && Input::KeyIsDown(SDL_SCANCODE_LCTRL))
 				m_bShowGUI = !m_bShowGUI;
 			else {
-				m_configManager.onKeyPressed(e.key.keysym.scancode, e.key.keysym.sym, m_particlesSystem, m_recordManager);
+				m_configManager.onKeyPressed(e.key.keysym.scancode, e.key.keysym.sym, m_stateModifier);
 			}
 		}
 		break;
@@ -178,7 +176,7 @@ void App::onWindowResize() {
 void App::onRenderTargetModified() {
 	m_particlePipeline.bind();
 	m_particlePipeline.setUniform1f("u_invAspectRatio", 1.0f / m_renderer.aspectRatio());
-	m_configManager.applyTo(m_particlesSystem); // some configs depend on the aspect ratio 
+	m_stateModifier.apply(); // some configs depend on the aspect ratio 
 }
 
 void App::switchFullScreenMode(){

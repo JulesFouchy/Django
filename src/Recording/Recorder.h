@@ -2,7 +2,6 @@
 
 #include "Record.h"
 
-struct ActionRef;
 struct ConfigRef;
 
 class Recorder {
@@ -10,7 +9,7 @@ public:
 	Recorder() = default;
 	~Recorder();
 
-	void onEvent(const Event& event, float time);
+	void onStateChange(const StateChange& stateChange, float time);
 	bool ImGui(const ConfigRef& currentConfigRef, float time);
 
 	inline const Record& getRecord() { return m_record; }

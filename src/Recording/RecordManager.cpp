@@ -2,8 +2,9 @@
 
 #include "Actions/ActionRef.h"
 #include "Clock/Clock_Realtime.h"
+#include "StateModifier.h"
+#include "Settings/SettingsManager.h"
 #include "Configurations/ConfigManager.h"
-#include "Particles/ParticlesSystem.h"
 #include "Helper/MyImGui.h"
 #include "Helper/File.h"
 #include "Constants/FolderPath.h"
@@ -22,19 +23,19 @@ RecordManager::RecordManager()
 	m_selectedRecordIdx = m_records.size() - 1;
 }
 
-void RecordManager::ImGui(ConfigManager& configManager, ParticlesSystem& partSystem, Renderer& renderer, std::unique_ptr<Clock>& clock, const glm::vec3& bgColor) {
+void RecordManager::ImGui(std::unique_ptr<Clock>& clock, StateModifier& stateModifier) {
 	// Exporter
 	if (hasARecordSelected()) {
 		if (!m_exporter.isExporting()) {
 			if (ImGui::Button("Export")) {
-				m_exporter.startExporting(selectedRecord(), renderer, clock, bgColor);
-				selectedRecord().startPlaying(configManager, partSystem, *this);
+				m_exporter.startExporting(selectedRecord(), stateModifier.renderer(), clock, stateModifier.settingsManager().get().getColors().backgroundColor());
+				selectedRecord().startPlaying(stateModifier);
 				m_recordPlayer.setState<PlayState_Play>(selectedRecord(), clock->time());
 			}
 		}
 		else {
 			if (ImGui::Button("Stop exporting")) {
-				m_exporter.stopExporting(renderer, clock);
+				m_exporter.stopExporting(stateModifier.renderer(), clock);
 				m_recordPlayer.setState<PlayState_NotStarted>(selectedRecord());
 			}
 		}
@@ -42,18 +43,18 @@ void RecordManager::ImGui(ConfigManager& configManager, ParticlesSystem& partSys
 	m_exporter.ImGui();
 	ImGui::Separator();
 	// Recorder
-	if (m_recorder.ImGui(configManager.getCurrentConfigRef(), m_clock->time())) // finished recording
+	if (m_recorder.ImGui(stateModifier.configManager().getCurrentConfigRef(), m_clock->time())) // finished recording
 		m_records.push_back(m_recorder.getRecord());
 	// Record player
-	m_recordPlayer.ImGui(potentialSelectedRecord(), m_clock->time(), configManager, partSystem, *this);
+	m_recordPlayer.ImGui(potentialSelectedRecord(), m_clock->time(), stateModifier);
 	// Records list
 	ImGuiRecordsList();
 }
 
-void RecordManager::update(ConfigManager& configManager, ParticlesSystem& partSystem, Renderer& renderer) {
+void RecordManager::update(StateModifier& stateModifier) {
 	m_clock->update();
-	m_recordPlayer.update(m_clock->time(), configManager, partSystem, *this);
-	m_exporter.update(renderer, m_clock);
+	m_recordPlayer.update(m_clock->time(), stateModifier);
+	m_exporter.update(stateModifier.renderer(), m_clock);
 }
 
 void RecordManager::ImGuiRecordsList() {

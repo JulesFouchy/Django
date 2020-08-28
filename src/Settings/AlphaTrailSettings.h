@@ -3,6 +3,7 @@
 #include "Presets.h"
 
 class Renderer;
+class StateModifier;
 
 struct AlphaTrailSettingsValues {
 	bool bEnabled = true;
@@ -32,8 +33,8 @@ public:
 	AlphaTrailSettings();
 	~AlphaTrailSettings() = default;
 
-	void apply();
-	void ImGui(const glm::vec3& bgColor, Renderer& renderer);
+	void apply(StateModifier& stateModifier);
+	void ImGui(const glm::vec3& bgColor, StateModifier& stateModifier);
 
 	const AlphaTrailSettingsValues& getValues() const { return m_values; }
 

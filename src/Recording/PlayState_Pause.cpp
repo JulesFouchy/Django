@@ -12,7 +12,7 @@ PlayState_Pause::PlayState_Pause(Record& record, float timeSinceStart)
 	: m_record(record), m_timeSinceStart(timeSinceStart)
 {}
 
-void PlayState_Pause::ImGui(Record* selectedRecord, float time, RecordPlayer& recordPlayer, ConfigManager& configManager, ParticlesSystem& partSystem, RecordManager& recordManager) {
+void PlayState_Pause::ImGui(Record* selectedRecord, float time, RecordPlayer& recordPlayer, StateModifier& stateModifier) {
 	std::function<void()> changeState = [](){};
 	// Change record
 	if (selectedRecord != &m_record) {
@@ -29,7 +29,7 @@ void PlayState_Pause::ImGui(Record* selectedRecord, float time, RecordPlayer& re
 	}
 	// Timeline
 	if (MyImGui::Timeline("", &m_timeSinceStart, m_record.totalDuration())) {
-		m_record.setTime(m_timeSinceStart, configManager, partSystem, recordManager);
+		m_record.setTime(m_timeSinceStart, stateModifier);
 	}
 	//
 	changeState(); // Apply the state change at the end, otherwise we get deleted and we can't finish the ImGui

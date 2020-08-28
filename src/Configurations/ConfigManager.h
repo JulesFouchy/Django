@@ -10,30 +10,31 @@
 
 #include "Helper/Array2D.h"
 
-class ParticlesSystem;
-class RecordManager;
+class StateModifier;
 
 class ConfigManager {
 public:
 	ConfigManager();
 	~ConfigManager() = default;
 
-	inline void applyTo(ParticlesSystem& partSystem) { get().applyTo(partSystem, m_params, m_randParams); }
-	void Imgui(ParticlesSystem& partSystem);
-	inline void ImGuiKeyBindings(ParticlesSystem& partSystem, RecordManager& recordManager) { m_keyBindings.ImGui(*this, partSystem, recordManager); }
+	void Imgui(StateModifier& stateModifier);
+	inline void ImGuiKeyBindings(StateModifier& stateModifier) { m_keyBindings.ImGui(stateModifier); }
 
-	void onWheel(float delta, ParticlesSystem& partSystem, bool bNoStandardScroll);
-	void onKeyPressed(SDL_Scancode scancode, char keysym, ParticlesSystem& partSystem, RecordManager& recordManager);
+	void onWheel(float delta, ParticleSystem& partSystem, bool bNoStandardScroll);
+	void onKeyPressed(SDL_Scancode scancode, char keysym, StateModifier& stateModifier);
 	inline void onKeyUp(SDL_Scancode scancode) { m_keyBindings.onKeyUp(scancode); }
 
 	ConfigRef getCurrentConfigRef();
-	void applyActionRef(const ActionRef& actionRef, RecordManager& recordManager);
-	void applyConfigRef(const ConfigRef& configRef, RecordManager& recordManager);
+	void applyActionRef(const ActionRef& actionRef, StateModifier& stateModifier);
+	void applyConfigRef(const ConfigRef& configRef, StateModifier& stateModifier);
 
 private:
 	Configuration& get();
-	void applyAction(const Action& action, RecordManager& recordManager);
 	void setCurrentConfigAsText();
+
+friend class StateModifier;
+	inline void applyTo(ParticleSystem& partSystem) { get().applyTo(partSystem, m_params, m_randParams); }
+	void applyAction(const Action& action);
 
 private:
 	ConfigTextGPU m_textConfig;

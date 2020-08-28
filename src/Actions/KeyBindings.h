@@ -3,9 +3,7 @@
 #include "ActionsByType.h"
 #include "BindingsPresets.h"
 
-class ConfigManager;
-class ParticlesSystem;
-class RecordManager;
+class StateModifier;
 
 class KeyBindings {
 	friend class BindingsPresets;
@@ -17,7 +15,7 @@ public:
 	void addAction(Action action);
 	void addAction(Action action, int type);
 	void setupBindings(const std::string& presetFilepath, bool clearExistingBndings = true);
-	void ImGui(ConfigManager& configManager, ParticlesSystem& partSystem, RecordManager& recordManager);
+	void ImGui(StateModifier& stateModifier);
 	void onKeyUp(SDL_Scancode scancode);
 
 	inline std::unordered_map<std::string, ActionBinding*>& getAllActionBindingsOfType(ActionType type) { return m_allActionsByType[type]; }
@@ -38,7 +36,7 @@ private:
 	SDL_Scancode findFirstFromLeft(std::vector<SDL_Scancode> row);
 	SDL_Scancode findFirstFromRight(std::vector<SDL_Scancode> row);
 
-	void ImGui_KeyboardRow(ConfigManager& configManager, ParticlesSystem& partSystem, RecordManager& recordManager, const std::vector<SDL_Scancode>& row, float indent);
+	void ImGui_KeyboardRow(const std::vector<SDL_Scancode>& row, float indent, StateModifier& stateModifier);
 	void ImGui_DragNDropKey(SDL_Scancode scancode, ActionBinding* actionBinding = nullptr);
 	bool ImGui_KeyboardKey(SDL_Scancode scancode, unsigned int textureID, bool hasAnActionBound, bool isKeyPressed);
 

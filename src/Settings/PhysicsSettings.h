@@ -2,7 +2,8 @@
 
 #include "Presets.h"
 
-class ShaderPipeline;
+class StateModifier;
+
 struct PhysicsSettingsValues {
 	// en.wikipedia.org/wiki/Harmonic_oscillator#Damped_harmonic_oscillator
 	// High Level parameters
@@ -30,16 +31,6 @@ public:
 	inline void computeDamping() {
 		m_damping = 2 * dampingRatio * pulsation;
 	}
-	//inline void computeHighLevelParameters() {
-	//	computePulsation();
-	//	computeDampingRatio();
-	//}
-	//inline void computePulsation() {
-	//	pulsation = sqrt(stiffness);
-	//}
-	//inline void computeDampingRatio() {
-	//	dampingRatio = damping * 0.5 / sqrt(stiffness);
-	//}
 
 private:
 	// Serialization
@@ -60,12 +51,12 @@ public:
 	PhysicsSettings();
 	~PhysicsSettings() = default;
 
-	void apply(ShaderPipeline& physicsCompute);
-	void ImGui(ShaderPipeline& physicsCompute);
+	void apply(StateModifier& stateModifier);
+	void ImGui(StateModifier& stateModifier);
 
 private:
-	void setStiffnessInShader(ShaderPipeline& physicsCompute);
-	void setDampingInShader(ShaderPipeline& physicsCompute);
+	void setStiffnessInShader(StateModifier& stateModifier);
+	void setDampingInShader(StateModifier& stateModifier);
 
 private:
 	PhysicsSettingsValues m_values;

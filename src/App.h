@@ -1,11 +1,14 @@
 #pragma once
 
-#include "Particles/ParticlesSystem.h"
 #include "OpenGL/ShaderPipeline.h"
-#include "Configurations/ConfigManager.h"
+
+#include "Particles/ParticlesSystem.h"
 #include "Settings/SettingsManager.h"
-#include "Recording/RecordManager.h"
+#include "Configurations/ConfigManager.h"
 #include "Renderer.h"
+#include "Recording/RecordManager.h"
+
+#include "StateModifier.h"
 
 class App {
 private:
@@ -30,14 +33,14 @@ private:
 	bool m_bShowGUI;
 
 	ShaderPipeline m_particlePipeline;
-	ParticlesSystem m_particlesSystem;
 
+	ParticleSystem m_particleSystem;
+	SettingsManager m_settingsManager;
 	ConfigManager m_configManager;
-	SettingsManager m_settingsMng;
-
+	Renderer m_renderer;
 	RecordManager m_recordManager;
 
-	Renderer m_renderer;
+	StateModifier m_stateModifier;
 
 /********************
   * INTERNAL CODE *

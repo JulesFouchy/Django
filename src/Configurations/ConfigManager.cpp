@@ -2,7 +2,7 @@
 
 #include "Actions/ThumbnailFactory.h"
 #include "Recording/RecordManager.h"
-#include "Recording/Event.h"
+#include "Recording/StateChange.h"
 
 #include <filesystem>
 namespace fs = std::filesystem;
@@ -11,6 +11,7 @@ namespace fs = std::filesystem;
 #include "Helper/Input.h"
 #include "Helper/Random.h"
 #include "Constants/FolderPath.h"
+#include "StateModifier.h"
 
 constexpr float SCROLL_SPEED = 0.1f;
 
@@ -211,8 +212,7 @@ Configuration& ConfigManager::get() {
     }
 }
 
-void ConfigManager::applyAction(const Action& action, RecordManager& recordManager) {
-    recordManager.onEvent(Event(action.ref));
+void ConfigManager::applyAction(const Action& action) {
     switch (action.ref.type)
     {
     case ActionType::SHAPE:
@@ -254,16 +254,20 @@ void ConfigManager::setCurrentConfigAsText() {
     }
 }
 
-void ConfigManager::Imgui(ParticlesSystem& partSystem) {
+void ConfigManager::Imgui(StateModifier& stateModifier) {
     ImGui::Begin("Random");
-    if (ImGui::DragFloat("Seed", &m_randParams.seed))
-        applyTo(partSystem);
-    if (ImGui::DragFloat2("X/Y Seed", &m_randParams.xySeed[0]))
-        applyTo(partSystem);
+    if (ImGui::DragFloat("Seed", &m_randParams.seed)) {
+        stateModifier.recordChange({ StateChangeType::Random_Seed, m_randParams.seed });
+        stateModifier.apply();
+    }
+    if (ImGui::DragFloat2("X/Y Seed", &m_randParams.xySeed[0])) {
+        stateModifier.recordChange({ StateChangeType::Random_XYSeed, m_randParams.xySeed });
+        stateModifier.apply();
+    }
     ImGui::End();
 }
 
-void ConfigManager::onWheel(float delta, ParticlesSystem& partSystem, bool bNoStandardScroll) {
+void ConfigManager::onWheel(float delta, ParticleSystem& partSystem, bool bNoStandardScroll) {
     bool b = false;
     if (Input::KeyIsDown(SDL_SCANCODE_LCTRL) || Input::KeyIsDown(SDL_SCANCODE_RCTRL)) {
         m_params.ctrlWheel += delta * SCROLL_SPEED;
@@ -283,13 +287,13 @@ void ConfigManager::onWheel(float delta, ParticlesSystem& partSystem, bool bNoSt
     applyTo(partSystem);
 }
 
-void ConfigManager::onKeyPressed(SDL_Scancode scancode, char keysym, ParticlesSystem& partSystem, RecordManager& recordManager) {
+void ConfigManager::onKeyPressed(SDL_Scancode scancode, char keysym, StateModifier& stateModifier) {
     bool bHandled = false;
     if (m_currConfigType != ConfigType::TEXT || !m_textConfig.onKeyPressed(scancode, keysym)) {
         if (!m_params.onKeyPressed(scancode)) {
             const Action* action = m_keyBindings.getAction(scancode);
             if (action) {
-                applyAction(*action, recordManager);
+                stateModifier.apply(*action);
                 bHandled = true;
             }
         }
@@ -301,7 +305,7 @@ void ConfigManager::onKeyPressed(SDL_Scancode scancode, char keysym, ParticlesSy
         bHandled = true;
     }
     if (bHandled)
-        applyTo(partSystem);
+        stateModifier.apply();
 }
 
 ConfigRef ConfigManager::getCurrentConfigRef() {
@@ -335,27 +339,27 @@ ConfigRef ConfigManager::getCurrentConfigRef() {
     }
 }
 
-void ConfigManager::applyActionRef(const ActionRef& actionRef, RecordManager& recordManager) {
+void ConfigManager::applyActionRef(const ActionRef& actionRef, StateModifier& stateModifier) {
     if (const Action* action = m_keyBindings.getActionByRef(actionRef)) {
-        applyAction(*action, recordManager);
+        stateModifier.apply(*action);
     }
     else {
         spdlog::warn("Couldn't find the action '{}' of type {}", actionRef.name, actionRef.type);
     }
 }
 
-void ConfigManager::applyConfigRef(const ConfigRef& configRef, RecordManager& recordManager) {
+void ConfigManager::applyConfigRef(const ConfigRef& configRef, StateModifier& stateModifier) {
     switch (configRef.type) {
     case ConfigType::SHAPE_LAYOUT:
-        applyActionRef({ configRef.mainName,   ActionType::SHAPE }, recordManager);
-        applyActionRef({ configRef.layoutName, ActionType::LAYOUT }, recordManager);
+        applyActionRef({ configRef.mainName,   ActionType::SHAPE }, stateModifier);
+        applyActionRef({ configRef.layoutName, ActionType::LAYOUT }, stateModifier);
         break;
     case ConfigType::SVG_LAYOUT:
-        applyActionRef({ configRef.mainName,   ActionType::SVG_SHAPE }, recordManager);
-        applyActionRef({ configRef.layoutName, ActionType::LAYOUT }, recordManager);
+        applyActionRef({ configRef.mainName,   ActionType::SVG_SHAPE }, stateModifier);
+        applyActionRef({ configRef.layoutName, ActionType::LAYOUT }, stateModifier);
         break;
     case ConfigType::STANDALONE:
-        applyActionRef({ configRef.mainName, ActionType::STANDALONE }, recordManager);
+        applyActionRef({ configRef.mainName, ActionType::STANDALONE }, stateModifier);
         break;
     case ConfigType::TEXT:
         setCurrentConfigAsText();

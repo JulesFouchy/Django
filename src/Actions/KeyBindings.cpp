@@ -1,8 +1,7 @@
 #include "KeyBindings.h"
 
+#include "StateModifier.h"
 #include "Configurations/ConfigManager.h"
-#include "Particles/ParticlesSystem.h"
-#include "Recording/RecordManager.h"
 
 #include <imgui/imgui_internal.h>
 #include <cereal/archives/json.hpp>
@@ -120,11 +119,6 @@ void KeyBindings::setBinding(ActionBinding* actionBinding, SDL_Scancode scancode
 }
 
 void KeyBindings::swapBindings(ActionBinding* actionBinding1, ActionBinding* actionBinding2) {
-	//SDL_Scancode scancode1 = actionBinding1->scancode;
-	//SDL_Scancode scancode2 = actionBinding2->scancode;
-	//setBinding(actionBinding1, scancode2);
-	//setBinding(actionBinding2, scancode1);
-	//setBinding(actionBinding1, scancode2);
 	std::swap(actionBinding1->scancode, actionBinding2->scancode);
 	if (actionBinding1->scancode != SDL_SCANCODE_UNKNOWN)
 		m_boundActions[actionBinding1->scancode] = actionBinding1;
@@ -234,11 +228,11 @@ SDL_Scancode KeyBindings::findFirstFromRight(std::vector<SDL_Scancode> row) {
 	return SDL_SCANCODE_UNKNOWN;
 }
 
-void KeyBindings::ImGui(ConfigManager& configManager, ParticlesSystem& partSystem, RecordManager& recordManager) {
+void KeyBindings::ImGui(StateModifier& stateModifier) {
 	// Keyboard
-	ImGui_KeyboardRow(configManager, partSystem, recordManager, firstRow,  0.0f);
-	ImGui_KeyboardRow(configManager, partSystem, recordManager, secondRow, KEY_OFFSET_PROP * KEY_SIZE);
-	ImGui_KeyboardRow(configManager, partSystem, recordManager, thirdRow,  KEY_OFFSET_PROP * KEY_SIZE * 2.0f);
+	ImGui_KeyboardRow(firstRow,  0.0f                             , stateModifier);
+	ImGui_KeyboardRow(secondRow, KEY_OFFSET_PROP * KEY_SIZE       , stateModifier);
+	ImGui_KeyboardRow(thirdRow,  KEY_OFFSET_PROP * KEY_SIZE * 2.0f, stateModifier);
 	ImGui::NewLine();
 	// List of configurations without a binding
 	bool b = false;
@@ -280,13 +274,13 @@ void KeyBindings::ImGui(ConfigManager& configManager, ParticlesSystem& partSyste
 	m_mouseWasDraggingLastFrame = ImGui::IsMouseDragging(0);
 }
 
-void KeyBindings::ImGui_KeyboardRow(ConfigManager& configManager, ParticlesSystem& partSystem, RecordManager& recordManager, const std::vector<SDL_Scancode>& row, float indent) {
+void KeyBindings::ImGui_KeyboardRow(const std::vector<SDL_Scancode>& row, float indent, StateModifier& stateModifier) {
 	ImGui::Indent(indent);
 	for (SDL_Scancode scancode : row) {
 		ImGui::PushID((int)scancode + 333);
 		ImGui_DragNDropKey(scancode);
 		if (ImGui::IsItemDeactivated() && !m_mouseWasDraggingLastFrame) {
-			configManager.onKeyPressed(scancode, 0, partSystem, recordManager); // pass invalid keysym (a.k.a neither a letter nor space) so that it doesn't write if text config is on
+			stateModifier.configManager().onKeyPressed(scancode, 0, stateModifier); // pass invalid keysym (a.k.a neither a letter nor space) so that it doesn't write if text config is on
 			onKeyUp(scancode);
 		}
 		ImGui::PopID();

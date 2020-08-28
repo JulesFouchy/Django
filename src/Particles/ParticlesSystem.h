@@ -3,10 +3,10 @@
 
 struct ColorSettingsValues;
 
-class ParticlesSystem {
+class ParticleSystem {
 public:
-	ParticlesSystem();
-	~ParticlesSystem();
+	ParticleSystem();
+	~ParticleSystem();
 
 	void draw();
 	void updatePositions();

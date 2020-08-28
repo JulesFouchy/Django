@@ -9,7 +9,7 @@ public:
 	ConfigTextGPU();
 	~ConfigTextGPU() = default;
 
-	void applyTo(ParticlesSystem& particlesSystem, const ConfigParams& params, const RandomParams& randParams) override;
+	void applyTo(ParticleSystem& particleSystem, const ConfigParams& params, const RandomParams& randParams) override;
 	bool onKeyPressed(SDL_Scancode scancode, char keysym);
 
 	inline void setCaptureKeys(bool b) { m_bCaptureKeys = b; }
