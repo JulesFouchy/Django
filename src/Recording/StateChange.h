@@ -7,12 +7,14 @@
 #include "Settings/PhysicsSettings.h"
 #include "Settings/WindSettings.h"
 #include <variant>
+#include <cereal/types/variant.hpp>
 
 enum class StateChangeType {
 	Action,
 	AlphaTrail,
 	Colors,
 	Particles,
+	ConfigParams,
 	Physics,
 	Physics_Damping,
 	Physics_Stiffness,
@@ -28,6 +30,7 @@ enum class StateChangeType {
 
 using StateChangeValue = std::variant<
 	ActionRef,
+	SDL_Scancode,
 	AlphaTrailSettingsValues,
 	ColorSettingsValues,
 	ParticleSystemSettingsValues,
@@ -37,14 +40,15 @@ using StateChangeValue = std::variant<
 	glm::vec2
 >;
 
-class StateChange {
+struct StateChange {
 public:
 	StateChange() = default;
-	StateChange(StateChangeType type, const StateChangeValue& value);
+	StateChange(StateChangeType type, const StateChangeValue& value)
+		: type(type), value(value)
+	{}
 
-private:
-	StateChangeType m_type;
-	StateChangeValue m_value;
+	StateChangeType type;
+	StateChangeValue value;
 
 private:
 	//Serialization
@@ -53,7 +57,8 @@ private:
 	void serialize(Archive& archive)
 	{
 		archive(
-			CEREAL_NVP(m_type)
+			CEREAL_NVP(type)
+			//CEREAL_NVP(value)
 		);
 	}
 };

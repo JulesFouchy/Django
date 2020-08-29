@@ -24,7 +24,7 @@ void Record::recordStateChange(const StateChange& stateChange, float timestamp) 
 }
 
 bool Record::startPlaying(StateModifier& stateModifier) {
-	stateModifier.apply(m_startState);
+	stateModifier.applyAndRecord(m_startState);
 	m_nextStateChangeIdx = 0;
 	return m_stateChangesTimeline.size() != 0;
 }
@@ -50,13 +50,13 @@ bool Record::setTime(float newTime, StateModifier& stateModifier) {
 	// Time is bigger than duration
 	else if (m_stateChangesTimeline.back().time <= newTime) {
 		// Apply last action
-		stateModifier.apply(m_stateChangesTimeline.back().stateChange);
+		stateModifier.applyAndRecord(m_stateChangesTimeline.back().stateChange);
 		//
 		return false;
 	}
 	// There is still some duration left
 	else {
-		stateModifier.apply(m_startState);
+		stateModifier.applyAndRecord(m_startState);
 		m_nextStateChangeIdx = 0;
 		while (nextStateChangeTS().time < newTime) {
 			advanceOnTimeline(stateModifier);
@@ -70,7 +70,7 @@ const StateChangeTimestamp& Record::nextStateChangeTS() const {
 }
 
 void Record::advanceOnTimeline(StateModifier& stateModifier) {
-	stateModifier.apply(nextStateChangeTS().stateChange);
+	stateModifier.applyAndRecord(nextStateChangeTS().stateChange);
 	m_nextStateChangeIdx++;
 }
 

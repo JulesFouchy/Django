@@ -212,38 +212,6 @@ Configuration& ConfigManager::get() {
     }
 }
 
-void ConfigManager::applyAction(const Action& action) {
-    switch (action.ref.type)
-    {
-    case ActionType::SHAPE:
-        m_currConfigType = ConfigType::SHAPE_LAYOUT;
-        m_currShapeIndex = action.index;
-        m_bLastShapeWasSVG = false;
-        break;
-    case ActionType::SVG_SHAPE:
-        m_currConfigType = ConfigType::SVG_LAYOUT;
-        m_currSvgIndex = action.index;
-        m_bLastShapeWasSVG = true;
-        break;
-    case ActionType::LAYOUT:
-        m_currConfigType = m_bLastShapeWasSVG ? ConfigType::SVG_LAYOUT : ConfigType::SHAPE_LAYOUT;
-        m_currLayoutIndex = action.index;
-        break;
-    case ActionType::STANDALONE:
-        m_currConfigType = ConfigType::STANDALONE;
-        m_currStandaloneIndex = action.index;
-        break;
-    case ActionType::TEXT:
-        setCurrentConfigAsText();
-        break;
-    case ActionType::REROLL_RANDOM:
-        m_randParams.seed = 10.0f * MyRand::_m1to1();
-        break;
-    default:
-        break;
-    }
-}
-
 void ConfigManager::setCurrentConfigAsText() {
     if (m_currConfigType != ConfigType::TEXT) {
         m_currConfigType = ConfigType::TEXT;
@@ -288,24 +256,16 @@ void ConfigManager::onWheel(float delta, ParticleSystem& partSystem, bool bNoSta
 }
 
 void ConfigManager::onKeyPressed(SDL_Scancode scancode, char keysym, StateModifier& stateModifier) {
-    bool bHandled = false;
-    if (m_currConfigType != ConfigType::TEXT || !m_textConfig.onKeyPressed(scancode, keysym)) {
-        if (!m_params.onKeyPressed(scancode)) {
-            const Action* action = m_keyBindings.getAction(scancode);
-            if (action) {
-                stateModifier.apply(*action);
-                bHandled = true;
+    // Text config
+    if (m_currConfigType != ConfigType::TEXT || !m_textConfig.onKeyPressed(scancode, keysym, stateModifier)) {
+        // Parameters
+        if (!m_params.onKeyPressed(scancode, stateModifier)) {
+            // Actions
+            if (const Action* action = m_keyBindings.getAction(scancode)) {
+                applyAndRecord_Action(*action, stateModifier);
             }
         }
-        else {
-            bHandled = true;
-        }
     }
-    else {
-        bHandled = true;
-    }
-    if (bHandled)
-        stateModifier.apply();
 }
 
 ConfigRef ConfigManager::getCurrentConfigRef() {
@@ -339,27 +299,66 @@ ConfigRef ConfigManager::getCurrentConfigRef() {
     }
 }
 
-void ConfigManager::applyActionRef(const ActionRef& actionRef, StateModifier& stateModifier) {
+void ConfigManager::applyAndRecord_Action(const Action& action, StateModifier& stateModifier) {
+    switch (action.ref.type)
+    {
+    case ActionType::SHAPE:
+        m_currConfigType = ConfigType::SHAPE_LAYOUT;
+        m_currShapeIndex = action.index;
+        m_bLastShapeWasSVG = false;
+        stateModifier.recordChange({ StateChangeType::Action, action.ref });
+        break;
+    case ActionType::SVG_SHAPE:
+        m_currConfigType = ConfigType::SVG_LAYOUT;
+        m_currSvgIndex = action.index;
+        m_bLastShapeWasSVG = true;
+        stateModifier.recordChange({ StateChangeType::Action, action.ref });
+        break;
+    case ActionType::LAYOUT:
+        m_currConfigType = m_bLastShapeWasSVG ? ConfigType::SVG_LAYOUT : ConfigType::SHAPE_LAYOUT;
+        m_currLayoutIndex = action.index;
+        stateModifier.recordChange({ StateChangeType::Action, action.ref });
+        break;
+    case ActionType::STANDALONE:
+        m_currConfigType = ConfigType::STANDALONE;
+        m_currStandaloneIndex = action.index;
+        stateModifier.recordChange({ StateChangeType::Action, action.ref });
+        break;
+    case ActionType::TEXT:
+        setCurrentConfigAsText();
+        stateModifier.recordChange({ StateChangeType::Action, action.ref });
+        break;
+    case ActionType::REROLL_RANDOM:
+        m_randParams.seed = 10.0f * MyRand::_m1to1();
+        stateModifier.recordChange({ StateChangeType::Random_Seed, m_randParams.seed });
+        break;
+    default:
+        break;
+    }
+    stateModifier.apply();
+}
+
+void ConfigManager::applyAndRecord_ActionRef(const ActionRef& actionRef, StateModifier& stateModifier) {
     if (const Action* action = m_keyBindings.getActionByRef(actionRef)) {
-        stateModifier.apply(*action);
+        applyAndRecord_Action(*action, stateModifier);
     }
     else {
         spdlog::warn("Couldn't find the action '{}' of type {}", actionRef.name, actionRef.type);
     }
 }
 
-void ConfigManager::applyConfigRef(const ConfigRef& configRef, StateModifier& stateModifier) {
+void ConfigManager::applyAndRecord_ConfigRef(const ConfigRef& configRef, StateModifier& stateModifier) {
     switch (configRef.type) {
     case ConfigType::SHAPE_LAYOUT:
-        applyActionRef({ configRef.mainName,   ActionType::SHAPE }, stateModifier);
-        applyActionRef({ configRef.layoutName, ActionType::LAYOUT }, stateModifier);
+        applyAndRecord_ActionRef({ configRef.mainName,   ActionType::SHAPE }, stateModifier);
+        applyAndRecord_ActionRef({ configRef.layoutName, ActionType::LAYOUT }, stateModifier);
         break;
     case ConfigType::SVG_LAYOUT:
-        applyActionRef({ configRef.mainName,   ActionType::SVG_SHAPE }, stateModifier);
-        applyActionRef({ configRef.layoutName, ActionType::LAYOUT }, stateModifier);
+        applyAndRecord_ActionRef({ configRef.mainName,   ActionType::SVG_SHAPE }, stateModifier);
+        applyAndRecord_ActionRef({ configRef.layoutName, ActionType::LAYOUT }, stateModifier);
         break;
     case ConfigType::STANDALONE:
-        applyActionRef({ configRef.mainName, ActionType::STANDALONE }, stateModifier);
+        applyAndRecord_ActionRef({ configRef.mainName, ActionType::STANDALONE }, stateModifier);
         break;
     case ConfigType::TEXT:
         setCurrentConfigAsText();

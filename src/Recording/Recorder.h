@@ -9,7 +9,7 @@ public:
 	Recorder() = default;
 	~Recorder();
 
-	void onStateChange(const StateChange& stateChange, float time);
+	void recordChange(const StateChange& stateChange, float time);
 	bool ImGui(const ConfigRef& currentConfigRef, float time);
 
 	inline const Record& getRecord() { return m_record; }

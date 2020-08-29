@@ -31,15 +31,18 @@ void StateModifier::applyAllSettings() {
 	physicsCompute.unbind();
 }
 
-void StateModifier::apply(const StateChange& stateChange) {
-
+void StateModifier::applyAndRecord(const StateChange& stateChange) {
+	switch (stateChange.type) {
+	case StateChangeType::Action:
+		m_configManager.applyAndRecord_ActionRef(std::get<ActionRef>(stateChange.value), *this);
+		break;
+	case StateChangeType::ConfigParams:
+		m_configManager.configParams().onKeyPressed(std::get<SDL_Scancode>(stateChange.value), *this);
+		break;
+	}
 }
 
-void StateModifier::apply(const State& state) {
-
-}
-
-void StateModifier::apply(const Action& action) {
+void StateModifier::applyAndRecord(const State& state) {
 
 }
 
@@ -48,5 +51,5 @@ void StateModifier::apply() {
 }
 
 void StateModifier::recordChange(const StateChange& stateChange) {
-	m_recordManager.onStateChange(stateChange);
+	m_recordManager.recordChange(stateChange);
 }

@@ -25,7 +25,7 @@ void ConfigTextGPU::applyTo(ParticleSystem& particleSystem, const ConfigParams& 
 	m_computeShader.get().unbind();
 }
 
-bool ConfigTextGPU::onKeyPressed(SDL_Scancode scancode, char keysym) {
+bool ConfigTextGPU::onKeyPressed(SDL_Scancode scancode, char keysym, StateModifier& stateModifer) {
 	bool bHandled = false;
 	if (m_bCaptureKeys) {
 		if (scancode == SDL_SCANCODE_BACKSPACE) {

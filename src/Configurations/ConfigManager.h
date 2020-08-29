@@ -25,8 +25,10 @@ public:
 	inline void onKeyUp(SDL_Scancode scancode) { m_keyBindings.onKeyUp(scancode); }
 
 	ConfigRef getCurrentConfigRef();
-	void applyActionRef(const ActionRef& actionRef, StateModifier& stateModifier);
-	void applyConfigRef(const ConfigRef& configRef, StateModifier& stateModifier);
+	void applyAndRecord_ActionRef(const ActionRef& actionRef, StateModifier& stateModifier);
+	void applyAndRecord_ConfigRef(const ConfigRef& configRef, StateModifier& stateModifier);
+
+	inline ConfigParams& configParams() { return m_params; }
 
 private:
 	Configuration& get();
@@ -34,7 +36,7 @@ private:
 
 friend class StateModifier;
 	inline void applyTo(ParticleSystem& partSystem) { get().applyTo(partSystem, m_params, m_randParams); }
-	void applyAction(const Action& action);
+	void applyAndRecord_Action(const Action& action, StateModifier& stateModifier);
 
 private:
 	ConfigTextGPU m_textConfig;

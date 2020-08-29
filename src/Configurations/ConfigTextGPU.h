@@ -4,13 +4,15 @@
 #include "OpenGL/ComputeShader.h"
 #include "OpenGL/SSBO.h"
 
+class StateModifier;
+
 class ConfigTextGPU : public Configuration {
 public:
 	ConfigTextGPU();
 	~ConfigTextGPU() = default;
 
 	void applyTo(ParticleSystem& particleSystem, const ConfigParams& params, const RandomParams& randParams) override;
-	bool onKeyPressed(SDL_Scancode scancode, char keysym);
+	bool onKeyPressed(SDL_Scancode scancode, char keysym, StateModifier& stateModifer);
 
 	inline void setCaptureKeys(bool b) { m_bCaptureKeys = b; }
 	inline void toggleCaptureKeys() { setCaptureKeys(!m_bCaptureKeys); }

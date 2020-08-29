@@ -15,7 +15,7 @@ public:
 
 	void update(StateModifier& stateModifier);
 	void ImGui (std::unique_ptr<Clock>& clock, StateModifier& stateModifier);
-	inline void onStateChange(const StateChange& stateChange) { m_recorder.onStateChange(stateChange, m_clock->time()); }
+	inline void recordChange(const StateChange& stateChange) { m_recorder.recordChange(stateChange, m_clock->time()); }
 
 	inline const Clock& clock() const { return *m_clock; }
 	inline std::unique_ptr<Clock>& clockPtrRef() { return m_clock; }

@@ -6,7 +6,7 @@ class ConfigManager;
 class Renderer;
 class RecordManager;
 
-class StateChange;
+struct StateChange;
 struct State;
 struct Action;
 
@@ -15,9 +15,8 @@ public:
 	StateModifier(ParticleSystem& particleSystem, SettingsManager& settingsManager, ConfigManager& configManager, Renderer& renderer, RecordManager& recordManager);
 	~StateModifier() = default;
 
-	void apply(const StateChange& stateChange);
-	void apply(const State& state);
-	void apply(const Action& action);
+	void applyAndRecord(const StateChange& stateChange);
+	void applyAndRecord(const State& state);
 	void apply();
 	void applyAllSettings();
 	void recordChange(const StateChange& stateChange);

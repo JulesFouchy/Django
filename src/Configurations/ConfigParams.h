@@ -1,5 +1,7 @@
 #pragma once
 
+class StateModifier;
+
 struct ConfigParams {
 	int count = 5;
 	int intLR = 6;
@@ -9,5 +11,5 @@ struct ConfigParams {
 	float shiftWheel = 1.0f;
 	float altWheel = 1.0f;
 
-	bool onKeyPressed(SDL_Scancode scancode);
+	bool onKeyPressed(SDL_Scancode scancode, StateModifier& stateModifier);
 };
