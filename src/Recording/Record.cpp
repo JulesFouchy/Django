@@ -2,6 +2,7 @@
 
 #include "StateModifier.h"
 #include "Helper/Time.h"
+#include "Helper/String.h"
 #include <cereal/archives/json.hpp>
 #include <fstream>
 

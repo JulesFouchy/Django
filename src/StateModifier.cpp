@@ -28,6 +28,25 @@ void StateModifier::applyAndRecord(const StateChange& stateChange) {
 	case StateChangeType::Action:
 		m_configManager.applyAndRecord_ActionRef(std::get<ActionRef>(stateChange.value), *this);
 		break;
+	case StateChangeType::AlphaTrail_Enabled:
+		m_settingsManager.get().getTrail().setApplyAndRecord_Enabled(std::get<bool>(stateChange.value), *this);
+		break;
+	case StateChangeType::AlphaTrail_FixResiduals:
+		m_settingsManager.get().getTrail().setFixResiduals(std::get<bool>(stateChange.value));
+		m_settingsManager.get().getTrail().applyAndRecord_FixResiduals(*this);
+		break;
+	case StateChangeType::AlphaTrail_Decay:
+		m_settingsManager.get().getTrail().setDecay(std::get<float>(stateChange.value));
+		m_settingsManager.get().getTrail().applyAndRecord_Decay(*this);
+		break;
+	case StateChangeType::AlphaTrail_Threshold:
+		m_settingsManager.get().getTrail().setThreshold(std::get<float>(stateChange.value));
+		m_settingsManager.get().getTrail().applyAndRecord_Threshold(*this);
+		break;
+	case StateChangeType::AlphaTrail_MinAlpha:
+		m_settingsManager.get().getTrail().setMinAlpha(std::get<float>(stateChange.value));
+		m_settingsManager.get().getTrail().applyAndRecord_MinAlpha(*this);
+		break;
 	case StateChangeType::Color_Background:
 		m_settingsManager.get().getColors().setBackgroundColor(std::get<glm::vec3>(stateChange.value));
 		m_settingsManager.get().getColors().applyAndRecord_BackgroundColor(*this);

@@ -4,54 +4,92 @@
 #include "Renderer.h"
 #include "StateModifier.h"
 #include "Recording/StateChange.h"
+#include "Settings/SettingsManager.h"
 
 AlphaTrailSettings::AlphaTrailSettings()
 	: m_presets("djgTrail")
 {}
 
-void AlphaTrailSettings::apply(StateModifier& stateModifier) {
-	if (m_values.bEnabled) {
-		if (!m_values.bFixResiduals)
-			glEnable(GL_BLEND);
-		else
-			glDisable(GL_BLEND);
-	}
-	else {
-		glDisable(GL_BLEND);
-	}
-	stateModifier.recordChange({ StateChangeType::AlphaTrail, m_values });
-}
-
-void AlphaTrailSettings::ImGui(const glm::vec3& bgColor, StateModifier& stateModifier) {
-	bool b = false;
-	if (ImGui::Checkbox("Enabled", &m_values.bEnabled)) {
-		b = true;
-		if (m_values.bEnabled)
-			stateModifier.renderer().clearRenderBuffer(bgColor);
-		apply(stateModifier);
+void AlphaTrailSettings::ImGui(StateModifier& stateModifier) {
+	bool bEnabled = m_values.bEnabled;
+	if (ImGui::Checkbox("Enabled", &bEnabled)) {
+		setApplyAndRecord_Enabled(bEnabled, stateModifier);
 	}
 	if (m_values.bEnabled) {
-		if (ImGui::SliderFloat("Trail Decay", &m_values.decay, 0.0f, 30.0f))
-			b = true;
+		if (ImGui::SliderFloat("Trail Decay", &m_values.decay, 0.0f, 30.0f)) {
+			m_presets.setToPlaceholderSetting();
+			applyAndRecord_Decay(stateModifier);
+		}
 		if (ImGui::Checkbox("Fix Residuals", &m_values.bFixResiduals)) {
-			b = true;
-			apply(stateModifier);
+			m_presets.setToPlaceholderSetting();
+			applyAndRecord_FixResiduals(stateModifier);
 		}
 		ImGui::SameLine();
 		MyImGui::HelpMarker("For very small values of Trail Decay, some artifacts appear.\nCheck this only if you see them, since the fix comes at a small performance cost.");
 		if (m_values.bFixResiduals) {
-			if (ImGui::SliderFloat("Threshold", &m_values.threshold, 0.0f, 0.5f))
-				b = true;
-			if (ImGui::SliderFloat("Min Alpha", &m_values.minAlpha, 0.0f, 0.2f))
-				b = true;
+			if (ImGui::SliderFloat("Threshold", &m_values.threshold, 0.0f, 0.5f)) {
+				m_presets.setToPlaceholderSetting();
+				applyAndRecord_Threshold(stateModifier);
+			}
+			if (ImGui::SliderFloat("Min Alpha", &m_values.minAlpha, 0.0f, 0.2f)) {
+				m_presets.setToPlaceholderSetting();
+				applyAndRecord_MinAlpha(stateModifier);
+			}
 		}
 	}
-	bool prevBTrail = m_values.bEnabled;
+	bool bPrevEnabled = m_values.bEnabled;
 	if (m_presets.ImGui(&m_values)) {
-		if (m_values.bEnabled && !prevBTrail)
-			stateModifier.renderer().clearRenderBuffer(bgColor);
-		apply(stateModifier);
+		bool bEnabled = m_values.bEnabled;
+		m_values.bEnabled = bPrevEnabled;
+		setEnabled_ApplyAndRecordAll(bEnabled, stateModifier);
 	}
-	if (b)
+}
+
+void AlphaTrailSettings::applyGLBlendState() {
+	if (m_values.bEnabled && !m_values.bFixResiduals)
+		glEnable(GL_BLEND);
+	else
+		glDisable(GL_BLEND);
+}
+
+void AlphaTrailSettings::setEnabled_ApplyAndRecordAll(bool bEnabled, StateModifier& stateModifier) {
+	setApplyAndRecord_Enabled(bEnabled, stateModifier);
+	stateModifier.recordChange({ StateChangeType::AlphaTrail_FixResiduals, m_values.bFixResiduals });
+	applyAndRecord_Decay(stateModifier);
+	applyAndRecord_Threshold(stateModifier);
+	applyAndRecord_MinAlpha(stateModifier);
+}
+
+void AlphaTrailSettings::setApplyAndRecord_Enabled(bool bEnabled, StateModifier& stateModifier) {
+	// Clear if we are transitionning from no trail to trail
+	if (!m_values.bEnabled && bEnabled)
+		stateModifier.renderer().clearRenderBuffer(stateModifier.settingsManager().get().getColors().backgroundColor());
+	// Set
+	if (m_values.bEnabled != bEnabled) {
+		m_values.bEnabled = bEnabled;
 		m_presets.setToPlaceholderSetting();
+	}
+	// Apply and record
+	applyGLBlendState();
+	stateModifier.recordChange({StateChangeType::AlphaTrail_Enabled, m_values.bEnabled});
+}
+
+void AlphaTrailSettings::applyAndRecord_FixResiduals(StateModifier& stateModifier) {
+	applyGLBlendState();
+	stateModifier.recordChange({ StateChangeType::AlphaTrail_FixResiduals, m_values.bFixResiduals });
+}
+
+void AlphaTrailSettings::applyAndRecord_Decay(StateModifier& stateModifier) {
+	stateModifier.recordChange({ StateChangeType::AlphaTrail_Decay, m_values.decay });
+	// There is nothing to do to apply, the current value is used every frame
+}
+
+void AlphaTrailSettings::applyAndRecord_Threshold(StateModifier& stateModifier) {
+	stateModifier.recordChange({ StateChangeType::AlphaTrail_Threshold, m_values.threshold });
+	// There is nothing to do to apply, the current value is used every frame
+}
+
+void AlphaTrailSettings::applyAndRecord_MinAlpha(StateModifier& stateModifier) {
+	stateModifier.recordChange({ StateChangeType::AlphaTrail_MinAlpha, m_values.minAlpha});
+	// There is nothing to do to apply, the current value is used every frame
 }

@@ -33,10 +33,24 @@ public:
 	AlphaTrailSettings();
 	~AlphaTrailSettings() = default;
 
-	void apply(StateModifier& stateModifier);
-	void ImGui(const glm::vec3& bgColor, StateModifier& stateModifier);
+	void ImGui(StateModifier& stateModifier);
+
+	void setEnabled_ApplyAndRecordAll(bool bEnabled, StateModifier& stateModifier);
+	void setApplyAndRecord_Enabled(bool bEnabled, StateModifier& stateModifier);
+	void applyAndRecord_FixResiduals(StateModifier& stateModifier);
+	void applyAndRecord_Decay(StateModifier& stateModifier);
+	void applyAndRecord_Threshold(StateModifier& stateModifier);
+	void applyAndRecord_MinAlpha(StateModifier& stateModifier);
+
+	inline void setFixResiduals(bool bFixResiduals) { m_values.bFixResiduals = bFixResiduals; m_presets.setToPlaceholderSetting(); }
+	inline void setDecay(float decay)               { m_values.decay = decay;                 m_presets.setToPlaceholderSetting(); }
+	inline void setThreshold(float threshold)       { m_values.threshold = threshold;         m_presets.setToPlaceholderSetting(); }
+	inline void setMinAlpha(float minAlpha)         { m_values.minAlpha = minAlpha;           m_presets.setToPlaceholderSetting(); }
 
 	const AlphaTrailSettingsValues& getValues() const { return m_values; }
+
+private:
+	void applyGLBlendState();
 
 private:
 	AlphaTrailSettingsValues m_values;

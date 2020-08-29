@@ -1,13 +1,16 @@
 #pragma once
 
 #include "Actions/ActionRef.h"
-#include "Settings/AlphaTrailSettings.h"
 #include <variant>
 #include <cereal/types/variant.hpp>
 
 enum class StateChangeType {
 	Action,
-	AlphaTrail,
+	AlphaTrail_Enabled,
+	AlphaTrail_FixResiduals,
+	AlphaTrail_Decay,
+	AlphaTrail_Threshold,
+	AlphaTrail_MinAlpha,
 	Color_Background,
 	Color_GradientMode,
 	Color_HueStart,
@@ -20,12 +23,12 @@ enum class StateChangeType {
 	Particles_Radius,
 	Physics_Pulsation,
 	Physics_DampingRatio,
-	ConfigParams,
 	Wind_Frequency,
 	Wind_MinStrength,
 	Wind_MaxStrength,
 	Wind_Speed,
 	Wind_Direction,
+	ConfigParams,
 	Param_Wheel,
 	Random_Seed,
 	Random_XYSeed
@@ -34,7 +37,6 @@ enum class StateChangeType {
 using StateChangeValue = std::variant<
 	ActionRef,
 	SDL_Scancode,
-	AlphaTrailSettingsValues,
 	unsigned int,
 	bool,
 	float,

@@ -7,7 +7,7 @@
 
 void Settings::ImGuiWindows(StateModifier& stateModifier) {
 	ImGui::Begin("Trail");
-		m_alphaTrailSettings.ImGui(m_colorSettings.backgroundColor(), stateModifier);
+		m_alphaTrailSettings.ImGui(stateModifier);
 	ImGui::End();
 	ImGui::Begin("Colors");
 		m_colorSettings.ImGui(stateModifier);
@@ -26,7 +26,7 @@ void Settings::ImGuiWindows(StateModifier& stateModifier) {
 void Settings::applyAndRecord(StateModifier& stateModifier) {
 	m_windSettings.applyAndRecord(stateModifier); // must be before particleSystemSettings
 	m_particleSystemSettings.applyAndRecord(stateModifier);
-	m_alphaTrailSettings.apply(stateModifier);
+	m_alphaTrailSettings.setEnabled_ApplyAndRecordAll(m_alphaTrailSettings.getValues().bEnabled, stateModifier);
 	m_colorSettings.applyAndRecord(stateModifier); // must be after particleSystemSettings
 	m_physicsSettings.applyAndRecord(stateModifier);
 }
