@@ -147,4 +147,5 @@ target_precompile_headers(${PROJECT_NAME}
   # Project Code
     [["Debugging/Log.h"]]
     [["Debugging/glException.h"]]
+    [["Helper/glmCereal.h"]]
 )

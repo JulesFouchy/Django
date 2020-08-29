@@ -57,8 +57,8 @@ private:
 	void serialize(Archive& archive)
 	{
 		archive(
-			CEREAL_NVP(type)
-			//CEREAL_NVP(value)
+			CEREAL_NVP(type),
+			CEREAL_NVP(value)
 		);
 	}
 };
