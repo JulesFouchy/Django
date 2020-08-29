@@ -13,7 +13,7 @@ public:
 
 	inline unsigned int getNbParticles() { return m_nbParticles; }
 	void setNbParticles(unsigned int newNbParticles, const ColorSettingsValues& colorSettings);
-	void setParticlesColors(const ColorSettingsValues& colorSettings);
+	void applyParticleColors(const ColorSettingsValues& colorSettings);
 
 	inline ShaderPipeline& physicsComputeShader() { return m_physicsShader.get(); }
 

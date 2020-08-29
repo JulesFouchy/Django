@@ -36,6 +36,38 @@ void StateModifier::applyAndRecord(const StateChange& stateChange) {
 	case StateChangeType::Action:
 		m_configManager.applyAndRecord_ActionRef(std::get<ActionRef>(stateChange.value), *this);
 		break;
+	case StateChangeType::Color_Background:
+		m_settingsManager.get().getColors().setBackgroundColor(std::get<glm::vec3>(stateChange.value));
+		m_settingsManager.get().getColors().applyAndRecord_BackgroundColor(*this);
+		break;
+	case StateChangeType::Color_GradientMode:
+		m_settingsManager.get().getColors().setGradientMode(std::get<bool>(stateChange.value));
+		m_settingsManager.get().getColors().applyAndRecord_GradientMode(*this);
+		break;
+	case StateChangeType::Color_HueStart:
+		m_settingsManager.get().getColors().setHueStart(std::get<float>(stateChange.value));
+		m_settingsManager.get().getColors().applyAndRecord_HueStart(*this);
+		break;
+	case StateChangeType::Color_HueEnd:
+		m_settingsManager.get().getColors().setHueEnd(std::get<float>(stateChange.value));
+		m_settingsManager.get().getColors().applyAndRecord_HueEnd(*this);
+		break;
+	case StateChangeType::Color_Saturation:
+		m_settingsManager.get().getColors().setSaturation(std::get<float>(stateChange.value));
+		m_settingsManager.get().getColors().applyAndRecord_Saturation(*this);
+		break;
+	case StateChangeType::Color_Value:
+		m_settingsManager.get().getColors().setValue(std::get<float>(stateChange.value));
+		m_settingsManager.get().getColors().applyAndRecord_Value(*this);
+		break;
+	case StateChangeType::Color_ColorStart:
+		m_settingsManager.get().getColors().setColorStart(std::get<glm::vec3>(stateChange.value));
+		m_settingsManager.get().getColors().applyAndRecord_ColorStart(*this);
+		break;
+	case StateChangeType::Color_ColorEnd:
+		m_settingsManager.get().getColors().setColorEnd(std::get<glm::vec3>(stateChange.value));
+		m_settingsManager.get().getColors().applyAndRecord_ColorEnd(*this);
+		break;
 	case StateChangeType::Physics_Pulsation:
 		m_settingsManager.get().getPhysics().setPulsation(std::get<float>(stateChange.value));
 		m_settingsManager.get().getPhysics().applyAndRecord_Pulsation(*this);
@@ -47,6 +79,8 @@ void StateModifier::applyAndRecord(const StateChange& stateChange) {
 	case StateChangeType::ConfigParams:
 		m_configManager.configParams().onKeyPressed(std::get<SDL_Scancode>(stateChange.value), *this);
 		break;
+	default:
+		assert(false && "[StateModifier::applyAndRecord] Forgot a case !");
 	}
 }
 

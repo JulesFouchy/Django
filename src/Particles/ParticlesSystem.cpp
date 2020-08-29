@@ -86,10 +86,10 @@ void ParticleSystem::setNbParticles(unsigned int newNbParticles, const ColorSett
     m_hueGradientComputeShader.get().setUniform1i("u_NbOfParticles", m_nbParticles);
     m_hueGradientComputeShader.get().unbind();
     // Colors
-    setParticlesColors(colorSettings);
+    applyParticleColors(colorSettings);
 }
 
-void ParticleSystem::setParticlesColors(const ColorSettingsValues& colorSettings) {
+void ParticleSystem::applyParticleColors(const ColorSettingsValues& colorSettings) {
     // Hue gradient mode
     if (colorSettings.bColorModeHueGradient) {
         m_hueGradientComputeShader.get().bind();

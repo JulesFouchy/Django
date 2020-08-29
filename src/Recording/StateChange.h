@@ -12,7 +12,14 @@
 enum class StateChangeType {
 	Action,
 	AlphaTrail,
-	Colors,
+	Color_Background,
+	Color_GradientMode,
+	Color_HueStart,
+	Color_HueEnd,
+	Color_Saturation,
+	Color_Value,
+	Color_ColorStart,
+	Color_ColorEnd,
 	Particles,
 	ConfigParams,
 	Physics_Pulsation,
@@ -35,8 +42,10 @@ using StateChangeValue = std::variant<
 	ParticleSystemSettingsValues,
 	PhysicsSettingsValues,
 	WindSettingsValues,
+	bool,
 	float,
-	glm::vec2
+	glm::vec2,
+	glm::vec3
 >;
 
 struct StateChange {

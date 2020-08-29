@@ -45,8 +45,26 @@ public:
 	ColorSettings();
 	~ColorSettings() = default;
 
-	void apply(StateModifier& stateModifier);
 	void ImGui(StateModifier& stateModifier);
+
+	void applyAndRecord(StateModifier& stateModifier);
+	void applyAndRecord_BackgroundColor(StateModifier& stateModifier);
+	void applyAndRecord_GradientMode(StateModifier& stateModifier);
+	void applyAndRecord_HueStart(StateModifier& stateModifier);
+	void applyAndRecord_HueEnd(StateModifier& stateModifier);
+	void applyAndRecord_Saturation(StateModifier& stateModifier);
+	void applyAndRecord_Value(StateModifier& stateModifier);
+	void applyAndRecord_ColorStart(StateModifier& stateModifier);
+	void applyAndRecord_ColorEnd(StateModifier& stateModifier);
+
+	inline void setBackgroundColor(const glm::vec3& col)   { m_values.bgColor = col;                      m_presets.setToPlaceholderSetting(); }
+	inline void setGradientMode(bool bIsHueMode)           { m_values.bColorModeHueGradient = bIsHueMode; m_presets.setToPlaceholderSetting(); }
+	inline void setHueStart(float hueStart)                { m_values.particlesHueStart = hueStart;       m_presets.setToPlaceholderSetting(); }
+	inline void setHueEnd(float hueEnd)                    { m_values.particlesHueEnd = hueEnd;           m_presets.setToPlaceholderSetting(); }
+	inline void setSaturation(float saturation)            { m_values.particleSaturation = saturation;    m_presets.setToPlaceholderSetting(); }
+	inline void setValue(float value)                      { m_values.particleValue = value;              m_presets.setToPlaceholderSetting(); }
+	inline void setColorStart(const glm::vec3& colorStart) { m_values.particleColorStart = colorStart;    m_presets.setToPlaceholderSetting(); }
+	inline void setColorEnd(const glm::vec3& colorEnd)     { m_values.particleColorEnd = colorEnd;        m_presets.setToPlaceholderSetting(); }
 
 	// Getters
 	inline const glm::vec3& backgroundColor() { return m_values.bgColor; }
