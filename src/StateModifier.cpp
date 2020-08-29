@@ -36,6 +36,14 @@ void StateModifier::applyAndRecord(const StateChange& stateChange) {
 	case StateChangeType::Action:
 		m_configManager.applyAndRecord_ActionRef(std::get<ActionRef>(stateChange.value), *this);
 		break;
+	case StateChangeType::Physics_Pulsation:
+		m_settingsManager.get().getPhysics().setPulsation(std::get<float>(stateChange.value));
+		m_settingsManager.get().getPhysics().applyAndRecord_Pulsation(*this);
+		break;
+	case StateChangeType::Physics_DampingRatio:
+		m_settingsManager.get().getPhysics().setDampingRatio(std::get<float>(stateChange.value));
+		m_settingsManager.get().getPhysics().applyAndRecord_DampingRatio(*this);
+		break;
 	case StateChangeType::ConfigParams:
 		m_configManager.configParams().onKeyPressed(std::get<SDL_Scancode>(stateChange.value), *this);
 		break;

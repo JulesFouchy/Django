@@ -28,7 +28,7 @@ void Settings::apply(StateModifier& stateModifier) {
 	m_particleSystemSettings.apply(stateModifier);
 	m_alphaTrailSettings.apply(stateModifier);
 	m_colorSettings.apply(stateModifier); // must be after particleSystemSettings
-	m_physicsSettings.apply(stateModifier);
+	m_physicsSettings.applyAndRecord(stateModifier);
 }
 
 void Settings::serializeTo(const std::string& filePath) {

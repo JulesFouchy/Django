@@ -3,24 +3,23 @@
 #include "Presets.h"
 
 class StateModifier;
+class ShaderPipeline;
 
 struct PhysicsSettingsValues {
-	// en.wikipedia.org/wiki/Harmonic_oscillator#Damped_harmonic_oscillator
-	// High Level parameters
+public:
+	// High Level parameters // en.wikipedia.org/wiki/Harmonic_oscillator#Damped_harmonic_oscillator
 	float pulsation = 4.472f;
 	float dampingRatio = 0.335f;
 
 	inline const float getStiffness() { return m_stiffness; }
 	inline const float getDamping()   { return m_damping; }
 private:
-	// actual physical parameters
+	// Actual physical parameters
 	float m_stiffness;
 	float m_damping;
 
 public:
-	PhysicsSettingsValues() {
-		computePhysicalParameters();
-	}
+	PhysicsSettingsValues() = default;
 	inline void computePhysicalParameters() {
 		computeStiffness();
 		computeDamping();
@@ -42,7 +41,6 @@ private:
 			CEREAL_NVP(pulsation),
 			CEREAL_NVP(dampingRatio)
 		);
-		computePhysicalParameters();
 	}
 };
 
@@ -51,12 +49,18 @@ public:
 	PhysicsSettings();
 	~PhysicsSettings() = default;
 
-	void apply(StateModifier& stateModifier);
 	void ImGui(StateModifier& stateModifier);
 
+	void applyAndRecord(StateModifier& stateModifier);
+	void applyAndRecord_Pulsation(StateModifier& stateModifier);
+	void applyAndRecord_DampingRatio(StateModifier& stateModifier);
+
+	inline void setPulsation(float pulsation)       { m_values.pulsation = pulsation;       m_presets.setToPlaceholderSetting(); }
+	inline void setDampingRatio(float dampingRatio) { m_values.dampingRatio = dampingRatio; m_presets.setToPlaceholderSetting(); }
+
 private:
-	void setStiffnessInShader(StateModifier& stateModifier);
-	void setDampingInShader(StateModifier& stateModifier);
+	void setStiffnessInShader(ShaderPipeline& physicsCompute);
+	void setDampingInShader  (ShaderPipeline& physicsCompute);
 
 private:
 	PhysicsSettingsValues m_values;
