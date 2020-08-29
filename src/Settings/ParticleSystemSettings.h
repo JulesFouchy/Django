@@ -26,7 +26,13 @@ public:
 	~ParticleSystemSettings() = default;
 
 	void ImGui(StateModifier& stateModifier);
-	void apply(StateModifier& stateModifier);
+
+	void applyAndRecord(StateModifier& stateModifier);
+	void applyAndRecord_NbParticles(StateModifier& stateModifier);
+	void applyAndRecord_ParticleRadius(StateModifier& stateModifier);
+
+	inline void setNbParticles(unsigned int nbParticles) { m_values.nbParticles = nbParticles;          m_presets.setToPlaceholderSetting(); }
+	inline void setRadius(float radius)                  { m_values.particleRadiusRelToHeight = radius; m_presets.setToPlaceholderSetting(); }
 
 	inline unsigned int nbParticles() { return m_values.nbParticles; }
 

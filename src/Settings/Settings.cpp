@@ -23,9 +23,9 @@ void Settings::ImGuiWindows(StateModifier& stateModifier) {
 	ImGui::End();
 }
 
-void Settings::apply(StateModifier& stateModifier) {
+void Settings::applyAndRecord(StateModifier& stateModifier) {
 	m_windSettings.apply(stateModifier); // must be before particleSystemSettings
-	m_particleSystemSettings.apply(stateModifier);
+	m_particleSystemSettings.applyAndRecord(stateModifier);
 	m_alphaTrailSettings.apply(stateModifier);
 	m_colorSettings.applyAndRecord(stateModifier); // must be after particleSystemSettings
 	m_physicsSettings.applyAndRecord(stateModifier);

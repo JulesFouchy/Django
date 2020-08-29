@@ -1,35 +1,45 @@
 #include "ParticleSystemSettings.h"
 
 #include "StateModifier.h"
+#include "Particles/ParticlesSystem.h"
+#include "Settings/SettingsManager.h"
+#include "Recording/StateChange.h"
 
 ParticleSystemSettings::ParticleSystemSettings()
     : m_presets("djgParticles")
 {}
 
 void ParticleSystemSettings::ImGui(StateModifier& stateModifier) {
-    bool b = false;
     // Nb of particles
     if (ImGui::SliderInt("Nb of particles", (int*)&m_values.nbParticles, 1, 100000)) {
-        b = true;
-        stateModifier.setNbParticles(m_values.nbParticles);
-        stateModifier.apply();
+        m_presets.setToPlaceholderSetting();
+        applyAndRecord_NbParticles(stateModifier);
     }
     // Particles Radius
     if (ImGui::SliderFloat("Particles' Radius", &m_values.particleRadiusRelToHeight, 0.0f, 0.1f)) {
-        b = true;
-        stateModifier.setParticleRadius(m_values.particleRadiusRelToHeight);
-        stateModifier.apply();
+        m_presets.setToPlaceholderSetting();
+        applyAndRecord_ParticleRadius(stateModifier);
     }
     //
-    if (m_presets.ImGui(&m_values)) {
-        apply(stateModifier);
-    }
-    if (b)
-        m_presets.setToPlaceholderSetting();
+    if (m_presets.ImGui(&m_values))
+        applyAndRecord(stateModifier);
 }
 
-void ParticleSystemSettings::apply(StateModifier& stateModifier) {
-    stateModifier.setNbParticles(m_values.nbParticles);
-    stateModifier.setParticleRadius(m_values.particleRadiusRelToHeight);
-    stateModifier.apply();
+void ParticleSystemSettings::applyAndRecord(StateModifier& stateModifier) {
+    applyAndRecord_NbParticles(stateModifier);
+    applyAndRecord_ParticleRadius(stateModifier);
+}
+
+void ParticleSystemSettings::applyAndRecord_NbParticles(StateModifier& stateModifier) {
+    stateModifier.particleSystem().applyNbParticles(
+        m_values.nbParticles,
+        stateModifier.settingsManager().get().getColors().getValues()
+    );
+    stateModifier.apply(); // adapt configuration to the new number of particles
+    stateModifier.recordChange({ StateChangeType::Particles_Number, m_values.nbParticles });
+}
+
+void ParticleSystemSettings::applyAndRecord_ParticleRadius(StateModifier& stateModifier) {
+    stateModifier.particleSystem().recomputeVBO(m_values.particleRadiusRelToHeight);
+    stateModifier.recordChange({ StateChangeType::Particles_Radius, m_values.particleRadiusRelToHeight });
 }

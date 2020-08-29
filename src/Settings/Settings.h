@@ -12,7 +12,7 @@ public:
 	~Settings() = default;
 
 	void ImGuiWindows(StateModifier& stateModifier);
-	void apply(StateModifier& stateModifier);
+	void applyAndRecord(StateModifier& stateModifier);
 
 	void serializeTo(const std::string& filePath);
 	void deserializeFrom(const std::string& filePath);

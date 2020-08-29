@@ -66,7 +66,7 @@ void ParticleSystem::sendRestPositionsToGPU() {
     m_restPositionsSSBO.uploadData(m_nbParticles * 2, (float*)m_restPositions.data());
 }
 
-void ParticleSystem::setNbParticles(unsigned int newNbParticles, const ColorSettingsValues& colorSettings) {
+void ParticleSystem::applyNbParticles(unsigned int newNbParticles, const ColorSettingsValues& colorSettings) {
     // Set
     m_nbParticles = newNbParticles;
     // Rest positions

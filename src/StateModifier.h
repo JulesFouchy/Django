@@ -21,9 +21,6 @@ public:
 	void applyAllSettings();
 	void recordChange(const StateChange& stateChange);
 
-	void setNbParticles(unsigned int nbParticles);
-	void setParticleRadius(float radiusRelToHeight);
-
 	ParticleSystem&  particleSystem()  { return m_particleSystem; }
 	SettingsManager& settingsManager() { return m_settingsManager; }
 	ConfigManager&   configManager()   { return m_configManager; }

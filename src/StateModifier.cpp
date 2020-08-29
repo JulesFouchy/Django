@@ -16,18 +16,10 @@ StateModifier::StateModifier(ParticleSystem& particleSystem, SettingsManager& se
 	  m_recordManager(recordManager)
 {}
 
-void StateModifier::setNbParticles(unsigned int nbParticles) {
-	m_particleSystem.setNbParticles(nbParticles, m_settingsManager.get().getColors().getValues());
-}
-
-void StateModifier::setParticleRadius(float radiusRelToHeight) {
-	m_particleSystem.recomputeVBO(radiusRelToHeight);
-}
-
 void StateModifier::applyAllSettings() {
 	ShaderPipeline& physicsCompute = m_particleSystem.physicsComputeShader();
 	physicsCompute.bind();
-	m_settingsManager.get().apply(*this);
+	m_settingsManager.get().applyAndRecord(*this);
 	physicsCompute.unbind();
 }
 
@@ -67,6 +59,14 @@ void StateModifier::applyAndRecord(const StateChange& stateChange) {
 	case StateChangeType::Color_ColorEnd:
 		m_settingsManager.get().getColors().setColorEnd(std::get<glm::vec3>(stateChange.value));
 		m_settingsManager.get().getColors().applyAndRecord_ColorEnd(*this);
+		break;
+	case StateChangeType::Particles_Number:
+		m_settingsManager.get().getPartSystem().setNbParticles(std::get<unsigned int>(stateChange.value));
+		m_settingsManager.get().getPartSystem().applyAndRecord_NbParticles(*this);
+		break;
+	case StateChangeType::Particles_Radius:
+		m_settingsManager.get().getPartSystem().setRadius(std::get<float>(stateChange.value));
+		m_settingsManager.get().getPartSystem().applyAndRecord_ParticleRadius(*this);
 		break;
 	case StateChangeType::Physics_Pulsation:
 		m_settingsManager.get().getPhysics().setPulsation(std::get<float>(stateChange.value));

@@ -2,9 +2,6 @@
 
 #include "Actions/ActionRef.h"
 #include "Settings/AlphaTrailSettings.h"
-#include "Settings/ColorSettings.h"
-#include "Settings/ParticleSystemSettings.h"
-#include "Settings/PhysicsSettings.h"
 #include "Settings/WindSettings.h"
 #include <variant>
 #include <cereal/types/variant.hpp>
@@ -20,10 +17,11 @@ enum class StateChangeType {
 	Color_Value,
 	Color_ColorStart,
 	Color_ColorEnd,
-	Particles,
-	ConfigParams,
+	Particles_Number,
+	Particles_Radius,
 	Physics_Pulsation,
 	Physics_DampingRatio,
+	ConfigParams,
 	Wind,
 	Wind_NoiseFrequency,
 	Wind_MinStrength,
@@ -38,10 +36,8 @@ using StateChangeValue = std::variant<
 	ActionRef,
 	SDL_Scancode,
 	AlphaTrailSettingsValues,
-	ColorSettingsValues,
-	ParticleSystemSettingsValues,
-	PhysicsSettingsValues,
 	WindSettingsValues,
+	unsigned int,
 	bool,
 	float,
 	glm::vec2,
