@@ -2,7 +2,6 @@
 
 #include "Actions/ActionRef.h"
 #include "Settings/AlphaTrailSettings.h"
-#include "Settings/WindSettings.h"
 #include <variant>
 #include <cereal/types/variant.hpp>
 
@@ -22,11 +21,11 @@ enum class StateChangeType {
 	Physics_Pulsation,
 	Physics_DampingRatio,
 	ConfigParams,
-	Wind,
-	Wind_NoiseFrequency,
+	Wind_Frequency,
 	Wind_MinStrength,
 	Wind_MaxStrength,
-	Wind_DirectionAngle,
+	Wind_Speed,
+	Wind_Direction,
 	Param_Wheel,
 	Random_Seed,
 	Random_XYSeed
@@ -36,7 +35,6 @@ using StateChangeValue = std::variant<
 	ActionRef,
 	SDL_Scancode,
 	AlphaTrailSettingsValues,
-	WindSettingsValues,
 	unsigned int,
 	bool,
 	float,

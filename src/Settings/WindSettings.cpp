@@ -11,54 +11,73 @@ WindSettings::WindSettings()
 {}
 
 void WindSettings::ImGui(StateModifier& stateModifier) {
-	bool b = false;
 	if (ImGui::SliderFloat("Frequency", &m_values.noiseFrequency, 0.0f, 1.5f)) {
-		b = true;
-		setNoiseFrequency(stateModifier);
+		m_presets.setToPlaceholderSetting();
+		applyAndRecord_Frequency(stateModifier);
 	}
 	if (ImGui::SliderFloat2("Strength range", &m_values.minStrength, -1.0f, 2.0f)) {
-		b = true;
-		setMinStrength(stateModifier);
-		setMaxStrength(stateModifier);
+		m_presets.setToPlaceholderSetting();
+		applyAndRecord_MinStrength(stateModifier);
+		applyAndRecord_MaxStrength(stateModifier);
 	}
 	if (ImGui::SliderFloat("Speed", &m_values.speed, 0.0f, 1.5f)) {
-		b = true;
+		m_presets.setToPlaceholderSetting();
+		applyAndRecord_Speed(stateModifier);
 	}
 	if (MyImGui::AngleWheel("Direction", &m_dirValues.directionAngle)) {
-		// b = true; // direction isn't actually handled by presets, so don't change b
-		m_dirValues.direction = glm::vec2(cos(m_dirValues.directionAngle), sin(m_dirValues.directionAngle));
-		setDirection(stateModifier);
+		// direction isn't actually handled by presets, so don't change placeholderSettings
+		m_dirValues.computeDirection();
+		applyAndRecord_Direction(stateModifier);
 	}
-	if (m_presets.ImGui(&m_values)) {
-		apply(stateModifier);
-	}
-	if (b)
-		m_presets.setToPlaceholderSetting();
+	if (m_presets.ImGui(&m_values))
+		applyAndRecord(stateModifier);
 }
 
-void WindSettings::apply(StateModifier& stateModifier) {
-	setNoiseFrequency(stateModifier);
-	setMaxStrength(stateModifier);
-	setMinStrength(stateModifier);
-	setDirection(stateModifier);
+void WindSettings::applyAndRecord(StateModifier& stateModifier) {
+	applyAndRecord_Frequency(stateModifier);
+	applyAndRecord_MinStrength(stateModifier);
+	applyAndRecord_MaxStrength(stateModifier);
+	applyAndRecord_Speed(stateModifier);
+	applyAndRecord_Direction(stateModifier);
 }
 
-void WindSettings::setWindOffset(ShaderPipeline& physicsCompute, float time) {
-	physicsCompute.setUniform2f("u_windOffset", -m_values.speed * time * m_dirValues.direction);
+void WindSettings::applyAndRecord_Frequency(StateModifier& stateModifier) {
+	setFrequencyInShader(stateModifier.particleSystem().physicsComputeShader());
+	stateModifier.recordChange({ StateChangeType::Wind_Frequency, m_values.noiseFrequency });
 }
-void WindSettings::setNoiseFrequency(StateModifier& stateModifier){
-	stateModifier.particleSystem().physicsComputeShader().setUniform1f("u_windNoisePuls", m_values.noiseFrequency);
-	stateModifier.recordChange({ StateChangeType::Wind_NoiseFrequency, m_values.noiseFrequency });
-}
-void WindSettings::setMaxStrength(StateModifier& stateModifier) {
-	stateModifier.particleSystem().physicsComputeShader().setUniform1f("u_windMaxStrength", m_values.maxStrength);
-	stateModifier.recordChange({ StateChangeType::Wind_MaxStrength, m_values.maxStrength });
-}
-void WindSettings::setMinStrength(StateModifier& stateModifier) {
-	stateModifier.particleSystem().physicsComputeShader().setUniform1f("u_windMinStrength", m_values.minStrength);
+void WindSettings::applyAndRecord_MinStrength(StateModifier& stateModifier) {
+	setMinStrengthInShader(stateModifier.particleSystem().physicsComputeShader());
 	stateModifier.recordChange({ StateChangeType::Wind_MinStrength, m_values.minStrength });
 }
-void WindSettings::setDirection(StateModifier& stateModifier) {
-	stateModifier.particleSystem().physicsComputeShader().setUniform1f("u_windDirectionAngle", m_dirValues.directionAngle);
-	stateModifier.recordChange({ StateChangeType::Wind_DirectionAngle, m_dirValues.directionAngle });
+void WindSettings::applyAndRecord_MaxStrength(StateModifier& stateModifier) {
+	setMaxStrengthInShader(stateModifier.particleSystem().physicsComputeShader());
+	stateModifier.recordChange({ StateChangeType::Wind_MaxStrength, m_values.maxStrength });
+}
+void WindSettings::applyAndRecord_Speed(StateModifier& stateModifier) {
+	stateModifier.recordChange({ StateChangeType::Wind_Speed, m_values.speed });
+	// There is nothing to do to apply the speed, the current value is used every frame
+}
+void WindSettings::applyAndRecord_Direction(StateModifier& stateModifier) {
+	setDirectionInShader(stateModifier.particleSystem().physicsComputeShader());
+	stateModifier.recordChange({ StateChangeType::Wind_Direction, m_dirValues.directionAngle });
+}
+
+void WindSettings::setWindOffsetInShader(ShaderPipeline& physicsCompute, float time) {
+	physicsCompute.setUniform2f("u_windOffset", -m_values.speed * time * m_dirValues.direction);
+}
+void WindSettings::setFrequencyInShader(ShaderPipeline& physicsCompute) {
+	physicsCompute.bind();
+	physicsCompute.setUniform1f("u_windNoisePuls", m_values.noiseFrequency);
+}
+void WindSettings::setMinStrengthInShader(ShaderPipeline& physicsCompute) {
+	physicsCompute.bind();
+	physicsCompute.setUniform1f("u_windMinStrength", m_values.minStrength);
+}
+void WindSettings::setMaxStrengthInShader(ShaderPipeline& physicsCompute) {
+	physicsCompute.bind();
+	physicsCompute.setUniform1f("u_windMaxStrength", m_values.maxStrength);
+}
+void WindSettings::setDirectionInShader(ShaderPipeline& physicsCompute) {
+	physicsCompute.bind();
+	physicsCompute.setUniform1f("u_windDirectionAngle", m_dirValues.directionAngle);
 }

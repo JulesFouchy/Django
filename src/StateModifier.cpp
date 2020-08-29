@@ -76,6 +76,26 @@ void StateModifier::applyAndRecord(const StateChange& stateChange) {
 		m_settingsManager.get().getPhysics().setDampingRatio(std::get<float>(stateChange.value));
 		m_settingsManager.get().getPhysics().applyAndRecord_DampingRatio(*this);
 		break;
+	case StateChangeType::Wind_Frequency:
+		m_settingsManager.get().getWind().setFrequency(std::get<float>(stateChange.value));
+		m_settingsManager.get().getWind().applyAndRecord_Frequency(*this);
+		break;
+	case StateChangeType::Wind_MinStrength:
+		m_settingsManager.get().getWind().setMinStrength(std::get<float>(stateChange.value));
+		m_settingsManager.get().getWind().applyAndRecord_MinStrength(*this);
+		break;
+	case StateChangeType::Wind_MaxStrength:
+		m_settingsManager.get().getWind().setMaxStrength(std::get<float>(stateChange.value));
+		m_settingsManager.get().getWind().applyAndRecord_MaxStrength(*this);
+		break;
+	case StateChangeType::Wind_Speed:
+		m_settingsManager.get().getWind().setSpeed(std::get<float>(stateChange.value));
+		m_settingsManager.get().getWind().applyAndRecord_Speed(*this);
+		break;
+	case StateChangeType::Wind_Direction:
+		m_settingsManager.get().getWind().setDirection(std::get<float>(stateChange.value));
+		m_settingsManager.get().getWind().applyAndRecord_Direction(*this);
+		break;
 	case StateChangeType::ConfigParams:
 		m_configManager.configParams().onKeyPressed(std::get<SDL_Scancode>(stateChange.value), *this);
 		break;

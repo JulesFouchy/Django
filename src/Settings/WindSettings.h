@@ -28,6 +28,11 @@ private:
 struct WindDirectionSettingsValues {
 	float directionAngle = 2.849f;
 	glm::vec2 direction = glm::vec2(-0.956f, 0.292f); // must be == {cos(directionAngle), sin(directionAngle)} as defined above
+
+	inline void computeDirection() {
+		direction = glm::vec2(cos(directionAngle), sin(directionAngle));
+	}
+
 private:
 	//Serialization
 	friend class cereal::access;
@@ -37,7 +42,7 @@ private:
 		archive(
 			CEREAL_NVP(directionAngle)
 		);
-		direction = glm::vec2(cos(directionAngle), sin(directionAngle));
+		computeDirection();
 	}
 };
 
@@ -46,16 +51,28 @@ public:
 	WindSettings();
 	~WindSettings() = default;
 
-	void apply(StateModifier& stateModifier);
 	void ImGui(StateModifier& stateModifier);
 
-	void setWindOffset(ShaderPipeline& physicsCompute, float time);
+	void applyAndRecord(StateModifier& stateModifier);
+	void applyAndRecord_Frequency(StateModifier& stateModifier);
+	void applyAndRecord_MinStrength(StateModifier& stateModifier);
+	void applyAndRecord_MaxStrength(StateModifier& stateModifier);
+	void applyAndRecord_Speed(StateModifier& stateModifier);
+	void applyAndRecord_Direction(StateModifier& stateModifier);
+
+	inline void setFrequency(float frequency)     { m_values.noiseFrequency = frequency; m_presets.setToPlaceholderSetting(); }
+	inline void setMinStrength(float minStrength) { m_values.minStrength = minStrength;  m_presets.setToPlaceholderSetting(); }
+	inline void setMaxStrength(float maxStrength) { m_values.maxStrength = maxStrength;  m_presets.setToPlaceholderSetting(); }
+	inline void setSpeed(float speed)             { m_values.speed = speed;              m_presets.setToPlaceholderSetting(); }
+	inline void setDirection(float angle)         { m_dirValues.directionAngle = angle;  m_presets.setToPlaceholderSetting(); m_dirValues.computeDirection(); }
+
+	void setWindOffsetInShader(ShaderPipeline& physicsCompute, float time);
 
 private:
-	void setNoiseFrequency(StateModifier& stateModifier);
-	void setMaxStrength(StateModifier& stateModifier);
-	void setMinStrength(StateModifier& stateModifier);
-	void setDirection(StateModifier& stateModifier);
+	void setFrequencyInShader(ShaderPipeline& physicsCompute);
+	void setMinStrengthInShader(ShaderPipeline& physicsCompute);
+	void setMaxStrengthInShader(ShaderPipeline& physicsCompute);
+	void setDirectionInShader(ShaderPipeline& physicsCompute);
 
 private:
 	WindSettingsValues m_values;
