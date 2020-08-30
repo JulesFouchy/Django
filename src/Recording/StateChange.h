@@ -77,7 +77,6 @@ private:
 	template <class Archive>
 	void serialize(Archive& archive)
 	{
-		spdlog::info(sizeof(StateChangeValue));
 		archive(
 			CEREAL_NVP(type),
 			CEREAL_NVP(value)
