@@ -22,17 +22,15 @@ public:
 	void setApplyAndRecord_SupprAllChars(StateModifier& stateModifer);
 
 	inline const std::string& getText() const { return m_text; }
-	inline void setText(const std::string& text) { m_text = text; }
+	inline void setText(const std::string& text) { m_text = text; uploadData(); }
 
 private:
 	void uploadData();
 
 private:
 	bool m_bCaptureKeys;
-	std::vector<int> m_letters;
-	std::vector<int> m_offsets;
-	int m_offset = 0;
-	std::string m_text; // TODO use me
+	std::string m_text;
+	int m_nbLetters;
 
 	ComputeShader m_computeShader;
 	SSBO<int> m_lettersSSBO;

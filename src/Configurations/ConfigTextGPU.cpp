@@ -40,32 +40,36 @@ void ConfigTextGPU::applyTo(ParticleSystem& particleSystem, const ConfigParams& 
 	//
 	m_computeShader.get().setUniform1i("u_NbOfParticles", particleSystem.getNbParticles());
 	m_computeShader.get().setUniform1f("u_aspectRatio", DisplayInfos::RenderTargetAspectRatio());
-	m_computeShader.get().setUniform1i("u_nbLetters", m_letters.size());
+	m_computeShader.get().setUniform1i("u_nbLetters", m_nbLetters);
 	//
 	m_computeShader.compute(particleSystem.getNbParticles());
 	m_computeShader.get().unbind();
 }
 
 void ConfigTextGPU::uploadData() {
-	m_lettersSSBO.uploadData(m_letters.size(), m_letters.data());
-	m_offsetsSSBO.uploadData(m_offsets.size(), m_offsets.data());
+	std::vector<int> letters;
+	std::vector<int> offsets;
+	int offset = 0;
+	for (char keysym : m_text) {
+		if ('a' <= keysym && keysym <= 'z') {
+			letters.push_back(keysym - 'a');
+			offsets.push_back(offset);
+			offset++;
+		}
+		else if (keysym == ' ') {
+			offset++;
+		}
+	}
+	m_nbLetters = letters.size();
+
+	m_lettersSSBO.uploadData(letters.size(), letters.data());
+	m_offsetsSSBO.uploadData(offsets.size(), offsets.data());
 }
 
 bool ConfigTextGPU::setApplyAndRecord_AddOneChar(char keysym, StateModifier& stateModifer) {
-	bool b = false;
-	// Set
-	if ('a' <= keysym && keysym <= 'z') {
-		m_letters.push_back(keysym - 'a');
-		m_offsets.push_back(m_offset);
-		m_offset++;
-		b = true;
-	}
-	else if (keysym == ' ') {
-		m_offset++;
-		b = true;
-	}
-	// Apply and record
+	bool b = ('a' <= keysym && keysym <= 'z') || keysym == ' ';
 	if (b) {
+		m_text += keysym;
 		uploadData();
 		stateModifer.apply();
 		stateModifer.recordChange({ StateChangeType::Text_AddChar, keysym });
@@ -74,25 +78,16 @@ bool ConfigTextGPU::setApplyAndRecord_AddOneChar(char keysym, StateModifier& sta
 }
 
 void ConfigTextGPU::setApplyAndRecord_SupprOneChar(StateModifier& stateModifer) {
-	// Set
-	if (m_letters.size() > 0 && m_offsets.back() == m_offset - 1) { // last character is a letter
-		m_letters.resize(m_letters.size() - 1);
-		m_offsets.resize(m_offsets.size() - 1);
-		m_offset--;
+	if (m_text.size() > 0) {
+		m_text.pop_back();
+		uploadData();
+		stateModifer.apply();
+		stateModifer.recordChange({ StateChangeType::Text_SupprChar, '\0' }); // '\0' is just a random placeholder value because we need to submit one to recordChange
 	}
-	else if (m_offset > 0) { // last character is a space
-		m_offset--;
-	}
-	// Apply and record
-	uploadData();
-	stateModifer.apply();
-	stateModifer.recordChange({ StateChangeType::Text_SupprChar, '\0' }); // '\0' is just a random placeholder value because we need to submit one to recordChange
 }
 
 void ConfigTextGPU::setApplyAndRecord_SupprAllChars(StateModifier& stateModifer) {
-	m_letters.resize(0);
-	m_offsets.resize(0);
-	m_offset = 0;
+	m_text = "";
 	uploadData();
 	stateModifer.apply();
 	stateModifer.recordChange({ StateChangeType::Text_SupprAll, '\0' }); // '\0' is just a random placeholder value because we need to submit one to recordChange
