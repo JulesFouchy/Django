@@ -48,7 +48,7 @@ public:
 	inline void setMinAlpha(float minAlpha)         { m_values.minAlpha = minAlpha;           m_presets.setToPlaceholderSetting(); }
 
 	inline const AlphaTrailSettingsValues& getValues() const { return m_values; }
-	inline void setValues(const AlphaTrailSettingsValues& values) { m_values = values; }
+	inline void setValues(const AlphaTrailSettingsValues& values) { m_values = values; m_presets.setToPlaceholderSetting(); }
 
 private:
 	void applyGLBlendState();

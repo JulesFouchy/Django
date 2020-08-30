@@ -36,7 +36,7 @@ public:
 
 	inline unsigned int nbParticles() { return m_values.nbParticles; }
 	inline const ParticleSystemSettingsValues& getValues() const { return m_values; }
-	inline void setValues(const ParticleSystemSettingsValues& values) { m_values = values; }
+	inline void setValues(const ParticleSystemSettingsValues& values) { m_values = values; m_presets.setToPlaceholderSetting(); }
 
 private:
 	ParticleSystemSettingsValues m_values;

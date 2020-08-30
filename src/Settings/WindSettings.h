@@ -69,7 +69,7 @@ public:
 	void setWindOffsetInShader(ShaderPipeline& physicsCompute, float time);
 
 	inline const WindSettingsValues& getValues() const { return m_values; }
-	inline void setValues(const WindSettingsValues& values) { m_values = values; }
+	inline void setValues(const WindSettingsValues& values) { m_values = values; m_presets.setToPlaceholderSetting(); }
 	inline float getDirAngle() const { return m_dirValues.directionAngle; }
 
 private:
