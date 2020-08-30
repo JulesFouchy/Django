@@ -3,7 +3,7 @@
 #include "StateModifier.h"
 #include "Helper/Time.h"
 #include "Helper/String.h"
-#include <cereal/archives/json.hpp>
+#include <cereal/archives/binary.hpp>
 #include <fstream>
 
 Record::Record(const State& currentState) {
@@ -77,23 +77,23 @@ void Record::advanceOnTimeline(StateModifier& stateModifier, bool bPlayTheMouseB
 }
 
 void Record::serialize(const std::string& folderPath) {
-	std::ofstream os(folderPath + "/" + m_name + ".json");
+	std::ofstream os(folderPath + "/" + m_name + ".djgRecord", std::ios::binary);
 	{
-		cereal::JSONOutputArchive archive(os);
+		cereal::BinaryOutputArchive archive(os);
 		archive(
-			CEREAL_NVP(m_startState),
-			CEREAL_NVP(m_stateChangesTimeline)
+			m_startState,
+			m_stateChangesTimeline
 		);
 	}
 }
 
 void Record::deserialize(const std::string& filepath) {
-	std::ifstream is(filepath);
+	std::ifstream is(filepath, std::ios::binary);
 	{
-		cereal::JSONInputArchive archive(is);
+		cereal::BinaryInputArchive archive(is);
 		archive(
-			CEREAL_NVP(m_startState),
-			CEREAL_NVP(m_stateChangesTimeline)
+			m_startState,
+			m_stateChangesTimeline
 		);
 	}
 	m_name = MyString::FileName(filepath);
