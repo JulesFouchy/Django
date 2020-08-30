@@ -59,6 +59,7 @@ public:
 	inline void setDampingRatio(float dampingRatio) { m_values.dampingRatio = dampingRatio; m_presets.setToPlaceholderSetting(); }
 
 	inline const PhysicsSettingsValues& getValues() const { return m_values; }
+	inline void setValues(const PhysicsSettingsValues& values) { m_values = values; }
 
 private:
 	void setStiffnessInShader(ShaderPipeline& physicsCompute);

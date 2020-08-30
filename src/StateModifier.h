@@ -16,10 +16,10 @@ public:
 	StateModifier(ParticleSystem& particleSystem, SettingsManager& settingsManager, ConfigManager& configManager, Renderer& renderer, RecordManager& recordManager, MouseInteractions& mouseInteractions);
 	~StateModifier() = default;
 
-	void applyAndRecord(const StateChange& stateChange);
-	void applyAndRecord(const State& state);
+	void setApplyAndRecord(const StateChange& stateChange);
+	void setApplyAndRecord(const State& state);
 	void apply();
-	void applyAllSettings();
+	void applyAndRecordAllSettings();
 	void recordChange(const StateChange& stateChange);
 
 	State getCurrentState() const;

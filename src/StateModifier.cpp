@@ -18,17 +18,21 @@ StateModifier::StateModifier(ParticleSystem& particleSystem, SettingsManager& se
 	  m_mouseInteractions(mouseInteractions)
 {}
 
-void StateModifier::applyAllSettings() {
+void StateModifier::applyAndRecordAllSettings() {
 	ShaderPipeline& physicsCompute = m_particleSystem.physicsComputeShader();
 	physicsCompute.bind();
 	m_settingsManager.get().applyAndRecord(*this);
 	physicsCompute.unbind();
 }
 
-void StateModifier::applyAndRecord(const StateChange& stateChange) {
+void StateModifier::setApplyAndRecord(const StateChange& stateChange) {
 	switch (stateChange.type) {
 	case StateChangeType::Action:
 		m_configManager.applyAndRecord_ActionRef(std::get<ActionRef>(stateChange.value), *this);
+		break;
+	case StateChangeType::Text:
+		m_configManager.textConfig().setText(std::get<std::string>(stateChange.value));
+		recordChange({ StateChangeType::Text, std::get<std::string>(stateChange.value) });
 		break;
 	case StateChangeType::Text_AddChar:
 		m_configManager.textConfig().setApplyAndRecord_AddOneChar(std::get<char>(stateChange.value), *this);
@@ -126,11 +130,19 @@ void StateModifier::applyAndRecord(const StateChange& stateChange) {
 		m_settingsManager.get().wind().setDirection(std::get<float>(stateChange.value));
 		m_settingsManager.get().wind().applyAndRecord_Direction(*this);
 		break;
+	case StateChangeType::Random:
+		m_configManager.setRandParams(std::get<RandomParams>(stateChange.value));
+		recordChange({ StateChangeType::Random, std::get<RandomParams>(stateChange.value) });
+		break;
 	case StateChangeType::Random_Seed:
 		m_configManager.randParams().setApplyAndRecord_Seed(std::get<float>(stateChange.value), *this);
 		break;
 	case StateChangeType::Random_XYSeed:
 		m_configManager.randParams().setApplyAndRecord_SeedXY(std::get<glm::vec2>(stateChange.value), *this);
+		break;
+	case StateChangeType::Param:
+		m_configManager.setConfigParams(std::get<ConfigParams>(stateChange.value));
+		recordChange({ StateChangeType::Param, std::get<ConfigParams>(stateChange.value) });
 		break;
 	case StateChangeType::Param_KeyPressed:
 		m_configManager.configParams().onKeyPressed(std::get<SDL_Scancode>(stateChange.value), *this);
@@ -154,12 +166,8 @@ void StateModifier::applyAndRecord(const StateChange& stateChange) {
 		m_mouseInteractions.setBurst(std::get<glm::vec3>(stateChange.value));
 		break;
 	default:
-		assert(false && "[StateModifier::applyAndRecord] Forgot a case !");
+		assert(false && "[StateModifier::setApplyAndRecord] Forgot a case !");
 	}
-}
-
-void StateModifier::applyAndRecord(const State& state) {
-
 }
 
 void StateModifier::apply() {
@@ -186,4 +194,23 @@ State StateModifier::getCurrentState() const {
 	state.randomParams         = m_configManager.randParams();
 	state.textConfigValue      = m_configManager.textConfig().getText();
 	return state;
+}
+
+void StateModifier::setApplyAndRecord(const State& state) {
+	m_configManager.setConfigParams(state.configParams);
+	recordChange({ StateChangeType::Param, state.configParams });
+	m_configManager.setRandParams(state.randomParams);
+	recordChange({ StateChangeType::Random, state.randomParams });
+	m_configManager.textConfig().setText(state.textConfigValue);
+	recordChange({ StateChangeType::Text, state.textConfigValue });
+	m_configManager.applyAndRecord_ActionRef(state.lastShape, *this);
+	m_configManager.applyAndRecord_ActionRef(state.lastLayout, *this);
+	m_configManager.applyAndRecord_ActionRef(state.currentAction, *this);
+	m_settingsManager.get().alphaTrail().setValues(state.alphaTrailValues);
+	m_settingsManager.get().colors()    .setValues(state.colorValues);
+	m_settingsManager.get().partSystem().setValues(state.particleSystemValues);
+	m_settingsManager.get().physics()   .setValues(state.physicsValues);
+	m_settingsManager.get().wind()      .setValues(state.windValues);
+	m_settingsManager.get().wind()      .setDirection(state.windDirectionAngle);
+	applyAndRecordAllSettings();
 }

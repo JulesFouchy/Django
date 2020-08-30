@@ -26,7 +26,7 @@ App::App(SDL_Window* window)
 }
 
 void App::onInit() {
-	m_stateModifier.applyAllSettings();
+	m_stateModifier.applyAndRecordAllSettings();
 }
 
 void App::onLoopIteration() {

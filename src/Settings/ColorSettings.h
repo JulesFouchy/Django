@@ -69,6 +69,7 @@ public:
 	// Getters
 	inline const glm::vec3& backgroundColor() { return m_values.bgColor; }
 	inline const ColorSettingsValues& getValues() { return m_values; }
+	inline void setValues(const ColorSettingsValues& values) { m_values = values; }
 
 private:
 	ColorSettingsValues m_values;

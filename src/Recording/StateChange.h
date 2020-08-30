@@ -1,11 +1,14 @@
 #pragma once
 
 #include "Actions/ActionRef.h"
+#include "Configurations/ConfigParams.h"
+#include "Configurations/RandomParams.h"
 #include <variant>
 #include <cereal/types/variant.hpp>
 
 enum class StateChangeType {
 	Action,
+	Text,
 	Text_AddChar,
 	Text_SupprChar,
 	Text_SupprAll,
@@ -31,19 +34,24 @@ enum class StateChangeType {
 	Wind_MaxStrength,
 	Wind_Speed,
 	Wind_Direction,
+	Param,
 	Param_KeyPressed,
 	Param_Wheel,
 	Param_CtrlWheel,
 	Param_ShiftWheel,
 	Param_AltWheel,
+	Random,
 	Random_Seed,
 	Random_XYSeed,
 	Mouse_ForceField,
 	Mouse_Burst
 };
 
-using StateChangeValue = std::variant<
+using StateChangeValue = std::variant <
 	ActionRef,
+	std::string,
+	ConfigParams,
+	RandomParams,
 	SDL_Scancode,
 	char,
 	unsigned int,
@@ -69,6 +77,7 @@ private:
 	template <class Archive>
 	void serialize(Archive& archive)
 	{
+		spdlog::info(sizeof(StateChangeValue));
 		archive(
 			CEREAL_NVP(type),
 			CEREAL_NVP(value)

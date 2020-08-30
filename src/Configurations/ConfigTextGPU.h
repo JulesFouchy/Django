@@ -22,6 +22,7 @@ public:
 	void setApplyAndRecord_SupprAllChars(StateModifier& stateModifer);
 
 	inline const std::string& getText() const { return m_text; }
+	inline void setText(const std::string& text) { m_text = text; }
 
 private:
 	void uploadData();
