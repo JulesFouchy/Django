@@ -15,5 +15,5 @@ public:
 private:
 	bool m_bForceField;
 	glm::vec2 m_forceFieldPos;
-	std::queue<glm::vec3> m_burstQueue;
+	std::queue<glm::vec3> m_burstQueue; // We use a queue because we currently can only apply one burst each frame, so in the unlikely case where two would be set for the same frame, the second is postponed to the next frame
 };
