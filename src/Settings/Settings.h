@@ -17,11 +17,11 @@ public:
 	void serializeTo(const std::string& filePath);
 	void deserializeFrom(const std::string& filePath);
 
-	inline PhysicsSettings&        getPhysics()    { return m_physicsSettings; }
-	inline AlphaTrailSettings&     getTrail()      { return m_alphaTrailSettings; }
-	inline ColorSettings&          getColors()     { return m_colorSettings; }
-	inline WindSettings&           getWind()       { return m_windSettings; }
-	inline ParticleSystemSettings& getPartSystem() { return m_particleSystemSettings; }
+	inline PhysicsSettings&        physics()    { return m_physicsSettings; }
+	inline AlphaTrailSettings&     alphaTrail() { return m_alphaTrailSettings; }
+	inline ColorSettings&          colors()     { return m_colorSettings; }
+	inline WindSettings&           wind()       { return m_windSettings; }
+	inline ParticleSystemSettings& partSystem() { return m_particleSystemSettings; }
 
 private:
 	PhysicsSettings m_physicsSettings;

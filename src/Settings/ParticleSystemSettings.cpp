@@ -33,7 +33,7 @@ void ParticleSystemSettings::applyAndRecord(StateModifier& stateModifier) {
 void ParticleSystemSettings::applyAndRecord_NbParticles(StateModifier& stateModifier) {
     stateModifier.particleSystem().applyNbParticles(
         m_values.nbParticles,
-        stateModifier.settingsManager().get().getColors().getValues()
+        stateModifier.settingsManager().get().colors().getValues()
     );
     stateModifier.apply(); // adapt configuration to the new number of particles
     stateModifier.recordChange({ StateChangeType::Particles_Number, m_values.nbParticles });

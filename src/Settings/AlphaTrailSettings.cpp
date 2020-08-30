@@ -63,7 +63,7 @@ void AlphaTrailSettings::setEnabled_ApplyAndRecordAll(bool bEnabled, StateModifi
 void AlphaTrailSettings::setApplyAndRecord_Enabled(bool bEnabled, StateModifier& stateModifier) {
 	// Clear if we are transitionning from no trail to trail
 	if (!m_values.bEnabled && bEnabled)
-		stateModifier.renderer().clearRenderBuffer(stateModifier.settingsManager().get().getColors().backgroundColor());
+		stateModifier.renderer().clearRenderBuffer(stateModifier.settingsManager().get().colors().backgroundColor());
 	// Set
 	if (m_values.bEnabled != bEnabled) {
 		m_values.bEnabled = bEnabled;

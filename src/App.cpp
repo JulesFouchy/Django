@@ -58,7 +58,7 @@ void App::onLoopIteration() {
 	m_recordManager.update(m_stateModifier); // updates time so must be called before sending it to compute shader // must be called after it's ImGui() because the latter is responsible for setting m_bDraggingOnTheTimeline
 	m_particleSystem.physicsComputeShader().setUniform1f("dt", m_recordManager.clock().deltaTime());
 	// Send wind to physics compute shader
-	m_settingsManager.get().getWind().setWindOffsetInShader(m_particleSystem.physicsComputeShader(), m_recordManager.clock().time());
+	m_settingsManager.get().wind().setWindOffsetInShader(m_particleSystem.physicsComputeShader(), m_recordManager.clock().time());
 	// Send mouse to physics compute shader
 		// Force field
 	bool bForceField = Input::IsMouseButtonDown(SDL_BUTTON_LEFT) && !ImGui::GetIO().WantCaptureMouse;
@@ -78,12 +78,12 @@ void App::onLoopIteration() {
 	// ----- RENDERING -----
 	// ---------------------
 	// Clear screen
-	m_renderer.onRenderBegin(m_recordManager.clock().deltaTime(), m_settingsManager.get().getColors().backgroundColor(), m_settingsManager.get().getTrail().getValues());
+	m_renderer.onRenderBegin(m_recordManager.clock().deltaTime(), m_settingsManager.get().colors().backgroundColor(), m_settingsManager.get().alphaTrail().getValues());
 	// Draw particles
 	m_particlePipeline.bind();
 	m_particleSystem.draw();
 	// Blit render buffer to screen if needed
-	m_renderer.onRenderEnd(m_settingsManager.get().getTrail().getValues());
+	m_renderer.onRenderEnd(m_settingsManager.get().alphaTrail().getValues());
 	// Export
 	if (m_recordManager.exporter().isExporting())
 		m_recordManager.exporter().exportFrame();
