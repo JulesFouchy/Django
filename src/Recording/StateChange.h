@@ -6,6 +6,9 @@
 
 enum class StateChangeType {
 	Action,
+	Text_AddChar,
+	Text_SupprChar,
+	Text_SupprAll,
 	AlphaTrail_Enabled,
 	AlphaTrail_FixResiduals,
 	AlphaTrail_Decay,
@@ -40,6 +43,7 @@ enum class StateChangeType {
 using StateChangeValue = std::variant<
 	ActionRef,
 	SDL_Scancode,
+	char,
 	unsigned int,
 	bool,
 	float,

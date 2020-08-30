@@ -28,6 +28,15 @@ void StateModifier::applyAndRecord(const StateChange& stateChange) {
 	case StateChangeType::Action:
 		m_configManager.applyAndRecord_ActionRef(std::get<ActionRef>(stateChange.value), *this);
 		break;
+	case StateChangeType::Text_AddChar:
+		m_configManager.textConfig().setApplyAndRecord_AddOneChar(std::get<char>(stateChange.value), *this);
+		break;
+	case StateChangeType::Text_SupprChar:
+		m_configManager.textConfig().setApplyAndRecord_SupprOneChar(*this);
+		break;
+	case StateChangeType::Text_SupprAll:
+		m_configManager.textConfig().setApplyAndRecord_SupprAllChars(*this);
+		break;
 	case StateChangeType::AlphaTrail_Enabled:
 		m_settingsManager.get().alphaTrail().setApplyAndRecord_Enabled(std::get<bool>(stateChange.value), *this);
 		break;

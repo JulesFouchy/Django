@@ -30,6 +30,7 @@ public:
 
 	inline ConfigParams& configParams() { return m_params; }
 	inline RandomParams& randParams() { return m_randParams; }
+	inline ConfigTextGPU& textConfig() { return m_textConfig; }
 
 	inline void applyTo(ParticleSystem& partSystem) { get().applyTo(partSystem, m_params, m_randParams); }
 	void applyAndRecord_Action(const Action& action, StateModifier& stateModifier);

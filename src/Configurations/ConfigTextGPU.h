@@ -17,6 +17,10 @@ public:
 	inline void setCaptureKeys(bool b) { m_bCaptureKeys = b; }
 	inline void toggleCaptureKeys() { setCaptureKeys(!m_bCaptureKeys); }
 
+	bool setApplyAndRecord_AddOneChar(char keysym, StateModifier& stateModifier);
+	void setApplyAndRecord_SupprOneChar (StateModifier& stateModifer);
+	void setApplyAndRecord_SupprAllChars(StateModifier& stateModifer);
+
 private:
 	void uploadData();
 
