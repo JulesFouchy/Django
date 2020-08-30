@@ -5,6 +5,7 @@ class SettingsManager;
 class ConfigManager;
 class Renderer;
 class RecordManager;
+class MouseInteractions;
 
 struct StateChange;
 struct State;
@@ -12,7 +13,7 @@ struct Action;
 
 class StateModifier {
 public:
-	StateModifier(ParticleSystem& particleSystem, SettingsManager& settingsManager, ConfigManager& configManager, Renderer& renderer, RecordManager& recordManager);
+	StateModifier(ParticleSystem& particleSystem, SettingsManager& settingsManager, ConfigManager& configManager, Renderer& renderer, RecordManager& recordManager, MouseInteractions& mouseInteractions);
 	~StateModifier() = default;
 
 	void applyAndRecord(const StateChange& stateChange);
@@ -33,4 +34,5 @@ private:
 	ConfigManager& m_configManager;
 	Renderer& m_renderer;
 	RecordManager& m_recordManager;
+	MouseInteractions& m_mouseInteractions;
 };

@@ -11,7 +11,7 @@ App::App(SDL_Window* window)
 	  m_bFullScreen(false),
 	  m_bShowGUI(true),
 	  m_renderer([this](){onRenderTargetModified();}),
-	  m_stateModifier(m_particleSystem, m_settingsManager, m_configManager, m_renderer, m_recordManager),
+	  m_stateModifier(m_particleSystem, m_settingsManager, m_configManager, m_renderer, m_recordManager, m_mouseInteractions),
 	  m_window(window), m_running(true)
 {
 	// Create graphics pipeline for particles
@@ -60,18 +60,7 @@ void App::onLoopIteration() {
 	// Send wind to physics compute shader
 	m_settingsManager.get().wind().setWindOffsetInShader(m_particleSystem.physicsComputeShader(), m_recordManager.clock().time());
 	// Send mouse to physics compute shader
-		// Force field
-	bool bForceField = Input::IsMouseButtonDown(SDL_BUTTON_LEFT) && !ImGui::GetIO().WantCaptureMouse;
-	m_particleSystem.physicsComputeShader().setUniform1i("u_bForceField", bForceField);
-		// Burst
-	bool bImpulse = ImGui::IsMouseReleased(ImGuiMouseButton_Right);
-	if (bImpulse)
-		m_particleSystem.physicsComputeShader().setUniform1f("u_burstStrength", pow(25.0f * ImGui::GetIO().MouseDownDurationPrev[ImGuiMouseButton_Right], 0.8f));
-	else
-		m_particleSystem.physicsComputeShader().setUniform1f("u_burstStrength", -1.0f);
-		//
-	if (bForceField || bImpulse)
-		m_particleSystem.physicsComputeShader().setUniform2f("u_mouse", Input::GetMouseInNormalizedRatioSpace());
+	m_mouseInteractions.update(m_stateModifier);
 	//
 	m_particleSystem.physicsComputeShader().unbind();
 	// ---------------------

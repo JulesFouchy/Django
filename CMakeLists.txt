@@ -144,6 +144,7 @@ target_precompile_headers(${PROJECT_NAME}
     <random>
     <memory>
     <unordered_map>
+    <queue>
   # Project Code
     [["Debugging/Log.h"]]
     [["Debugging/glException.h"]]

@@ -37,7 +37,9 @@ enum class StateChangeType {
 	Param_ShiftWheel,
 	Param_AltWheel,
 	Random_Seed,
-	Random_XYSeed
+	Random_XYSeed,
+	Mouse_ForceField,
+	Mouse_Burst
 };
 
 using StateChangeValue = std::variant<

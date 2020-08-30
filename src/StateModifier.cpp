@@ -7,13 +7,15 @@
 #include "Recording/RecordManager.h"
 #include "Recording/StateChange.h"
 #include "Actions/Action.h"
+#include "MouseInteractions.h"
 
-StateModifier::StateModifier(ParticleSystem& particleSystem, SettingsManager& settingsManager, ConfigManager& configManager, Renderer& renderer, RecordManager& recordManager)
+StateModifier::StateModifier(ParticleSystem& particleSystem, SettingsManager& settingsManager, ConfigManager& configManager, Renderer& renderer, RecordManager& recordManager, MouseInteractions& mouseInteractions)
 	: m_particleSystem(particleSystem),
 	  m_settingsManager(settingsManager),
 	  m_configManager(configManager),
 	  m_renderer(renderer),
-	  m_recordManager(recordManager)
+	  m_recordManager(recordManager),
+	  m_mouseInteractions(mouseInteractions)
 {}
 
 void StateModifier::applyAllSettings() {
@@ -144,6 +146,12 @@ void StateModifier::applyAndRecord(const StateChange& stateChange) {
 		break;
 	case StateChangeType::Param_AltWheel:
 		m_configManager.configParams().setApplyAndRecord_AltWheel(std::get<float>(stateChange.value), *this);
+		break;
+	case StateChangeType::Mouse_ForceField:
+		m_mouseInteractions.setApplyAndRecord_ForceField(std::get<glm::vec2>(stateChange.value), *this);
+		break;
+	case StateChangeType::Mouse_Burst:
+		m_mouseInteractions.setApplyAndRecord_Burst(std::get<glm::vec3>(stateChange.value), *this);
 		break;
 	default:
 		assert(false && "[StateModifier::applyAndRecord] Forgot a case !");

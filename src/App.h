@@ -7,6 +7,7 @@
 #include "Configurations/ConfigManager.h"
 #include "Renderer.h"
 #include "Recording/RecordManager.h"
+#include "MouseInteractions.h"
 
 #include "StateModifier.h"
 
@@ -39,6 +40,7 @@ private:
 	ConfigManager m_configManager;
 	Renderer m_renderer;
 	RecordManager m_recordManager;
+	MouseInteractions m_mouseInteractions;
 
 	StateModifier m_stateModifier;
 
