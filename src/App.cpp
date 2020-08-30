@@ -104,7 +104,7 @@ void App::onEvent(const SDL_Event& e) {
 		break;
 
 	case SDL_MOUSEWHEEL:
-		m_configManager.onWheel(e.wheel.y, m_particleSystem, ImGui::GetIO().WantCaptureMouse);
+		m_configManager.onWheel(e.wheel.y, ImGui::GetIO().WantCaptureMouse, m_stateModifier);
 		break;
 
 	case SDL_MOUSEBUTTONDOWN:

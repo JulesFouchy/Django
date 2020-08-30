@@ -228,24 +228,19 @@ void ConfigManager::Imgui(StateModifier& stateModifier) {
     ImGui::End();
 }
 
-void ConfigManager::onWheel(float delta, ParticleSystem& partSystem, bool bNoStandardScroll) {
-    bool b = false;
+void ConfigManager::onWheel(float delta, bool bNoStandardScroll, StateModifier& stateModifier) {
     if (Input::KeyIsDown(SDL_SCANCODE_LCTRL) || Input::KeyIsDown(SDL_SCANCODE_RCTRL)) {
-        m_params.ctrlWheel += delta * SCROLL_SPEED;
-        b = true;
+        m_params.setApplyAndRecord_CtrlWheel(m_params.getCtrlWheel() + delta * SCROLL_SPEED, stateModifier);
     }
-    if (Input::KeyIsDown(SDL_SCANCODE_LSHIFT) || Input::KeyIsDown(SDL_SCANCODE_RSHIFT)) {
-        m_params.shiftWheel += delta * SCROLL_SPEED;
-        b = true;
+    else if (Input::KeyIsDown(SDL_SCANCODE_LSHIFT) || Input::KeyIsDown(SDL_SCANCODE_RSHIFT)) {
+        m_params.setApplyAndRecord_ShiftWheel(m_params.getShiftWheel() + delta * SCROLL_SPEED, stateModifier);
     }
-    if (Input::KeyIsDown(SDL_SCANCODE_LALT) || Input::KeyIsDown(SDL_SCANCODE_RALT)) {
-        m_params.altWheel += delta * SCROLL_SPEED;
-        b = true;
+    else if (Input::KeyIsDown(SDL_SCANCODE_LALT) || Input::KeyIsDown(SDL_SCANCODE_RALT)) {
+        m_params.setApplyAndRecord_AltWheel(m_params.getAltWheel() + delta * SCROLL_SPEED, stateModifier);
     }
-    if (!b && !bNoStandardScroll) {
-        m_params.wheel += delta * SCROLL_SPEED;
+    else if (!bNoStandardScroll) {
+        m_params.setApplyAndRecord_Wheel(m_params.getWheel() + delta * SCROLL_SPEED, stateModifier);
     }
-    applyTo(partSystem);
 }
 
 void ConfigManager::onKeyPressed(SDL_Scancode scancode, char keysym, StateModifier& stateModifier) {

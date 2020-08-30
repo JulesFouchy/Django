@@ -121,8 +121,20 @@ void StateModifier::applyAndRecord(const StateChange& stateChange) {
 	case StateChangeType::Random_XYSeed:
 		m_configManager.randParams().setApplyAndRecord_SeedXY(std::get<glm::vec2>(stateChange.value), *this);
 		break;
-	case StateChangeType::ConfigParams:
+	case StateChangeType::Param_KeyPressed:
 		m_configManager.configParams().onKeyPressed(std::get<SDL_Scancode>(stateChange.value), *this);
+		break;
+	case StateChangeType::Param_Wheel:
+		m_configManager.configParams().setApplyAndRecord_Wheel(std::get<float>(stateChange.value), *this);
+		break;
+	case StateChangeType::Param_CtrlWheel:
+		m_configManager.configParams().setApplyAndRecord_CtrlWheel(std::get<float>(stateChange.value), *this);
+		break;
+	case StateChangeType::Param_ShiftWheel:
+		m_configManager.configParams().setApplyAndRecord_ShiftWheel(std::get<float>(stateChange.value), *this);
+		break;
+	case StateChangeType::Param_AltWheel:
+		m_configManager.configParams().setApplyAndRecord_AltWheel(std::get<float>(stateChange.value), *this);
 		break;
 	default:
 		assert(false && "[StateModifier::applyAndRecord] Forgot a case !");

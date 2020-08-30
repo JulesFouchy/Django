@@ -28,8 +28,11 @@ enum class StateChangeType {
 	Wind_MaxStrength,
 	Wind_Speed,
 	Wind_Direction,
-	ConfigParams,
+	Param_KeyPressed,
 	Param_Wheel,
+	Param_CtrlWheel,
+	Param_ShiftWheel,
+	Param_AltWheel,
 	Random_Seed,
 	Random_XYSeed
 };
