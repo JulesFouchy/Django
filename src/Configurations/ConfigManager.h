@@ -29,14 +29,14 @@ public:
 	void applyAndRecord_ConfigRef(const ConfigRef& configRef, StateModifier& stateModifier);
 
 	inline ConfigParams& configParams() { return m_params; }
+	inline RandomParams& randParams() { return m_randParams; }
+
+	inline void applyTo(ParticleSystem& partSystem) { get().applyTo(partSystem, m_params, m_randParams); }
+	void applyAndRecord_Action(const Action& action, StateModifier& stateModifier);
 
 private:
 	Configuration& get();
 	void setCurrentConfigAsText();
-
-friend class StateModifier;
-	inline void applyTo(ParticleSystem& partSystem) { get().applyTo(partSystem, m_params, m_randParams); }
-	void applyAndRecord_Action(const Action& action, StateModifier& stateModifier);
 
 private:
 	ConfigTextGPU m_textConfig;

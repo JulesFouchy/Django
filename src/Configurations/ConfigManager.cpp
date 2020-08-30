@@ -224,14 +224,7 @@ void ConfigManager::setCurrentConfigAsText() {
 
 void ConfigManager::Imgui(StateModifier& stateModifier) {
     ImGui::Begin("Random");
-    if (ImGui::DragFloat("Seed", &m_randParams.seed)) {
-        stateModifier.recordChange({ StateChangeType::Random_Seed, m_randParams.seed });
-        stateModifier.apply();
-    }
-    if (ImGui::DragFloat2("X/Y Seed", &m_randParams.xySeed[0])) {
-        stateModifier.recordChange({ StateChangeType::Random_XYSeed, m_randParams.xySeed });
-        stateModifier.apply();
-    }
+    m_randParams.ImGui(stateModifier);
     ImGui::End();
 }
 

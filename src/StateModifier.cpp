@@ -115,6 +115,12 @@ void StateModifier::applyAndRecord(const StateChange& stateChange) {
 		m_settingsManager.get().getWind().setDirection(std::get<float>(stateChange.value));
 		m_settingsManager.get().getWind().applyAndRecord_Direction(*this);
 		break;
+	case StateChangeType::Random_Seed:
+		m_configManager.randParams().setApplyAndRecord_Seed(std::get<float>(stateChange.value), *this);
+		break;
+	case StateChangeType::Random_XYSeed:
+		m_configManager.randParams().setApplyAndRecord_SeedXY(std::get<glm::vec2>(stateChange.value), *this);
+		break;
 	case StateChangeType::ConfigParams:
 		m_configManager.configParams().onKeyPressed(std::get<SDL_Scancode>(stateChange.value), *this);
 		break;
