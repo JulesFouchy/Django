@@ -9,10 +9,11 @@ public:
 
 	void update(StateModifier& stateModifier);
 
-	void setApplyAndRecord_ForceField(const glm::vec2& mousePos, StateModifier& stateModifier);
-	void setApplyAndRecord_Burst(const glm::vec3& mousePosAndStrength, StateModifier& stateModifier);
+	void setForceField(const glm::vec2& mousePos);
+	void setBurst(const glm::vec3& mousePosAndStrength);
 
 private:
-	std::queue<glm::vec2> m_forceFieldQueue;
+	bool m_bForceField;
+	glm::vec2 m_forceFieldPos;
 	std::queue<glm::vec3> m_burstQueue;
 };

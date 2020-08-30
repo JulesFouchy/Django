@@ -148,10 +148,10 @@ void StateModifier::applyAndRecord(const StateChange& stateChange) {
 		m_configManager.configParams().setApplyAndRecord_AltWheel(std::get<float>(stateChange.value), *this);
 		break;
 	case StateChangeType::Mouse_ForceField:
-		m_mouseInteractions.setApplyAndRecord_ForceField(std::get<glm::vec2>(stateChange.value), *this);
+		m_mouseInteractions.setForceField(std::get<glm::vec2>(stateChange.value));
 		break;
 	case StateChangeType::Mouse_Burst:
-		m_mouseInteractions.setApplyAndRecord_Burst(std::get<glm::vec3>(stateChange.value), *this);
+		m_mouseInteractions.setBurst(std::get<glm::vec3>(stateChange.value));
 		break;
 	default:
 		assert(false && "[StateModifier::applyAndRecord] Forgot a case !");

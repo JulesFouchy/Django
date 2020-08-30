@@ -9,18 +9,19 @@
 void MouseInteractions::update(StateModifier& stateModifier) {
 	// Force field
 	if (ImGui::IsMouseDown(ImGuiMouseButton_Left) && !ImGui::GetIO().WantCaptureMouse)
-		setApplyAndRecord_ForceField(Input::GetMouseInNormalizedRatioSpace(), stateModifier);
+		setForceField(Input::GetMouseInNormalizedRatioSpace());
 	// Burst
 	if (ImGui::IsMouseReleased(ImGuiMouseButton_Right)) {
 		float strength = pow(25.0f * ImGui::GetIO().MouseDownDurationPrev[ImGuiMouseButton_Right], 0.8f);
-		setApplyAndRecord_Burst({ Input::GetMouseInNormalizedRatioSpace(), strength }, stateModifier);
+		setBurst({ Input::GetMouseInNormalizedRatioSpace(), strength });
 	}
 	// Apply
 	ShaderPipeline& physicsCompute = stateModifier.particleSystem().physicsComputeShader();
-	if (!m_forceFieldQueue.empty()) {
+	if (m_bForceField) {
 		physicsCompute.setUniform1i("u_bForceField", true);
-		physicsCompute.setUniform2f("u_mouse", m_forceFieldQueue.front());
-		m_forceFieldQueue.pop();
+		physicsCompute.setUniform2f("u_mouse", m_forceFieldPos);
+		stateModifier.recordChange({ StateChangeType::Mouse_ForceField, m_forceFieldPos }); // record only the position we selected for this frame (current mouse if any, recorded mouse otherwise if any)
+		m_bForceField = false; // reset for next frame
 	}
 	else {
 		physicsCompute.setUniform1i("u_bForceField", false);
@@ -28,6 +29,7 @@ void MouseInteractions::update(StateModifier& stateModifier) {
 	if (!m_burstQueue.empty()) {
 		physicsCompute.setUniform1f("u_burstStrength", m_burstQueue.front().z);
 		physicsCompute.setUniform2f("u_mouse", { m_burstQueue.front().x, m_burstQueue.front().y });
+		stateModifier.recordChange({ StateChangeType::Mouse_Burst, m_burstQueue.front() });
 		m_burstQueue.pop();
 	}
 	else {
@@ -35,12 +37,11 @@ void MouseInteractions::update(StateModifier& stateModifier) {
 	}
 }
 
-void MouseInteractions::setApplyAndRecord_ForceField(const glm::vec2& mousePos, StateModifier& stateModifier) {
-	m_forceFieldQueue.push(mousePos);
-	stateModifier.recordChange({ StateChangeType::Mouse_ForceField, mousePos });
+void MouseInteractions::setForceField(const glm::vec2& mousePos) {
+	m_bForceField = true;
+	m_forceFieldPos = mousePos;
 }
 
-void MouseInteractions::setApplyAndRecord_Burst(const glm::vec3& mousePosAndStrength, StateModifier& stateModifier) {
+void MouseInteractions::setBurst(const glm::vec3& mousePosAndStrength) {
 	m_burstQueue.push(mousePosAndStrength);
-	stateModifier.recordChange({ StateChangeType::Mouse_Burst, mousePosAndStrength });
 }
