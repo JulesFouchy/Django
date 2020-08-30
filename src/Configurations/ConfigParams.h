@@ -27,4 +27,21 @@ private:
 	float ctrlWheel = 5.0f;
 	float shiftWheel = 1.0f;
 	float altWheel = 1.0f;
+
+private:
+	//Serialization
+	friend class cereal::access;
+	template <class Archive>
+	void serialize(Archive& archive)
+	{
+		archive(
+			CEREAL_NVP(count),
+			CEREAL_NVP(intLR),
+			CEREAL_NVP(intUD),
+			CEREAL_NVP(wheel),
+			CEREAL_NVP(ctrlWheel),
+			CEREAL_NVP(shiftWheel),
+			CEREAL_NVP(altWheel)
+		);
+	}
 };

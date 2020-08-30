@@ -11,4 +11,16 @@ struct RandomParams {
 
 	void setApplyAndRecord_Seed(float seed, StateModifier& stateModifier);
 	void setApplyAndRecord_SeedXY(const glm::vec2& seedXY, StateModifier& stateModifier);
+
+private:
+	//Serialization
+	friend class cereal::access;
+	template <class Archive>
+	void serialize(Archive& archive)
+	{
+		archive(
+			CEREAL_NVP(seed),
+			CEREAL_NVP(xySeed)
+		);
+	}
 };

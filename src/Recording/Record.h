@@ -8,10 +8,10 @@ class StateModifier;
 class Record {
 public:
 	Record() = default;
-	Record(float timestamp, const ConfigRef& initialConfiguration);
+	Record(float timestamp);
 	Record(const std::string& filepath);
 	~Record() = default;
-	void init(float timestamp, const ConfigRef& initialConfiguration);
+	void init(float timestamp);
 
 	void recordStateChange(const StateChange& stateChange, float timestamp);
 	bool startPlaying(StateModifier& stateModifier); // Returns true iff we should keep playing the record

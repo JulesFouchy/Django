@@ -10,12 +10,12 @@ public:
 	~Recorder();
 
 	void recordChange(const StateChange& stateChange, float time);
-	bool ImGui(const ConfigRef& currentConfigRef, float time);
+	bool ImGui(float time);
 
 	inline const Record& getRecord() { return m_record; }
 
 private:
-	void start(const ConfigRef& currentConfigRef, float time);
+	void start(float time);
 	void stop();
 
 	inline bool isRecording() { return m_bIsRecording; }

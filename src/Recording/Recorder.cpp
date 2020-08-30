@@ -15,8 +15,8 @@ void Recorder::recordChange(const StateChange& stateChange, float time) {
 		m_record.recordStateChange(stateChange, time - m_startTime);
 }
 
-void Recorder::start(const ConfigRef& currentConfigRef, float time) {
-	m_record.init(time, currentConfigRef);
+void Recorder::start(float time) {
+	m_record.init(time);
 	m_startTime = time;
 	m_bIsRecording = true;
 }
@@ -28,12 +28,12 @@ void Recorder::stop() {
 	m_record.serialize(FolderPath::Records);
 }
 
-bool Recorder::ImGui(const ConfigRef& currentConfigRef, float time) {
+bool Recorder::ImGui(float time) {
 	bool b = false;
 	if (!isRecording()) {
 		// Start recording
 		if (MyImGui::ButtonWithIcon(Textures::Record(), ImVec4(1, 0, 0, 1)))
-			start(currentConfigRef, time);
+			start(time);
 	}
 	else {
 		// Stop recording

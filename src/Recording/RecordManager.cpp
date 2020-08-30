@@ -43,7 +43,7 @@ void RecordManager::ImGui(std::unique_ptr<Clock>& clock, StateModifier& stateMod
 	m_exporter.ImGui();
 	ImGui::Separator();
 	// Recorder
-	if (m_recorder.ImGui(stateModifier.configManager().getCurrentConfigRef(), m_clock->time())) // finished recording
+	if (m_recorder.ImGui(m_clock->time())) // finished recording
 		m_records.push_back(m_recorder.getRecord());
 	// Record player
 	m_recordPlayer.ImGui(potentialSelectedRecord(), m_clock->time(), stateModifier);

@@ -256,37 +256,6 @@ void ConfigManager::onKeyPressed(SDL_Scancode scancode, char keysym, StateModifi
     }
 }
 
-ConfigRef ConfigManager::getCurrentConfigRef() {
-    switch (m_currConfigType) {
-    case ConfigType::SHAPE_LAYOUT:
-        return {
-            m_shapeLayoutConfigs(m_currShapeIndex, m_currLayoutIndex).getName(),
-            m_shapeLayoutConfigs(m_currShapeIndex, m_currLayoutIndex).getLayoutName(),
-            ConfigType::SHAPE_LAYOUT
-        };
-        break;
-    case ConfigType::SVG_LAYOUT:
-        return {
-            m_svgManager.getSVGName(m_currSvgIndex),
-            m_svgManager.getLayoutName(m_currLayoutIndex),
-            ConfigType::SVG_LAYOUT
-        };
-        break;
-    case ConfigType::STANDALONE:
-        return {
-            m_standaloneConfigs[m_currStandaloneIndex].getName(),
-            ConfigType::STANDALONE
-        };
-        break;
-    case ConfigType::TEXT:
-        return {
-            m_textConfig.getName(),
-            ConfigType::TEXT
-        };
-        break;
-    }
-}
-
 void ConfigManager::applyAndRecord_Action(const Action& action, StateModifier& stateModifier) {
     switch (action.ref.type)
     {
@@ -332,24 +301,5 @@ void ConfigManager::applyAndRecord_ActionRef(const ActionRef& actionRef, StateMo
     }
     else {
         spdlog::warn("Couldn't find the action '{}' of type {}", actionRef.name, actionRef.type);
-    }
-}
-
-void ConfigManager::applyAndRecord_ConfigRef(const ConfigRef& configRef, StateModifier& stateModifier) {
-    switch (configRef.type) {
-    case ConfigType::SHAPE_LAYOUT:
-        applyAndRecord_ActionRef({ configRef.mainName,   ActionType::SHAPE }, stateModifier);
-        applyAndRecord_ActionRef({ configRef.layoutName, ActionType::LAYOUT }, stateModifier);
-        break;
-    case ConfigType::SVG_LAYOUT:
-        applyAndRecord_ActionRef({ configRef.mainName,   ActionType::SVG_SHAPE }, stateModifier);
-        applyAndRecord_ActionRef({ configRef.layoutName, ActionType::LAYOUT }, stateModifier);
-        break;
-    case ConfigType::STANDALONE:
-        applyAndRecord_ActionRef({ configRef.mainName, ActionType::STANDALONE }, stateModifier);
-        break;
-    case ConfigType::TEXT:
-        setCurrentConfigAsText();
-        break;
     }
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ConfigRef.h"
+#include "ConfigType.h"
 #include "ConfigGPU.h"
 #include "ConfigTextGPU.h"
 #include "ConfigParams.h"
@@ -24,9 +24,7 @@ public:
 	void onKeyPressed(SDL_Scancode scancode, char keysym, StateModifier& stateModifier);
 	inline void onKeyUp(SDL_Scancode scancode) { m_keyBindings.onKeyUp(scancode); }
 
-	ConfigRef getCurrentConfigRef();
 	void applyAndRecord_ActionRef(const ActionRef& actionRef, StateModifier& stateModifier);
-	void applyAndRecord_ConfigRef(const ConfigRef& configRef, StateModifier& stateModifier);
 
 	inline ConfigParams& configParams() { return m_params; }
 	inline RandomParams& randParams() { return m_randParams; }
