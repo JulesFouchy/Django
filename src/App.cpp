@@ -5,6 +5,9 @@
 
 #include "Helper/DisplayInfos.h"
 #include "Helper/Input.h"
+#ifndef NDEBUG
+#include "Helper/MyImGui.h"
+#endif
 
 App::App(SDL_Window* window)
 	: m_bShowImGUIDemoWindow(false),
@@ -31,11 +34,38 @@ void App::onInit() {
 
 void App::onLoopIteration() {
 	m_particleSystem.physicsComputeShader().bind();
+	// Send time to physics compute shader
+	m_recordManager.update(m_stateModifier); // updates time so must be called before sending it to compute shader // must be called after it's ImGui() because the latter is responsible for setting m_bDraggingOnTheTimeline
+	m_particleSystem.physicsComputeShader().setUniform1f("dt", m_recordManager.clock().deltaTime());
+	// Send wind to physics compute shader
+	m_settingsManager.get().wind().setWindOffsetInShader(m_particleSystem.physicsComputeShader(), m_recordManager.clock().time());
+	// Send mouse to physics compute shader
+	m_mouseInteractions.update(m_stateModifier);
+	// Apply physics
+	m_particleSystem.updatePositions();
+	m_particleSystem.physicsComputeShader().unbind();
+	// ---------------------
+	// ----- RENDERING -----
+	// ---------------------
+	// Clear screen
+	m_renderer.onRenderBegin(m_recordManager.clock().deltaTime(), m_settingsManager.get().colors().backgroundColor(), m_settingsManager.get().alphaTrail().getValues());
+	// Draw particles
+	m_particlePipeline.bind();
+	m_particleSystem.draw();
+	// Blit render buffer to screen if needed
+	m_renderer.onRenderEnd(m_settingsManager.get().alphaTrail().getValues());
+	// Export
+	if (m_recordManager.exporter().isExporting())
+		m_recordManager.exporter().exportFrame();
+	// ----------------------------
+	// ----- end of RENDERING -----
+	// ----------------------------
 	// ImGui windows
 	if (m_bShowGUI) {
 #ifndef NDEBUG
 		// Debug
 		ImGui::Begin("Debug");
+		MyImGui::TimeFormatedHMS(m_recordManager.clock().time());
 		ImGui::Checkbox("Show Demo Window", &m_bShowImGUIDemoWindow);
 		ImGui::Text("Application average %.1f FPS", ImGui::GetIO().Framerate);
 		ImGui::End();
@@ -54,33 +84,6 @@ void App::onLoopIteration() {
 		m_recordManager.ImGui(m_recordManager.clockPtrRef(), m_stateModifier); // must be called before m_recordManager.update()
 		ImGui::End();
 	}
-	// Send time to physics compute shader
-	m_recordManager.update(m_stateModifier); // updates time so must be called before sending it to compute shader // must be called after it's ImGui() because the latter is responsible for setting m_bDraggingOnTheTimeline
-	m_particleSystem.physicsComputeShader().setUniform1f("dt", m_recordManager.clock().deltaTime());
-	// Send wind to physics compute shader
-	m_settingsManager.get().wind().setWindOffsetInShader(m_particleSystem.physicsComputeShader(), m_recordManager.clock().time());
-	// Send mouse to physics compute shader
-	m_mouseInteractions.update(m_stateModifier);
-	//
-	m_particleSystem.physicsComputeShader().unbind();
-	// ---------------------
-	// ----- RENDERING -----
-	// ---------------------
-	// Clear screen
-	m_renderer.onRenderBegin(m_recordManager.clock().deltaTime(), m_settingsManager.get().colors().backgroundColor(), m_settingsManager.get().alphaTrail().getValues());
-	// Draw particles
-	m_particlePipeline.bind();
-	m_particleSystem.draw();
-	// Blit render buffer to screen if needed
-	m_renderer.onRenderEnd(m_settingsManager.get().alphaTrail().getValues());
-	// Export
-	if (m_recordManager.exporter().isExporting())
-		m_recordManager.exporter().exportFrame();
-	// ----------------------------
-	// ----- end of RENDERING -----
-	// ----------------------------
-	// Update particles physics
-	m_particleSystem.updatePositions();
 }
 
 void App::onEvent(const SDL_Event& e) {
