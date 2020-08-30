@@ -1,6 +1,7 @@
 #include "Time.h"
 
 #include <ctime>
+#include "String.h"
 
 std::string MyTime::AsString() {
 	time_t now = time(0);
@@ -45,10 +46,10 @@ std::string MyTime::AsString() {
 		month = "December";
 		break;
 	}
-	std::string day = std::to_string(ltm->tm_mday);
+	std::string day = MyString::ToString(ltm->tm_mday, 2);
 	std::string hour = std::to_string(ltm->tm_hour);
-	std::string minute = std::to_string(ltm->tm_min);
-	std::string second = std::to_string(ltm->tm_sec);
+	std::string minute = MyString::ToString(ltm->tm_min, 2);
+	std::string second = MyString::ToString(ltm->tm_sec, 2);
 
 	return year + "_" + month + "_" + day + "__" + hour + "h" + minute + "m" + second + "s";
 }
