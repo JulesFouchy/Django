@@ -46,23 +46,14 @@ bool Record::updatePlaying(float time, StateModifier& stateModifier) {
 
 bool Record::setTime(float newTime, StateModifier& stateModifier) {
 	stateModifier.setApplyAndRecord(m_startState);
-	// No actions
 	if (m_stateChangesTimeline.size() == 0)
 		return false;
-	// Time is bigger than duration
-	//else if (m_stateChangesTimeline.back().time <= newTime) {
-	//	// Apply last action
-	//	stateModifier.setApplyAndRecord(m_stateChangesTimeline.back().stateChange);
-	//	//
-	//	return false;
-	//}
-	// There is still some duration left
 	else {
 		m_nextStateChangeIdx = 0;
-		while (nextStateChangeTS().time < newTime) {
+		while (m_nextStateChangeIdx < m_stateChangesTimeline.size() && nextStateChangeTS().time <= newTime) {
 			advanceOnTimeline(stateModifier, false);
 		}
-		return true;
+		return m_nextStateChangeIdx < m_stateChangesTimeline.size();
 	}
 }
 

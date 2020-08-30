@@ -67,26 +67,28 @@ void ParticleSystem::sendRestPositionsToGPU() {
 }
 
 void ParticleSystem::applyNbParticles(unsigned int newNbParticles, const ColorSettingsValues& colorSettings) {
-    // Set
-    m_nbParticles = newNbParticles;
-    // Rest positions
-    m_restPositions.resize(m_nbParticles);
-    // Resize SSBOs
-    m_particlesSSBO.uploadData(m_nbParticles * 4, nullptr);
-    m_restPositionsSSBO.uploadData(m_nbParticles * 2, nullptr);
-    m_colorsSSBO.uploadData(m_nbParticles * 3, nullptr);
-    // Update uniform
-    m_physicsShader.get().bind();
-    m_physicsShader.get().setUniform1i("u_NbOfParticles", m_nbParticles);
-    m_physicsShader.get().unbind();
-    m_colorGradientComputeShader.get().bind();
-    m_colorGradientComputeShader.get().setUniform1i("u_NbOfParticles", m_nbParticles);
-    m_colorGradientComputeShader.get().unbind();
-    m_hueGradientComputeShader.get().bind();
-    m_hueGradientComputeShader.get().setUniform1i("u_NbOfParticles", m_nbParticles);
-    m_hueGradientComputeShader.get().unbind();
-    // Colors
-    applyParticleColors(colorSettings);
+    if (m_nbParticles != newNbParticles) {
+        // Set
+        m_nbParticles = newNbParticles;
+        // Rest positions
+        m_restPositions.resize(m_nbParticles);
+        // Resize SSBOs
+        m_particlesSSBO.uploadData(m_nbParticles * 4, nullptr);
+        m_restPositionsSSBO.uploadData(m_nbParticles * 2, nullptr);
+        m_colorsSSBO.uploadData(m_nbParticles * 3, nullptr);
+        // Update uniform
+        m_physicsShader.get().bind();
+        m_physicsShader.get().setUniform1i("u_NbOfParticles", m_nbParticles);
+        m_physicsShader.get().unbind();
+        m_colorGradientComputeShader.get().bind();
+        m_colorGradientComputeShader.get().setUniform1i("u_NbOfParticles", m_nbParticles);
+        m_colorGradientComputeShader.get().unbind();
+        m_hueGradientComputeShader.get().bind();
+        m_hueGradientComputeShader.get().setUniform1i("u_NbOfParticles", m_nbParticles);
+        m_hueGradientComputeShader.get().unbind();
+        // Colors
+        applyParticleColors(colorSettings);
+    }
 }
 
 void ParticleSystem::applyParticleColors(const ColorSettingsValues& colorSettings) {
