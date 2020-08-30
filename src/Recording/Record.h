@@ -28,7 +28,7 @@ private:
 	void deserialize(const std::string& filepath);
 
 	const StateChangeTimestamp& nextStateChangeTS() const;
-	void advanceOnTimeline(StateModifier& stateModifier);
+	void advanceOnTimeline(StateModifier& stateModifier, bool bPlayTheMouseBursts = true);
 
 private:
 	State m_startState;

@@ -49,18 +49,18 @@ bool Record::setTime(float newTime, StateModifier& stateModifier) {
 	if (m_stateChangesTimeline.size() == 0)
 		return false;
 	// Time is bigger than duration
-	else if (m_stateChangesTimeline.back().time <= newTime) {
-		// Apply last action
-		stateModifier.applyAndRecord(m_stateChangesTimeline.back().stateChange);
-		//
-		return false;
-	}
+	//else if (m_stateChangesTimeline.back().time <= newTime) {
+	//	// Apply last action
+	//	stateModifier.applyAndRecord(m_stateChangesTimeline.back().stateChange);
+	//	//
+	//	return false;
+	//}
 	// There is still some duration left
 	else {
 		stateModifier.applyAndRecord(m_startState);
 		m_nextStateChangeIdx = 0;
 		while (nextStateChangeTS().time < newTime) {
-			advanceOnTimeline(stateModifier);
+			advanceOnTimeline(stateModifier, false);
 		}
 		return true;
 	}
@@ -70,8 +70,9 @@ const StateChangeTimestamp& Record::nextStateChangeTS() const {
 	return m_stateChangesTimeline[m_nextStateChangeIdx];
 }
 
-void Record::advanceOnTimeline(StateModifier& stateModifier) {
-	stateModifier.applyAndRecord(nextStateChangeTS().stateChange);
+void Record::advanceOnTimeline(StateModifier& stateModifier, bool bPlayTheMouseBursts) {
+	if (bPlayTheMouseBursts || nextStateChangeTS().stateChange.type != StateChangeType::Mouse_Burst) // skip te mouse bursts because they cause problem when we setTime() repeatedly (e.g. when dragging on the timeline)
+		stateModifier.applyAndRecord(nextStateChangeTS().stateChange);
 	m_nextStateChangeIdx++;
 }
 
