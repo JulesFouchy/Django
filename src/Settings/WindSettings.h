@@ -68,6 +68,9 @@ public:
 
 	void setWindOffsetInShader(ShaderPipeline& physicsCompute, float time);
 
+	inline const WindSettingsValues& getValues() const { return m_values; }
+	inline float getDirAngle() const { return m_dirValues.directionAngle; }
+
 private:
 	void setFrequencyInShader(ShaderPipeline& physicsCompute);
 	void setMinStrengthInShader(ShaderPipeline& physicsCompute);

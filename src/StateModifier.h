@@ -22,6 +22,8 @@ public:
 	void applyAllSettings();
 	void recordChange(const StateChange& stateChange);
 
+	State getCurrentState() const;
+
 	ParticleSystem&  particleSystem()  { return m_particleSystem; }
 	SettingsManager& settingsManager() { return m_settingsManager; }
 	ConfigManager&   configManager()   { return m_configManager; }

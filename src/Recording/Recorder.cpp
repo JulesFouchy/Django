@@ -4,6 +4,8 @@
 #include "Constants/Textures.h"
 #include "Helper/File.h"
 #include "Constants/FolderPath.h"
+#include "State.h"
+#include "StateModifier.h"
 
 Recorder::~Recorder() {
 	if (isRecording())
@@ -15,9 +17,9 @@ void Recorder::recordChange(const StateChange& stateChange, float time) {
 		m_record.recordStateChange(stateChange, time - m_startTime);
 }
 
-void Recorder::start(float time) {
-	m_record.init(time);
-	m_startTime = time;
+void Recorder::start(const State& currentState) {
+	m_record.init(currentState);
+	m_startTime = currentState.timestamp;
 	m_bIsRecording = true;
 }
 
@@ -28,12 +30,12 @@ void Recorder::stop() {
 	m_record.serialize(FolderPath::Records);
 }
 
-bool Recorder::ImGui(float time) {
+bool Recorder::ImGui(float time, const StateModifier& stateModifier) {
 	bool b = false;
 	if (!isRecording()) {
 		// Start recording
 		if (MyImGui::ButtonWithIcon(Textures::Record(), ImVec4(1, 0, 0, 1)))
-			start(time);
+			start(stateModifier.getCurrentState());
 	}
 	else {
 		// Stop recording

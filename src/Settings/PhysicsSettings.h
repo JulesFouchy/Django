@@ -58,6 +58,8 @@ public:
 	inline void setPulsation(float pulsation)       { m_values.pulsation = pulsation;       m_presets.setToPlaceholderSetting(); }
 	inline void setDampingRatio(float dampingRatio) { m_values.dampingRatio = dampingRatio; m_presets.setToPlaceholderSetting(); }
 
+	inline const PhysicsSettingsValues& getValues() const { return m_values; }
+
 private:
 	void setStiffnessInShader(ShaderPipeline& physicsCompute);
 	void setDampingInShader  (ShaderPipeline& physicsCompute);

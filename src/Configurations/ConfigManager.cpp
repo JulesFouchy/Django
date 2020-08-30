@@ -303,3 +303,46 @@ void ConfigManager::applyAndRecord_ActionRef(const ActionRef& actionRef, StateMo
         spdlog::warn("Couldn't find the action '{}' of type {}", actionRef.name, actionRef.type);
     }
 }
+
+ActionRef ConfigManager::getLastShapeAsActionRef() {
+    if (m_bLastShapeWasSVG)
+        return ActionRef(m_svgManager.getSVGName(m_currSvgIndex), ActionType::SVG_SHAPE);
+    else
+        return ActionRef(m_shapeLayoutConfigs(m_currShapeIndex, 0).getName(), ActionType::SHAPE);
+}
+
+ActionRef ConfigManager::getLastLayoutAsActionRef() {
+    if (m_shapeLayoutConfigs.getWidth() > 0)
+        return ActionRef(m_shapeLayoutConfigs(0, m_currLayoutIndex).getLayoutName(), ActionType::LAYOUT);
+    else
+        return ActionRef(m_svgManager.getLayoutName(m_currLayoutIndex), ActionType::LAYOUT);
+}
+
+ActionRef ConfigManager::getCurrentConfigAsActionRef() {
+    switch (m_currConfigType) {
+    case ConfigType::SHAPE_LAYOUT:
+        return {
+            m_shapeLayoutConfigs(m_currShapeIndex, m_currLayoutIndex).getName(),
+            ActionType::SHAPE
+        };
+        break;
+    case ConfigType::SVG_LAYOUT:
+        return {
+            m_svgManager.getSVGName(m_currSvgIndex),
+            ActionType::SVG_SHAPE
+        };
+        break;
+    case ConfigType::STANDALONE:
+        return {
+            m_standaloneConfigs[m_currStandaloneIndex].getName(),
+            ActionType::STANDALONE
+        };
+        break;
+    case ConfigType::TEXT:
+        return {
+            m_textConfig.getName(),
+            ActionType::TEXT
+        };
+        break;
+    }
+}

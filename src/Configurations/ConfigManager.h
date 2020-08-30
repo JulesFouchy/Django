@@ -33,6 +33,10 @@ public:
 	inline void applyTo(ParticleSystem& partSystem) { get().applyTo(partSystem, m_params, m_randParams); }
 	void applyAndRecord_Action(const Action& action, StateModifier& stateModifier);
 
+	ActionRef getLastShapeAsActionRef();
+	ActionRef getLastLayoutAsActionRef();
+	ActionRef getCurrentConfigAsActionRef();
+
 private:
 	Configuration& get();
 	void setCurrentConfigAsText();

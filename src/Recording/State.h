@@ -10,9 +10,6 @@
 #include "Configurations/RandomParams.h"
 
 struct State {
-	State(float timestamp)
-		: timestamp(timestamp)
-	{}
 	State() = default;
 
 	float timestamp;
@@ -24,6 +21,7 @@ struct State {
 	ParticleSystemSettingsValues particleSystemValues;
 	PhysicsSettingsValues physicsValues;
 	WindSettingsValues windValues;
+	float windDirectionAngle;
 	ConfigParams configParams;
 	RandomParams randomParams;
 	std::string textConfigValue;
@@ -37,12 +35,14 @@ private:
 		archive(
 			CEREAL_NVP(timestamp),
 			CEREAL_NVP(lastShape),
+			CEREAL_NVP(lastLayout),
 			CEREAL_NVP(currentAction),
 			CEREAL_NVP(alphaTrailValues),
 			CEREAL_NVP(colorValues),
 			CEREAL_NVP(particleSystemValues),
 			CEREAL_NVP(physicsValues),
 			CEREAL_NVP(windValues),
+			CEREAL_NVP(windDirectionAngle),
 			CEREAL_NVP(configParams),
 			CEREAL_NVP(randomParams),
 			CEREAL_NVP(textConfigValue)

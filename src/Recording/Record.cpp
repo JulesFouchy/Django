@@ -6,16 +6,16 @@
 #include <cereal/archives/json.hpp>
 #include <fstream>
 
-Record::Record(float timestamp) {
-	init(timestamp);
+Record::Record(const State& currentState) {
+	init(currentState);
 }
 
 Record::Record(const std::string& filepath) {
 	deserialize(filepath);
 }
 
-void Record::init(float timestamp) {
-	//m_startState = State(timestamp, initialConfiguration);
+void Record::init(const State& currentState) {
+	m_startState = currentState;
 	m_name = MyTime::AsString();
 	m_stateChangesTimeline.clear();
 }

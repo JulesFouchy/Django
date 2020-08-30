@@ -21,6 +21,8 @@ public:
 	void setApplyAndRecord_SupprOneChar (StateModifier& stateModifer);
 	void setApplyAndRecord_SupprAllChars(StateModifier& stateModifer);
 
+	inline const std::string& getText() const { return m_text; }
+
 private:
 	void uploadData();
 
@@ -29,6 +31,7 @@ private:
 	std::vector<int> m_letters;
 	std::vector<int> m_offsets;
 	int m_offset = 0;
+	std::string m_text; // TODO use me
 
 	ComputeShader m_computeShader;
 	SSBO<int> m_lettersSSBO;

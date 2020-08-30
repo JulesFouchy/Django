@@ -169,3 +169,21 @@ void StateModifier::apply() {
 void StateModifier::recordChange(const StateChange& stateChange) {
 	m_recordManager.recordChange(stateChange);
 }
+
+State StateModifier::getCurrentState() const {
+	State state;
+	state.timestamp            = m_recordManager.clock().time();
+	state.lastShape            = m_configManager.getLastShapeAsActionRef();
+	state.lastLayout           = m_configManager.getLastLayoutAsActionRef();
+	state.currentAction        = m_configManager.getCurrentConfigAsActionRef();
+	state.alphaTrailValues     = m_settingsManager.get().alphaTrail().getValues();
+	state.colorValues          = m_settingsManager.get().colors().getValues();
+	state.particleSystemValues = m_settingsManager.get().partSystem().getValues();
+	state.physicsValues        = m_settingsManager.get().physics().getValues();
+	state.windValues           = m_settingsManager.get().wind().getValues();
+	state.windDirectionAngle   = m_settingsManager.get().wind().getDirAngle();
+	state.configParams         = m_configManager.configParams();
+	state.randomParams         = m_configManager.randParams();
+	state.textConfigValue      = m_configManager.textConfig().getText();
+	return state;
+}

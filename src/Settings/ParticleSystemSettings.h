@@ -35,6 +35,7 @@ public:
 	inline void setRadius(float radius)                  { m_values.particleRadiusRelToHeight = radius; m_presets.setToPlaceholderSetting(); }
 
 	inline unsigned int nbParticles() { return m_values.nbParticles; }
+	inline const ParticleSystemSettingsValues& getValues() const { return m_values; }
 
 private:
 	ParticleSystemSettingsValues m_values;
