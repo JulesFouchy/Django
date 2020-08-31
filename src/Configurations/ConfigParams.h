@@ -21,8 +21,8 @@ public:
 
 private:
 	int count = 5;
-	int intLR = 6;
-	int intUD = 1;
+	int intLR = 0;
+	int intUD = 0;
 	float wheel = 0.0f;
 	float ctrlWheel = 0.0f;
 	float shiftWheel = 0.0f;

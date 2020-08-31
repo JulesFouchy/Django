@@ -67,7 +67,7 @@ bool ConfigParams::onKeyPressed(SDL_Scancode scancode, StateModifier& stateModif
         break;
     // LR
     case SDL_SCANCODE_LEFT:
-        intLR = std::max(intLR-1, 1);
+        intLR--;
         b = true;
         break;
     case SDL_SCANCODE_RIGHT:
@@ -77,7 +77,7 @@ bool ConfigParams::onKeyPressed(SDL_Scancode scancode, StateModifier& stateModif
     // UD
     case SDL_SCANCODE_DOWN:
         intUD--;
-        return true;
+        b = true;
         break;
     case SDL_SCANCODE_UP:
         intUD++;
