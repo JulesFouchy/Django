@@ -28,11 +28,14 @@ private:
 	void deserialize(const std::string& filepath);
 
 	const StateChangeTimestamp& nextStateChangeTS() const;
-	void advanceOnTimeline(StateModifier& stateModifier, bool bPlayTheMouseBursts = true);
+	void advanceOnTimeline(StateModifier& stateModifier);
+	void setApplyRecord_WithChecks(StateModifier& stateModifier, float prevTime, float newTime);
 
 private:
 	State m_startState;
 	std::vector<StateChangeTimestamp> m_stateChangesTimeline;
 	size_t m_nextStateChangeIdx;
 	std::string m_name;
+	
+	float m_prevTime = 0.0f;
 };
