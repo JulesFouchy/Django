@@ -17,7 +17,7 @@ uniform vec2 u_xySeed;
 vec2 shape(float t, vec2 center, float radius, float rotation) {
     float N = float(u_intLR);
     float R = radius;
-    float r = R * 0.5 * u_altWheel;
+    float r = R * 0.5 * (u_ctrlWheel+1.0);
     //
     float id = floor(t * 2.0 * N);
     t =        fract(t * 2.0 * N);

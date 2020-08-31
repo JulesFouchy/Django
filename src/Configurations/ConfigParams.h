@@ -23,10 +23,10 @@ private:
 	int count = 5;
 	int intLR = 6;
 	int intUD = 1;
-	float wheel = 1.0f;
-	float ctrlWheel = 5.0f;
-	float shiftWheel = 1.0f;
-	float altWheel = 1.0f;
+	float wheel = 0.0f;
+	float ctrlWheel = 0.0f;
+	float shiftWheel = 0.0f;
+	float altWheel = 0.0f;
 
 private:
 	//Serialization
