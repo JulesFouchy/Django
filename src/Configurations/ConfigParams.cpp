@@ -2,6 +2,7 @@
 
 #include "StateModifier.h"
 #include "Recording/StateChange.h"
+#include "Helper/Input.h"
 
 bool ConfigParams::onKeyPressed(SDL_Scancode scancode, StateModifier& stateModifier) {
     bool b = false;
@@ -89,6 +90,21 @@ bool ConfigParams::onKeyPressed(SDL_Scancode scancode, StateModifier& stateModif
         stateModifier.recordChange({ StateChangeType::Param_KeyPressed, scancode });
     }
     return b;
+}
+
+void ConfigParams::onWheel(int delta, bool bNoStandardScroll, StateModifier& stateModifier) {
+    if (Input::KeyIsDown(SDL_SCANCODE_LCTRL) || Input::KeyIsDown(SDL_SCANCODE_RCTRL)) {
+        setApplyAndRecord_CtrlWheel(ctrlWheel + delta, stateModifier);
+    }
+    else if (Input::KeyIsDown(SDL_SCANCODE_LSHIFT) || Input::KeyIsDown(SDL_SCANCODE_RSHIFT)) {
+        setApplyAndRecord_ShiftWheel(shiftWheel + delta, stateModifier);
+    }
+    else if (Input::KeyIsDown(SDL_SCANCODE_LALT) || Input::KeyIsDown(SDL_SCANCODE_RALT)) {
+        setApplyAndRecord_AltWheel(altWheel + delta, stateModifier);
+    }
+    else if (!bNoStandardScroll) {
+        setApplyAndRecord_Wheel(wheel + delta, stateModifier);
+    }
 }
 
 void ConfigParams::setApplyAndRecord_Wheel(int value, StateModifier& stateModifier) {

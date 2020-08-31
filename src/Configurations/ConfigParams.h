@@ -5,6 +5,7 @@ class StateModifier;
 struct ConfigParams {
 public:
 	bool onKeyPressed(SDL_Scancode scancode, StateModifier& stateModifier);
+	void onWheel(int delta, bool bNoStandardScroll, StateModifier& stateModifier);
 
 	void setApplyAndRecord_Wheel     (int value, StateModifier& stateModifier);
 	void setApplyAndRecord_CtrlWheel (int value, StateModifier& stateModifier);

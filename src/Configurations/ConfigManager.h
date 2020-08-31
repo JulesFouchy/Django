@@ -20,7 +20,7 @@ public:
 	void Imgui(StateModifier& stateModifier);
 	inline void ImGuiKeyBindings(StateModifier& stateModifier) { m_keyBindings.ImGui(stateModifier); }
 
-	void onWheel(int delta, bool bNoStandardScroll, StateModifier& stateModifier);
+	inline void onWheel(int delta, bool bNoStandardScroll, StateModifier& stateModifier) { m_params.onWheel(delta, bNoStandardScroll, stateModifier); }
 	void onKeyPressed(SDL_Scancode scancode, char keysym, StateModifier& stateModifier);
 	inline void onKeyUp(SDL_Scancode scancode) { m_keyBindings.onKeyUp(scancode); }
 
