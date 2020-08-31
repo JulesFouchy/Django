@@ -14,7 +14,7 @@ uniform vec2 u_xySeed;
 //? float rand(float id, float seed);
 
 vec2 shape(float t, vec2 center, float radius, float rotation) {
-    float nbBranches = float(u_intLR);
+    float nbBranches = float(max(u_intLR + 6, 1));
     float branchId    = floor(t * nbBranches);
     float branchCoord = fract(t * nbBranches);
     float angle = branchId * 6.28 / nbBranches - 3.14*0.5 + rotation;
