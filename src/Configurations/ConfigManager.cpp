@@ -13,8 +13,6 @@ namespace fs = std::filesystem;
 #include "Constants/FolderPath.h"
 #include "StateModifier.h"
 
-constexpr float SCROLL_SPEED = 0.1f;
-
 static const std::string VERSION = "#version 430";
 
 static const std::string SHAPES_FOLDER       = "configurations/shapes";
@@ -228,18 +226,18 @@ void ConfigManager::Imgui(StateModifier& stateModifier) {
     ImGui::End();
 }
 
-void ConfigManager::onWheel(float delta, bool bNoStandardScroll, StateModifier& stateModifier) {
+void ConfigManager::onWheel(int delta, bool bNoStandardScroll, StateModifier& stateModifier) {
     if (Input::KeyIsDown(SDL_SCANCODE_LCTRL) || Input::KeyIsDown(SDL_SCANCODE_RCTRL)) {
-        m_params.setApplyAndRecord_CtrlWheel(m_params.getCtrlWheel() + delta * SCROLL_SPEED, stateModifier);
+        m_params.setApplyAndRecord_CtrlWheel(m_params.getCtrlWheel() + delta, stateModifier);
     }
     else if (Input::KeyIsDown(SDL_SCANCODE_LSHIFT) || Input::KeyIsDown(SDL_SCANCODE_RSHIFT)) {
-        m_params.setApplyAndRecord_ShiftWheel(m_params.getShiftWheel() + delta * SCROLL_SPEED, stateModifier);
+        m_params.setApplyAndRecord_ShiftWheel(m_params.getShiftWheel() + delta, stateModifier);
     }
     else if (Input::KeyIsDown(SDL_SCANCODE_LALT) || Input::KeyIsDown(SDL_SCANCODE_RALT)) {
-        m_params.setApplyAndRecord_AltWheel(m_params.getAltWheel() + delta * SCROLL_SPEED, stateModifier);
+        m_params.setApplyAndRecord_AltWheel(m_params.getAltWheel() + delta, stateModifier);
     }
     else if (!bNoStandardScroll) {
-        m_params.setApplyAndRecord_Wheel(m_params.getWheel() + delta * SCROLL_SPEED, stateModifier);
+        m_params.setApplyAndRecord_Wheel(m_params.getWheel() + delta, stateModifier);
     }
 }
 

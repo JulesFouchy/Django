@@ -54,6 +54,7 @@ using StateChangeValue = std::variant <
 	RandomParams,
 	SDL_Scancode,
 	char,
+	int,
 	unsigned int,
 	bool,
 	float,

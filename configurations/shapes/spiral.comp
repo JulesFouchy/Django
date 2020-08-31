@@ -14,6 +14,6 @@ uniform vec2 u_xySeed;
 //? float rand(float id, float seed);
 
 vec2 shape(float t, vec2 center, float radius, float rotation) {
-	float angle = t * 6.28 * (u_ctrlWheel+5.0) + rotation;
+	float angle = t * 6.28 * (u_ctrlWheel*0.1+5.0) + rotation;
 	return center + t * radius * vec2(cos(angle), sin(angle));
 }

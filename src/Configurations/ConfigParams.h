@@ -6,27 +6,27 @@ struct ConfigParams {
 public:
 	bool onKeyPressed(SDL_Scancode scancode, StateModifier& stateModifier);
 
-	void setApplyAndRecord_Wheel     (float value, StateModifier& stateModifier);
-	void setApplyAndRecord_CtrlWheel (float value, StateModifier& stateModifier);
-	void setApplyAndRecord_ShiftWheel(float value, StateModifier& stateModifier);
-	void setApplyAndRecord_AltWheel  (float value, StateModifier& stateModifier);
+	void setApplyAndRecord_Wheel     (int value, StateModifier& stateModifier);
+	void setApplyAndRecord_CtrlWheel (int value, StateModifier& stateModifier);
+	void setApplyAndRecord_ShiftWheel(int value, StateModifier& stateModifier);
+	void setApplyAndRecord_AltWheel  (int value, StateModifier& stateModifier);
 
-	inline int   getCount()      const { return count; }
-	inline int   getIntLR()      const { return intLR; }
-	inline int   getIntUD()      const { return intUD; }
-	inline float getWheel()      const { return wheel; }
-	inline float getCtrlWheel()  const { return ctrlWheel; }
-	inline float getShiftWheel() const { return shiftWheel; }
-	inline float getAltWheel()   const { return altWheel; }
+	inline int getCount()      const { return count; }
+	inline int getIntLR()      const { return intLR; }
+	inline int getIntUD()      const { return intUD; }
+	inline int getWheel()      const { return wheel; }
+	inline int getCtrlWheel()  const { return ctrlWheel; }
+	inline int getShiftWheel() const { return shiftWheel; }
+	inline int getAltWheel()   const { return altWheel; }
 
 private:
-	int count = 5;
-	int intLR = 0;
-	int intUD = 0;
-	float wheel = 0.0f;
-	float ctrlWheel = 0.0f;
-	float shiftWheel = 0.0f;
-	float altWheel = 0.0f;
+	int count      = 5;
+	int intLR      = 0;
+	int intUD      = 0;
+	int wheel      = 0;
+	int ctrlWheel  = 0;
+	int shiftWheel = 0;
+	int altWheel   = 0;
 
 private:
 	//Serialization

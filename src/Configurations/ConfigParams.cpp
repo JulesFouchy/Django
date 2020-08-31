@@ -91,25 +91,25 @@ bool ConfigParams::onKeyPressed(SDL_Scancode scancode, StateModifier& stateModif
     return b;
 }
 
-void ConfigParams::setApplyAndRecord_Wheel(float value, StateModifier& stateModifier) {
+void ConfigParams::setApplyAndRecord_Wheel(int value, StateModifier& stateModifier) {
     wheel = value;
     stateModifier.apply();
     stateModifier.recordChange({StateChangeType::Param_Wheel, value });
 }
 
-void ConfigParams::setApplyAndRecord_CtrlWheel(float value, StateModifier& stateModifier) {
+void ConfigParams::setApplyAndRecord_CtrlWheel(int value, StateModifier& stateModifier) {
     ctrlWheel = value;
     stateModifier.apply();
     stateModifier.recordChange({ StateChangeType::Param_CtrlWheel, value });
 }
 
-void ConfigParams::setApplyAndRecord_ShiftWheel(float value, StateModifier& stateModifier) {
+void ConfigParams::setApplyAndRecord_ShiftWheel(int value, StateModifier& stateModifier) {
     shiftWheel = value;
     stateModifier.apply();
     stateModifier.recordChange({ StateChangeType::Param_ShiftWheel, value });
 }
 
-void ConfigParams::setApplyAndRecord_AltWheel(float value, StateModifier& stateModifier) {
+void ConfigParams::setApplyAndRecord_AltWheel(int value, StateModifier& stateModifier) {
     altWheel = value;
     stateModifier.apply();
     stateModifier.recordChange({ StateChangeType::Param_AltWheel, value });
