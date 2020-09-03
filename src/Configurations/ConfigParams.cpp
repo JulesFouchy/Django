@@ -68,20 +68,20 @@ bool ConfigParams::onKeyPressed(SDL_Scancode scancode, StateModifier& stateModif
         break;
     // LR
     case SDL_SCANCODE_LEFT:
-        intLR--;
+        LR--;
         b = true;
         break;
     case SDL_SCANCODE_RIGHT:
-        intLR++;
+        LR++;
         b = true;
         break;
     // UD
     case SDL_SCANCODE_DOWN:
-        intUD--;
+        UD--;
         b = true;
         break;
     case SDL_SCANCODE_UP:
-        intUD++;
+        UD++;
         b = true;
         break;
     }

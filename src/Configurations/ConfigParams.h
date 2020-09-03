@@ -13,8 +13,8 @@ public:
 	void setApplyAndRecord_AltWheel  (int value, StateModifier& stateModifier);
 
 	inline int getCount()      const { return count; }
-	inline int getIntLR()      const { return intLR; }
-	inline int getIntUD()      const { return intUD; }
+	inline int getLR()         const { return LR; }
+	inline int getUD()         const { return UD; }
 	inline int getWheel()      const { return wheel; }
 	inline int getCtrlWheel()  const { return ctrlWheel; }
 	inline int getShiftWheel() const { return shiftWheel; }
@@ -22,8 +22,8 @@ public:
 
 private:
 	int count      = 5;
-	int intLR      = 0;
-	int intUD      = 0;
+	int LR         = 0;
+	int UD         = 0;
 	int wheel      = 0;
 	int ctrlWheel  = 0;
 	int shiftWheel = 0;
@@ -37,8 +37,8 @@ private:
 	{
 		archive(
 			CEREAL_NVP(count),
-			CEREAL_NVP(intLR),
-			CEREAL_NVP(intUD),
+			CEREAL_NVP(LR),
+			CEREAL_NVP(UD),
 			CEREAL_NVP(wheel),
 			CEREAL_NVP(ctrlWheel),
 			CEREAL_NVP(shiftWheel),

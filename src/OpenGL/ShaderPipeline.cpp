@@ -32,13 +32,13 @@ void ShaderPipeline::addShaderBySrcCode(ShaderType type, const std::string& shad
 void ShaderPipeline::createProgram() {
 	if (m_programID != 0)
 		GLCall(glDeleteProgram(m_programID));
-	m_programID = glCreateProgram();
+	GLCall(m_programID = glCreateProgram());
 	for (Shader& shader : m_shaders) {
 		shader.compile();
-		glAttachShader(m_programID, shader.getID());
+		GLCall(glAttachShader(m_programID, shader.getID()));
 	}
-	glLinkProgram(m_programID);
-	glValidateProgram(m_programID);
+	GLCall(glLinkProgram(m_programID));
+	GLCall(glValidateProgram(m_programID));
 	m_shaders.clear(); // delete all shaders
 	//Log::separationLine();
 }

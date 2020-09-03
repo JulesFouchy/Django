@@ -4,8 +4,8 @@
 //? uniform float u_aspectRatio;
 //? // Params
 //? uniform int u_count;
-//? uniform int u_intLR;
-//? uniform int u_intUD;
+//? uniform int u_LR;
+//? uniform int u_UD;
 //? uniform float u_wheel;
 //? uniform float u_ctrlWheel;
 //? uniform float u_shiftWheel;

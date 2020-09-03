@@ -2,8 +2,8 @@ uniform int u_NbOfParticles;
 uniform float u_aspectRatio;
 // Params
 uniform int u_count;
-uniform int u_intLR;
-uniform int u_intUD;
+uniform int u_LR;
+uniform int u_UD;
 uniform float u_wheel;
 uniform float u_ctrlWheel;
 uniform float u_shiftWheel;
@@ -14,7 +14,7 @@ uniform vec2 u_xySeed;
 //? float rand(float id, float seed);
 
 vec2 shape(float t, vec2 center, float radius, float rotation) {
-    float nbBranches = float(max(u_intLR + 6, 1));
+    float nbBranches = float(max(u_LR + 6, 1));
     float branchId    = floor(t * nbBranches);
     float branchCoord = fract(t * nbBranches);
     float angle = branchId * 6.28 / nbBranches - 3.14*0.5 + rotation;
