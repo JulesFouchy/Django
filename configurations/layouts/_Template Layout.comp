@@ -3,13 +3,13 @@
 //? uniform int u_NbOfParticles;
 //? uniform float u_aspectRatio;
 // Parameters
+//? uniform int u_count;
+//? uniform int u_LR;
+//? uniform int u_UD;
 //? uniform int u_wheel;
+//? uniform int u_ctrlWheel;
 //? uniform int u_shiftWheel;
 //? uniform int u_altWheel;
-//? uniform int u_count;
-//? uniform int u_UD;
-//? uniform int u_LR;        // I wouldn't recommend using this one for the layouts, see comments in the bottom section
-//? uniform int u_ctrlWheel; // I wouldn't recommend using this one for the layouts, see comments in the bottom section
 //Random
 //? uniform float u_seed;
 //? uniform vec2 u_xySeed;
@@ -30,7 +30,6 @@ vec2 getPosition(uint particleID) {
 		u_wheel * 3.141592653 / 24.0         // rotation
 	);
 }
-
 
 // The Coordinate System is :
 // (0, 0) is the center

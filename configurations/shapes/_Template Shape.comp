@@ -1,36 +1,28 @@
 //? #version 430
 
-//? uniform int u_NbOfParticles;
-//? uniform float u_aspectRatio;
+uniform int u_NbOfParticles;
+uniform float u_aspectRatio;
 // Parameters
-//? uniform int u_wheel;
-//? uniform int u_shiftWheel;
-//? uniform int u_altWheel;
-//? uniform int u_count;
-//? uniform int u_UD;
-//? uniform int u_LR;        // I wouldn't recommend using this one for the layouts, see comments in the bottom section
-//? uniform int u_ctrlWheel; // I wouldn't recommend using this one for the layouts, see comments in the bottom section
-//Random
-//? uniform float u_seed;
-//? uniform vec2 u_xySeed;
-//? float rand(float seedX, float seedY);
+uniform int u_count;
+uniform int u_LR;
+uniform int u_UD;
+uniform int u_wheel;
+uniform int u_ctrlWheel;
+uniform int u_shiftWheel;
+uniform int u_altWheel;
+// Random
+uniform float u_seed;
+uniform vec2 u_xySeed;
+//? float rand(float id, float seed);
 
+// The "shape" function will be used by the layout configurations
+// t is the position/progress on the shape : 0 for the beginning, 1 for the end
+// For example, if you want to draw a circle the angle of the current point will be t * TWO_PI
 
-// getPosition is called for every particle, each with a different ID going from 0 to u_NbOfParticles-1
-
-//  A layout configuration has this "shape" function passed to it and it's goal is to draw shapes whereever it wants
-//  t is the position on the shape (0 for the beginning, 1 for the end)
-//? vec2 shape(float t, vec2 center, float radius, float rotation);
-
-vec2 getPosition(uint particleID) {
-	return shape(
-		particleID / float(u_NbOfParticles), // t
-		vec2(0.0),                           // center
-		u_shiftWheel*0.1 + 0.9,              // radius
-		u_wheel * 3.141592653 / 24.0         // rotation
-	);
+vec2 shape(float t, vec2 center, float radius, float rotation) {
+	float angle = t * 6.28 + rotation;
+	return center + radius * vec2(cos(angle), sin(angle));
 }
-
 
 // The Coordinate System is :
 // (0, 0) is the center
@@ -66,6 +58,21 @@ vec2 getPosition(uint particleID) {
 //            vvv	   vvv
 //   max(param, 0)     abs(param)
 
+// int u_ctrlWheel;
+// This number is controlled by the mouse wheel while holding CTRL
+// Is is typically used as a parameter for the shapes or standalones
+
+// uniform int u_LR;
+// This number is controlled by the left/right arrows
+// Is is typically used as a parameter for the shapes or standalones
+
+
+
+//-------------------------------------------------
+// The parameters below are meant to be used by the layouts.
+// I wouldn't recommend using them for the shapes as you would have one parameter controlling two things at the same time (one in the shape and one in the layout)
+//-------------------------------------------------
+
 // int u_wheel;
 // This number is controlled by the mouse wheel
 // Is is typically used to rotate the shapes
@@ -88,18 +95,3 @@ vec2 getPosition(uint particleID) {
 // int u_UD;
 // This number is controlled by the up/down arrows
 // Is is typically used as a parameter for the layouts or standalones
-
-
-
-//-------------------------------------------------
-// The parameters below are meant to be used by the shapes.
-// I wouldn't recommend using them for the layouts as you would have one parameter controlling two things at the same time (one in the layout and one in the shape)
-//-------------------------------------------------
-
-// int u_ctrlWheel;
-// This number is controlled by the mouse wheel while holding CTRL
-// Is is typically used as a parameter for the shapes or standalones
-
-// uniform int u_LR;
-// This number is controlled by the left/right arrows
-// Is is typically used as a parameter for the shapes or standalones
