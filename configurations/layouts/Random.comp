@@ -8,10 +8,10 @@
 //? uniform int u_count;
 //? uniform int u_LR;
 //? uniform int u_UD;
-//? uniform float u_wheel;
-//? uniform float u_ctrlWheel;
-//? uniform float u_shiftWheel;
-//? uniform float u_altWheel;
+//? uniform int u_wheel;
+//? uniform int u_ctrlWheel;
+//? uniform int u_shiftWheel;
+//? uniform int u_altWheel;
 //? // Random
 //? uniform float u_seed;
 //? uniform vec2 u_xySeed;

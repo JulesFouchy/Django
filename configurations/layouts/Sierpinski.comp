@@ -1,7 +1,7 @@
 //? #version 430
 //  ||| Include all the available values. They are explained at the bottom of the file.
 //  vvv
-//? uniform int u_NbOfParticles; uniform float u_aspectRatio; uniform int u_count; uniform int u_LR; uniform int u_UD; uniform float u_wheel; uniform float u_ctrlWheel; uniform float u_shiftWheel; uniform float u_altWheel; uniform float u_seed; uniform vec2 u_xySeed; float rand(float seedX, float seedY); vec2 shape(float t, vec2 center, float radius, float rotation);
+//? uniform int u_NbOfParticles; uniform float u_aspectRatio; uniform int u_count; uniform int u_LR; uniform int u_UD; uniform int u_wheel; uniform int u_ctrlWheel; uniform int u_shiftWheel; uniform int u_altWheel; uniform float u_seed; uniform vec2 u_xySeed; float rand(float seedX, float seedY); vec2 shape(float t, vec2 center, float radius, float rotation);
 
 
 const vec2 dirUp = vec2(0.0, 1.0);

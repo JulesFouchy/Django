@@ -33,10 +33,10 @@ void ConfigGPU::applyTo(ParticleSystem& particleSystem, const ConfigParams& para
     m_computeShader.get().setUniform1i("u_count", params.getCount());
     m_computeShader.get().setUniform1i("u_LR", params.getLR());
     m_computeShader.get().setUniform1i("u_UD", params.getUD());
-    m_computeShader.get().setUniform1f("u_wheel", params.getWheel());
-    m_computeShader.get().setUniform1f("u_ctrlWheel", params.getCtrlWheel());
-    m_computeShader.get().setUniform1f("u_shiftWheel", params.getShiftWheel());
-    m_computeShader.get().setUniform1f("u_altWheel", params.getAltWheel());
+    m_computeShader.get().setUniform1i("u_wheel", params.getWheel());
+    m_computeShader.get().setUniform1i("u_ctrlWheel", params.getCtrlWheel());
+    m_computeShader.get().setUniform1i("u_shiftWheel", params.getShiftWheel());
+    m_computeShader.get().setUniform1i("u_altWheel", params.getAltWheel());
     m_computeShader.get().setUniform1f("u_seed", randParams.seed);
     m_computeShader.get().setUniform2f("u_xySeed", randParams.xySeed);
     //
