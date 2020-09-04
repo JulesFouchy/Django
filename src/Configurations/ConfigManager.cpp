@@ -22,6 +22,11 @@ static const std::string STANDALONE_TEMPLATE = "internal-shaders/configTemplate_
 static const std::string LAYOUT_TEMPLATE     = "internal-shaders/configTemplate_Layout_and_Standalone.comp";
 static const std::string RANDOM_FILE         = "internal-shaders/random.glsl";
 
+bool ConfigManager::acceptFile(const std::string& path, const char* desiredExtension) {
+    return !MyString::FileExtension(path).compare(desiredExtension)
+        && !MyString::StartsWith("_Template", MyString::FileName(path));
+}
+
 ConfigManager::ConfigManager() {
     ThumbnailFactory thumbnailFactory;
     // Get rand() source code
@@ -41,7 +46,7 @@ ConfigManager::ConfigManager() {
 
     size_t nbShapesFiles = 0;
     for (const auto& entry : fs::directory_iterator(SHAPES_FOLDER)) {
-        if (!MyString::FileExtension(entry.path().string()).compare(".comp"))
+        if (acceptFile(entry.path().string(), ".comp"))
             nbShapesFiles++;
     }
     std::vector<std::string> shapesSrcCode;
@@ -51,9 +56,8 @@ ConfigManager::ConfigManager() {
     size_t   svgIdx = 0;
     size_t shapeIdx = 0;
     for (const auto& entry : fs::directory_iterator(SHAPES_FOLDER)) {
-        const std::string fileExtension = MyString::FileExtension(entry.path().string());
         // SVG Shapes
-        if (!fileExtension.compare(".svg")) {
+        if (acceptFile(entry.path().string(), ".svg")) {
             // add
             m_svgManager.addSVGShape(entry.path().string());
             // key binding
@@ -65,7 +69,7 @@ ConfigManager::ConfigManager() {
             });
         }
         // Shapes .comp
-        else if (!fileExtension.compare(".comp")) {
+        else if (acceptFile(entry.path().string(), ".comp")) {
             // get source code
             std::string srcCode;
             MyFile::ToString(entry.path().string(), &srcCode);
@@ -83,7 +87,7 @@ ConfigManager::ConfigManager() {
             });
         }
         else {
-            spdlog::warn("Unknown extension for a shape file : '{}'. Can only handle '.svg' and '.comp' !", fileExtension);
+            //spdlog::warn("Unknown extension for a shape file : '{}'. Can only handle '.svg' and '.comp' !", MyString::FileExtension(entry.path().string()));
         }
     }
     // Finish SVG handling
@@ -96,15 +100,14 @@ ConfigManager::ConfigManager() {
 
     size_t nbLayoutsFiles = 0;
     for (const auto& entry : fs::directory_iterator(LAYOUTS_FOLDER)) {
-        if (!MyString::FileExtension(entry.path().string()).compare(".comp"))
+        if (acceptFile(entry.path().string(), ".comp"))
             nbLayoutsFiles++;
     }
     m_shapeLayoutConfigs.setSize(nbShapesFiles, nbLayoutsFiles);
     m_svgManager.setNbLayouts(nbLayoutsFiles);
     size_t y = 0;
     for (const auto& entry : fs::directory_iterator(LAYOUTS_FOLDER)) {
-        const std::string fileExtension = MyString::FileExtension(entry.path().string());
-        if (!fileExtension.compare(".comp")) {
+        if (acceptFile(entry.path().string(), ".comp")) {
             const std::string layoutName = MyString::FileName(entry.path().string());
             // get source code
             std::string layoutSrc;
@@ -144,7 +147,7 @@ ConfigManager::ConfigManager() {
             y++;
         }
         else {
-            spdlog::warn("Unknown extension for a layout file : '{}'. Can only handle '.comp' !", fileExtension);
+            //spdlog::warn("Unknown extension for a layout file : '{}'. Can only handle '.comp' !", MyString::FileExtension(entry.path().string()));
         }
     }
 
@@ -154,15 +157,14 @@ ConfigManager::ConfigManager() {
 
     size_t nbStandaloneConfigs = 0;
     for (const auto& entry : fs::directory_iterator(STANDALONE_FOLDER)) {
-        if (!MyString::FileExtension(entry.path().string()).compare(".comp"))
+        if (acceptFile(entry.path().string(), ".comp"))
             nbStandaloneConfigs++;
     }
     m_standaloneConfigs.resize(nbStandaloneConfigs);
     size_t i = 0;
     for (const auto& entry : fs::directory_iterator(STANDALONE_FOLDER)) {
-        const std::string fileExtension = MyString::FileExtension(entry.path().string());
         const std::string fileName = MyString::FileName(entry.path().string());
-        if (!fileExtension.compare(".comp")) {
+        if (acceptFile(entry.path().string(), ".comp")) {
             // create from source code
             std::string src;
             MyFile::ToString(entry.path().string(), &src);
@@ -185,7 +187,7 @@ ConfigManager::ConfigManager() {
             });
         }
         else {
-            spdlog::warn("Unknown extension for a standalone config file : '{}'. Can only handle '.comp' !", fileExtension);
+            //spdlog::warn("Unknown extension for a standalone config file : '{}'. Can only handle '.comp' !", MyString::FileExtension(entry.path().string()));
         }
     }
 

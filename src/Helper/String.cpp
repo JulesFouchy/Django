@@ -26,3 +26,7 @@ std::string MyString::FileExtension(const std::string& myString) {
 	auto pos = myString.find_last_of(".");
 	return myString.substr(pos, myString.size());
 }
+
+bool MyString::StartsWith(const char* toFind, const std::string& str) {
+	return str.rfind(toFind, 0) == 0;
+}

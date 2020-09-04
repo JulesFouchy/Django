@@ -43,6 +43,8 @@ private:
 	Configuration& get();
 	void setCurrentConfigAsText();
 
+	bool acceptFile(const std::string& path, const char* desiredExtension);
+
 private:
 	ConfigTextGPU m_textConfig;
 	Array2D<ConfigGPU> m_shapeLayoutConfigs;
