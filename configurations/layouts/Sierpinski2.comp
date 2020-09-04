@@ -21,6 +21,10 @@ mat3 trans(vec2 v) {
 		        v.x, v.y, 1.);
 }
 
+mat3 rotWithOrigin(mat3 rot, vec2 origin) {
+	return trans(origin) * rot * trans(-origin);
+}
+
 const vec2 dirUp = vec2(0.0, 1.0);
 const vec2 dirLeft = vec2(-0.866025403784439, -0.5);
 const vec2 dirRight = vec2(0.866025403784439, -0.5);
@@ -38,28 +42,26 @@ vec2 getPosition(uint particleID) {
 		vec2 dir;
 		switch (id) {
 			case 0:
-				dir = dirRight;
+				dir = dirUp;
 				break;
 			case 1:
 				dir = dirLeft;
 				break;
 			case 2:
-				dir = dirUp;
+				dir = dirRight;
 				break;
 		}
-		transform *= trans(dir * radius);
-		if (_ == 0) {
-			switch (id) {
-				case 0:
-					transform *= rot;
-					break;
-				case 1:
-					break;
-				case 2:
-					transform *= rot2;
-					break;
-			}
+		switch (id) {
+			case 0:
+				break;
+			case 1:
+				transform = rot * transform;
+				break;
+			case 2:
+				transform = rot2 * transform;
+				break;
 		}
+		transform = trans(dir * radius) * transform;
 	}
 
 	return shape(t, (transform * vec3(center, 1.)).xy, radius, u_wheel * 3.141592653 / 6.0);
