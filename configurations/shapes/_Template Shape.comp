@@ -3,17 +3,18 @@
 uniform int u_NbOfParticles;
 uniform float u_aspectRatio;
 // Parameters
-uniform int u_count;
 uniform int u_LR;
-uniform int u_UD;
-uniform int u_wheel;
 uniform int u_ctrlWheel;
-uniform int u_shiftWheel;
-uniform int u_altWheel;
+uniform int u_wheel;	  // I wouldn't recommend using this one for the shapes, see comments in the bottom section
+uniform int u_shiftWheel; // I wouldn't recommend using this one for the shapes, see comments in the bottom section
+uniform int u_altWheel;	  // I wouldn't recommend using this one for the shapes, see comments in the bottom section
+uniform int u_count;	  // I wouldn't recommend using this one for the shapes, see comments in the bottom section
+uniform int u_UD;		  // I wouldn't recommend using this one for the shapes, see comments in the bottom section
 // Random
 uniform float u_seed;
 uniform vec2 u_xySeed;
 //? float rand(float id, float seed);
+
 
 // The "shape" function will be used by the layout configurations
 // t is the position/progress on the shape : 0 for the beginning, 1 for the end
@@ -23,6 +24,7 @@ vec2 shape(float t, vec2 center, float radius, float rotation) {
 	float angle = t * 6.28 + rotation;
 	return center + radius * vec2(cos(angle), sin(angle));
 }
+
 
 // The Coordinate System is :
 // (0, 0) is the center
