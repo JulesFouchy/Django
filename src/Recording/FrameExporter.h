@@ -21,10 +21,10 @@ public:
 	void ImGui();
 
 private:
-	unsigned int m_width  = 100;
-	unsigned int m_height = 100;
-	float m_fps = 25.0f;
-	float m_durationAfterLastAction = 3.0f;
+	unsigned int m_width  = 1920;
+	unsigned int m_height = 1080;
+	float m_fps = 30.0f;
+	float m_durationAfterLastAction = 10.0f;
 	std::string m_exportFolderPath;
 	std::string m_prefix = "";
 
