@@ -10,7 +10,7 @@
 // getPosition is called for every particle, each with a different ID going from 0 to u_NbOfParticles-1
 
 vec2 getPosition(uint particleID) {
-	return shape(particleID / float(u_NbOfParticles), vec2(0.0), u_shiftWheel*0.1 + 1.0, u_wheel * 3.141592653 / 24.0);
+	return shape(particleID / float(u_NbOfParticles), vec2(0.0), u_shiftWheel*0.1 + 0.9, u_wheel * 3.141592653 / 24.0);
 }
 
 // The Coordinate System is :
