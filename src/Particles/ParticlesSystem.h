@@ -2,6 +2,7 @@
 #include "OpenGL/SSBO.h"
 
 struct ColorSettingsValues;
+class StateModifier;
 
 class ParticleSystem {
 public:
@@ -14,6 +15,7 @@ public:
 	inline unsigned int getNbParticles() { return m_nbParticles; }
 	void applyNbParticles(unsigned int newNbParticles, const ColorSettingsValues& colorSettings);
 	void applyParticleColors(const ColorSettingsValues& colorSettings);
+	void applyAndRecord_SetAllRestPositions(const glm::vec2& position, StateModifier& stateModifier);
 
 	inline ShaderPipeline& physicsComputeShader() { return m_physicsShader.get(); }
 
@@ -40,4 +42,5 @@ private:
 	ComputeShader m_physicsShader;
 	ComputeShader m_colorGradientComputeShader;
 	ComputeShader m_hueGradientComputeShader;
+	ComputeShader m_setAllRestPositionsComputeShader;
 };

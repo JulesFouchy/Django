@@ -19,7 +19,8 @@ public:
 	void setApplyAndRecord(const StateChange& stateChange);
 	void setApplyAndRecord(const State& state);
 	void apply();
-	void applyAndRecordAllSettings();
+	void applyAndRecord_CurrentAction();
+	void applyAndRecord_AllSettings();
 	void recordChange(const StateChange& stateChange);
 
 	State getCurrentState() const;

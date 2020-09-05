@@ -5,6 +5,9 @@
 
 #include "Settings/ColorSettings.h"
 
+#include "StateModifier.h"
+#include "Recording/StateChange.h"
+
 #define ACTUAL_POS_ID 0
 #define REST_POS_ID 1
 
@@ -14,7 +17,8 @@ ParticleSystem::ParticleSystem()
       m_colorsSSBO(2, GL_STATIC_DRAW),
       m_physicsShader("internal-shaders/physics.comp"),
       m_colorGradientComputeShader("internal-shaders/colorGradient.comp"),
-      m_hueGradientComputeShader("internal-shaders/hueGradient.comp")
+      m_hueGradientComputeShader("internal-shaders/hueGradient.comp"),
+      m_setAllRestPositionsComputeShader("internal-shaders/setAllRestPositions.comp")
 {
     // Vertex buffer
     GLCall(glGenBuffers(1, &m_vboID));
@@ -86,6 +90,9 @@ void ParticleSystem::applyNbParticles(unsigned int newNbParticles, const ColorSe
         m_hueGradientComputeShader.get().bind();
         m_hueGradientComputeShader.get().setUniform1i("u_NbOfParticles", m_nbParticles);
         m_hueGradientComputeShader.get().unbind();
+        m_setAllRestPositionsComputeShader.get().bind();
+        m_setAllRestPositionsComputeShader.get().setUniform1i("u_NbOfParticles", m_nbParticles);
+        m_setAllRestPositionsComputeShader.get().unbind();
         // Colors
         applyParticleColors(colorSettings);
     }
@@ -108,4 +115,11 @@ void ParticleSystem::applyParticleColors(const ColorSettingsValues& colorSetting
         m_colorGradientComputeShader.get().setUniform3f("colorEnd",   colorSettings.particleColorEnd);
         m_colorGradientComputeShader.compute(m_nbParticles);
     }
+}
+
+void ParticleSystem::applyAndRecord_SetAllRestPositions(const glm::vec2& position, StateModifier& stateModifier) {
+    m_setAllRestPositionsComputeShader.get().bind();
+    m_setAllRestPositionsComputeShader.get().setUniform2f("u_position", position);
+    m_setAllRestPositionsComputeShader.compute(m_nbParticles);
+    stateModifier.recordChange({ StateChangeType::Mouse_SetAllRestPositions, position });
 }

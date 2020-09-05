@@ -18,11 +18,16 @@ StateModifier::StateModifier(ParticleSystem& particleSystem, SettingsManager& se
 	  m_mouseInteractions(mouseInteractions)
 {}
 
-void StateModifier::applyAndRecordAllSettings() {
+void StateModifier::applyAndRecord_AllSettings() {
 	ShaderPipeline& physicsCompute = m_particleSystem.physicsComputeShader();
 	physicsCompute.bind();
 	m_settingsManager.get().applyAndRecord(*this);
 	physicsCompute.unbind();
+}
+
+
+void StateModifier::applyAndRecord_CurrentAction() {
+	m_configManager.applyAndRecord_ActionRef(m_configManager.getCurrentConfigAsActionRef(), *this);
 }
 
 void StateModifier::setApplyAndRecord(const StateChange& stateChange) {
@@ -165,6 +170,9 @@ void StateModifier::setApplyAndRecord(const StateChange& stateChange) {
 	case StateChangeType::Mouse_Burst:
 		m_mouseInteractions.setBurst(std::get<glm::vec3>(stateChange.value));
 		break;
+	case StateChangeType::Mouse_SetAllRestPositions:
+		m_particleSystem.applyAndRecord_SetAllRestPositions(std::get<glm::vec2>(stateChange.value), *this);
+		break;
 	default:
 		assert(false && "[StateModifier::setApplyAndRecord] Forgot a case !");
 	}
@@ -212,5 +220,5 @@ void StateModifier::setApplyAndRecord(const State& state) {
 	m_settingsManager.get().physics()   .setValues(state.physicsValues);
 	m_settingsManager.get().wind()      .setValues(state.windValues);
 	m_settingsManager.get().wind()      .setDirection(state.windDirectionAngle);
-	applyAndRecordAllSettings();
+	applyAndRecord_AllSettings();
 }

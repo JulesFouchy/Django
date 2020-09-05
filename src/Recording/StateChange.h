@@ -44,7 +44,8 @@ enum class StateChangeType {
 	Random_Seed,
 	Random_XYSeed,
 	Mouse_ForceField,
-	Mouse_Burst
+	Mouse_Burst,
+	Mouse_SetAllRestPositions
 };
 
 using StateChangeValue = std::variant <

@@ -29,7 +29,7 @@ App::App(SDL_Window* window)
 }
 
 void App::onInit() {
-	m_stateModifier.applyAndRecordAllSettings();
+	m_stateModifier.applyAndRecord_AllSettings();
 }
 
 void App::onLoopIteration() {
@@ -41,6 +41,9 @@ void App::onLoopIteration() {
 	m_settingsManager.get().wind().setWindOffsetInShader(m_particleSystem.physicsComputeShader(), m_recordManager.clock().time());
 	// Send mouse to physics compute shader
 	m_mouseInteractions.update(m_stateModifier);
+	// Move all particles towars mouse if wheel is down
+	if (ImGui::IsMouseDown(ImGuiMouseButton_Middle))
+		m_particleSystem.applyAndRecord_SetAllRestPositions(Input::GetMouseInNormalizedRatioSpace(), m_stateModifier);
 	// Apply physics
 	m_particleSystem.updatePositions();
 	m_particleSystem.physicsComputeShader().unbind();
@@ -115,7 +118,15 @@ void App::onEvent(const SDL_Event& e) {
 
 	case SDL_MOUSEBUTTONUP:
 		if (!ImGui::GetIO().WantCaptureMouse) {
+			if (e.button.button == SDL_BUTTON_LEFT) {
 
+			}
+			else if (e.button.button == SDL_BUTTON_RIGHT) {
+
+			}
+			else if (e.button.button == SDL_BUTTON_MIDDLE) {
+				m_stateModifier.applyAndRecord_CurrentAction();
+			}
 		}
 		break;
 
