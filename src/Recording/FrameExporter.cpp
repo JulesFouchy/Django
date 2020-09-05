@@ -36,19 +36,21 @@ void FrameExporter::stopExporting(Renderer& renderer, std::unique_ptr<Clock>& cl
 }
 
 void FrameExporter::exportFrame() {
-	//
+	// Get pixel data
 	m_renderBuffer.bind();
 	unsigned char* data = new unsigned char[4 * m_width * m_height];
 	glReadPixels(0, 0, m_width, m_height, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	m_renderBuffer.unbind();
+	// Write png
 	stbi_flip_vertically_on_write(1);
 	std::string filepath = m_exportFolderPath + "/" + m_prefix + MyString::ToString(m_frameCount, m_maxNbDigitsOfFrameCount) + ".png";
 	stbi_write_png(filepath.c_str(), m_width, m_height, 4, data, 0);
 	delete[] data;
-	m_renderBuffer.unbind();
-	m_frameCount++;
-	//
+	// Measure frame time
 	m_framesTime.push((SDL_GetPerformanceCounter() - m_lastSDLCounter) / (float)SDL_GetPerformanceFrequency());
 	m_lastSDLCounter = SDL_GetPerformanceCounter();
+	//
+	m_frameCount++;
 }
 
 void FrameExporter::update(Renderer& renderer, std::unique_ptr<Clock>& clock) {
