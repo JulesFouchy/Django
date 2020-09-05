@@ -21,9 +21,11 @@ void FrameExporter::startExporting(Record& selectedRecord, Renderer& renderer, s
 	m_frameCount = 0;
 	float totalExportDuration = selectedRecord.totalDuration() + m_durationAfterLastAction;
 	m_timeExportStops = selectedRecord.initialTime() + totalExportDuration;
+	m_totalNbFrames = std::ceil(totalExportDuration * m_fps);
 	m_maxNbDigitsOfFrameCount = std::ceil(std::log10(totalExportDuration * m_fps));
 	clock = std::make_unique<Clock_FixedTimestep>(m_fps, selectedRecord.initialTime());
 	m_bIsExporting = true;
+	m_framesTime.clear();
 }
 
 void FrameExporter::stopExporting(Renderer& renderer, std::unique_ptr<Clock>& clock) {
@@ -33,6 +35,8 @@ void FrameExporter::stopExporting(Renderer& renderer, std::unique_ptr<Clock>& cl
 }
 
 void FrameExporter::exportFrame() {
+	Uint64 start = SDL_GetPerformanceCounter();
+	//
 	m_renderBuffer.bind();
 	unsigned char* data = new unsigned char[4 * m_width * m_height];
 	glReadPixels(0, 0, m_width, m_height, GL_RGBA, GL_UNSIGNED_BYTE, data);
@@ -42,6 +46,9 @@ void FrameExporter::exportFrame() {
 	delete[] data;
 	m_renderBuffer.unbind();
 	m_frameCount++;
+	//
+	Uint64 end = SDL_GetPerformanceCounter();
+	m_framesTime.push((end - start) / (float)SDL_GetPerformanceFrequency());
 }
 
 void FrameExporter::update(Renderer& renderer, std::unique_ptr<Clock>& clock) {
@@ -61,4 +68,9 @@ void FrameExporter::ImGui() {
 	ImGui::InputFloat("FPS", &m_fps);
 	ImGui::InputFloat("Duration after last action", &m_durationAfterLastAction);
 	ImGui::InputText("Export to", &m_exportFolderPath);
+	if (isExporting()) {
+		ImGui::Text("Remaining time : ");
+		ImGui::SameLine();
+		MyImGui::TimeFormatedHMS(m_framesTime.computeAverage() * (m_totalNbFrames - m_frameCount));
+	}
 }

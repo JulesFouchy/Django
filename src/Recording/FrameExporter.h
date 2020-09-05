@@ -1,6 +1,7 @@
 #pragma once
 
 #include "OpenGL/RenderBuffer.h"
+#include "Helper/CircularBuffer.h"
 
 class Record;
 class Renderer;
@@ -21,8 +22,8 @@ public:
 	void ImGui();
 
 private:
-	unsigned int m_width  = 1920;
-	unsigned int m_height = 1080;
+	unsigned int m_width  = 1280;
+	unsigned int m_height = 720;
 	float m_fps = 30.0f;
 	float m_durationAfterLastAction = 10.0f;
 	std::string m_exportFolderPath;
@@ -31,6 +32,8 @@ private:
 	RenderBuffer m_renderBuffer;
 	float m_timeExportStops;
 	unsigned int m_frameCount;
+	unsigned int m_totalNbFrames;
 	int m_maxNbDigitsOfFrameCount;
+	CircularBuffer<float, 50> m_framesTime;
 	bool m_bIsExporting = false;
 };
