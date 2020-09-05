@@ -26,6 +26,7 @@ void FrameExporter::startExporting(Record& selectedRecord, Renderer& renderer, s
 	clock = std::make_unique<Clock_FixedTimestep>(m_fps, selectedRecord.initialTime());
 	m_bIsExporting = true;
 	m_framesTime.clear();
+	m_lastSDLCounter = SDL_GetPerformanceCounter();
 }
 
 void FrameExporter::stopExporting(Renderer& renderer, std::unique_ptr<Clock>& clock) {
@@ -35,7 +36,6 @@ void FrameExporter::stopExporting(Renderer& renderer, std::unique_ptr<Clock>& cl
 }
 
 void FrameExporter::exportFrame() {
-	Uint64 start = SDL_GetPerformanceCounter();
 	//
 	m_renderBuffer.bind();
 	unsigned char* data = new unsigned char[4 * m_width * m_height];
@@ -47,8 +47,8 @@ void FrameExporter::exportFrame() {
 	m_renderBuffer.unbind();
 	m_frameCount++;
 	//
-	Uint64 end = SDL_GetPerformanceCounter();
-	m_framesTime.push((end - start) / (float)SDL_GetPerformanceFrequency());
+	m_framesTime.push((SDL_GetPerformanceCounter() - m_lastSDLCounter) / (float)SDL_GetPerformanceFrequency());
+	m_lastSDLCounter = SDL_GetPerformanceCounter();
 }
 
 void FrameExporter::update(Renderer& renderer, std::unique_ptr<Clock>& clock) {

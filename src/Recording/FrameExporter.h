@@ -35,5 +35,6 @@ private:
 	unsigned int m_totalNbFrames;
 	int m_maxNbDigitsOfFrameCount;
 	CircularBuffer<float, 50> m_framesTime;
+	Uint64 m_lastSDLCounter;
 	bool m_bIsExporting = false;
 };
