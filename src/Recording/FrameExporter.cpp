@@ -19,7 +19,7 @@ void FrameExporter::startExporting(Record& selectedRecord, Renderer& renderer, s
 	m_renderBuffer.setSize(m_width, m_height);
 	renderer.attachRenderbuffer(m_renderBuffer, bgColor);
 	m_frameCount = 0;
-	float totalExportDuration = selectedRecord.totalDuration() + m_durationAfterLastAction;
+	float totalExportDuration = selectedRecord.totalDuration();
 	m_timeExportStops = selectedRecord.initialTime() + totalExportDuration;
 	m_totalNbFrames = std::ceil(totalExportDuration * m_fps);
 	m_maxNbDigitsOfFrameCount = std::ceil(std::log10(m_totalNbFrames));
@@ -68,7 +68,6 @@ void FrameExporter::ImGui() {
 	MyImGui::InputUInt("H", &m_height);
 	ImGui::PopItemWidth();
 	ImGui::InputFloat("FPS", &m_fps);
-	ImGui::InputFloat("Duration after last action", &m_durationAfterLastAction);
 	ImGui::InputText("Export to", &m_exportFolderPath);
 	if (isExporting()) {
 		ImGui::Text("Remaining time :");
