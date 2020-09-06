@@ -4,10 +4,11 @@
 
 struct ConfigRef;
 class StateModifier;
+class Clock;
 
 class Recorder {
 public:
-	Recorder() = default;
+	Recorder(Clock& clock);
 	~Recorder();
 
 	void recordChange(const StateChange& stateChange, float time);
@@ -17,7 +18,7 @@ public:
 
 private:
 	void start(const State& currentState);
-	void stop();
+	void stop(float currentTime);
 
 	inline bool isRecording() { return m_bIsRecording; }
 
@@ -25,4 +26,6 @@ private:
 	float m_startTime;
 	Record m_record;
 	bool m_bIsRecording = false;
+
+	Clock& m_clock; // we only need it to grab time in the destructor, because we can't pass it as an argument there
 };

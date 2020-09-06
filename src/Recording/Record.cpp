@@ -35,26 +35,17 @@ bool Record::startPlaying(StateModifier& stateModifier) {
 
 bool Record::updatePlaying(float time, StateModifier& stateModifier) {
 	m_prevTime = time;
-	if (m_nextStateChangeIdx < m_stateChangesTimeline.size()) {
-		while (nextStateChangeTS().time < time) {
-			advanceOnTimeline(stateModifier);
-			if (m_nextStateChangeIdx >= m_stateChangesTimeline.size())
-				return false;
-		}
-		return true;
+	while (m_nextStateChangeIdx < m_stateChangesTimeline.size() && nextStateChangeTS().time < time) {
+		advanceOnTimeline(stateModifier);
 	}
-	else {
-		return false;
-	}
+	return time < totalDuration();
 }
 
 bool Record::setTime(float newTime, StateModifier& stateModifier) {
 	float prevTime = m_prevTime;
 	m_prevTime = newTime;
 	stateModifier.setApplyAndRecord(m_startState);
-	if (m_stateChangesTimeline.size() == 0)
-		return false;
-	else {
+	if (m_stateChangesTimeline.size() != 0) {
 		m_nextStateChangeIdx = 0;
 		// Apply everyting up to newTime
 		while (m_nextStateChangeIdx < m_stateChangesTimeline.size() && nextStateChangeTS().time <= newTime) {
@@ -72,8 +63,8 @@ bool Record::setTime(float newTime, StateModifier& stateModifier) {
 				stateChangeIdx++;
 			}
 		}
-		return m_nextStateChangeIdx < m_stateChangesTimeline.size();
 	}
+	return newTime < totalDuration();
 }
 
 const StateChangeTimestamp& Record::nextStateChangeTS() const {
@@ -107,6 +98,7 @@ void Record::serialize(const std::string& folderPath) {
 		cereal::BinaryOutputArchive archive(os);
 		archive(
 			m_startState,
+			m_totalDuration,
 			m_stateChangesTimeline
 		);
 	}
@@ -118,6 +110,7 @@ void Record::deserialize(const std::string& filepath) {
 		cereal::BinaryInputArchive archive(is);
 		archive(
 			m_startState,
+			m_totalDuration,
 			m_stateChangesTimeline
 		);
 	}

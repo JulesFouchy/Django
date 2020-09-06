@@ -12,7 +12,7 @@
 #include "PlayState_Play.h"
 
 RecordManager::RecordManager()
-	: m_clock(std::make_unique<Clock_Realtime>())
+	: m_clock(std::make_unique<Clock_Realtime>()), m_recorder(*m_clock)
 {
 	// Load records
 	if (MyFile::Exists(FolderPath::Records)) {

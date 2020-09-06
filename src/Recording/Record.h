@@ -11,7 +11,9 @@ public:
 	Record(const State& currentState);
 	Record(const std::string& filepath);
 	~Record() = default;
+
 	void init(const State& currentState);
+	inline void onRecordingStops(float currentTime) { m_totalDuration = currentTime - m_startState.timestamp; }
 
 	void recordStateChange(const StateChange& stateChange, float timestamp);
 	bool startPlaying(StateModifier& stateModifier); // Returns true iff we should keep playing the record
@@ -19,7 +21,7 @@ public:
 
 	bool setTime(float newTime, StateModifier& stateModifier); // Returns true iff we should keep playing the record
 	inline float initialTime() const { return m_startState.timestamp; }
-	inline float totalDuration() const { return m_stateChangesTimeline.size() > 0 ? m_stateChangesTimeline.back().time : 0.0f; }
+	inline float totalDuration() const { return m_totalDuration; }
 	inline const std::string& name() const { return m_name; }
 
 	void serialize(const std::string& folderPath);
@@ -33,6 +35,7 @@ private:
 
 private:
 	State m_startState;
+	float m_totalDuration;
 	std::vector<StateChangeTimestamp> m_stateChangesTimeline;
 	size_t m_nextStateChangeIdx;
 	std::string m_name;

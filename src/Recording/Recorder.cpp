@@ -6,10 +6,15 @@
 #include "Constants/FolderPath.h"
 #include "State.h"
 #include "StateModifier.h"
+#include "Clock/Clock.h"
+
+Recorder::Recorder(Clock& clock)
+	: m_clock(clock)
+{}
 
 Recorder::~Recorder() {
 	if (isRecording())
-		stop();
+		stop(m_clock.time());
 }
 
 void Recorder::recordChange(const StateChange& stateChange, float time) {
@@ -23,7 +28,8 @@ void Recorder::start(const State& currentState) {
 	m_bIsRecording = true;
 }
 
-void Recorder::stop() {
+void Recorder::stop(float currentTime) {
+	m_record.onRecordingStops(currentTime);
 	m_bIsRecording = false;
 	// Serialize record
 	MyFile::CreateFolderIfDoesntExist(FolderPath::Records);
@@ -40,7 +46,7 @@ bool Recorder::ImGui(float time, const StateModifier& stateModifier) {
 	else {
 		// Stop recording
 		if (MyImGui::ButtonWithIcon(Textures::Record(), ImVec4(1, 0, 0, 1), ImVec4(1, 0.2, 0.2, 1))) {
-			stop();
+			stop(time);
 			b = true;
 		}
 		// Show duration
