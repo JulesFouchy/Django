@@ -24,7 +24,7 @@ public:
 private:
 	unsigned int m_width  = 1280;
 	unsigned int m_height = 720;
-	float m_fps = 30.0f;
+	float m_fps = 60.0f;
 	float m_durationAfterLastAction = 10.0f;
 	std::string m_exportFolderPath;
 	std::string m_prefix = "";
