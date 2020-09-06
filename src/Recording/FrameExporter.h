@@ -1,7 +1,7 @@
 #pragma once
 
 #include "OpenGL/RenderBuffer.h"
-#include "Helper/CircularBuffer.h"
+#include "Helper/Averager.h"
 
 class Record;
 class Renderer;
@@ -34,7 +34,7 @@ private:
 	unsigned int m_frameCount;
 	unsigned int m_totalNbFrames;
 	int m_maxNbDigitsOfFrameCount;
-	CircularBuffer<float, 50> m_framesTime;
+	Averager<float> m_frameAverageTime;
 	Uint64 m_lastSDLCounter;
 	bool m_bIsExporting = false;
 };

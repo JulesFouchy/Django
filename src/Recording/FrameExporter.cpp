@@ -25,7 +25,7 @@ void FrameExporter::startExporting(Record& selectedRecord, Renderer& renderer, s
 	m_maxNbDigitsOfFrameCount = std::ceil(std::log10(m_totalNbFrames));
 	clock = std::make_unique<Clock_FixedTimestep>(m_fps, selectedRecord.initialTime());
 	m_bIsExporting = true;
-	m_framesTime.clear();
+	m_frameAverageTime.clear();
 	m_lastSDLCounter = SDL_GetPerformanceCounter();
 }
 
@@ -47,7 +47,7 @@ void FrameExporter::exportFrame() {
 	stbi_write_png(filepath.c_str(), m_width, m_height, 4, data, 0);
 	delete[] data;
 	// Measure frame time
-	m_framesTime.push((SDL_GetPerformanceCounter() - m_lastSDLCounter) / (float)SDL_GetPerformanceFrequency());
+	m_frameAverageTime.push((SDL_GetPerformanceCounter() - m_lastSDLCounter) / (float)SDL_GetPerformanceFrequency());
 	m_lastSDLCounter = SDL_GetPerformanceCounter();
 	//
 	m_frameCount++;
@@ -73,7 +73,7 @@ void FrameExporter::ImGui() {
 	if (isExporting()) {
 		ImGui::Text("Remaining time :");
 		ImGui::SameLine();
-		MyImGui::TimeFormatedHMS(m_framesTime.computeAverage() * (m_totalNbFrames - m_frameCount));
+		MyImGui::TimeFormatedHMS(m_frameAverageTime.get() * (m_totalNbFrames - m_frameCount));
 		ImGui::Text(("Exported frames " + MyString::ToString(m_frameCount, m_maxNbDigitsOfFrameCount) + " / " + std::to_string(m_totalNbFrames)).c_str());
 	}
 }
