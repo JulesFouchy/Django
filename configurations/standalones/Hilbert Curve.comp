@@ -68,7 +68,7 @@ vec2 getPosition(uint particleID) {
     vec2 pos;
     mat3 mat = mat3(1.0);
 
-    for (int n = 0; n < u_count; ++n) {
+    for (int n = 0; n < u_UD; ++n) {
         int id = int(floor(t * 4));
         t = fract(t * 4);
         switch(id) {
