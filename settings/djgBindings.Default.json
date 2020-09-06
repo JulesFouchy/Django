@@ -16,101 +16,87 @@
         },
         {
             "actionRef": {
-                "name": "Shape butterfly",
-                "type": 1
-            },
-            "scancode": 24
-        },
-        {
-            "actionRef": {
-                "name": "Shape childishStar",
-                "type": 0
-            },
-            "scancode": 8
-        },
-        {
-            "actionRef": {
-                "name": "Shape circle",
-                "type": 0
-            },
-            "scancode": 20
-        },
-        {
-            "actionRef": {
-                "name": "Shape dessin-1",
-                "type": 1
-            },
-            "scancode": 48
-        },
-        {
-            "actionRef": {
-                "name": "Shape dessin",
-                "type": 1
-            },
-            "scancode": 19
-        },
-        {
-            "actionRef": {
-                "name": "Shape disney",
+                "name": "Butterfly",
                 "type": 1
             },
             "scancode": 12
         },
         {
             "actionRef": {
-                "name": "Shape drawing",
-                "type": 1
-            },
-            "scancode": 47
-        },
-        {
-            "actionRef": {
-                "name": "Shape heart",
+                "name": "Childish Star",
                 "type": 0
             },
-            "scancode": 28
+            "scancode": 8
         },
         {
             "actionRef": {
-                "name": "Shape horse",
-                "type": 1
-            },
-            "scancode": 18
-        },
-        {
-            "actionRef": {
-                "name": "Shape polygon",
+                "name": "Circle",
                 "type": 0
             },
-            "scancode": 26
+            "scancode": 20
         },
         {
             "actionRef": {
-                "name": "Shape spiral",
+                "name": "Heart",
                 "type": 0
             },
-            "scancode": 23
+            "scancode": 24
         },
         {
             "actionRef": {
-                "name": "Shape star",
+                "name": "Polygon",
                 "type": 0
             },
             "scancode": 21
         },
         {
             "actionRef": {
-                "name": "Layout One Centered",
+                "name": "Spiral",
+                "type": 0
+            },
+            "scancode": 28
+        },
+        {
+            "actionRef": {
+                "name": "Star in Circle",
+                "type": 0
+            },
+            "scancode": 23
+        },
+        {
+            "actionRef": {
+                "name": "Star",
+                "type": 0
+            },
+            "scancode": 26
+        },
+        {
+            "actionRef": {
+                "name": "One Centered",
                 "type": 2
             },
             "scancode": 4
         },
         {
             "actionRef": {
-                "name": "Layout Random",
+                "name": "Random",
                 "type": 2
             },
             "scancode": 22
+        },
+        {
+            "actionRef": {
+                "name": "Sierpinski",
+                "type": 2
+            },
+            "scancode": 7
+        },
+        {
+            "actionRef": {
+                "name": "Sierpinski2",
+                "type": 2
+            },
+            "scancode": 9
         },
         {
             "actionRef": {
@@ -121,17 +107,17 @@
         },
         {
             "actionRef": {
-                "name": "Hilbert Curve 2",
-                "type": 3
-            },
-            "scancode": 5
-        },
-        {
-            "actionRef": {
                 "name": "Hilbert Curve",
                 "type": 3
             },
             "scancode": 25
+        },
+        {
+            "actionRef": {
+                "name": "Hilbert Curve2",
+                "type": 3
+            },
+            "scancode": 5
         },
         {
             "actionRef": {
