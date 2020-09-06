@@ -41,14 +41,16 @@ void RecordManager::ImGui(std::unique_ptr<Clock>& clock, StateModifier& stateMod
 			}
 		}
 	}
-	ImGui::Separator();
-	// Recorder
-	if (m_recorder.ImGui(m_clock->time(), stateModifier)) // finished recording
-		m_records.push_back(m_recorder.getRecord());
-	// Record player
-	m_recordPlayer.ImGui(potentialSelectedRecord(), m_clock->time(), stateModifier);
-	// Records list
-	ImGuiRecordsList();
+	if (!m_exporter.isExporting()) {
+		ImGui::Separator();
+		// Recorder
+		if (m_recorder.ImGui(m_clock->time(), stateModifier)) // finished recording
+			m_records.push_back(m_recorder.getRecord());
+		// Record player
+		m_recordPlayer.ImGui(potentialSelectedRecord(), m_clock->time(), stateModifier);
+		// Records list
+		ImGuiRecordsList();
+	}
 }
 
 void RecordManager::update(StateModifier& stateModifier) {

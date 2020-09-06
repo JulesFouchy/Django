@@ -39,11 +39,13 @@ void App::onLoopIteration() {
 	m_particleSystem.physicsComputeShader().setUniform1f("dt", m_recordManager.clock().deltaTime());
 	// Send wind to physics compute shader
 	m_settingsManager.get().wind().setWindOffsetInShader(m_particleSystem.physicsComputeShader(), m_recordManager.clock().time());
-	// Send mouse to physics compute shader
-	m_mouseInteractions.update(m_stateModifier);
-	// Move all particles towars mouse if wheel is down
-	if (ImGui::IsMouseDown(ImGuiMouseButton_Middle))
-		m_particleSystem.applyAndRecord_SetAllRestPositions(Input::GetMouseInNormalizedRatioSpace(), m_stateModifier);
+	if (!m_recordManager.isExporting()) {
+		// Send mouse to physics compute shader
+		m_mouseInteractions.update(m_stateModifier);
+		// Move all particles towars mouse if wheel is down
+		if (ImGui::IsMouseDown(ImGuiMouseButton_Middle))
+			m_particleSystem.applyAndRecord_SetAllRestPositions(Input::GetMouseInNormalizedRatioSpace(), m_stateModifier);
+	}
 	// Apply physics
 	m_particleSystem.updatePositions();
 	m_particleSystem.physicsComputeShader().unbind();
@@ -65,23 +67,25 @@ void App::onLoopIteration() {
 	// ----------------------------
 	// ImGui windows
 	if (m_bShowGUI) {
+		if (!m_recordManager.isExporting()) {
 #ifndef NDEBUG
-		// Debug
-		ImGui::Begin("Debug");
-		MyImGui::TimeFormatedHMS(m_recordManager.clock().time());
-		ImGui::Checkbox("Show Demo Window", &m_bShowImGUIDemoWindow);
-		ImGui::Text("Application average %.1f FPS", ImGui::GetIO().Framerate);
-		ImGui::End();
-		if (m_bShowImGUIDemoWindow) // Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-			ImGui::ShowDemoWindow(&m_bShowImGUIDemoWindow);
+			// Debug
+			ImGui::Begin("Debug");
+			MyImGui::TimeFormatedHMS(m_recordManager.clock().time());
+			ImGui::Checkbox("Show Demo Window", &m_bShowImGUIDemoWindow);
+			ImGui::Text("Application average %.1f FPS", ImGui::GetIO().Framerate);
+			ImGui::End();
+			if (m_bShowImGUIDemoWindow) // Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
+				ImGui::ShowDemoWindow(&m_bShowImGUIDemoWindow);
 #endif
-		// Settings
-		m_stateModifier.settingsManager().get().ImGuiWindows(m_stateModifier);
-		m_configManager.Imgui(m_stateModifier);
-		// Key bindings
-		ImGui::Begin("Key Bindings");
-		m_configManager.ImGuiKeyBindings(m_stateModifier);
-		ImGui::End();
+			// Settings
+			m_stateModifier.settingsManager().get().ImGuiWindows(m_stateModifier);
+			m_configManager.Imgui(m_stateModifier);
+			// Key bindings
+			ImGui::Begin("Key Bindings");
+			m_configManager.ImGuiKeyBindings(m_stateModifier);
+			ImGui::End();
+		}
 		// Recording
 		ImGui::Begin("Recording");
 		m_recordManager.ImGui(m_recordManager.clockPtrRef(), m_stateModifier); // must be called before m_recordManager.update()
@@ -90,82 +94,84 @@ void App::onLoopIteration() {
 }
 
 void App::onEvent(const SDL_Event& e) {
-	switch (e.type) {
+	if (!m_recordManager.isExporting()) {
+		switch (e.type) {
 
-	case SDL_MOUSEMOTION:
-		if (!ImGui::GetIO().WantCaptureMouse) {
-
-		}
-		break;
-
-	case SDL_MOUSEWHEEL:
-		m_configManager.onWheel(e.wheel.y, ImGui::GetIO().WantCaptureMouse, m_stateModifier);
-		break;
-
-	case SDL_MOUSEBUTTONDOWN:
-		if (!ImGui::GetIO().WantCaptureMouse) {
-			if (e.button.button == SDL_BUTTON_LEFT) {
+		case SDL_MOUSEMOTION:
+			if (!ImGui::GetIO().WantCaptureMouse) {
 
 			}
-			else if (e.button.button == SDL_BUTTON_RIGHT) {
+			break;
 
+		case SDL_MOUSEWHEEL:
+			m_configManager.onWheel(e.wheel.y, ImGui::GetIO().WantCaptureMouse, m_stateModifier);
+			break;
+
+		case SDL_MOUSEBUTTONDOWN:
+			if (!ImGui::GetIO().WantCaptureMouse) {
+				if (e.button.button == SDL_BUTTON_LEFT) {
+
+				}
+				else if (e.button.button == SDL_BUTTON_RIGHT) {
+
+				}
+				else if (e.button.button == SDL_BUTTON_MIDDLE) {
+
+				}
 			}
-			else if (e.button.button == SDL_BUTTON_MIDDLE) {
+			break;
 
+		case SDL_MOUSEBUTTONUP:
+			if (!ImGui::GetIO().WantCaptureMouse) {
+				if (e.button.button == SDL_BUTTON_LEFT) {
+
+				}
+				else if (e.button.button == SDL_BUTTON_RIGHT) {
+
+				}
+				else if (e.button.button == SDL_BUTTON_MIDDLE) {
+					m_stateModifier.applyAndRecord_CurrentAction();
+				}
 			}
-		}
-		break;
+			break;
 
-	case SDL_MOUSEBUTTONUP:
-		if (!ImGui::GetIO().WantCaptureMouse) {
-			if (e.button.button == SDL_BUTTON_LEFT) {
 
+		case SDL_KEYDOWN:
+			if (e.key.keysym.scancode == SDL_SCANCODE_F11)
+				switchFullScreenMode();
+			if (e.key.keysym.scancode == SDL_SCANCODE_ESCAPE && m_bFullScreen)
+				switchFullScreenMode();
+			if (!ImGui::GetIO().WantTextInput) {
+				if (e.key.keysym.sym == 'h' && Input::KeyIsDown(SDL_SCANCODE_LCTRL))
+					m_bShowGUI = !m_bShowGUI;
+				else {
+					m_configManager.onKeyPressed(e.key.keysym.scancode, e.key.keysym.sym, m_stateModifier);
+				}
 			}
-			else if (e.button.button == SDL_BUTTON_RIGHT) {
+			break;
 
+		case SDL_KEYUP:
+			if (!ImGui::GetIO().WantTextInput) {
+				if (!(e.key.keysym.sym == 'h') || !Input::KeyIsDown(SDL_SCANCODE_LCTRL))
+					m_configManager.onKeyUp(e.key.keysym.scancode);
 			}
-			else if (e.button.button == SDL_BUTTON_MIDDLE) {
-				m_stateModifier.applyAndRecord_CurrentAction();
+			break;
+
+		case SDL_WINDOWEVENT:
+			switch (e.window.event) {
+			case SDL_WINDOWEVENT_RESIZED:
+				onWindowResize();
+				break;
 			}
-		}
-		break;
+			break;
 
+		case SDL_QUIT:
+			exit();
+			break;
 
-	case SDL_KEYDOWN:
-		if (e.key.keysym.scancode == SDL_SCANCODE_F11)
-			switchFullScreenMode();
-		if (e.key.keysym.scancode == SDL_SCANCODE_ESCAPE && m_bFullScreen)
-			switchFullScreenMode();
-		if (!ImGui::GetIO().WantTextInput) {
-			if (e.key.keysym.sym == 'h' && Input::KeyIsDown(SDL_SCANCODE_LCTRL))
-				m_bShowGUI = !m_bShowGUI;
-			else {
-				m_configManager.onKeyPressed(e.key.keysym.scancode, e.key.keysym.sym, m_stateModifier);
-			}
-		}
-		break;
-
-	case SDL_KEYUP:
-		if (!ImGui::GetIO().WantTextInput) {
-			if (!(e.key.keysym.sym == 'h') || !Input::KeyIsDown(SDL_SCANCODE_LCTRL))
-				m_configManager.onKeyUp(e.key.keysym.scancode);
-		}
-		break;
-
-	case SDL_WINDOWEVENT:
-		switch (e.window.event) {
-		case SDL_WINDOWEVENT_RESIZED:
-			onWindowResize();
+		default:
 			break;
 		}
-		break;
-
-	case SDL_QUIT:
-		exit();
-		break;
-
-	default:
-		break;
 	}
 }
 

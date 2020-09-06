@@ -62,14 +62,16 @@ void FrameExporter::update(Renderer& renderer, std::unique_ptr<Clock>& clock) {
 }
 
 void FrameExporter::ImGui() {
-	ImGui::Text("Resolution : "); ImGui::SameLine();
-	ImGui::PushItemWidth(50);
-	MyImGui::InputUInt("W", &m_width); ImGui::SameLine();
-	MyImGui::InputUInt("H", &m_height);
-	ImGui::PopItemWidth();
-	ImGui::InputFloat("FPS", &m_fps);
-	ImGui::InputText("Export to", &m_exportFolderPath);
-	if (isExporting()) {
+	if (!isExporting()) {
+		ImGui::Text("Resolution : "); ImGui::SameLine();
+		ImGui::PushItemWidth(50);
+		MyImGui::InputUInt("W", &m_width); ImGui::SameLine();
+		MyImGui::InputUInt("H", &m_height);
+		ImGui::PopItemWidth();
+		ImGui::InputFloat("FPS", &m_fps);
+		ImGui::InputText("Export to", &m_exportFolderPath);
+	}
+	else {
 		ImGui::Text("Remaining time :");
 		ImGui::SameLine();
 		MyImGui::TimeFormatedHMS(m_frameAverageTime.get() * (m_totalNbFrames - m_frameCount));
