@@ -25,6 +25,7 @@ RecordManager::RecordManager()
 
 void RecordManager::ImGui(std::unique_ptr<Clock>& clock, StateModifier& stateModifier) {
 	// Exporter
+	m_exporter.ImGui();
 	if (hasARecordSelected()) {
 		if (!m_exporter.isExporting()) {
 			if (ImGui::Button("Export")) {
@@ -40,7 +41,6 @@ void RecordManager::ImGui(std::unique_ptr<Clock>& clock, StateModifier& stateMod
 			}
 		}
 	}
-	m_exporter.ImGui();
 	ImGui::Separator();
 	// Recorder
 	if (m_recorder.ImGui(m_clock->time(), stateModifier)) // finished recording
