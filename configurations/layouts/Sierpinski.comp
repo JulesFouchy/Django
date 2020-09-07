@@ -64,5 +64,6 @@ vec2 getPosition(uint particleID) {
 		}
 	}
 
-	return 0.9 * shape(t, (transform * vec3(0., 0., 1.)).xy, radius, u_wheel * 3.141592653 / 6.0);
+	float scale = 0.1 * u_shiftWheel + 0.9;
+	return scale * shape(t, (transform * vec3(0., 0., 1.)).xy, radius, u_wheel * 3.141592653 / 6.0);
 }
