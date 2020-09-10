@@ -22,7 +22,8 @@ App::App(SDL_Window* window)
 	m_particlePipeline.addShader(ShaderType::Fragment, "internal-shaders/particle.frag");
 	m_particlePipeline.createProgram();
 	//
-	onWindowResize();
+	m_settingsManager.get().partSystem().applyAndRecord_NbParticles(m_stateModifier); // Very important. Makes sure the partSystem SSBOs are initialized before applying any config
+	onWindowResize(); // Also applies the current config
 	glEnable(GL_DEPTH_TEST);
 	// glEnable(GL_BLEND); // This is already handled by Alpha Trail Settings
 	glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
