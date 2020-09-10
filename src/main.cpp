@@ -101,10 +101,12 @@ int main(int argc, char *argv[]) {
 		Textures::_LoadAll();
 
 		// ------ Actual App
-		App app(window);
-		while (app._isRunning()) {
-			app._loopIteration();
-		}
+		{
+			App app(window);
+			while (app._isRunning()) {
+				app._loopIteration();
+			}
+		} // Needs to be in a scope so that app is destructed here. Otherwise console won't close
 
 		// ------ Shutdown
 		Textures::_DestroyAll();
