@@ -162,6 +162,10 @@ void App::onEvent(const SDL_Event& e) {
 			case SDL_WINDOWEVENT_RESIZED:
 				onWindowResize();
 				break;
+			case SDL_WINDOWEVENT_CLOSE:
+				if (e.window.windowID == SDL_GetWindowID(m_window))
+					exit();
+				break;
 			}
 			break;
 
