@@ -11,7 +11,7 @@ namespace MyString {
 	std::string ToString(T val, int minNbChars = -1) { // adds 0s to the left to reach minNbChars (if the latter isn't -1)
 		std::string str = std::to_string(val);
 		if (minNbChars != -1) {
-			int dn = minNbChars - str.size();
+			int dn = minNbChars - static_cast<int>(str.size());
 			if (dn > 0) {
 				str = std::string(dn, '0') + str;
 			}

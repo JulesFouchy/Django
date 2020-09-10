@@ -3,7 +3,7 @@
 Clock_FixedTimestep::Clock_FixedTimestep(float fps, float initialTime)
     : m_dt(1.0f / fps)
 {
-    m_framesCount = std::round(initialTime * fps);
+    m_framesCount = static_cast<unsigned int>(std::round(initialTime * fps));
 }
 
 float Clock_FixedTimestep::deltaTime() const {
@@ -15,7 +15,7 @@ float Clock_FixedTimestep::time() const {
 }
 
 void Clock_FixedTimestep::setTime(float newTime) {
-    m_framesCount = round(newTime / m_dt);
+    m_framesCount = static_cast<unsigned int>(round(newTime / m_dt));
 }
 
 void Clock_FixedTimestep::update() {

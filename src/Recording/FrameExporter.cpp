@@ -21,8 +21,8 @@ void FrameExporter::startExporting(Record& selectedRecord, Renderer& renderer, s
 	m_frameCount = 0;
 	float totalExportDuration = selectedRecord.totalDuration();
 	m_timeExportStops = selectedRecord.initialTime() + totalExportDuration;
-	m_totalNbFrames = std::ceil(totalExportDuration * m_fps);
-	m_maxNbDigitsOfFrameCount = std::ceil(std::log10(m_totalNbFrames));
+	m_totalNbFrames = static_cast<unsigned int>(std::ceil(totalExportDuration * m_fps));
+	m_maxNbDigitsOfFrameCount = static_cast<int>(std::ceil(std::log10(m_totalNbFrames)));
 	clock = std::make_unique<Clock_FixedTimestep>(m_fps, selectedRecord.initialTime());
 	m_bIsExporting = true;
 	m_frameAverageTime.clear();

@@ -51,13 +51,13 @@ void FrameBuffer::blitToScreenWithCareToAspectRatio() {
 		// Fit height
 		float halfW = DisplayInfos::Height() * ratio * 0.5f;
 		float c = DisplayInfos::Width() * 0.5f;
-		GLCall(glBlitFramebuffer(0, 0, m_width, m_height, c - halfW, 0, c + halfW, DisplayInfos::Height(), GL_COLOR_BUFFER_BIT, GL_LINEAR));
+		GLCall(glBlitFramebuffer(0, 0, m_width, m_height, static_cast<int>(c - halfW), 0, static_cast<int>(c + halfW), DisplayInfos::Height(), GL_COLOR_BUFFER_BIT, GL_LINEAR));
 	}
 	else {
 		// Fit width
 		float halfH = DisplayInfos::Width() / ratio * 0.5f;
 		float c = DisplayInfos::Height() * 0.5f;
-		GLCall(glBlitFramebuffer(0, 0, m_width, m_height, 0, c - halfH, DisplayInfos::Width(), c + halfH, GL_COLOR_BUFFER_BIT, GL_LINEAR));
+		GLCall(glBlitFramebuffer(0, 0, m_width, m_height, 0, static_cast<int>(c - halfH), DisplayInfos::Width(), static_cast<int>(c + halfH), GL_COLOR_BUFFER_BIT, GL_LINEAR));
 	}
 	//
 	GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));

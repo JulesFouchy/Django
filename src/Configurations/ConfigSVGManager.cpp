@@ -40,14 +40,14 @@ void ConfigSVGManager::addSVGShape(const std::string& svgFilepath) {
 		for (auto path = shape->paths; path != NULL; path = path->next) {
 			for (int i = 0; i < path->npts - 1; i += 3) {
 				float* p = &path->pts[i * 2];
-				m_data.push_back(p[0] / image->height * 2.0 - 1.0);
-				m_data.push_back(1.0 - p[1] / image->height * 2.0);
-				m_data.push_back(p[2] / image->height * 2.0 - 1.0);
-				m_data.push_back(1.0 - p[3] / image->height * 2.0);
-				m_data.push_back(p[4] / image->height * 2.0 - 1.0);
-				m_data.push_back(1.0 - p[5] / image->height * 2.0);
-				m_data.push_back(p[6] / image->height * 2.0 - 1.0);
-				m_data.push_back(1.0 - p[7] / image->height * 2.0);
+				m_data.push_back(p[0] / image->height * 2.0f - 1.0f);
+				m_data.push_back(1.0f - p[1] / image->height * 2.0f);
+				m_data.push_back(p[2] / image->height * 2.0f - 1.0f);
+				m_data.push_back(1.0f - p[3] / image->height * 2.0f);
+				m_data.push_back(p[4] / image->height * 2.0f - 1.0f);
+				m_data.push_back(1.0f - p[5] / image->height * 2.0f);
+				m_data.push_back(p[6] / image->height * 2.0f - 1.0f);
+				m_data.push_back(1.0f - p[7] / image->height * 2.0f);
 			}
 		}
 	}
@@ -56,8 +56,8 @@ void ConfigSVGManager::addSVGShape(const std::string& svgFilepath) {
 	// Init SVG position in ssbo
 	assert(((m_data.size() - m_previousDataSize) % 8 == 0) && "Problem while reading the SVG !");
 	m_svgPositionsInSsbo.emplace_back();
-	m_svgPositionsInSsbo.back().nbCurves = (m_data.size() - m_previousDataSize) / 8;
-	m_svgPositionsInSsbo.back().offsetInSsbo = m_previousDataSize / 8;
+	m_svgPositionsInSsbo.back().nbCurves = static_cast<int>(m_data.size() - m_previousDataSize) / 8;
+	m_svgPositionsInSsbo.back().offsetInSsbo = static_cast<int>(m_previousDataSize) / 8;
 	//
 	m_previousDataSize = m_data.size();
 }

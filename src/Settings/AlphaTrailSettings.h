@@ -9,8 +9,8 @@ struct AlphaTrailSettingsValues {
 	bool bEnabled = true;
 	bool bFixResiduals = false;
 	float decay = 20.0f;
-	float threshold = 0.233;
-	float minAlpha = 0.112;
+	float threshold = 0.233f;
+	float minAlpha = 0.112f;
 
 private:
 	//Serialization

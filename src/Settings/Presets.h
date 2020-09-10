@@ -48,7 +48,7 @@ public:
 			ImGui::Text("as");
 		}
 		else {
-			ImGui::TextColored(ImVec4(0.74, 0.04, 0.04, 1), "Name already used :");
+			ImGui::TextColored(ImVec4(0.74f, 0.04f, 0.04f, 1.f), "Name already used :");
 		}
 		ImGui::SameLine();
 		ImGui::PushID(138571);

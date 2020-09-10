@@ -207,6 +207,7 @@ Configuration& ConfigManager::get() {
     case ConfigType::TEXT:
         return m_textConfig;
     default:
+        spdlog::error("[ConfigManager::get()] Invalid current ConfigType : {}", m_currConfigType);
         break;
     }
 }
@@ -327,6 +328,9 @@ ActionRef ConfigManager::getCurrentConfigAsActionRef() {
             m_textConfig.getName(),
             ActionType::TEXT
         };
+        break;
+    default:
+        spdlog::error("[ConfigManager::getCurrentConfigAsActionRef()] Invalid current ConfigType : {}", m_currConfigType);
         break;
     }
 }

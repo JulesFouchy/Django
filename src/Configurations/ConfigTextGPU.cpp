@@ -60,7 +60,7 @@ void ConfigTextGPU::uploadData() {
 			offset++;
 		}
 	}
-	m_nbLetters = letters.size();
+	m_nbLetters = static_cast<int>(letters.size());
 
 	m_lettersSSBO.uploadData(letters.size(), letters.data());
 	m_offsetsSSBO.uploadData(offsets.size(), offsets.data());

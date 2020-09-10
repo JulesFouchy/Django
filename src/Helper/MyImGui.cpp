@@ -152,12 +152,12 @@ static constexpr int BUTTON_ICON_SIZE = 24;
 static constexpr int BUTTON_FRAME_PADDING = 2;
 
 bool MyImGui::ButtonWithIcon(unsigned int texID, const ImVec4& tintColor, const ImVec4& backgroundColor) {
-	return ImGui::ImageButton((ImTextureID)texID, ImVec2(BUTTON_ICON_SIZE, BUTTON_ICON_SIZE), ImVec2(0, 0), ImVec2(1, 1), BUTTON_FRAME_PADDING, backgroundColor, tintColor);
+	return ImGui::ImageButton((ImTextureID)texID, ImVec2(BUTTON_ICON_SIZE, BUTTON_ICON_SIZE), ImVec2(0.f, 0.f), ImVec2(1.f, 1.f), BUTTON_FRAME_PADDING, backgroundColor, tintColor);
 }
 
 void MyImGui::ButtonWithIconDisabled(unsigned int texID, const char* reasonForDisabling) {
-	const ImVec4 grey = ImVec4(0.35, 0.35, 0.35, 1);
-	ImageFramed(texID, ImVec2(BUTTON_ICON_SIZE, BUTTON_ICON_SIZE), BUTTON_FRAME_PADDING, grey, ImVec4(0, 0, 0, 1), grey);
+	const ImVec4 grey = ImVec4(0.35f, 0.35f, 0.35f, 1.f);
+	ImageFramed(texID, ImVec2(BUTTON_ICON_SIZE, BUTTON_ICON_SIZE), BUTTON_FRAME_PADDING, grey, ImVec4(0.f, 0.f, 0.f, 1.f), grey);
 	Tooltip(reasonForDisabling);
 }
 
