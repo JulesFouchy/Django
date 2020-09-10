@@ -99,16 +99,14 @@ int main(int argc, char *argv[]) {
 
 		Clock_Realtime::Initialize();
 		Textures::_LoadAll();
-		App::Initialize(window);
 
 		// ------ Actual App
-		App::Get().onInit();
-		while (App::Get().isRunning()) {
-			App::Get()._loopIteration();
+		App app(window);
+		while (app._isRunning()) {
+			app._loopIteration();
 		}
 
 		// ------ Shutdown
-		App::ShutDown();
 		Textures::_DestroyAll();
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplSDL2_Shutdown();

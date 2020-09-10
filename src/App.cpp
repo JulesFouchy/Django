@@ -26,9 +26,7 @@ App::App(SDL_Window* window)
 	glEnable(GL_DEPTH_TEST);
 	// glEnable(GL_BLEND); // This is already handled by Alpha Trail Settings
 	glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
-}
-
-void App::onInit() {
+	//
 	m_stateModifier.applyAndRecord_AllSettings();
 }
 
@@ -201,31 +199,17 @@ void App::switchFullScreenMode(){
 	onWindowResize();
 }
 
-void App::beforeShutDown() {
-
-}
-
 /////////////////////////////////////////////////////////////////////////////
 ///////////////////////////// INTERNAL CODE /////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
 
-App* App::m_instance = nullptr;
-
-void App::Initialize(SDL_Window* window) {
-	assert(!m_instance);
-	m_instance = new App(window);
-	if (m_instance == nullptr)
-		spdlog::error("[App::Initialize] Unable to allocate enough memory !");
-}
-
-void App::ShutDown() {
-	m_instance->beforeShutDown();
-	delete m_instance;
-}
-
 void App::_loopIteration() {
 	// Events
-	handleSDLevents();
+	SDL_Event e;
+	while (SDL_PollEvent(&e)) {
+		ImGui_ImplSDL2_ProcessEvent(&e);
+		onEvent(e);
+	}
 	// Start ImGui frame
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(m_window);
@@ -254,12 +238,4 @@ void App::_loopIteration() {
 
 	// End frame
 	SDL_GL_SwapWindow(m_window);
-}
-
-void App::handleSDLevents() {
-	SDL_Event e;
-	while (SDL_PollEvent(&e)) {
-		ImGui_ImplSDL2_ProcessEvent(&e);
-		onEvent(e);
-	}
 }

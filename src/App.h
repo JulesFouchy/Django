@@ -12,12 +12,10 @@
 #include "StateModifier.h"
 
 class App {
-private:
+public:
 	App(SDL_Window* window);
 	~App() = default;
 
-public:
-	void onInit();
 private:
 	void onLoopIteration();
 	void onEvent(const SDL_Event& e);
@@ -25,8 +23,6 @@ private:
 	void onWindowResize();
 	void onRenderTargetModified();
 	void switchFullScreenMode();
-
-	void beforeShutDown();
 
 private:
 	bool m_bShowImGUIDemoWindow;
@@ -49,20 +45,13 @@ private:
  ********************/
 
 public:
-	static void Initialize(SDL_Window* window);
-	static void ShutDown();
-	inline static App& Get() { return *m_instance; }
-
 	void _loopIteration();
-	void handleSDLevents();
+	inline bool _isRunning() const { return m_running; }
 
-	inline SDL_Window* getWindow() const { return m_window; }
-	inline bool isRunning() const { return m_running; }
+private:
 	inline void exit() { m_running = false; }
 
 private:
-	static App* m_instance;
-
 	SDL_Window* m_window;
 	bool m_running;
 };
