@@ -60,6 +60,7 @@ int main(int argc, char *argv[]) {
 			spdlog::critical("[SDL2] OpenGL context is null: {}", SDL_GetError());
 			debug_break();
 		}
+		SDL_GL_MakeCurrent(window, glContext);
 
 		SDL_GL_SetSwapInterval(1);
 
@@ -70,11 +71,8 @@ int main(int argc, char *argv[]) {
 
 		// ------- Initialize ImGUI ------------
 
-#if __APPLE__
-		const char* glslVersion = "#version 150";
-#else
-		const char* glslVersion = "#version 130";
-#endif
+		const char* glslVersion = "#version 430";
+
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 		ImGui::StyleColorsClassic();
