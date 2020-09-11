@@ -22,7 +22,7 @@ void ComputeShader::setSrcCode(const std::string& sourceCode) {
 
 void ComputeShader::compute(unsigned int nbComputations) {
     m_shader.bind();
-    glDispatchCompute(nbComputations / WORK_GROUP_SIZE + 1, 1, 1);
+    glDispatchCompute(nbComputations / WORK_GROUP_SIZE + ((nbComputations % WORK_GROUP_SIZE == 0) ? 0 : 1), 1, 1);
     glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT | GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT);
     m_shader.unbind();
 }
