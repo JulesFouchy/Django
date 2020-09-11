@@ -1,6 +1,6 @@
 #include "ComputeShader.h"
 
-#define WORK_GROUP_SIZE 256
+static constexpr unsigned int WORK_GROUP_SIZE = 256;
 
 ComputeShader::ComputeShader(const std::string& filepath)
 {
