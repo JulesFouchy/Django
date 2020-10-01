@@ -10,9 +10,26 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 ################################ -------- ######
 file(GLOB_RECURSE MY_SOURCES src/*)
+file(GLOB_RECURSE MY_INTERNAL_SHADERS internal-shaders/*)
+file(GLOB_RECURSE MY_CONFIGS configurations/*)
 
 # Recreate folder architecture inside visual studio solution (might work for other IDEs as well)
+# src
 foreach(_source IN ITEMS ${MY_SOURCES})
+    get_filename_component(_source_path "${_source}" PATH)
+    string(REPLACE "${CMAKE_SOURCE_DIR}" "" _group_path "${_source_path}")
+    string(REPLACE "/" "\\" _group_path "${_group_path}")
+    source_group("${_group_path}" FILES "${_source}")
+endforeach()
+# internal-shaders
+foreach(_source IN ITEMS ${MY_INTERNAL_SHADERS})
+    get_filename_component(_source_path "${_source}" PATH)
+    string(REPLACE "${CMAKE_SOURCE_DIR}" "" _group_path "${_source_path}")
+    string(REPLACE "/" "\\" _group_path "${_group_path}")
+    source_group("${_group_path}" FILES "${_source}")
+endforeach()
+# configurations
+foreach(_source IN ITEMS ${MY_CONFIGS})
     get_filename_component(_source_path "${_source}" PATH)
     string(REPLACE "${CMAKE_SOURCE_DIR}" "" _group_path "${_source_path}")
     string(REPLACE "/" "\\" _group_path "${_group_path}")
@@ -69,6 +86,7 @@ include_directories(
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
 add_executable(${PROJECT_NAME} ${MY_SOURCES}
     lib/nanosvg/nanosvg.cpp # compile the nanosvg library
+    ${MY_INTERNAL_SHADERS} ${MY_CONFIGS} # include in the VS project so they will appear in the solution explorer
 )
 target_link_libraries(
     ${PROJECT_NAME}
