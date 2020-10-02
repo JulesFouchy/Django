@@ -50,6 +50,7 @@ public:
 
 private:
 	inline void exit() { m_running = false; }
+	void dockspace();
 
 private:
 	SDL_Window* m_window;
