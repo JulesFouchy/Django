@@ -249,7 +249,7 @@ void App::_loopIteration() {
 }
 
 void App::dockspace() {
-	const ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
+	const ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruCentralNode;
 
 	// We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
 	// because it would be confusing to have two docking targets within each others.
@@ -289,7 +289,7 @@ void App::dockspace() {
 	}
 	else
 	{
-
+		spdlog::error("Docking not enabled !");
 	}
 	ImGui::End();
 }
