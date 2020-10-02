@@ -64,7 +64,7 @@ void App::onLoopIteration() {
 	m_particlePipeline.bind();
 	m_particleSystem.draw();
 	// Blit render buffer to screen if needed
-	m_renderer.onRenderEnd(m_settingsManager.get().alphaTrail().getValues());
+	m_renderer.onRenderEnd(m_settingsManager.get().alphaTrail().getValues(), m_corner1, m_corner2);
 	// Export
 	if (m_recordManager.exporter().isExporting())
 		m_recordManager.exporter().exportFrame();
@@ -247,7 +247,7 @@ void App::_loopIteration() {
 	// End frame
 	SDL_GL_SwapWindow(m_window);
 }
-
+#include "imgui/imgui_internal.h"
 void App::dockspace() {
 	const ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruCentralNode;
 
@@ -286,6 +286,14 @@ void App::dockspace() {
 	{
 		ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
 		ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
+		ImGuiDockNode* node = ImGui::DockBuilderGetCentralNode(dockspace_id);
+		int x, y;
+		SDL_GetWindowPosition(m_window, &x, &y);
+		auto h = DisplayInfos::Height();
+		ImVec2 pos = node->Pos;
+		ImVec2 size = node->Size;
+		m_corner1 = { pos.x - x,          h - (node->Pos.y - y + node->Size.y) };
+		m_corner2 = { pos.x - x + size.x, h - (node->Pos.y - y) };
 	}
 	else
 	{

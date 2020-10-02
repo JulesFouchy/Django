@@ -9,8 +9,8 @@ public:
 
 	void bind();
 	void unbind();
-	void blitToScreen();
-	void blitToScreenWithCareToAspectRatio();
+	void blitToScreen(const glm::vec2& corner1, const glm::vec2& corner2);
+	void blitToScreenWithCareToAspectRatio(const glm::vec2& corner1, const glm::vec2& corner2);
 	void blitTo(FrameBuffer& frameBuffer);
 
 	inline unsigned int width()  const { return m_width; }

@@ -51,12 +51,12 @@ void Renderer::onRenderBegin(float dt, const glm::vec3& bgColor, const AlphaTrai
 	}
 }
 
-void Renderer::onRenderEnd(const AlphaTrailSettingsValues& alphaTrail) {
+void Renderer::onRenderEnd(const AlphaTrailSettingsValues& alphaTrail, const glm::vec2& corner1, const glm::vec2& corner2) {
 	if (alphaTrail.bEnabled || m_targetRenderBuffer) {
 		if (m_targetRenderBuffer)
-			renderBuffer().blitToScreenWithCareToAspectRatio();
+			renderBuffer().blitToScreenWithCareToAspectRatio(corner1, corner2);
 		else
-			renderBuffer().blitToScreen();
+			renderBuffer().blitToScreen(corner1, corner2);
 	}
 }
 

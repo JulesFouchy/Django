@@ -40,6 +40,9 @@ private:
 
 	StateModifier m_stateModifier;
 
+	glm::vec2 m_corner1 = glm::vec2(0.0f);
+	glm::vec2 m_corner2 = glm::vec2(0.0f);
+
 /********************
   * INTERNAL CODE *
  ********************/
