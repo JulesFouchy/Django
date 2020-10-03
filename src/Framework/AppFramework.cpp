@@ -25,6 +25,20 @@ void AppFramework::onWindowResize() {
 	glViewport(0, 0, w, h);
 }
 
+void AppFramework::updateRenderArea(ImGuiDockNode* node) {
+	// Position
+	Viewports::RenderArea.setTopLeft(
+		node->Pos.x - Viewports::Window.topLeft().x,
+		node->Pos.y - Viewports::Window.topLeft().y
+	);
+	// Size
+	glm::ivec2 size = { static_cast<int>(node->Size.x), static_cast<int>(node->Size.y) };
+	if (size.x != Viewports::RenderArea.size().x || size.y != Viewports::RenderArea.size().y) {
+		Viewports::RenderArea.setSize(size.x, size.y);
+		m_app.onRenderAreaResized();
+	}
+}
+
 void AppFramework::switchFullScreenMode(){
 	if (m_bFullScreen)
 		SDL_SetWindowFullscreen(m_window, 0);
@@ -70,10 +84,10 @@ void AppFramework::onEvent(SDL_Event e) {
 
 void AppFramework::ImGuiDockspace() {
 	const ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruCentralNode;
-
-	// We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
-	// because it would be confusing to have two docking targets within each others.
-	ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+	ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoBackground
+									| ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse
+									| ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus
+									| ImGuiWindowFlags_NoNavFocus;
 
 	ImGuiViewport* viewport = ImGui::GetMainViewport();
 	ImGui::SetNextWindowPos(viewport->GetWorkPos());
@@ -81,24 +95,11 @@ void AppFramework::ImGuiDockspace() {
 	ImGui::SetNextWindowViewport(viewport->ID);
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-	window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-	window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
-
-	// When using ImGuiDockNodeFlags_PassthruCentralNode, DockSpace() will render our background
-	// and handle the pass-thru hole, so we ask Begin() to not render a background.
-	if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
-		window_flags |= ImGuiWindowFlags_NoBackground;
-
-	// Important: note that we proceed even if Begin() returns false (aka window is collapsed).
-	// This is because we want to keep our DockSpace() active. If a DockSpace() is inactive,
-	// all active windows docked into it will lose their parent and become undocked.
-	// We cannot preserve the docking relationship between an active window and an inactive docking, otherwise
-	// any change of dockspace/settings would lead to windows being stuck in limbo and never being visible.
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+
 	bool bopen = true;
-	ImGui::Begin("DockSpace Demo", &bopen, window_flags);
-	ImGui::PopStyleVar();
-	ImGui::PopStyleVar(2);
+	ImGui::Begin("MyMainDockSpace", &bopen, window_flags);
+	ImGui::PopStyleVar(3);
 
 	// DockSpace
 	ImGuiIO& io = ImGui::GetIO();
@@ -106,21 +107,11 @@ void AppFramework::ImGuiDockspace() {
 	{
 		ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
 		ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
-		ImGuiDockNode* node = ImGui::DockBuilderGetCentralNode(dockspace_id);
-		auto h = Viewports::Window.height();
-		ImVec2 pos = node->Pos;
-		ImVec2 size = node->Size;
-		int x = Viewports::Window.topLeft().x;
-		int y = Viewports::Window.topLeft().y;
-		Viewports::RenderArea.setTopLeft(pos.x - x, pos.y - y);
-		if (size.x != Viewports::RenderArea.width() || size.y != Viewports::RenderArea.height()) {
-			Viewports::RenderArea.setSize(size.x, size.y);
-			m_app.onRenderAreaResize();
-		}
+		updateRenderArea(ImGui::DockBuilderGetCentralNode(dockspace_id));
 	}
 	else
 	{
-		spdlog::error("Docking not enabled !");
+		spdlog::warn("Docking not enabled !");
 	}
 	ImGui::End();
 }

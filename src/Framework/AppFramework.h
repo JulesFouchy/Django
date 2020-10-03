@@ -2,6 +2,8 @@
 
 #include "App.h"
 
+struct ImGuiDockNode;
+
 class AppFramework {
 public:
 	AppFramework(SDL_Window* window, App& app);
@@ -13,6 +15,7 @@ public:
 private:
 	void onWindowMove();
 	void onWindowResize();
+	void updateRenderArea(ImGuiDockNode* node);
 	void switchFullScreenMode();
 	void onEvent(SDL_Event e);
 	void ImGuiDockspace();

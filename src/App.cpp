@@ -155,7 +155,7 @@ void App::onEvent(const SDL_Event& e) {
 	}
 }
 
-void App::onRenderAreaResize() {
+void App::onRenderAreaResized() {
 	m_renderer.onWindowResize(Viewports::RenderArea.width(), Viewports::RenderArea.height());
 	onRenderTargetModified();
 }

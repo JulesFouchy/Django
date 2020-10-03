@@ -17,7 +17,7 @@ public:
 	void update();
 	void onEvent(const SDL_Event& e);
 
-	void onRenderAreaResize();
+	void onRenderAreaResized();
 
 private:
 	void onRenderTargetModified();
