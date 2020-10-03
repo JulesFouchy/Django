@@ -10,15 +10,15 @@ App::App()
 	: m_renderer([this](){onRenderTargetModified();}),
 	  m_stateModifier(m_particleSystem, m_settingsManager, m_configManager, m_renderer, m_recordManager, m_mouseInteractions)
 {
+	glEnable(GL_DEPTH_TEST);
+	// glEnable(GL_BLEND); // This is already handled by Alpha Trail Settings
+	glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 	// Create graphics pipeline for particles
 	m_particlePipeline.addShader(ShaderType::Vertex,   "internal-shaders/particle.vert");
 	m_particlePipeline.addShader(ShaderType::Fragment, "internal-shaders/particle.frag");
 	m_particlePipeline.createProgram();
 	//
 	m_settingsManager.get().partSystem().applyAndRecord_NbParticles(m_stateModifier); // Very important. Makes sure the partSystem SSBOs are initialized before applying any config
-	glEnable(GL_DEPTH_TEST);
-	// glEnable(GL_BLEND); // This is already handled by Alpha Trail Settings
-	glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 	//
 	m_stateModifier.applyAndRecord_AllSettings();
 }
@@ -38,7 +38,7 @@ void App::update() {
 	if (!m_recordManager.isExporting()) {
 		// Send mouse to physics compute shader
 		m_mouseInteractions.update(m_stateModifier);
-		// Move all particles towars mouse if wheel is down
+		// Move all particles towards mouse if wheel is down
 		if (ImGui::IsMouseDown(ImGuiMouseButton_Middle))
 			m_particleSystem.applyAndRecord_SetAllRestPositions(Input::GetMouseInNormalizedRatioSpace(), m_stateModifier);
 	}
@@ -70,10 +70,6 @@ void App::update() {
 			MyImGui::TimeFormatedHMS(m_recordManager.clock().time());
 			ImGui::Checkbox("Show Demo Window", &m_bShowImGUIDemoWindow);
 			ImGui::Text("Application average %.1f FPS", ImGui::GetIO().Framerate);
-			ImGui::Text("TopLeft  : %d %d", Viewports::RenderArea.topLeft().x, Viewports::RenderArea.topLeft().y);
-			ImGui::Text("Size     : %d %d", Viewports::RenderArea.size().x, Viewports::RenderArea.size().y);
-			ImGui::Text("BotLeft  : %d %d", Viewports::RenderArea.botLeft().x, Viewports::RenderArea.botLeft().y);
-			ImGui::Text("TopRight : %d %d", Viewports::RenderArea.topRight().x, Viewports::RenderArea.topRight().y);
 			ImGui::End();
 			if (m_bShowImGUIDemoWindow) // Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
 				ImGui::ShowDemoWindow(&m_bShowImGUIDemoWindow);
@@ -162,10 +158,6 @@ void App::onEvent(const SDL_Event& e) {
 void App::onRenderAreaResize() {
 	m_renderer.onWindowResize(Viewports::RenderArea.width(), Viewports::RenderArea.height());
 	onRenderTargetModified();
-}
-
-void App::onWindowResize() {
-	onRenderAreaResize();
 }
 
 void App::onRenderTargetModified() {

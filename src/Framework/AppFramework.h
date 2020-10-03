@@ -11,12 +11,12 @@ public:
 	inline bool isRunning() const { return m_running; }
 
 private:
-	void switchFullScreenMode();
-	inline void exit() { m_running = false; }
-	void onEvent(SDL_Event e);
-	void dockspace();
 	void onWindowMove();
 	void onWindowResize();
+	void switchFullScreenMode();
+	void onEvent(SDL_Event e);
+	void ImGuiDockspace();
+	inline void exit() { m_running = false; }
 
 private:
 	SDL_Window* m_window;
