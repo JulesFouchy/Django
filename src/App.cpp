@@ -3,7 +3,8 @@
 #include <imgui_impl_sdl.h>
 #include <imgui_impl_opengl3.h>
 
-#include "Helper/DisplayInfos.h"
+#include "Viewports/Viewports.h"
+
 #include "Helper/Input.h"
 #ifndef NDEBUG
 #include "Helper/MyImGui.h"
@@ -186,9 +187,17 @@ void App::onEvent(const SDL_Event& e) {
 }
 
 void App::onWindowResize() {
-	DisplayInfos::RefreshSize(m_window);
-	glViewport(0, 0, DisplayInfos::Width(), DisplayInfos::Height());
-	m_renderer.onWindowResize(DisplayInfos::Width(), DisplayInfos::Height());
+	// Get new window size
+	int w, h;
+	SDL_GetWindowSize(m_window, &w, &h);
+	// Update viewports infos
+	Viewports::Window.setSize(w, h);
+	Viewports::RenderArea.setSize(w, h);
+	// Update glViewport
+	glViewport(0, 0, Viewports::Window.size().x, Viewports::Window.size().y);
+	// Update renderer
+
+	m_renderer.onWindowResize(Viewports::Window.size().x, Viewports::Window.size().y);
 	onRenderTargetModified();
 }
 
@@ -289,7 +298,7 @@ void App::dockspace() {
 		ImGuiDockNode* node = ImGui::DockBuilderGetCentralNode(dockspace_id);
 		int x, y;
 		SDL_GetWindowPosition(m_window, &x, &y);
-		auto h = DisplayInfos::Height();
+		auto h = Viewports::Window.height();
 		ImVec2 pos = node->Pos;
 		ImVec2 size = node->Size;
 		m_corner1 = { pos.x - x,          h - (node->Pos.y - y + node->Size.y) };

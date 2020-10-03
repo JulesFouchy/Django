@@ -1,6 +1,6 @@
 #include "FrameBuffer.h"
 
-#include "Helper/DisplayInfos.h"
+#include "Viewports/Viewports.h"
 
 #include "Debugging/glException.h"
 
@@ -47,18 +47,18 @@ void FrameBuffer::blitToScreenWithCareToAspectRatio(const glm::vec2& pos, const 
 	glClear(GL_COLOR_BUFFER_BIT);
 	// Fit frame buffer as well as possible
 	float ratio = aspectRatio();
-	if (ratio < DisplayInfos::ScreenAspectRatio()) {
+	if (ratio < Viewports::RenderArea.aspectRatio()) {
 		// Fit height
-		float halfW = DisplayInfos::Height() * ratio * 0.5f;
-		float c = DisplayInfos::Width() * 0.5f;
-		GLCall(glBlitFramebuffer(0, 0, m_width, m_height, static_cast<int>(c - halfW), 0, static_cast<int>(c + halfW), DisplayInfos::Height(), GL_COLOR_BUFFER_BIT, GL_LINEAR));
+		float halfW = Viewports::RenderArea.height() * ratio * 0.5f;
+		float c = Viewports::RenderArea.width() * 0.5f;
+		GLCall(glBlitFramebuffer(0, 0, m_width, m_height, static_cast<int>(c - halfW), 0, static_cast<int>(c + halfW), Viewports::RenderArea.height(), GL_COLOR_BUFFER_BIT, GL_LINEAR));
 	}
 	else {
 		// Fit width
-		float halfH = DisplayInfos::Width() / ratio * 0.5f;
-		float c = DisplayInfos::Height() * 0.5f;
+		float halfH = Viewports::RenderArea.width() / ratio * 0.5f;
+		float c = Viewports::RenderArea.height() * 0.5f;
 		// TODO : 
-		GLCall(glBlitFramebuffer(0, 0, m_width, m_height, 0, static_cast<int>(c - halfH), DisplayInfos::Width(), static_cast<int>(c + halfH), GL_COLOR_BUFFER_BIT, GL_LINEAR));
+		GLCall(glBlitFramebuffer(0, 0, m_width, m_height, 0, static_cast<int>(c - halfH), Viewports::RenderArea.width(), static_cast<int>(c + halfH), GL_COLOR_BUFFER_BIT, GL_LINEAR));
 	}
 	//
 	GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));

@@ -1,7 +1,7 @@
 #include "Renderer.h"
 
 #include "Settings/AlphaTrailSettings.h"
-#include "Helper/DisplayInfos.h"
+//#include "Viewports/Viewports.h"
 
 Renderer::Renderer(std::function<void()> renderTargetChangeCallback)
 	: m_fullScreenVAOWithUVs(true), m_renderTargetChangeCallback(renderTargetChangeCallback)
@@ -64,7 +64,7 @@ void Renderer::onWindowResize(unsigned int width, unsigned int height) {
 	m_screenSizeRenderBuffer.setSize(width, height);
 	if (!hasRenderBufferAttached())
 		m_textureFrameBuffer.setSize(width, height);
-	DisplayInfos::SetRenderTargetAspectRatio(aspectRatio());
+	//DisplayInfos::SetRenderTargetAspectRatio(aspectRatio());
 }
 
 void Renderer::attachRenderbuffer(RenderBuffer& renderBuffer, const glm::vec3& bgColor) {
@@ -72,7 +72,7 @@ void Renderer::attachRenderbuffer(RenderBuffer& renderBuffer, const glm::vec3& b
 	m_targetRenderBuffer = &renderBuffer;
 	m_textureFrameBuffer.setSize(renderBuffer.width(), renderBuffer.height());
 	clearRenderBuffer(bgColor);
-	DisplayInfos::SetRenderTargetAspectRatio(aspectRatio());
+	//DisplayInfos::SetRenderTargetAspectRatio(aspectRatio());
 	m_renderTargetChangeCallback();
 }
 
@@ -80,7 +80,7 @@ void Renderer::detachRenderBuffer() {
 	assert(hasRenderBufferAttached());
 	m_targetRenderBuffer = nullptr;
 	m_textureFrameBuffer.setSize(m_screenSizeRenderBuffer.width(), m_screenSizeRenderBuffer.height());
-	DisplayInfos::SetRenderTargetAspectRatio(aspectRatio());
+	//DisplayInfos::SetRenderTargetAspectRatio(aspectRatio());
 	m_renderTargetChangeCallback();
 }
 

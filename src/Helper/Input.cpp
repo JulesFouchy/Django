@@ -1,6 +1,6 @@
 #include "Input.h"
 
-#include "Helper/DisplayInfos.h"
+#include "Viewports/Viewports.h"
 
 bool Input::KeyIsDown(SDL_Scancode key) {
 	const Uint8* state = SDL_GetKeyboardState(NULL);
@@ -15,10 +15,10 @@ glm::vec2 Input::GetMouseInPixels() {
 
 glm::vec2 Input::GetMouseInNormalizedRatioSpace() {
 	glm::vec2 pos = GetMouseInPixels();
-	pos /= DisplayInfos::Height();
+	pos /= Viewports::RenderArea.height();
 	pos.y = 1.0f - pos.y;
 	pos *= 2.0f;
-	pos -= glm::vec2(DisplayInfos::ScreenAspectRatio(), 1.0f);
+	pos -= glm::vec2(Viewports::RenderArea.aspectRatio(), 1.0f);
 	return pos;
 }
 
