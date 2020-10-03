@@ -10,7 +10,6 @@ public:
 	void bind();
 	void unbind();
 	void blitToScreen(const glm::ivec2& botLeft, const glm::ivec2& topRight);
-	void blitToScreenWithCareToAspectRatio(const glm::ivec2& botLeft, const glm::ivec2& topRight);
 	void blitTo(FrameBuffer& frameBuffer);
 
 	inline unsigned int width()  const { return m_width; }

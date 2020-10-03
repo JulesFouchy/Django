@@ -39,31 +39,6 @@ void FrameBuffer::blitToScreen(const glm::ivec2& botLeft, const glm::ivec2& topR
 	GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
 }
 
-void FrameBuffer::blitToScreenWithCareToAspectRatio(const glm::ivec2& botLeft, const glm::ivec2& topRight) {
-	GLCall(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0));
-	GLCall(glBindFramebuffer(GL_READ_FRAMEBUFFER, m_frameBufferId));
-	// Gray background
-	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
-	// Fit frame buffer as well as possible
-	float ratio = aspectRatio();
-	if (ratio < Viewports::RenderArea.aspectRatio()) {
-		// Fit height
-		float halfW = Viewports::RenderArea.height() * ratio * 0.5f;
-		float c = Viewports::RenderArea.width() * 0.5f;
-		GLCall(glBlitFramebuffer(0, 0, m_width, m_height, static_cast<int>(c - halfW), 0, static_cast<int>(c + halfW), Viewports::RenderArea.height(), GL_COLOR_BUFFER_BIT, GL_LINEAR));
-	}
-	else {
-		// Fit width
-		float halfH = Viewports::RenderArea.width() / ratio * 0.5f;
-		float c = Viewports::RenderArea.height() * 0.5f;
-		// TODO : 
-		GLCall(glBlitFramebuffer(0, 0, m_width, m_height, 0, static_cast<int>(c - halfH), Viewports::RenderArea.width(), static_cast<int>(c + halfH), GL_COLOR_BUFFER_BIT, GL_LINEAR));
-	}
-	//
-	GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
-}
-
 void FrameBuffer::blitTo(FrameBuffer& frameBuffer) {
 	GLCall(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, frameBuffer.getFrameBufferId()));
 	GLCall(glBindFramebuffer(GL_READ_FRAMEBUFFER, m_frameBufferId));

@@ -53,10 +53,7 @@ void Renderer::onRenderBegin(float dt, const glm::vec3& bgColor, const AlphaTrai
 
 void Renderer::onRenderEnd(const AlphaTrailSettingsValues& alphaTrail) {
 	if (alphaTrail.bEnabled || m_targetRenderBuffer) {
-		if (m_targetRenderBuffer)
-			renderBuffer().blitToScreenWithCareToAspectRatio(Viewports::SwapYConvention(Viewports::RenderArea.botLeft()), Viewports::SwapYConvention(Viewports::RenderArea.topRight()));
-		else
-			renderBuffer().blitToScreen(Viewports::SwapYConvention(Viewports::RenderArea.botLeft()), Viewports::SwapYConvention(Viewports::RenderArea.topRight()));
+		renderBuffer().blitToScreen(Viewports::SwapYConvention(Viewports::RenderArea.botLeft()), Viewports::SwapYConvention(Viewports::RenderArea.topRight()));
 	}
 }
 
@@ -72,7 +69,7 @@ void Renderer::attachRenderbuffer(RenderBuffer& renderBuffer, const glm::vec3& b
 	m_targetRenderBuffer = &renderBuffer;
 	m_textureFrameBuffer.setSize(renderBuffer.width(), renderBuffer.height());
 	clearRenderBuffer(bgColor);
-	//DisplayInfos::SetRenderTargetAspectRatio(aspectRatio());
+	Viewports::RenderArea.constrainRatio(aspectRatio());
 	m_renderTargetChangeCallback();
 }
 
@@ -80,7 +77,7 @@ void Renderer::detachRenderBuffer() {
 	assert(hasRenderBufferAttached());
 	m_targetRenderBuffer = nullptr;
 	m_textureFrameBuffer.setSize(m_screenSizeRenderBuffer.width(), m_screenSizeRenderBuffer.height());
-	//DisplayInfos::SetRenderTargetAspectRatio(aspectRatio());
+	Viewports::RenderArea.unconstrainRatio();
 	m_renderTargetChangeCallback();
 }
 
@@ -101,6 +98,6 @@ void Renderer::drawFullScreenWithUVs() {
 	GLCall(glDrawArrays(GL_TRIANGLES, 0, 6));
 }
 
-//float Renderer::aspectRatio() const {
-//	return m_targetRenderBuffer ? m_targetRenderBuffer->aspectRatio() : m_screenSizeRenderBuffer.aspectRatio();
-//}
+float Renderer::aspectRatio() const {
+	return m_targetRenderBuffer ? m_targetRenderBuffer->aspectRatio() : m_screenSizeRenderBuffer.aspectRatio();
+}

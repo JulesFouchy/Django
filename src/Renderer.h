@@ -23,7 +23,7 @@ public:
 	void drawFullScreen();
 	void drawFullScreenWithUVs();
 
-	//float aspectRatio() const;
+	float aspectRatio() const;
 
 private:
 	RenderBuffer& renderBuffer();

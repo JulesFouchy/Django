@@ -2,6 +2,7 @@
 
 class RectSize {
 	friend class AppFramework;
+	friend class RectSizePosConstrainedRatio;
 public:
 	RectSize(int width = 0, int height = 0)
 		: m_size(width, height)
