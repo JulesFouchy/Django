@@ -13,7 +13,7 @@ FrameBuffer::~FrameBuffer() {
 	GLCall(glDeleteFramebuffers(1, &m_frameBufferId));
 }
 
-void FrameBuffer::setSize(unsigned int width, unsigned int height) {
+void FrameBuffer::setSize(int width, int height) {
 	m_width = width;
 	m_height = height;
 	destroyAttachments();

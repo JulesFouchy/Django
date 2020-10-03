@@ -12,7 +12,7 @@ DrawOnTextureFramebuffer::~DrawOnTextureFramebuffer() {
 	GLCall(glDeleteFramebuffers(1, &m_frameBufferId));
 }
 
-void DrawOnTextureFramebuffer::setRenderTarget_Texture(unsigned int textureID, unsigned int width, unsigned int height) {
+void DrawOnTextureFramebuffer::setRenderTarget_Texture(unsigned int textureID, int width, int height) {
 	// Bind Framebuffer
 	GLCall(glBindFramebuffer(GL_FRAMEBUFFER, m_frameBufferId));
 	// Set viewport

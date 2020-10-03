@@ -16,7 +16,7 @@ Renderer::Renderer(std::function<void()> renderTargetChangeCallback)
 }
 
 RenderBuffer& Renderer::renderBuffer() {
-	return m_targetRenderBuffer ? *m_targetRenderBuffer : m_screenSizeRenderBuffer;
+	return m_targetRenderBuffer ? *m_targetRenderBuffer : m_renderAreaRenderBuffer;
 }
 
 void Renderer::onRenderBegin(float dt, const glm::vec3& bgColor, const AlphaTrailSettingsValues& alphaTrail) {
@@ -57,11 +57,10 @@ void Renderer::onRenderEnd(const AlphaTrailSettingsValues& alphaTrail) {
 	}
 }
 
-void Renderer::onWindowResize(unsigned int width, unsigned int height) {
-	m_screenSizeRenderBuffer.setSize(width, height);
+void Renderer::onRenderAreaResized(int width, int height) {
+	m_renderAreaRenderBuffer.setSize(width, height);
 	if (!hasRenderBufferAttached())
 		m_textureFrameBuffer.setSize(width, height);
-	//DisplayInfos::SetRenderTargetAspectRatio(aspectRatio());
 }
 
 void Renderer::attachRenderbuffer(RenderBuffer& renderBuffer, const glm::vec3& bgColor) {
@@ -76,7 +75,7 @@ void Renderer::attachRenderbuffer(RenderBuffer& renderBuffer, const glm::vec3& b
 void Renderer::detachRenderBuffer() {
 	assert(hasRenderBufferAttached());
 	m_targetRenderBuffer = nullptr;
-	m_textureFrameBuffer.setSize(m_screenSizeRenderBuffer.width(), m_screenSizeRenderBuffer.height());
+	m_textureFrameBuffer.setSize(m_renderAreaRenderBuffer.width(), m_renderAreaRenderBuffer.height());
 	applyRatioConstraints();
 	// m_renderTargetChangeCallback(); // already called by applyRatioConstraints()
 }
@@ -99,7 +98,7 @@ void Renderer::drawFullScreenWithUVs() {
 }
 
 float Renderer::aspectRatio() const {
-	return m_targetRenderBuffer ? m_targetRenderBuffer->aspectRatio() : m_screenSizeRenderBuffer.aspectRatio();
+	return m_targetRenderBuffer ? m_targetRenderBuffer->aspectRatio() : m_renderAreaRenderBuffer.aspectRatio();
 }
 
 void Renderer::ImGui() {

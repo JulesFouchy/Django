@@ -15,7 +15,7 @@ public:
 	void onRenderBegin(float dt, const glm::vec3& bgColor, const AlphaTrailSettingsValues& alphaTrail);
 	void onRenderEnd(const AlphaTrailSettingsValues& alphaTrail);
 
-	void onWindowResize(unsigned int width, unsigned int height);
+	void onRenderAreaResized(int width, int height);
 	void attachRenderbuffer(RenderBuffer& renderBuffer, const glm::vec3& bgColor);
 	void detachRenderBuffer();
 
@@ -33,7 +33,7 @@ private:
 	void applyRatioConstraints();
 
 private:
-	RenderBuffer m_screenSizeRenderBuffer;        // used to then blit on screen (prevents visual artifacts when applying alpha trail)
+	RenderBuffer m_renderAreaRenderBuffer;        // used to then blit on screen (prevents visual artifacts when applying alpha trail)
 	RenderBuffer* m_targetRenderBuffer = nullptr; // used if we want to render on this render buffer instead of screen e.g. when exporting high res images
 	TextureFrameBuffer m_textureFrameBuffer;      // used to sample the previous frame (used to fix residuals of alpha trail)
 

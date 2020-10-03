@@ -4,7 +4,7 @@ TextureFrameBuffer::~TextureFrameBuffer() {
 	destroyAttachments();
 }
 
-void TextureFrameBuffer::createAttachments(unsigned int width, unsigned int height) {
+void TextureFrameBuffer::createAttachments(int width, int height) {
 	GLCall(glGenTextures(1, &m_colorTextureId));
 	GLCall(glBindTexture(GL_TEXTURE_2D, m_colorTextureId));
 	GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr));
