@@ -27,14 +27,14 @@ void AppFramework::onWindowResize() {
 
 void AppFramework::updateRenderArea(ImGuiDockNode* node) {
 	// Position
-	Viewports::RenderArea.setTopLeft(
+	Viewports::RenderArea.setUnconstrainedTopLeft(
 		node->Pos.x - Viewports::Window.topLeft().x,
 		node->Pos.y - Viewports::Window.topLeft().y
 	);
 	// Size
 	glm::ivec2 size = { static_cast<int>(node->Size.x), static_cast<int>(node->Size.y) };
-	if (size.x != Viewports::RenderArea.size().x || size.y != Viewports::RenderArea.size().y) {
-		Viewports::RenderArea.setSize(size.x, size.y);
+	if (size.x != Viewports::RenderArea.unconstrainedSize().x || size.y != Viewports::RenderArea.unconstrainedSize().y) {
+		Viewports::RenderArea.setUnconstrainedSize(size.x, size.y);
 		m_app.onRenderAreaResized();
 	}
 }

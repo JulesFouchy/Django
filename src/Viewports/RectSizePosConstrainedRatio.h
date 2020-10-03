@@ -26,8 +26,10 @@ private:
 	inline void constrainRatio(float desiredRatio) { m_desiredRatio = desiredRatio; m_bIsRatioConstrained = true; }
 	inline void unconstrainRatio() { m_bIsRatioConstrained = false; }
 
-	inline void setTopLeft(int topLeftX, int topLeftY) { m_sizePos.setTopLeft(topLeftX, topLeftY); }
-	inline void setSize(int width, int height) { m_sizePos.setSize(width, height); }
+	inline void setUnconstrainedTopLeft(int topLeftX, int topLeftY) { m_sizePos.setTopLeft(topLeftX, topLeftY); }
+	inline void setUnconstrainedSize(int width, int height) { m_sizePos.setSize(width, height); }
+
+	inline const glm::ivec2& unconstrainedSize() const { return m_sizePos.size(); }
 
 private:
 	RectSizePos m_sizePos;
