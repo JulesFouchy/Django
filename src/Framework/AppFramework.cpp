@@ -84,7 +84,7 @@ void AppFramework::onEvent(SDL_Event e) {
 
 void AppFramework::ImGuiDockspace() {
 	const ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruCentralNode;
-	ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoBackground
+	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoBackground
 									| ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse
 									| ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus
 									| ImGuiWindowFlags_NoNavFocus;

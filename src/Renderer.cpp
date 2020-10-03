@@ -77,8 +77,8 @@ void Renderer::detachRenderBuffer() {
 	assert(hasRenderBufferAttached());
 	m_targetRenderBuffer = nullptr;
 	m_textureFrameBuffer.setSize(m_screenSizeRenderBuffer.width(), m_screenSizeRenderBuffer.height());
-	Viewports::RenderArea.unconstrainRatio();
-	m_renderTargetChangeCallback();
+	applyRatioConstraints();
+	// m_renderTargetChangeCallback(); // already called by applyRatioConstraints()
 }
 
 void Renderer::clearRenderBuffer(const glm::vec3& clearColor) {
@@ -100,4 +100,23 @@ void Renderer::drawFullScreenWithUVs() {
 
 float Renderer::aspectRatio() const {
 	return m_targetRenderBuffer ? m_targetRenderBuffer->aspectRatio() : m_screenSizeRenderBuffer.aspectRatio();
+}
+
+void Renderer::ImGui() {
+	if (ImGui::Checkbox("Free ratio", &m_bFreeRatio)) {
+		applyRatioConstraints();
+	}
+	if (!m_bFreeRatio) {
+		if (ImGui::SliderFloat("Aspect Ratio", &m_desiredRatio, 0.5f, 2.0f)) {
+			applyRatioConstraints();
+		}
+	}
+}
+
+void Renderer::applyRatioConstraints() {
+	if (m_bFreeRatio)
+		Viewports::RenderArea.unconstrainRatio();
+	else
+		Viewports::RenderArea.constrainRatio(m_desiredRatio);
+	m_renderTargetChangeCallback();
 }

@@ -64,6 +64,16 @@ void App::update() {
 	// ImGui windows
 	if (m_bShowGUI) {
 		if (!m_recordManager.isExporting()) {
+			ImGui::BeginMainMenuBar();
+			if (ImGui::BeginMenu("RenderAreas")) {
+				m_renderer.ImGui();
+				ImGui::EndMenu();
+			}
+			if (ImGui::BeginMenu("Windows")) {
+				ImGui::Text("Hello !");
+				ImGui::EndMenu();
+			}
+			ImGui::EndMainMenuBar();
 #ifndef NDEBUG
 			// Debug
 			ImGui::Begin("Debug");

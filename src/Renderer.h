@@ -25,9 +25,12 @@ public:
 
 	float aspectRatio() const;
 
+	void ImGui();
+
 private:
 	RenderBuffer& renderBuffer();
 	inline bool hasRenderBufferAttached() const { return (bool)m_targetRenderBuffer; }
+	void applyRatioConstraints();
 
 private:
 	RenderBuffer m_screenSizeRenderBuffer;        // used to then blit on screen (prevents visual artifacts when applying alpha trail)
@@ -41,4 +44,7 @@ private:
 	ShaderPipeline m_clearScreenNoResidualsPipeline;
 
 	std::function<void()> m_renderTargetChangeCallback;
+
+	bool m_bFreeRatio = true;
+	float m_desiredRatio = 16.0f / 9.0f;
 };
