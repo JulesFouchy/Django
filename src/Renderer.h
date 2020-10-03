@@ -13,7 +13,7 @@ public:
 	~Renderer() = default;
 
 	void onRenderBegin(float dt, const glm::vec3& bgColor, const AlphaTrailSettingsValues& alphaTrail);
-	void onRenderEnd(const AlphaTrailSettingsValues& alphaTrail, const glm::vec2& corner1, const glm::vec2& corner2);
+	void onRenderEnd(const AlphaTrailSettingsValues& alphaTrail);
 
 	void onWindowResize(unsigned int width, unsigned int height);
 	void attachRenderbuffer(RenderBuffer& renderBuffer, const glm::vec3& bgColor);
@@ -23,7 +23,7 @@ public:
 	void drawFullScreen();
 	void drawFullScreenWithUVs();
 
-	float aspectRatio() const;
+	//float aspectRatio() const;
 
 private:
 	RenderBuffer& renderBuffer();

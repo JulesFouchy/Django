@@ -1,4 +1,4 @@
-#include "App.h"
+#include "Framework/AppFramework.h"
 
 #include <imgui_impl_sdl.h>
 #include <imgui_impl_opengl3.h>
@@ -102,9 +102,10 @@ int main(int argc, char *argv[]) {
 
 		// ------ Actual App
 		{
-			App app(window);
-			while (app._isRunning()) {
-				app._loopIteration();
+			App app;
+			AppFramework appFramework(window, app);
+			while (appFramework.isRunning()) {
+				appFramework.update();
 			}
 		} // Needs to be in a scope so that app is destructed here. Otherwise console won't close
 

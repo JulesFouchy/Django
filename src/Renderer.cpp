@@ -1,7 +1,7 @@
 #include "Renderer.h"
 
 #include "Settings/AlphaTrailSettings.h"
-//#include "Viewports/Viewports.h"
+#include "Viewports/Viewports.h"
 
 Renderer::Renderer(std::function<void()> renderTargetChangeCallback)
 	: m_fullScreenVAOWithUVs(true), m_renderTargetChangeCallback(renderTargetChangeCallback)
@@ -51,12 +51,12 @@ void Renderer::onRenderBegin(float dt, const glm::vec3& bgColor, const AlphaTrai
 	}
 }
 
-void Renderer::onRenderEnd(const AlphaTrailSettingsValues& alphaTrail, const glm::vec2& corner1, const glm::vec2& corner2) {
+void Renderer::onRenderEnd(const AlphaTrailSettingsValues& alphaTrail) {
 	if (alphaTrail.bEnabled || m_targetRenderBuffer) {
 		if (m_targetRenderBuffer)
-			renderBuffer().blitToScreenWithCareToAspectRatio(corner1, corner2);
+			renderBuffer().blitToScreenWithCareToAspectRatio(Viewports::SwapYConvention(Viewports::RenderArea.botLeft()), Viewports::SwapYConvention(Viewports::RenderArea.topRight()));
 		else
-			renderBuffer().blitToScreen(corner1, corner2);
+			renderBuffer().blitToScreen(Viewports::SwapYConvention(Viewports::RenderArea.botLeft()), Viewports::SwapYConvention(Viewports::RenderArea.topRight()));
 	}
 }
 
@@ -101,6 +101,6 @@ void Renderer::drawFullScreenWithUVs() {
 	GLCall(glDrawArrays(GL_TRIANGLES, 0, 6));
 }
 
-float Renderer::aspectRatio() const {
-	return m_targetRenderBuffer ? m_targetRenderBuffer->aspectRatio() : m_screenSizeRenderBuffer.aspectRatio();
-}
+//float Renderer::aspectRatio() const {
+//	return m_targetRenderBuffer ? m_targetRenderBuffer->aspectRatio() : m_screenSizeRenderBuffer.aspectRatio();
+//}

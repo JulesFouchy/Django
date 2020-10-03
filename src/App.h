@@ -13,21 +13,21 @@
 
 class App {
 public:
-	App(SDL_Window* window);
+	App();
 	~App() = default;
 
-private:
-	void onLoopIteration();
+	void update();
 	void onEvent(const SDL_Event& e);
 
+	void onRenderAreaResize();
 	void onWindowResize();
-	void onRenderTargetModified();
-	void switchFullScreenMode();
 
 private:
-	bool m_bShowImGUIDemoWindow;
-	bool m_bFullScreen;
-	bool m_bShowGUI;
+	void onRenderTargetModified();
+
+private:
+	bool m_bShowImGUIDemoWindow = false;
+	bool m_bShowGUI = true;
 
 	ShaderPipeline m_particlePipeline;
 
@@ -38,24 +38,5 @@ private:
 	RecordManager m_recordManager;
 	MouseInteractions m_mouseInteractions;
 
-	StateModifier m_stateModifier;
-
-	glm::vec2 m_corner1 = glm::vec2(0.0f);
-	glm::vec2 m_corner2 = glm::vec2(0.0f);
-
-/********************
-  * INTERNAL CODE *
- ********************/
-
-public:
-	void _loopIteration();
-	inline bool _isRunning() const { return m_running; }
-
-private:
-	inline void exit() { m_running = false; }
-	void dockspace();
-
-private:
-	SDL_Window* m_window;
-	bool m_running;
+	StateModifier m_stateModifier; // must be declared last because it relies on all the systems to be initialized
 };

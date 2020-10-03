@@ -32,14 +32,14 @@ void FrameBuffer::unbind() {
 	GLCall(glViewport(m_prevViewportSettings[0], m_prevViewportSettings[1], m_prevViewportSettings[2], m_prevViewportSettings[3]));
 }
 
-void FrameBuffer::blitToScreen(const glm::vec2& corner1, const glm::vec2& corner2) {
+void FrameBuffer::blitToScreen(const glm::ivec2& botLeft, const glm::ivec2& topRight) {
 	GLCall(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0));
 	GLCall(glBindFramebuffer(GL_READ_FRAMEBUFFER, m_frameBufferId));
-	GLCall(glBlitFramebuffer(0, 0, m_width, m_height, corner1.x, corner1.y, corner2.x, corner2.y, GL_COLOR_BUFFER_BIT, GL_LINEAR));
+	GLCall(glBlitFramebuffer(0, 0, m_width, m_height, botLeft.x, botLeft.y, topRight.x, topRight.y, GL_COLOR_BUFFER_BIT, GL_LINEAR));
 	GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
 }
 
-void FrameBuffer::blitToScreenWithCareToAspectRatio(const glm::vec2& pos, const glm::vec2& size) {
+void FrameBuffer::blitToScreenWithCareToAspectRatio(const glm::ivec2& botLeft, const glm::ivec2& topRight) {
 	GLCall(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0));
 	GLCall(glBindFramebuffer(GL_READ_FRAMEBUFFER, m_frameBufferId));
 	// Gray background
