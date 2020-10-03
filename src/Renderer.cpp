@@ -44,17 +44,14 @@ void Renderer::onRenderBegin(float dt, const glm::vec3& bgColor, const AlphaTrai
 		}
 	}
 	else {
-		if (m_targetRenderBuffer)
-			m_targetRenderBuffer->bind();
+		renderBuffer().bind();
 		glClearColor(bgColor.x, bgColor.y, bgColor.z, 1);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 }
 
 void Renderer::onRenderEnd(const AlphaTrailSettingsValues& alphaTrail) {
-	if (alphaTrail.bEnabled || m_targetRenderBuffer) {
-		renderBuffer().blitToScreen(Viewports::SwapYConvention(Viewports::RenderArea.botLeft()), Viewports::SwapYConvention(Viewports::RenderArea.topRight()));
-	}
+	renderBuffer().blitToScreen(Viewports::SwapYConvention(Viewports::RenderArea.botLeft()), Viewports::SwapYConvention(Viewports::RenderArea.topRight()));
 }
 
 void Renderer::onRenderAreaResized(int width, int height) {
