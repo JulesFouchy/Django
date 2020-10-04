@@ -26,5 +26,5 @@ void DrawOnTextureFramebuffer::setRenderTarget_Screen(){
 	// Unbind FrameBuffer
 	GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
 	// Set viewport
-	glViewport(0, 0, Viewports::Window.width(), Viewports::Window.height());
+	glViewport(0, 0, Viewports::getWindowSize().x, Viewports::getWindowSize().y);
 }

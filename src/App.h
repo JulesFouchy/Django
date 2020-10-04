@@ -19,10 +19,9 @@ public:
 	void update();
 	void onEvent(const SDL_Event& e);
 
-	void onRenderAreaResized();
+	void onRenderSizeChanged();
 
 private:
-	void onRenderTargetModified();
 	void setOutputWindowVisibility(bool isVisible);
 
 private:
@@ -39,7 +38,6 @@ private:
 	MouseInteractions m_mouseInteractions;
 	StateModifier m_stateModifier; // must be declared last because it relies on all the systems to be initialized
 
-	bool m_bShowOutputWindow = false;
 	GLWindow& m_mainGLWindow;
 	GLWindow& m_outputGLWindow;
 };

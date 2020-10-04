@@ -15,11 +15,11 @@ glm::vec2 Input::GetMouseInPixels() {
 
 glm::vec2 Input::GetMouseInNormalizedRatioSpace() {
 	glm::vec2 pos = GetMouseInPixels();
-	pos -= Viewports::RenderArea.topLeft();
-	pos /= Viewports::RenderArea.height();
+	pos -= Viewports::AppView().topLeft();
+	pos /= Viewports::AppView().height();
 	pos.y = 1.0f - pos.y;
 	pos *= 2.0f;
-	pos -= glm::vec2(Viewports::RenderArea.aspectRatio(), 1.0f);
+	pos -= glm::vec2(Viewports::AppView().aspectRatio(), 1.0f);
 	return pos;
 }
 

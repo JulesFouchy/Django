@@ -10,6 +10,7 @@
 #include "Constants/FolderPath.h"
 #include "PlayState_NotStarted.h"
 #include "PlayState_Play.h"
+#include "Viewports/Viewports.h"
 
 RecordManager::RecordManager()
 	: m_clock(std::make_unique<Clock_Realtime>()), m_recorder(*m_clock)
@@ -27,7 +28,7 @@ void RecordManager::ImGui(std::unique_ptr<Clock>& clock, StateModifier& stateMod
 	// Exporter
 	m_exporter.ImGui();
 	if (hasARecordSelected()) {
-		if (!m_exporter.isExporting()) {
+		if (!Viewports::IsExporting()) {
 			if (ImGui::Button("Export")) {
 				m_exporter.startExporting(selectedRecord(), stateModifier.renderer(), clock, stateModifier.settingsManager().get().colors().backgroundColor());
 				selectedRecord().startPlaying(stateModifier);
@@ -41,7 +42,7 @@ void RecordManager::ImGui(std::unique_ptr<Clock>& clock, StateModifier& stateMod
 			}
 		}
 	}
-	if (!m_exporter.isExporting()) {
+	if (!Viewports::IsExporting()) {
 		ImGui::Separator();
 		// Recorder
 		if (m_recorder.ImGui(m_clock->time(), stateModifier)) // finished recording

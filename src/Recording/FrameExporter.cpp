@@ -9,42 +9,45 @@
 #include "Record.h"
 #include "Clock/Clock_FixedTimestep.h"
 #include "Clock/Clock_Realtime.h"
+#include "Viewports/Viewports.h"
+#include "OpenGL/RenderBuffer.h"
 
 FrameExporter::FrameExporter()
 	: m_exportFolderPath(FolderPath::Exports)
-{}
+{
+	Viewports::setExportSize(1280, 720);
+}
 
 void FrameExporter::startExporting(Record& selectedRecord, Renderer& renderer, std::unique_ptr<Clock>& clock, const glm::vec3& bgColor) {
 	MyFile::CreateFolderIfDoesntExist(m_exportFolderPath);
-	m_renderBuffer.setSize(m_width, m_height);
-	renderer.attachRenderbuffer(m_renderBuffer, bgColor);
 	m_frameCount = 0;
 	float totalExportDuration = selectedRecord.totalDuration();
 	m_timeExportStops = selectedRecord.initialTime() + totalExportDuration;
 	m_totalNbFrames = static_cast<unsigned int>(std::ceil(totalExportDuration * m_fps));
 	m_maxNbDigitsOfFrameCount = static_cast<int>(std::ceil(std::log10(m_totalNbFrames)));
 	clock = std::make_unique<Clock_FixedTimestep>(m_fps, selectedRecord.initialTime());
-	m_bIsExporting = true;
+	Viewports::setIsExporting(true);
 	m_frameAverageTime.clear();
 	m_lastSDLCounter = SDL_GetPerformanceCounter();
 }
 
 void FrameExporter::stopExporting(Renderer& renderer, std::unique_ptr<Clock>& clock) {
 	clock = std::make_unique<Clock_Realtime>();
-	renderer.detachRenderBuffer();
-	m_bIsExporting = false;
+	Viewports::setIsExporting(false);
 }
 
-void FrameExporter::exportFrame() {
+void FrameExporter::exportFrame(RenderBuffer& renderBuffer) {
 	// Get pixel data
-	m_renderBuffer.bind();
-	unsigned char* data = new unsigned char[4 * m_width * m_height];
-	glReadPixels(0, 0, m_width, m_height, GL_RGBA, GL_UNSIGNED_BYTE, data);
-	m_renderBuffer.unbind();
+	renderBuffer.bind();
+	int width = renderBuffer.width();
+	int height = renderBuffer.height();
+	unsigned char* data = new unsigned char[4 * width * height];
+	glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	renderBuffer.unbind();
 	// Write png
 	stbi_flip_vertically_on_write(1);
 	std::string filepath = m_exportFolderPath + "/" + m_prefix + MyString::ToString(m_frameCount, m_maxNbDigitsOfFrameCount) + ".png";
-	stbi_write_png(filepath.c_str(), m_width, m_height, 4, data, 0);
+	stbi_write_png(filepath.c_str(), width, height, 4, data, 0);
 	delete[] data;
 	// Measure frame time
 	m_frameAverageTime.push((SDL_GetPerformanceCounter() - m_lastSDLCounter) / (float)SDL_GetPerformanceFrequency());
@@ -54,7 +57,7 @@ void FrameExporter::exportFrame() {
 }
 
 void FrameExporter::update(Renderer& renderer, std::unique_ptr<Clock>& clock) {
-	if (isExporting()) {
+	if (Viewports::IsExporting()) {
 		if (clock->time() > m_timeExportStops) {
 			stopExporting(renderer, clock);
 		}
@@ -62,11 +65,13 @@ void FrameExporter::update(Renderer& renderer, std::unique_ptr<Clock>& clock) {
 }
 
 void FrameExporter::ImGui() {
-	if (!isExporting()) {
+	if (!Viewports::IsExporting()) {
 		ImGui::Text("Resolution : "); ImGui::SameLine();
 		ImGui::PushItemWidth(50);
-		MyImGui::InputUInt("W", &m_width); ImGui::SameLine();
-		MyImGui::InputUInt("H", &m_height);
+		glm::ivec2 size = Viewports::getExportSize();
+		ImGui::InputInt("W", &size.x); ImGui::SameLine();
+		ImGui::InputInt("H", &size.y);
+		Viewports::setExportSize(size.x, size.y);
 		ImGui::PopItemWidth();
 		ImGui::InputFloat("FPS", &m_fps);
 		ImGui::InputText("Export to", &m_exportFolderPath);

@@ -1,7 +1,7 @@
 #pragma once
 
 class RectSize {
-	friend class AppFramework;
+	friend class Viewports;
 	friend class RectSizePosConstrainedRatio;
 public:
 	RectSize(int width = 0, int height = 0)

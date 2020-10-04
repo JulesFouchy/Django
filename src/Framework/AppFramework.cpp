@@ -15,27 +15,26 @@ AppFramework::AppFramework(GLWindow& glWindow, App& app)
 void AppFramework::onWindowMove() {
 	int x, y;
 	SDL_GetWindowPosition(m_glWindow.window, &x, &y);
-	Viewports::Window.setTopLeft(x, y);
+	Viewports::setWindowTopLeft(x, y);
 }
 
 void AppFramework::onWindowResize() {
 	int w, h;
 	SDL_GetWindowSize(m_glWindow.window, &w, &h);
-	Viewports::Window.setSize(w, h);
+	Viewports::setWindowSize(w, h);
 	glViewport(0, 0, w, h);
 }
 
-void AppFramework::updateRenderArea(ImGuiDockNode* node) {
+void AppFramework::updateAppViewSizeAndPos(ImGuiDockNode* node) {
 	// Position
-	Viewports::RenderArea.setUnconstrainedTopLeft(
-		node->Pos.x - Viewports::Window.topLeft().x,
-		node->Pos.y - Viewports::Window.topLeft().y
+	Viewports::setAvailableAppViewTopLeft(
+		node->Pos.x - Viewports::getWindowTopLeft().x,
+		node->Pos.y - Viewports::getWindowTopLeft().y
 	);
 	// Size
 	glm::ivec2 size = { static_cast<int>(node->Size.x), static_cast<int>(node->Size.y) };
-	if (size.x != Viewports::RenderArea.unconstrainedSize().x || size.y != Viewports::RenderArea.unconstrainedSize().y) {
-		Viewports::RenderArea.setUnconstrainedSize(size.x, size.y);
-		m_app.onRenderAreaResized();
+	if (size.x != Viewports::getAvailableAppViewSize().x || size.y != Viewports::getAvailableAppViewSize().y) {
+		Viewports::setAvailableAppViewSize(size.x, size.y);
 	}
 }
 
@@ -93,7 +92,7 @@ void AppFramework::ImGuiDockspace() {
 	{
 		ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
 		ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
-		updateRenderArea(ImGui::DockBuilderGetCentralNode(dockspace_id));
+		updateAppViewSizeAndPos(ImGui::DockBuilderGetCentralNode(dockspace_id));
 	}
 	else
 	{

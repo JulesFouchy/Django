@@ -1,4 +1,77 @@
 #include "Viewports.h"
 
-RectSizePos Viewports::Window;
-RectSizePosConstrainedRatio Viewports::RenderArea;
+RectSizePos Viewports::m_Window;
+RectSizePos Viewports::m_AvailableAppView;
+RectSize Viewports::m_Export;
+RectSize Viewports::m_OutputWindow;
+
+bool Viewports::m_bIsExporting = false;
+bool Viewports::m_bIsOutputWindowOpen = false;
+
+std::function<void()> Viewports::OnRenderSizeChanged = []() {};
+
+RectSize Viewports::RenderSize() {
+	if (m_bIsExporting)
+		return m_Export;
+	else if (m_bIsOutputWindowOpen)
+		return m_OutputWindow;
+	else
+		return AppView();
+}
+
+void Viewports::setIsExporting(bool bIsExporting) {
+	m_bIsExporting = bIsExporting;
+	OnRenderSizeChanged();
+}
+
+void Viewports::setIsOutputWindowOpen(bool bIsOpen) {
+	m_bIsOutputWindowOpen = bIsOpen;
+	if (!m_bIsExporting)
+		OnRenderSizeChanged();
+}
+
+void Viewports::setWindowSize(int width, int height) {
+	m_Window.setSize(width, height);
+}
+
+void Viewports::setAvailableAppViewSize(int width, int height) {
+	m_AvailableAppView.setSize(width, height);
+	if (!m_bIsExporting && !m_bIsOutputWindowOpen)
+		OnRenderSizeChanged();
+}
+
+void Viewports::setExportSize(int width, int height) {
+	m_Export.setSize(width, height);
+}
+
+void Viewports::setOutputWindowSize(int width, int height) {
+	m_OutputWindow.setSize(width, height);
+	if (!m_bIsExporting && m_bIsOutputWindowOpen)
+		OnRenderSizeChanged();
+}
+
+RectSizePos Viewports::AppView() {
+	if (!m_bIsExporting && !m_bIsOutputWindowOpen)
+		return m_AvailableAppView;
+	else {
+		// Get aspect ratios
+		float appViewRatio = m_AvailableAppView.aspectRatio();
+		float aspectRatio;
+		if (m_bIsExporting)
+			aspectRatio = m_Export.aspectRatio();
+		else
+			aspectRatio = m_OutputWindow.aspectRatio();
+		// Compute size
+		RectSizePos res;
+		if (aspectRatio > appViewRatio)
+			res.setSize(m_AvailableAppView.width(), static_cast<int>(m_AvailableAppView.width() / aspectRatio));
+		else
+			res.setSize(static_cast<int>(m_AvailableAppView.height() * aspectRatio), m_AvailableAppView.height());
+		// Compute pos
+		glm::ivec2 center = (m_AvailableAppView.topLeft() + m_AvailableAppView.botRight()) / 2;
+		glm::ivec2 topLeft = center - res.size() / 2;
+		res.setTopLeft(topLeft.x, topLeft.y);
+		//
+		return res;
+	}
+}

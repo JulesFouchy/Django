@@ -3,8 +3,7 @@
 #include "RectSizePos.h"
 
 class RectSizePosConstrainedRatio {
-	friend class AppFramework;
-	friend class Renderer;
+	friend class Viewports;
 public:
 	RectSizePosConstrainedRatio(int width = 0, int height = 0, int topLeftX = 0, int topLeftY = 0)
 		: m_sizePos(width, height, topLeftX, topLeftY)

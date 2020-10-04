@@ -22,8 +22,6 @@ public:
 	inline FrameExporter& exporter() { return m_exporter; }
 	inline Record* potentialSelectedRecord() { return hasARecordSelected() ? &selectedRecord() : nullptr; }
 
-	inline bool isExporting() { return m_exporter.isExporting(); }
-
 private:
 	void ImGuiRecordsList();
 

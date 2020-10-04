@@ -16,7 +16,7 @@ public:
 private:
 	void onWindowMove();
 	void onWindowResize();
-	void updateRenderArea(ImGuiDockNode* node);
+	void updateAppViewSizeAndPos(ImGuiDockNode* node);
 	void onEvent(const SDL_Event& e);
 	void ImGuiDockspace();
 	inline void exit() { m_running = false; }

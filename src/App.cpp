@@ -7,10 +7,11 @@
 #endif
 
 App::App(GLWindow& mainGLWindow, GLWindow& outputGLWindow)
-	: m_renderer([this](){onRenderTargetModified();}),
-	  m_stateModifier(m_particleSystem, m_settingsManager, m_configManager, m_renderer, m_recordManager, m_mouseInteractions),
+	: m_stateModifier(m_particleSystem, m_settingsManager, m_configManager, m_renderer, m_recordManager, m_mouseInteractions),
 	  m_mainGLWindow(mainGLWindow), m_outputGLWindow(outputGLWindow)
 {
+	Viewports::setRenderSizeChangedCallback([this]() {onRenderSizeChanged(); });
+	//
 	glEnable(GL_DEPTH_TEST);
 	// glEnable(GL_BLEND); // This is already handled by Alpha Trail Settings
 	glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
@@ -22,6 +23,10 @@ App::App(GLWindow& mainGLWindow, GLWindow& outputGLWindow)
 	m_settingsManager.get().partSystem().applyAndRecord_NbParticles(m_stateModifier); // Very important. Makes sure the partSystem SSBOs are initialized before applying any config
 	//
 	m_stateModifier.applyAndRecord_AllSettings();
+	// Get output window size
+	int x, y;
+	SDL_GetWindowSize(m_outputGLWindow.window, &x, &y);
+	Viewports::setOutputWindowSize(x, y);
 	// Hide output window
 	outputGLWindow.hide();
 }
@@ -38,7 +43,7 @@ void App::update() {
 	m_particleSystem.physicsComputeShader().setUniform1f("dt", m_recordManager.clock().deltaTime());
 	// Send wind to physics compute shader
 	m_settingsManager.get().wind().setWindOffsetInShader(m_particleSystem.physicsComputeShader(), m_recordManager.clock().time());
-	if (!m_recordManager.isExporting()) {
+	if (!Viewports::IsExporting()) {
 		// Send mouse to physics compute shader
 		m_mouseInteractions.update(m_stateModifier);
 		// Move all particles towards mouse if wheel is down
@@ -58,30 +63,36 @@ void App::update() {
 	m_particlePipeline.bind();
 	m_particleSystem.draw();
 	// Blit render buffer to screen if needed
-	m_renderer.onRenderEnd();
+	m_renderer.renderBuffer().blitToScreen(
+		Viewports::SwapYConvention(Viewports::AppView().botLeft()),
+		Viewports::SwapYConvention(Viewports::AppView().topRight())
+	);
 	//----------------
 	m_outputGLWindow.makeCurrent();
 	glClear(GL_COLOR_BUFFER_BIT); // TODO : remove me once we copy the framebuffer to the whole window
-	m_renderer.onRenderEnd();
+	m_renderer.renderBuffer().blitToScreen(
+		{0, 0},
+		Viewports::OutputWindowSize()
+	);
 	SDL_GL_SwapWindow(m_outputGLWindow.window);
 	m_mainGLWindow.makeCurrent();
 	//--------------------
 	// Export
-	if (m_recordManager.exporter().isExporting())
-		m_recordManager.exporter().exportFrame();
+	if (Viewports::IsExporting())
+		m_recordManager.exporter().exportFrame(m_renderer.renderBuffer());
 	// ----------------------------
 	// ---------- IMGUI -----------
 	// ----------------------------
 	// ImGui windows
 	if (m_bShowGUI) {
-		if (!m_recordManager.isExporting()) {
+		if (!Viewports::IsExporting()) {
 			ImGui::BeginMainMenuBar();
 			if (ImGui::BeginMenu("RenderAreas")) {
 				ImGui::ColorEdit3("Empty space color", &m_clearColor[0]);
-				if (ImGui::Checkbox("Show output window", &m_bShowOutputWindow)) {
-					setOutputWindowVisibility(m_bShowOutputWindow);
+				bool bOutputWindowVisible = Viewports::IsOutputWindowOpen();
+				if (ImGui::Checkbox("Show output window", &bOutputWindowVisible)) {
+					setOutputWindowVisibility(bOutputWindowVisible);
 				}
-				m_renderer.ImGui();
 				ImGui::EndMenu();
 			}
 			if (ImGui::BeginMenu("Windows")) {
@@ -95,6 +106,7 @@ void App::update() {
 			MyImGui::TimeFormatedHMS(m_recordManager.clock().time());
 			ImGui::Checkbox("Show Demo Window", &m_bShowImGUIDemoWindow);
 			ImGui::Text("Application average %.1f FPS", ImGui::GetIO().Framerate);
+			ImGui::Text("Render Size : %d %d", Viewports::RenderSize().width(), Viewports::RenderSize().height());
 			ImGui::End();
 			if (m_bShowImGUIDemoWindow) // Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
 				ImGui::ShowDemoWindow(&m_bShowImGUIDemoWindow);
@@ -115,7 +127,7 @@ void App::update() {
 }
 
 void App::onEvent(const SDL_Event& e) {
-	if (!m_recordManager.isExporting()) {
+	if (!Viewports::IsExporting()) {
 		m_outputGLWindow.checkForFullscreenToggles(e);
 		switch (e.type) {
 
@@ -177,9 +189,13 @@ void App::onEvent(const SDL_Event& e) {
 
 		case SDL_WINDOWEVENT:
 			switch (e.window.event) {
-			//case SDL_WINDOWEVENT_RESIZED:
-			//	onWindowResize();
-			//	break;
+			case SDL_WINDOWEVENT_RESIZED:
+				if (e.window.windowID == SDL_GetWindowID(m_outputGLWindow.window)) {
+					int x, y;
+					SDL_GetWindowSize(m_outputGLWindow.window, &x, &y);
+					Viewports::setOutputWindowSize(x, y);
+				}
+				break;
 			case SDL_WINDOWEVENT_CLOSE:
 				if (e.window.windowID == SDL_GetWindowID(m_outputGLWindow.window))
 					setOutputWindowVisibility(false);
@@ -193,20 +209,16 @@ void App::onEvent(const SDL_Event& e) {
 	}
 }
 
-void App::onRenderAreaResized() {
-	m_renderer.onRenderAreaResized(Viewports::RenderArea.width(), Viewports::RenderArea.height());
-	onRenderTargetModified();
-}
-
-void App::onRenderTargetModified() {
+void App::onRenderSizeChanged() {
+	m_renderer.onRenderSizeChanged();
 	m_particlePipeline.bind();
-	m_particlePipeline.setUniform1f("u_invAspectRatio", 1.0f / Viewports::RenderArea.aspectRatio());
+	m_particlePipeline.setUniform1f("u_invAspectRatio", 1.0f / Viewports::RenderSize().aspectRatio());
 	m_stateModifier.apply(); // some configs depend on the aspect ratio 
 }
 
 void App::setOutputWindowVisibility(bool isVisible) {
-	m_bShowOutputWindow = isVisible;
-	if (m_bShowOutputWindow)
+	Viewports::setIsOutputWindowOpen(isVisible);
+	if (isVisible)
 		m_outputGLWindow.show();
 	else
 		m_outputGLWindow.hide();
