@@ -50,7 +50,7 @@ void Renderer::onRenderBegin(float dt, const glm::vec3& bgColor, const AlphaTrai
 	}
 }
 
-void Renderer::onRenderEnd(const AlphaTrailSettingsValues& alphaTrail) {
+void Renderer::onRenderEnd() {
 	renderBuffer().blitToScreen(Viewports::SwapYConvention(Viewports::RenderArea.botLeft()), Viewports::SwapYConvention(Viewports::RenderArea.topRight()));
 }
 

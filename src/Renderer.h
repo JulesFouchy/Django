@@ -13,7 +13,7 @@ public:
 	~Renderer() = default;
 
 	void onRenderBegin(float dt, const glm::vec3& bgColor, const AlphaTrailSettingsValues& alphaTrail);
-	void onRenderEnd(const AlphaTrailSettingsValues& alphaTrail);
+	void onRenderEnd();
 
 	void onRenderAreaResized(int width, int height);
 	void attachRenderbuffer(RenderBuffer& renderBuffer, const glm::vec3& bgColor);
