@@ -92,6 +92,9 @@ void App::update() {
 				if (ImGui::Checkbox("Show output window", &bIsOutputWindowOpen)) {
 					setIsOutputWindowOpen(bIsOutputWindowOpen);
 				}
+				if (!bIsOutputWindowOpen) {
+					Viewports::ImGuiConstrainAppViewRatio();
+				}
 				ImGui::EndMenu();
 			}
 			if (ImGui::BeginMenu("Windows")) {

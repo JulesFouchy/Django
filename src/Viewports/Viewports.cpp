@@ -8,6 +8,9 @@ RectSize Viewports::m_OutputWindow;
 bool Viewports::m_bIsExporting = false;
 bool Viewports::m_bIsOutputWindowOpen = false;
 
+bool Viewports::m_bConstrainAppViewRatio = false;
+float Viewports::m_appViewConstrainedRatio = 16.0f / 9.0f;
+
 std::function<void()> Viewports::OnRenderSizeChanged = []() {};
 
 RectSize Viewports::RenderSize() {
@@ -51,7 +54,7 @@ void Viewports::setOutputWindowSize(int width, int height) {
 }
 
 RectSizePos Viewports::AppView() {
-	if (!m_bIsExporting && !m_bIsOutputWindowOpen)
+	if (!m_bIsExporting && !m_bIsOutputWindowOpen && !m_bConstrainAppViewRatio)
 		return m_AvailableAppView;
 	else {
 		// Get aspect ratios
@@ -59,8 +62,10 @@ RectSizePos Viewports::AppView() {
 		float aspectRatio;
 		if (m_bIsExporting)
 			aspectRatio = m_Export.aspectRatio();
-		else
+		else if (m_bIsOutputWindowOpen)
 			aspectRatio = m_OutputWindow.aspectRatio();
+		else
+			aspectRatio = m_appViewConstrainedRatio;
 		// Compute size
 		RectSizePos res;
 		if (aspectRatio > appViewRatio)
@@ -73,5 +78,16 @@ RectSizePos Viewports::AppView() {
 		res.setTopLeft(topLeft.x, topLeft.y);
 		//
 		return res;
+	}
+}
+
+void Viewports::ImGuiConstrainAppViewRatio() {
+	if (ImGui::Checkbox("Constrain aspect ratio", &m_bConstrainAppViewRatio)) {
+		OnRenderSizeChanged();
+	}
+	if (m_bConstrainAppViewRatio) {
+		if (ImGui::SliderFloat("Aspect ratio", &m_appViewConstrainedRatio, 0.5f, 2.0f)) {
+			OnRenderSizeChanged();
+		}
 	}
 }

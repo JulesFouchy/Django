@@ -28,6 +28,8 @@ public:
 
 	static inline void setRenderSizeChangedCallback(std::function<void()> callback) { OnRenderSizeChanged = callback; }
 
+	static void ImGuiConstrainAppViewRatio();
+
 private:
 	static std::function<void()> OnRenderSizeChanged;
 
@@ -39,4 +41,7 @@ private:
 
 	static bool m_bIsExporting;        // Owned by Viewports because it needs to know it when deciding what the render size should be
 	static bool m_bIsOutputWindowOpen; // Same as above
+
+	static bool m_bConstrainAppViewRatio;
+	static float m_appViewConstrainedRatio;
 };
