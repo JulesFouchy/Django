@@ -205,7 +205,7 @@ void App::onEvent(const SDL_Event& e) {
 }
 
 void App::onRenderSizeChanged() {
-	m_renderer.onRenderSizeChanged();
+	m_renderer.onRenderSizeChanged(m_settingsManager.get().colors().backgroundColor());
 	m_particlePipeline.bind();
 	m_particlePipeline.setUniform1f("u_invAspectRatio", 1.0f / Viewports::RenderSize().aspectRatio());
 	m_stateModifier.apply(); // some configs depend on the aspect ratio 

@@ -14,7 +14,7 @@ public:
 
 	void onRenderBegin(float dt, const glm::vec3& bgColor, const AlphaTrailSettingsValues& alphaTrail);
 
-	void onRenderSizeChanged();
+	void onRenderSizeChanged(const glm::vec3& bgColor);
 
 	void clearRenderBuffer(const glm::vec3& clearColor);
 	void drawFullScreen();

@@ -46,10 +46,11 @@ void Renderer::onRenderBegin(float dt, const glm::vec3& bgColor, const AlphaTrai
 	}
 }
 
-void Renderer::onRenderSizeChanged() {
+void Renderer::onRenderSizeChanged(const glm::vec3& bgColor) {
 	const glm::ivec2& size = Viewports::RenderSize().size();
 	m_renderBuffer    .setSize(size.x, size.y);
 	m_prevFrameTexture.setSize(size.x, size.y);
+	clearRenderBuffer(bgColor);
 }
 
 void Renderer::clearRenderBuffer(const glm::vec3& clearColor) {
