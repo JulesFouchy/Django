@@ -58,17 +58,9 @@ void App::update() {
 	// Blit render buffer to screen if needed
 	m_renderer.onRenderEnd();
 	//----------------
-	//m_renderer.renderBuffer().blitTo(*m_outputWindowRB);
 	m_outputGLWindow.makeCurrent();
-	int w, h;
-	SDL_GetWindowSize(m_outputGLWindow.window, &w, &h);
-	glViewport(0, 0, w, h);
-	//glClearColor(1., 0., 0., 1.);
-	//glClear(GL_COLOR_BUFFER_BIT);
-	//m_renderer.onRenderEnd(m_settingsManager.get().alphaTrail().getValues());
-	//m_outputWindowRB->blitToScreen({ 0, 0 }, { 1280, 720 });
-	//m_renderer.renderBuffer().blitToScreen({ 0, 0 }, { 1280, 720 });
-	//m_renderer.onRenderEnd();
+	glClear(GL_COLOR_BUFFER_BIT); // TODO : remove me once we copy the framebuffer to the whole window
+	m_renderer.onRenderEnd();
 	SDL_GL_SwapWindow(m_outputGLWindow.window);
 	m_mainGLWindow.makeCurrent();
 	//--------------------
