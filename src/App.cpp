@@ -25,7 +25,7 @@ App::App(GLWindow& mainGLWindow, GLWindow& outputGLWindow)
 }
 
 void App::update() {
-	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+	glClearColor(m_clearColor.r, m_clearColor.g, m_clearColor.b, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 	// ---------------------
 	// ------ PHYSICS ------
@@ -68,7 +68,7 @@ void App::update() {
 	//m_renderer.onRenderEnd(m_settingsManager.get().alphaTrail().getValues());
 	//m_outputWindowRB->blitToScreen({ 0, 0 }, { 1280, 720 });
 	//m_renderer.renderBuffer().blitToScreen({ 0, 0 }, { 1280, 720 });
-	m_renderer.onRenderEnd();
+	//m_renderer.onRenderEnd();
 	SDL_GL_SwapWindow(m_outputGLWindow.window);
 	m_mainGLWindow.makeCurrent();
 	//--------------------
@@ -83,6 +83,7 @@ void App::update() {
 		if (!m_recordManager.isExporting()) {
 			ImGui::BeginMainMenuBar();
 			if (ImGui::BeginMenu("RenderAreas")) {
+				ImGui::ColorEdit3("Empty space color", &m_clearColor[0]);
 				m_renderer.ImGui();
 				ImGui::EndMenu();
 			}

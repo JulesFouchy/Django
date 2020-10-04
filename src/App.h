@@ -27,6 +27,7 @@ private:
 private:
 	bool m_bShowImGUIDemoWindow = false;
 	bool m_bShowGUI = true;
+	glm::vec3 m_clearColor = glm::vec3(0.5f);
 
 	ShaderPipeline m_particlePipeline;
 	ParticleSystem m_particleSystem;
