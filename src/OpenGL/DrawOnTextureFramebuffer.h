@@ -5,7 +5,7 @@ public:
 	DrawOnTextureFramebuffer();
 	~DrawOnTextureFramebuffer();
 
-	void setRenderTarget_Texture(unsigned int textureID, unsigned int width, unsigned int height);
+	void setRenderTarget_Texture(unsigned int textureID, int width, int height);
 	void setRenderTarget_Screen();
 
 protected:

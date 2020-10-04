@@ -1,4 +1,4 @@
-#include "App.h"
+#include "Framework/AppFramework.h"
 
 #include <imgui_impl_sdl.h>
 #include <imgui_impl_opengl3.h>
@@ -48,7 +48,10 @@ int main(int argc, char *argv[]) {
 			"Django",
 			SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
 			1280, 720,
-			SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI
+			SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI 
+#ifdef NDEBUG
+			| SDL_WINDOW_MAXIMIZED
+#endif
 		);
 		if (window == nullptr) {
 			spdlog::critical("[SDL2] Window is null: {}", SDL_GetError());
@@ -102,9 +105,10 @@ int main(int argc, char *argv[]) {
 
 		// ------ Actual App
 		{
-			App app(window);
-			while (app._isRunning()) {
-				app._loopIteration();
+			App app;
+			AppFramework appFramework(window, app);
+			while (appFramework.isRunning()) {
+				appFramework.update();
 			}
 		} // Needs to be in a scope so that app is destructed here. Otherwise console won't close
 

@@ -3,4 +3,4 @@
 
 #pragma once
 #include "./ext/vector_float2.hpp"
-#include "./ext/vector_float2_precision.hpp"
+#include "./ext/vector_int2.hpp"

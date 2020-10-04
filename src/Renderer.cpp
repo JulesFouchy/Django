@@ -1,7 +1,7 @@
 #include "Renderer.h"
 
 #include "Settings/AlphaTrailSettings.h"
-#include "Helper/DisplayInfos.h"
+#include "Viewports/Viewports.h"
 
 Renderer::Renderer(std::function<void()> renderTargetChangeCallback)
 	: m_fullScreenVAOWithUVs(true), m_renderTargetChangeCallback(renderTargetChangeCallback)
@@ -16,7 +16,7 @@ Renderer::Renderer(std::function<void()> renderTargetChangeCallback)
 }
 
 RenderBuffer& Renderer::renderBuffer() {
-	return m_targetRenderBuffer ? *m_targetRenderBuffer : m_screenSizeRenderBuffer;
+	return m_targetRenderBuffer ? *m_targetRenderBuffer : m_renderAreaRenderBuffer;
 }
 
 void Renderer::onRenderBegin(float dt, const glm::vec3& bgColor, const AlphaTrailSettingsValues& alphaTrail) {
@@ -44,27 +44,20 @@ void Renderer::onRenderBegin(float dt, const glm::vec3& bgColor, const AlphaTrai
 		}
 	}
 	else {
-		if (m_targetRenderBuffer)
-			m_targetRenderBuffer->bind();
+		renderBuffer().bind();
 		glClearColor(bgColor.x, bgColor.y, bgColor.z, 1);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 }
 
 void Renderer::onRenderEnd(const AlphaTrailSettingsValues& alphaTrail) {
-	if (alphaTrail.bEnabled || m_targetRenderBuffer) {
-		if (m_targetRenderBuffer)
-			renderBuffer().blitToScreenWithCareToAspectRatio();
-		else
-			renderBuffer().blitToScreen();
-	}
+	renderBuffer().blitToScreen(Viewports::SwapYConvention(Viewports::RenderArea.botLeft()), Viewports::SwapYConvention(Viewports::RenderArea.topRight()));
 }
 
-void Renderer::onWindowResize(unsigned int width, unsigned int height) {
-	m_screenSizeRenderBuffer.setSize(width, height);
+void Renderer::onRenderAreaResized(int width, int height) {
+	m_renderAreaRenderBuffer.setSize(width, height);
 	if (!hasRenderBufferAttached())
 		m_textureFrameBuffer.setSize(width, height);
-	DisplayInfos::SetRenderTargetAspectRatio(aspectRatio());
 }
 
 void Renderer::attachRenderbuffer(RenderBuffer& renderBuffer, const glm::vec3& bgColor) {
@@ -72,16 +65,16 @@ void Renderer::attachRenderbuffer(RenderBuffer& renderBuffer, const glm::vec3& b
 	m_targetRenderBuffer = &renderBuffer;
 	m_textureFrameBuffer.setSize(renderBuffer.width(), renderBuffer.height());
 	clearRenderBuffer(bgColor);
-	DisplayInfos::SetRenderTargetAspectRatio(aspectRatio());
+	Viewports::RenderArea.constrainRatio(aspectRatio());
 	m_renderTargetChangeCallback();
 }
 
 void Renderer::detachRenderBuffer() {
 	assert(hasRenderBufferAttached());
 	m_targetRenderBuffer = nullptr;
-	m_textureFrameBuffer.setSize(m_screenSizeRenderBuffer.width(), m_screenSizeRenderBuffer.height());
-	DisplayInfos::SetRenderTargetAspectRatio(aspectRatio());
-	m_renderTargetChangeCallback();
+	m_textureFrameBuffer.setSize(m_renderAreaRenderBuffer.width(), m_renderAreaRenderBuffer.height());
+	applyRatioConstraints();
+	// m_renderTargetChangeCallback(); // already called by applyRatioConstraints()
 }
 
 void Renderer::clearRenderBuffer(const glm::vec3& clearColor) {
@@ -102,5 +95,24 @@ void Renderer::drawFullScreenWithUVs() {
 }
 
 float Renderer::aspectRatio() const {
-	return m_targetRenderBuffer ? m_targetRenderBuffer->aspectRatio() : m_screenSizeRenderBuffer.aspectRatio();
+	return m_targetRenderBuffer ? m_targetRenderBuffer->aspectRatio() : m_renderAreaRenderBuffer.aspectRatio();
+}
+
+void Renderer::ImGui() {
+	if (ImGui::Checkbox("Free ratio", &m_bFreeRatio)) {
+		applyRatioConstraints();
+	}
+	if (!m_bFreeRatio) {
+		if (ImGui::SliderFloat("Aspect Ratio", &m_desiredRatio, 0.5f, 2.0f)) {
+			applyRatioConstraints();
+		}
+	}
+}
+
+void Renderer::applyRatioConstraints() {
+	if (m_bFreeRatio)
+		Viewports::RenderArea.unconstrainRatio();
+	else
+		Viewports::RenderArea.constrainRatio(m_desiredRatio);
+	m_renderTargetChangeCallback();
 }

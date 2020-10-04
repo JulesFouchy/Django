@@ -4,7 +4,7 @@ RenderBuffer::~RenderBuffer() {
 	destroyAttachments();
 }
 
-void RenderBuffer::createAttachments(unsigned int width, unsigned int height) {
+void RenderBuffer::createAttachments(int width, int height) {
 	// Color attachment
 	GLCall(glGenRenderbuffers(1, &m_colorRenderBufferId));
 	GLCall(glBindRenderbuffer(GL_RENDERBUFFER, m_colorRenderBufferId));

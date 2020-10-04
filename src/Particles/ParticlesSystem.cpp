@@ -1,6 +1,5 @@
 #include "ParticlesSystem.h"
 
-#include "Helper/DisplayInfos.h"
 #include "Helper/Random.h"
 
 #include "Settings/ColorSettings.h"
