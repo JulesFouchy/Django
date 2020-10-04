@@ -22,7 +22,7 @@ public:
 	void onRenderSizeChanged();
 
 private:
-	void setOutputWindowVisibility(bool isVisible);
+	void setIsOutputWindowOpen(bool isOpen);
 
 private:
 	bool m_bShowImGUIDemoWindow = false;

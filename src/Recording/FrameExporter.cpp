@@ -68,10 +68,11 @@ void FrameExporter::ImGui() {
 	if (!Viewports::IsExporting()) {
 		ImGui::Text("Resolution : "); ImGui::SameLine();
 		ImGui::PushItemWidth(50);
-		glm::ivec2 size = Viewports::getExportSize();
-		ImGui::InputInt("W", &size.x); ImGui::SameLine();
-		ImGui::InputInt("H", &size.y);
-		Viewports::setExportSize(size.x, size.y);
+		unsigned int w = static_cast<unsigned int>(Viewports::getExportSize().x);
+		unsigned int h = static_cast<unsigned int>(Viewports::getExportSize().y);
+		MyImGui::InputUInt("W", &w); ImGui::SameLine();
+		MyImGui::InputUInt("H", &h);
+		Viewports::setExportSize(static_cast<int>(w), static_cast<int>(h));
 		ImGui::PopItemWidth();
 		ImGui::InputFloat("FPS", &m_fps);
 		ImGui::InputText("Export to", &m_exportFolderPath);

@@ -67,7 +67,7 @@ RectSizePos Viewports::AppView() {
 			res.setSize(m_AvailableAppView.width(), static_cast<int>(m_AvailableAppView.width() / aspectRatio));
 		else
 			res.setSize(static_cast<int>(m_AvailableAppView.height() * aspectRatio), m_AvailableAppView.height());
-		// Compute pos
+		// Compute position
 		glm::ivec2 center = (m_AvailableAppView.topLeft() + m_AvailableAppView.botRight()) / 2;
 		glm::ivec2 topLeft = center - res.size() / 2;
 		res.setTopLeft(topLeft.x, topLeft.y);

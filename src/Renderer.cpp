@@ -16,7 +16,12 @@ Renderer::Renderer()
 }
 
 void Renderer::onRenderBegin(float dt, const glm::vec3& bgColor, const AlphaTrailSettingsValues& alphaTrail) {
-	if (alphaTrail.bEnabled) {
+	if (!alphaTrail.bEnabled) {
+		m_renderBuffer.bind();
+		glClearColor(bgColor.x, bgColor.y, bgColor.z, 1);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	}
+	else {
 		if (!alphaTrail.bFixResiduals) {
 			m_renderBuffer.bind();
 			m_clearScreenPipeline.bind();
@@ -38,11 +43,6 @@ void Renderer::onRenderBegin(float dt, const glm::vec3& bgColor, const AlphaTrai
 			drawFullScreenWithUVs();
 			glClear(GL_DEPTH_BUFFER_BIT);
 		}
-	}
-	else {
-		m_renderBuffer.bind();
-		glClearColor(bgColor.x, bgColor.y, bgColor.z, 1);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 }
 

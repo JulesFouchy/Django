@@ -31,7 +31,4 @@ private:
 
 	ShaderPipeline m_clearScreenPipeline;
 	ShaderPipeline m_clearScreenNoResidualsPipeline;
-
-	bool m_bFreeRatio = true;
-	float m_desiredRatio = 16.0f / 9.0f;
 };

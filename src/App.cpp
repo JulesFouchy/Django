@@ -62,21 +62,21 @@ void App::update() {
 	// Draw particles
 	m_particlePipeline.bind();
 	m_particleSystem.draw();
-	// Blit render buffer to screen if needed
+	// Blit render buffer to screen
 	m_renderer.renderBuffer().blitToScreen(
 		Viewports::SwapYConvention(Viewports::AppView().botLeft()),
 		Viewports::SwapYConvention(Viewports::AppView().topRight())
 	);
-	//----------------
-	m_outputGLWindow.makeCurrent();
-	glClear(GL_COLOR_BUFFER_BIT); // TODO : remove me once we copy the framebuffer to the whole window
-	m_renderer.renderBuffer().blitToScreen(
-		{0, 0},
-		Viewports::OutputWindowSize()
-	);
-	SDL_GL_SwapWindow(m_outputGLWindow.window);
-	m_mainGLWindow.makeCurrent();
-	//--------------------
+	// Render on output window
+	if (Viewports::IsOutputWindowOpen()) {
+		m_outputGLWindow.makeCurrent();
+		m_renderer.renderBuffer().blitToScreen(
+			{ 0, 0 },
+			Viewports::getOutputWindowSize()
+		);
+		SDL_GL_SwapWindow(m_outputGLWindow.window);
+		m_mainGLWindow.makeCurrent();
+	}
 	// Export
 	if (Viewports::IsExporting())
 		m_recordManager.exporter().exportFrame(m_renderer.renderBuffer());
@@ -89,9 +89,9 @@ void App::update() {
 			ImGui::BeginMainMenuBar();
 			if (ImGui::BeginMenu("RenderAreas")) {
 				ImGui::ColorEdit3("Empty space color", &m_clearColor[0]);
-				bool bOutputWindowVisible = Viewports::IsOutputWindowOpen();
-				if (ImGui::Checkbox("Show output window", &bOutputWindowVisible)) {
-					setOutputWindowVisibility(bOutputWindowVisible);
+				bool bIsOutputWindowOpen = Viewports::IsOutputWindowOpen();
+				if (ImGui::Checkbox("Show output window", &bIsOutputWindowOpen)) {
+					setIsOutputWindowOpen(bIsOutputWindowOpen);
 				}
 				ImGui::EndMenu();
 			}
@@ -198,7 +198,7 @@ void App::onEvent(const SDL_Event& e) {
 				break;
 			case SDL_WINDOWEVENT_CLOSE:
 				if (e.window.windowID == SDL_GetWindowID(m_outputGLWindow.window))
-					setOutputWindowVisibility(false);
+					setIsOutputWindowOpen(false);
 				break;
 			}
 			break;
@@ -216,9 +216,9 @@ void App::onRenderSizeChanged() {
 	m_stateModifier.apply(); // some configs depend on the aspect ratio 
 }
 
-void App::setOutputWindowVisibility(bool isVisible) {
-	Viewports::setIsOutputWindowOpen(isVisible);
-	if (isVisible)
+void App::setIsOutputWindowOpen(bool isOpen) {
+	Viewports::setIsOutputWindowOpen(isOpen);
+	if (isOpen)
 		m_outputGLWindow.show();
 	else
 		m_outputGLWindow.hide();

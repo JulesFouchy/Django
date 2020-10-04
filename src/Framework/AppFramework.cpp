@@ -25,7 +25,7 @@ void AppFramework::onWindowResize() {
 	glViewport(0, 0, w, h);
 }
 
-void AppFramework::updateAppViewSizeAndPos(ImGuiDockNode* node) {
+void AppFramework::updateAvailableAppViewSizeAndPos(ImGuiDockNode* node) {
 	// Position
 	Viewports::setAvailableAppViewTopLeft(
 		node->Pos.x - Viewports::getWindowTopLeft().x,
@@ -92,7 +92,7 @@ void AppFramework::ImGuiDockspace() {
 	{
 		ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
 		ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
-		updateAppViewSizeAndPos(ImGui::DockBuilderGetCentralNode(dockspace_id));
+		updateAvailableAppViewSizeAndPos(ImGui::DockBuilderGetCentralNode(dockspace_id));
 	}
 	else
 	{

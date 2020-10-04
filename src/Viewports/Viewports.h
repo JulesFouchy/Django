@@ -1,6 +1,6 @@
 #pragma once
 
-#include "RectSizePosConstrainedRatio.h"
+#include "RectSizePos.h"
 
 class Viewports {
 public:
@@ -22,7 +22,7 @@ public:
 	static inline const glm::ivec2& getWindowTopLeft()        { return m_Window.topLeft(); }
 	static inline const glm::ivec2& getWindowSize()           { return m_Window.size(); }
 	static inline const glm::ivec2& getAvailableAppViewSize() { return m_AvailableAppView.size(); }
-	static inline const glm::ivec2& OutputWindowSize()        { return m_OutputWindow.size(); }
+	static inline const glm::ivec2& getOutputWindowSize()     { return m_OutputWindow.size(); }
 	static inline bool IsExporting() { return m_bIsExporting; }
 	static inline bool IsOutputWindowOpen() { return m_bIsOutputWindowOpen; }
 
@@ -32,11 +32,11 @@ private:
 	static std::function<void()> OnRenderSizeChanged;
 
 private:
-	static RectSizePos m_Window; // Size of the window, and it's position inside the screen
+	static RectSizePos m_Window;           // Size of the window, and it's position inside the screen
 	static RectSizePos m_AvailableAppView; // Size of the available viewing area (excludes the docked ImGui windows), and its position inside the window
-	static RectSize m_Export; // Size of the exported images
-	static RectSize m_OutputWindow; // Size of the second window, used as the final output that the spectators see
+	static RectSize m_Export;              // Size of the exported images
+	static RectSize m_OutputWindow;        // Size of the second window, used as the final output that the spectators see
 
-	static bool m_bIsExporting; // Owned by Viewports because it needs to know it when deciding what the render size should be
+	static bool m_bIsExporting;        // Owned by Viewports because it needs to know it when deciding what the render size should be
 	static bool m_bIsOutputWindowOpen; // Same as above
 };
