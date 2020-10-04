@@ -19,7 +19,7 @@ public:
 	static inline void setAvailableAppViewTopLeft(int x, int y) { m_AvailableAppView.setTopLeft(x, y); }
 
 	static inline const glm::ivec2& getExportSize()           { return m_Export.size(); }
-	static inline const glm::ivec2& getWindowTopLeft()        { return m_Window.topLeft(); }
+	static inline       glm::ivec2  getWindowTopLeft()        { return m_Window.topLeft(); }
 	static inline const glm::ivec2& getWindowSize()           { return m_Window.size(); }
 	static inline const glm::ivec2& getAvailableAppViewSize() { return m_AvailableAppView.size(); }
 	static inline const glm::ivec2& getOutputWindowSize()     { return m_OutputWindow.size(); }
