@@ -10,9 +10,14 @@ struct GLWindow {
 			debug_break();
 		}
 	}
+	GLWindow(SDL_Window* _window, SDL_GLContext _glContext)
+		: window(_window), glContext(_glContext)
+	{}
 	SDL_Window* window;
 	SDL_GLContext glContext;
 
 	inline void makeCurrent() { SDL_GL_MakeCurrent(window, glContext); }
+	inline void hide() { SDL_HideWindow(window); }
+	inline void show() { SDL_ShowWindow(window); }
 	inline void destroy() { SDL_DestroyWindow(window); }
 };

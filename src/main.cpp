@@ -68,7 +68,7 @@ int main(int argc, char *argv[]) {
 			spdlog::critical("[SDL2] Window is null: {}", SDL_GetError());
 			debug_break();
 		}
-		GLWindow mainGLWindow(mainWindow);
+		GLWindow mainGLWindow(mainWindow, outputGLWindow.glContext);
 		mainGLWindow.makeCurrent();
 		//
 		SDL_GL_SetSwapInterval(1);
@@ -123,8 +123,8 @@ int main(int argc, char *argv[]) {
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplSDL2_Shutdown();
 		ImGui::DestroyContext();
-		outputGLWindow.destroy();
 		mainGLWindow.destroy();
+		outputGLWindow.destroy();
 		SDL_Quit();
 
 	return 0;
