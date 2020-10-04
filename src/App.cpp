@@ -116,6 +116,7 @@ void App::update() {
 
 void App::onEvent(const SDL_Event& e) {
 	if (!m_recordManager.isExporting()) {
+		m_outputGLWindow.checkForFullscreenToggles(e);
 		switch (e.type) {
 
 		case SDL_MOUSEMOTION:

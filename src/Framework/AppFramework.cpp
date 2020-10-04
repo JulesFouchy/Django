@@ -5,8 +5,8 @@
 #include "imgui/imgui_internal.h"
 #include "Viewports/Viewports.h"
 
-AppFramework::AppFramework(SDL_Window* window, App& app)
-	: m_window(window), m_app(app)
+AppFramework::AppFramework(GLWindow& glWindow, App& app)
+	: m_glWindow(glWindow), m_app(app)
 {
 	onWindowMove();
 	onWindowResize();
@@ -14,13 +14,13 @@ AppFramework::AppFramework(SDL_Window* window, App& app)
 
 void AppFramework::onWindowMove() {
 	int x, y;
-	SDL_GetWindowPosition(m_window, &x, &y);
+	SDL_GetWindowPosition(m_glWindow.window, &x, &y);
 	Viewports::Window.setTopLeft(x, y);
 }
 
 void AppFramework::onWindowResize() {
 	int w, h;
-	SDL_GetWindowSize(m_window, &w, &h);
+	SDL_GetWindowSize(m_glWindow.window, &w, &h);
 	Viewports::Window.setSize(w, h);
 	glViewport(0, 0, w, h);
 }
@@ -39,16 +39,9 @@ void AppFramework::updateRenderArea(ImGuiDockNode* node) {
 	}
 }
 
-void AppFramework::switchFullScreenMode(){
-	if (m_bFullScreen)
-		SDL_SetWindowFullscreen(m_window, 0);
-	else
-		SDL_SetWindowFullscreen(m_window, SDL_WINDOW_FULLSCREEN);
-	m_bFullScreen = !m_bFullScreen;
-	onWindowResize();
-}
-
-void AppFramework::onEvent(SDL_Event e) {
+void AppFramework::onEvent(const SDL_Event& e) {
+	if (m_glWindow.checkForFullscreenToggles(e))
+		onWindowResize();
 	switch (e.type) {
 
 	case SDL_WINDOWEVENT:
@@ -57,20 +50,13 @@ void AppFramework::onEvent(SDL_Event e) {
 			onWindowResize();
 			break;
 		case SDL_WINDOWEVENT_CLOSE:
-			if (e.window.windowID == SDL_GetWindowID(m_window))
+			if (e.window.windowID == SDL_GetWindowID(m_glWindow.window))
 				exit();
 			break;
 			case SDL_WINDOWEVENT_MOVED:
 				onWindowMove();
 				break;
 		}
-		break;
-
-	case SDL_KEYDOWN:
-		if (e.key.keysym.scancode == SDL_SCANCODE_F11)
-			switchFullScreenMode();
-		if (e.key.keysym.scancode == SDL_SCANCODE_ESCAPE && m_bFullScreen)
-			switchFullScreenMode();
 		break;
 
 	case SDL_QUIT:
@@ -126,7 +112,7 @@ void AppFramework::update() {
 	}
 	// Start ImGui frame
 	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplSDL2_NewFrame(m_window);
+	ImGui_ImplSDL2_NewFrame(m_glWindow.window);
 	ImGui::NewFrame();
 	ImGuiDockspace();
 	// Actual application code
@@ -147,5 +133,5 @@ void AppFramework::update() {
 	}
 
 	// End frame
-	SDL_GL_SwapWindow(m_window);
+	SDL_GL_SwapWindow(m_glWindow.window);
 }

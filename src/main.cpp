@@ -112,7 +112,7 @@ int main(int argc, char *argv[]) {
 		// ------ Actual App
 		{
 			App app(mainGLWindow, outputGLWindow);
-			AppFramework appFramework(mainGLWindow.window, app);
+			AppFramework appFramework(mainGLWindow, app);
 			while (appFramework.isRunning()) {
 				appFramework.update();
 			}
