@@ -22,6 +22,8 @@ App::App(GLWindow& mainGLWindow, GLWindow& outputGLWindow)
 	m_settingsManager.get().partSystem().applyAndRecord_NbParticles(m_stateModifier); // Very important. Makes sure the partSystem SSBOs are initialized before applying any config
 	//
 	m_stateModifier.applyAndRecord_AllSettings();
+	// Hide output window
+	outputGLWindow.hide();
 }
 
 void App::update() {
@@ -76,6 +78,9 @@ void App::update() {
 			ImGui::BeginMainMenuBar();
 			if (ImGui::BeginMenu("RenderAreas")) {
 				ImGui::ColorEdit3("Empty space color", &m_clearColor[0]);
+				if (ImGui::Checkbox("Show output window", &m_bShowOutputWindow)) {
+					setOutputWindowVisibility(m_bShowOutputWindow);
+				}
 				m_renderer.ImGui();
 				ImGui::EndMenu();
 			}
@@ -169,6 +174,18 @@ void App::onEvent(const SDL_Event& e) {
 			}
 			break;
 
+		case SDL_WINDOWEVENT:
+			switch (e.window.event) {
+			//case SDL_WINDOWEVENT_RESIZED:
+			//	onWindowResize();
+			//	break;
+			case SDL_WINDOWEVENT_CLOSE:
+				if (e.window.windowID == SDL_GetWindowID(m_outputGLWindow.window))
+					setOutputWindowVisibility(false);
+				break;
+			}
+			break;
+
 		default:
 			break;
 		}
@@ -184,4 +201,12 @@ void App::onRenderTargetModified() {
 	m_particlePipeline.bind();
 	m_particlePipeline.setUniform1f("u_invAspectRatio", 1.0f / Viewports::RenderArea.aspectRatio());
 	m_stateModifier.apply(); // some configs depend on the aspect ratio 
+}
+
+void App::setOutputWindowVisibility(bool isVisible) {
+	m_bShowOutputWindow = isVisible;
+	if (m_bShowOutputWindow)
+		m_outputGLWindow.show();
+	else
+		m_outputGLWindow.hide();
 }
