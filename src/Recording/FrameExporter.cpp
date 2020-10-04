@@ -19,6 +19,8 @@ FrameExporter::FrameExporter()
 }
 
 void FrameExporter::startExporting(Record& selectedRecord, Renderer& renderer, std::unique_ptr<Clock>& clock, const glm::vec3& bgColor) {
+	Viewports::setIsExporting(true);
+	renderer.clearRenderBuffer(bgColor);
 	MyFile::CreateFolderIfDoesntExist(m_exportFolderPath);
 	m_frameCount = 0;
 	float totalExportDuration = selectedRecord.totalDuration();
@@ -26,7 +28,6 @@ void FrameExporter::startExporting(Record& selectedRecord, Renderer& renderer, s
 	m_totalNbFrames = static_cast<unsigned int>(std::ceil(totalExportDuration * m_fps));
 	m_maxNbDigitsOfFrameCount = static_cast<int>(std::ceil(std::log10(m_totalNbFrames)));
 	clock = std::make_unique<Clock_FixedTimestep>(m_fps, selectedRecord.initialTime());
-	Viewports::setIsExporting(true);
 	m_frameAverageTime.clear();
 	m_lastSDLCounter = SDL_GetPerformanceCounter();
 }
