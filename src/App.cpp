@@ -6,9 +6,10 @@
 #include "Helper/MyImGui.h"
 #endif
 
-App::App()
+App::App(GLWindow& mainGLWindow, GLWindow& outputGLWindow)
 	: m_renderer([this](){onRenderTargetModified();}),
-	  m_stateModifier(m_particleSystem, m_settingsManager, m_configManager, m_renderer, m_recordManager, m_mouseInteractions)
+	  m_stateModifier(m_particleSystem, m_settingsManager, m_configManager, m_renderer, m_recordManager, m_mouseInteractions),
+	  m_mainGLWindow(mainGLWindow), m_outputGLWindow(outputGLWindow)
 {
 	glEnable(GL_DEPTH_TEST);
 	// glEnable(GL_BLEND); // This is already handled by Alpha Trail Settings

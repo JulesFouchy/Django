@@ -1,4 +1,5 @@
 #include "Framework/AppFramework.h"
+#include "Framework/GLWindow.h"
 
 #include <imgui_impl_sdl.h>
 #include <imgui_impl_opengl3.h>
@@ -23,9 +24,6 @@ int main(int argc, char *argv[]) {
 
 		// ------- Initialize SDL and OpenGL ------------
 
-		SDL_Window* window;
-		SDL_GLContext glContext;
-
 		if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) != 0) {
 			spdlog::critical("[SDL2] Unable to initialize SDL: {}", SDL_GetError());
 			debug_break();
@@ -44,7 +42,20 @@ int main(int argc, char *argv[]) {
 		SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 		SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
 
-		window = SDL_CreateWindow(
+		// Output window
+		SDL_Window* outputWindow = SDL_CreateWindow(
+			"Django output",
+			SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+			1280, 720,
+			SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI
+		);
+		if (outputWindow == nullptr) {
+			spdlog::critical("[SDL2] Window is null: {}", SDL_GetError());
+			debug_break();
+		}
+		GLWindow outputGLWindow(outputWindow);
+		// Main window
+		SDL_Window* mainWindow = SDL_CreateWindow(
 			"Django",
 			SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
 			1280, 720,
@@ -53,18 +64,13 @@ int main(int argc, char *argv[]) {
 			| SDL_WINDOW_MAXIMIZED
 #endif
 		);
-		if (window == nullptr) {
+		if (mainWindow == nullptr) {
 			spdlog::critical("[SDL2] Window is null: {}", SDL_GetError());
 			debug_break();
 		}
-
-		glContext = SDL_GL_CreateContext(window);
-		if (glContext == nullptr) {
-			spdlog::critical("[SDL2] OpenGL context is null: {}", SDL_GetError());
-			debug_break();
-		}
-		SDL_GL_MakeCurrent(window, glContext);
-
+		GLWindow mainGLWindow(mainWindow);
+		mainGLWindow.makeCurrent();
+		//
 		SDL_GL_SetSwapInterval(1);
 
 		if (!gladLoadGLLoader(SDL_GL_GetProcAddress)) {
@@ -95,7 +101,7 @@ int main(int argc, char *argv[]) {
 			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 		}
 
-		ImGui_ImplSDL2_InitForOpenGL(window, glContext);
+		ImGui_ImplSDL2_InitForOpenGL(mainGLWindow.window, mainGLWindow.glContext);
 		ImGui_ImplOpenGL3_Init(glslVersion);
 
 		// ------ Initialize our own classes
@@ -105,8 +111,8 @@ int main(int argc, char *argv[]) {
 
 		// ------ Actual App
 		{
-			App app;
-			AppFramework appFramework(window, app);
+			App app(mainGLWindow, outputGLWindow);
+			AppFramework appFramework(mainGLWindow.window, app);
 			while (appFramework.isRunning()) {
 				appFramework.update();
 			}
@@ -117,7 +123,8 @@ int main(int argc, char *argv[]) {
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplSDL2_Shutdown();
 		ImGui::DestroyContext();
-		SDL_DestroyWindow(window);
+		outputGLWindow.destroy();
+		mainGLWindow.destroy();
 		SDL_Quit();
 
 	return 0;

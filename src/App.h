@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Framework/GLWindow.h"
+
 #include "OpenGL/ShaderPipeline.h"
 #include "Particles/ParticlesSystem.h"
 #include "Settings/SettingsManager.h"
@@ -11,7 +13,7 @@
 
 class App {
 public:
-	App();
+	App(GLWindow& mainGLWindow, GLWindow& outputGLWindow);
 	~App() = default;
 
 	void update();
@@ -34,4 +36,7 @@ private:
 	RecordManager m_recordManager;
 	MouseInteractions m_mouseInteractions;
 	StateModifier m_stateModifier; // must be declared last because it relies on all the systems to be initialized
+
+	GLWindow& m_mainGLWindow;
+	GLWindow& m_outputGLWindow;
 };
