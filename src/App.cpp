@@ -58,7 +58,6 @@ void App::update() {
 	// ---------------------
 	// Clear screen
 	m_renderer.onRenderBegin(m_recordManager.clock().deltaTime(), m_settingsManager.get().colors().backgroundColor(), m_settingsManager.get().alphaTrail().getValues());
-	//m_outputWindowRB->bind();
 	// Draw particles
 	m_particlePipeline.bind();
 	m_particleSystem.draw();
@@ -127,8 +126,20 @@ void App::update() {
 }
 
 void App::onEvent(const SDL_Event& e) {
+	m_outputGLWindow.checkForFullscreenToggles(e);
+	if (e.type == SDL_WINDOWEVENT && e.window.windowID == SDL_GetWindowID(m_outputGLWindow.window)) {
+		switch (e.window.event) {
+		case SDL_WINDOWEVENT_RESIZED:
+			int x, y;
+			SDL_GetWindowSize(m_outputGLWindow.window, &x, &y);
+			Viewports::setOutputWindowSize(x, y);
+			break;
+		case SDL_WINDOWEVENT_CLOSE:
+			setIsOutputWindowOpen(false);
+			break;
+		}
+	}
 	if (!Viewports::IsExporting()) {
-		m_outputGLWindow.checkForFullscreenToggles(e);
 		switch (e.type) {
 
 		case SDL_MOUSEMOTION:
@@ -184,22 +195,6 @@ void App::onEvent(const SDL_Event& e) {
 			if (!ImGui::GetIO().WantTextInput) {
 				if (!(e.key.keysym.sym == 'h') || !Input::KeyIsDown(SDL_SCANCODE_LCTRL))
 					m_configManager.onKeyUp(e.key.keysym.scancode);
-			}
-			break;
-
-		case SDL_WINDOWEVENT:
-			switch (e.window.event) {
-			case SDL_WINDOWEVENT_RESIZED:
-				if (e.window.windowID == SDL_GetWindowID(m_outputGLWindow.window)) {
-					int x, y;
-					SDL_GetWindowSize(m_outputGLWindow.window, &x, &y);
-					Viewports::setOutputWindowSize(x, y);
-				}
-				break;
-			case SDL_WINDOWEVENT_CLOSE:
-				if (e.window.windowID == SDL_GetWindowID(m_outputGLWindow.window))
-					setIsOutputWindowOpen(false);
-				break;
 			}
 			break;
 
