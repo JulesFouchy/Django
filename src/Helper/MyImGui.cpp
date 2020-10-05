@@ -79,8 +79,6 @@ bool MyImGui::Timeline(const char* label, float* timeInSec, float duration, bool
         return false;
 
     ImGuiContext& g = *GImGui;
-    const ImGuiStyle& style = g.Style;
-    const ImGuiID id = window->GetID(label);
 
 	ImVec2 p = ImGui::GetCursorScreenPos();
     ImVec2 size = ImVec2(std::min(maxWidthInPx, ImGui::GetWindowContentRegionWidth()), 15);
@@ -92,12 +90,8 @@ bool MyImGui::Timeline(const char* label, float* timeInSec, float duration, bool
 		         && abs(mousePos.y - p.y - size.y * 0.5) < size.y * 0.5;
 	// Active
 	bool bActive = ImGui::IsItemActive();
-	if (ImGui::IsMouseDragging(ImGuiMouseButton_Left)) {
-		const ImVec2& mouseClickPos = *ImGui::GetIO().MouseClickedPos;
-		bActive |= abs(mouseClickPos.x - p.x - size.x * 0.5) < size.x * 0.5
-			    && abs(mouseClickPos.y - p.y - size.y * 0.5) < size.y * 0.5;
-	}
-	//
+	if (bActive)
+		ImGui::GetCurrentWindow()->Flags |= ImGuiWindowFlags_NoMove;
 	bool bMouseInsideXBounds = abs(mousePos.x - p.x - size.x * 0.5) < size.x * 0.5;
 
 	const float filledWidth = size.x * std::min(std::max((*timeInSec)/duration, 0.0f), 1.0f);
