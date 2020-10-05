@@ -37,7 +37,7 @@ void PlayState_Play::ImGui(Record* selectedRecord, float time, RecordPlayer& rec
 	}
 	// Timeline
 	float t = time - m_startTime;
-	if (MyImGui::Timeline("", &t, m_record.totalDuration())) {
+	if (MyImGui::Timeline("MySuperbTimeline", &t, m_record.totalDuration())) {
 		m_startTime = time - t;
 		m_record.setTime(t, stateModifier);
 		m_bDraggingOnTheTimeline = true;

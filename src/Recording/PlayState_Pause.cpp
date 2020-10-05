@@ -28,7 +28,7 @@ void PlayState_Pause::ImGui(Record* selectedRecord, float time, RecordPlayer& re
 		changeState = [&](){ recordPlayer.setState<PlayState_NotStarted>(m_record); };
 	}
 	// Timeline
-	if (MyImGui::Timeline("", &m_timeSinceStart, m_record.totalDuration())) {
+	if (MyImGui::Timeline("MySuperbTimeline", &m_timeSinceStart, m_record.totalDuration())) {
 		m_record.setTime(m_timeSinceStart, stateModifier);
 	}
 	//

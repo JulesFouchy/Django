@@ -28,6 +28,10 @@ void MyImGui::HelpMarker(const char* text) {
 }
 
 bool MyImGui::AngleWheel(const char* label, float* value_p, float thickness, float radius, int circleNbSegments) {
+	ImGuiWindow* window = ImGui::GetCurrentWindow();
+	if (window->SkipItems)
+		return false;
+	//
 	ImGuiStyle& style = ImGui::GetStyle();
 	float line_height = ImGui::GetTextLineHeight();
 	//
@@ -73,29 +77,20 @@ void MyImGui::TimeFormatedHMS(float timeInSec, float totalDuration) {
 }
 
 // Thanks to https://github.com/ocornut/imgui/issues/1901
-bool MyImGui::Timeline(const char* label, float* timeInSec, float duration, bool bShowCurrentTime, float maxWidthInPx) {
+bool MyImGui::Timeline(const char* stringID, float* timeInSec, float duration, bool bShowCurrentTime, float maxWidthInPx) {
     ImGuiWindow* window = ImGui::GetCurrentWindow();
     if (window->SkipItems)
         return false;
-
-    ImGuiContext& g = *GImGui;
-
+	//
 	ImVec2 p = ImGui::GetCursorScreenPos();
+	const ImVec2& mousePos = ImGui::GetIO().MousePos;
     ImVec2 size = ImVec2(std::min(maxWidthInPx, ImGui::GetWindowContentRegionWidth()), 15);
 	// Detect clic
-	ImGui::InvisibleButton(label, size);
-	const ImVec2& mousePos = ImGui::GetIO().MousePos;
-	// Hovered
-	bool bHovered = abs(mousePos.x - p.x - size.x * 0.5) < size.x * 0.5
-		         && abs(mousePos.y - p.y - size.y * 0.5) < size.y * 0.5;
-	// Active
+	ImGui::InvisibleButton(stringID, size);
 	bool bActive = ImGui::IsItemActive();
-	if (bActive)
-		ImGui::GetCurrentWindow()->Flags |= ImGuiWindowFlags_NoMove;
-	bool bMouseInsideXBounds = abs(mousePos.x - p.x - size.x * 0.5) < size.x * 0.5;
-
-	const float filledWidth = size.x * std::min(std::max((*timeInSec)/duration, 0.0f), 1.0f);
+	bool bHovered = ImGui::IsItemHovered();
 	// Draw Progress
+	const float filledWidth = size.x * std::min(std::max((*timeInSec) / duration, 0.0f), 1.0f);
 	window->DrawList->AddRectFilled(p, ImVec2(p.x + filledWidth, p.y + size.y), ImGui::GetColorU32(ImGuiCol_FrameBg), 25);
 	// Draw Background
     window->DrawList->AddRectFilled(p, ImVec2(p.x + size.x,      p.y + size.y), ImGui::GetColorU32(ImGuiCol_FrameBgActive), 25);
@@ -109,6 +104,7 @@ bool MyImGui::Timeline(const char* label, float* timeInSec, float duration, bool
 	// Cursor
 	if (bHovered || bActive) {
 		// Draw line
+		bool bMouseInsideXBounds = abs(mousePos.x - p.x - size.x * 0.5) < size.x * 0.5;
 		if (bMouseInsideXBounds) {
 			window->DrawList->AddLine(ImVec2(mousePos.x, p.y), ImVec2(mousePos.x, p.y + size.y), ImGui::GetColorU32(ImGuiCol_Text));
 		}
