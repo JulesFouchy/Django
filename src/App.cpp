@@ -98,18 +98,28 @@ void App::update() {
 				ImGui::EndMenu();
 			}
 			if (ImGui::BeginMenu("Windows")) {
-				ImGui::Text("Hello !");
+				ImGui::Checkbox("Key Bindings", &m_bOpenKeyBindings);
+				ImGui::Checkbox("Recordings", &m_bOpenRecordings);
+				ImGui::Separator();
+				m_stateModifier.settingsManager().get().ImGuiOpenWindowsCheckboxes();
+				m_configManager.ImGuiOpenWindowCheckbox();
+#ifndef NDEBUG
+				ImGui::Separator();
+				ImGui::Checkbox("Debug", &m_bOpenDebug);
+#endif
 				ImGui::EndMenu();
 			}
 			ImGui::EndMainMenuBar();
 #ifndef NDEBUG
 			// Debug
-			ImGui::Begin("Debug");
-			MyImGui::TimeFormatedHMS(m_recordManager.clock().time());
-			ImGui::Checkbox("Show Demo Window", &m_bShowImGUIDemoWindow);
-			ImGui::Text("Application average %.1f FPS", ImGui::GetIO().Framerate);
-			ImGui::Text("Render Size : %d %d", Viewports::RenderSize().width(), Viewports::RenderSize().height());
-			ImGui::End();
+			if (m_bOpenDebug) {
+				ImGui::Begin("Debug", &m_bOpenDebug);
+				MyImGui::TimeFormatedHMS(m_recordManager.clock().time());
+				ImGui::Checkbox("Show Demo Window", &m_bShowImGUIDemoWindow);
+				ImGui::Text("Application average %.1f FPS", ImGui::GetIO().Framerate);
+				ImGui::Text("Render Size : %d %d", Viewports::RenderSize().width(), Viewports::RenderSize().height());
+				ImGui::End();
+			}
 			if (m_bShowImGUIDemoWindow) // Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
 				ImGui::ShowDemoWindow(&m_bShowImGUIDemoWindow);
 #endif
@@ -117,14 +127,18 @@ void App::update() {
 			m_stateModifier.settingsManager().get().ImGuiWindows(m_stateModifier);
 			m_configManager.Imgui(m_stateModifier);
 			// Key bindings
-			ImGui::Begin("Key Bindings");
-			m_configManager.ImGuiKeyBindings(m_stateModifier);
-			ImGui::End();
+			if (m_bOpenKeyBindings) {
+				ImGui::Begin("Key Bindings", &m_bOpenKeyBindings);
+				m_configManager.ImGuiKeyBindings(m_stateModifier);
+				ImGui::End();
+			}
 		}
 		// Recording
-		ImGui::Begin("Recording");
-		m_recordManager.ImGui(m_recordManager.clockPtrRef(), m_stateModifier); // must be called before m_recordManager.update()
-		ImGui::End();
+		if (m_bOpenRecordings) {
+			ImGui::Begin("Recording", &m_bOpenRecordings);
+			m_recordManager.ImGui(m_recordManager.clockPtrRef(), m_stateModifier); // must be called before m_recordManager.update()
+			ImGui::End();
+		}
 	}
 }
 

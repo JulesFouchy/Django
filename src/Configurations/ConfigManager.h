@@ -18,6 +18,7 @@ public:
 	~ConfigManager() = default;
 
 	void Imgui(StateModifier& stateModifier);
+	void ImGuiOpenWindowCheckbox();
 	inline void ImGuiKeyBindings(StateModifier& stateModifier) { m_keyBindings.ImGui(stateModifier); }
 
 	inline void onWheel(int delta, bool bNoStandardScroll, StateModifier& stateModifier) { m_params.onWheel(delta, bNoStandardScroll, stateModifier); }
@@ -59,4 +60,6 @@ private:
 	RandomParams m_randParams;
 	KeyBindings m_keyBindings;
 	bool m_bLastShapeWasSVG = false; // TODO initialize this according to the startup config
+
+	bool m_bOpenRandom = true;
 };

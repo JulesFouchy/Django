@@ -12,6 +12,7 @@ public:
 	~Settings() = default;
 
 	void ImGuiWindows(StateModifier& stateModifier);
+	void ImGuiOpenWindowsCheckboxes();
 	void applyAndRecord(StateModifier& stateModifier);
 
 	void serializeTo(const std::string& filePath);
@@ -29,4 +30,10 @@ private:
 	ColorSettings m_colorSettings;
 	WindSettings m_windSettings;
 	ParticleSystemSettings m_particleSystemSettings;
+
+	bool m_bOpenPhysics = true;
+	bool m_bOpenTrail = true;
+	bool m_bOpenColors = true;
+	bool m_bOpenWind = true;
+	bool m_bOpenParticles = true;
 };

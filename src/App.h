@@ -38,6 +38,12 @@ private:
 	MouseInteractions m_mouseInteractions;
 	StateModifier m_stateModifier; // must be declared last because it relies on all the systems to be initialized
 
+	bool m_bOpenKeyBindings = true;
+	bool m_bOpenRecordings = true;
+#ifndef NDEBUG
+	bool m_bOpenDebug = true;
+#endif
+
 	GLWindow& m_mainGLWindow;
 	GLWindow& m_outputGLWindow;
 };

@@ -223,9 +223,15 @@ void ConfigManager::setCurrentConfigAsText() {
 }
 
 void ConfigManager::Imgui(StateModifier& stateModifier) {
-    ImGui::Begin("Random");
-    m_randParams.ImGui(stateModifier);
-    ImGui::End();
+    if (m_bOpenRandom) {
+        ImGui::Begin("Random", &m_bOpenRandom);
+        m_randParams.ImGui(stateModifier);
+        ImGui::End();
+    }
+}
+
+void ConfigManager::ImGuiOpenWindowCheckbox() {
+    ImGui::Checkbox("Random", &m_bOpenRandom);
 }
 
 void ConfigManager::onKeyPressed(SDL_Scancode scancode, char keysym, StateModifier& stateModifier) {

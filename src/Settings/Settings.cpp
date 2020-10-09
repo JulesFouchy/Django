@@ -6,21 +6,39 @@
 #include <fstream>
 
 void Settings::ImGuiWindows(StateModifier& stateModifier) {
-	ImGui::Begin("Trail");
+	if (m_bOpenTrail) {
+		ImGui::Begin("Trail", &m_bOpenTrail);
 		m_alphaTrailSettings.ImGui(stateModifier);
-	ImGui::End();
-	ImGui::Begin("Colors");
+		ImGui::End();
+	}
+	if (m_bOpenColors) {
+		ImGui::Begin("Colors", &m_bOpenColors);
 		m_colorSettings.ImGui(stateModifier);
-	ImGui::End();
-	ImGui::Begin("Wind");
+		ImGui::End();
+	}
+	if (m_bOpenWind) {
+		ImGui::Begin("Wind", &m_bOpenWind);
 		m_windSettings.ImGui(stateModifier);
-	ImGui::End();
-	ImGui::Begin("Physics");
+		ImGui::End();
+	}
+	if (m_bOpenPhysics) {
+		ImGui::Begin("Physics", &m_bOpenPhysics);
 		m_physicsSettings.ImGui(stateModifier);
-	ImGui::End();
-	ImGui::Begin("Particles");
+		ImGui::End();
+	}
+	if (m_bOpenParticles) {
+		ImGui::Begin("Particles", &m_bOpenParticles);
 		m_particleSystemSettings.ImGui(stateModifier);
-	ImGui::End();
+		ImGui::End();
+	}
+}
+
+void Settings::ImGuiOpenWindowsCheckboxes() {
+	ImGui::Checkbox("Trail",     &m_bOpenTrail);
+	ImGui::Checkbox("Colors",    &m_bOpenColors);
+	ImGui::Checkbox("Wind",      &m_bOpenWind);
+	ImGui::Checkbox("Physics",   &m_bOpenPhysics);
+	ImGui::Checkbox("Particles", &m_bOpenParticles);
 }
 
 void Settings::applyAndRecord(StateModifier& stateModifier) {
