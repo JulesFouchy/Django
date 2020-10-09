@@ -19,17 +19,21 @@ FrameExporter::FrameExporter()
 }
 
 void FrameExporter::startExporting(Record& selectedRecord, Renderer& renderer, std::unique_ptr<Clock>& clock, const glm::vec3& bgColor) {
-	Viewports::setIsExporting(true);
-	renderer.clearRenderBuffer(bgColor);
-	MyFile::CreateFolderIfDoesntExist(m_exportFolderPath);
-	m_frameCount = 0;
-	float totalExportDuration = selectedRecord.totalDuration();
-	m_timeExportStops = selectedRecord.initialTime() + totalExportDuration;
-	m_totalNbFrames = static_cast<unsigned int>(std::ceil(totalExportDuration * m_fps));
-	m_maxNbDigitsOfFrameCount = static_cast<int>(std::ceil(std::log10(m_totalNbFrames)));
-	clock = std::make_unique<Clock_FixedTimestep>(m_fps, selectedRecord.initialTime());
-	m_frameAverageTime.clear();
-	m_lastSDLCounter = SDL_GetPerformanceCounter();
+	if (MyFile::CreateFolderIfDoesntExist(m_exportFolderPath)) {
+		Viewports::setIsExporting(true);
+		renderer.clearRenderBuffer(bgColor);
+		m_frameCount = 0;
+		float totalExportDuration = selectedRecord.totalDuration();
+		m_timeExportStops = selectedRecord.initialTime() + totalExportDuration;
+		m_totalNbFrames = static_cast<unsigned int>(std::ceil(totalExportDuration * m_fps));
+		m_maxNbDigitsOfFrameCount = static_cast<int>(std::ceil(std::log10(m_totalNbFrames)));
+		clock = std::make_unique<Clock_FixedTimestep>(m_fps, selectedRecord.initialTime());
+		m_frameAverageTime.clear();
+		m_lastSDLCounter = SDL_GetPerformanceCounter();
+	}
+	else {
+		spdlog::warn("[FrameExporter::startExporting] Couldn't start exporting because folder creation failed !");
+	}
 }
 
 void FrameExporter::stopExporting(Renderer& renderer, std::unique_ptr<Clock>& clock) {

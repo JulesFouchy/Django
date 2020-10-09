@@ -30,7 +30,16 @@ void MyFile::ToString(const std::string& filepath, std::string* dst) {
     stream.close();
 }
 
-void MyFile::CreateFolderIfDoesntExist(const std::string& folderPath) {
-    if (!Exists(folderPath))
-        std::filesystem::create_directory(folderPath);
+bool MyFile::CreateFolderIfDoesntExist(const std::string& folderPath) {
+    if (!Exists(folderPath)) {
+        try {
+            std::filesystem::create_directories(folderPath);
+            return true;
+        }
+        catch (std::exception e) {
+            spdlog::warn(e.what());
+            return false;
+        }
+    }
+    return true;
 }
