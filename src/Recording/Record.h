@@ -31,7 +31,7 @@ private:
 
 	const StateChangeTimestamp& nextStateChangeTS() const;
 	void advanceOnTimeline(StateModifier& stateModifier);
-	void setApplyRecord_WithChecks(const StateChangeTimestamp& stateChangeTS, float prevTime, float newTime, StateModifier& stateModifier);
+	void setAndRecord_WithChecks(const StateChangeTimestamp& stateChangeTS, float prevTime, float newTime, StateModifier& stateModifier);
 
 private:
 	State m_startState;

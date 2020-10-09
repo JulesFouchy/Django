@@ -47,9 +47,9 @@ bool Record::setTime(float newTime, StateModifier& stateModifier) {
 	stateModifier.setApplyAndRecord(m_startState);
 	if (m_stateChangesTimeline.size() != 0) {
 		m_nextStateChangeIdx = 0;
-		// Apply everyting up to newTime
+		// Set everything up to newTime
 		while (m_nextStateChangeIdx < m_stateChangesTimeline.size() && nextStateChangeTS().time <= newTime) {
-			setApplyRecord_WithChecks(nextStateChangeTS(), prevTime, newTime, stateModifier);
+			setAndRecord_WithChecks(nextStateChangeTS(), prevTime, newTime, stateModifier);
 			m_nextStateChangeIdx++;
 		}
 		// Check for mouse bursts to apply if we are moving backward
@@ -59,10 +59,11 @@ bool Record::setTime(float newTime, StateModifier& stateModifier) {
 				const StateChangeTimestamp& stateChangeTS = m_stateChangesTimeline[stateChangeIdx];
 				if (stateChangeTS.stateChange.type == StateChangeType::Mouse_Burst 
 					&& stateChangeTS.time < prevTime) // we didn't apply the burst last time
-					stateModifier.setApplyAndRecord(stateChangeTS.stateChange);
+					stateModifier.setAndRecord(stateChangeTS.stateChange);
 				stateChangeIdx++;
 			}
 		}
+		stateModifier.apply(); // Apply only once at the end
 	}
 	return newTime < totalDuration();
 }
@@ -76,7 +77,7 @@ void Record::advanceOnTimeline(StateModifier& stateModifier) {
 	m_nextStateChangeIdx++;
 }
 
-void Record::setApplyRecord_WithChecks(const StateChangeTimestamp& stateChangeTS, float prevTime, float newTime, StateModifier& stateModifier) {
+void Record::setAndRecord_WithChecks(const StateChangeTimestamp& stateChangeTS, float prevTime, float newTime, StateModifier& stateModifier) {
 	switch (stateChangeTS.stateChange.type)
 	{
 	case StateChangeType::Mouse_ForceField:
@@ -89,7 +90,7 @@ void Record::setApplyRecord_WithChecks(const StateChangeTimestamp& stateChangeTS
 			return;
 		break;
 	}
-	stateModifier.setApplyAndRecord(stateChangeTS.stateChange);
+	stateModifier.setAndRecord(stateChangeTS.stateChange);
 }
 
 void Record::serialize(const std::string& folderPath) {

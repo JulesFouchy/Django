@@ -16,6 +16,7 @@ public:
 	StateModifier(ParticleSystem& particleSystem, SettingsManager& settingsManager, ConfigManager& configManager, Renderer& renderer, RecordManager& recordManager, MouseInteractions& mouseInteractions);
 	~StateModifier() = default;
 
+	void setAndRecord(const StateChange& stateChange);
 	void setApplyAndRecord(const StateChange& stateChange);
 	void setApplyAndRecord(const State& state);
 	void apply();
@@ -38,4 +39,6 @@ private:
 	Renderer& m_renderer;
 	RecordManager& m_recordManager;
 	MouseInteractions& m_mouseInteractions;
+
+	bool m_bBlockApplying = false; // Ugly thing "required" by setAndRecord(StateChange)
 };

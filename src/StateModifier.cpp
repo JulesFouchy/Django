@@ -30,6 +30,12 @@ void StateModifier::applyAndRecord_CurrentAction() {
 	m_configManager.applyAndRecord_ActionRef(m_configManager.getCurrentConfigAsActionRef(), *this);
 }
 
+void StateModifier::setAndRecord(const StateChange& stateChange) {
+	m_bBlockApplying = true; // Ugly thing because I thought of it too late and can't be bothered to create all the setAndRecord functions
+	setApplyAndRecord(stateChange);
+	m_bBlockApplying = false;
+}
+
 void StateModifier::setApplyAndRecord(const StateChange& stateChange) {
 	switch (stateChange.type) {
 	case StateChangeType::Action:
@@ -179,7 +185,8 @@ void StateModifier::setApplyAndRecord(const StateChange& stateChange) {
 }
 
 void StateModifier::apply() {
-	m_configManager.applyTo(m_particleSystem);
+	if (!m_bBlockApplying)
+		m_configManager.applyTo(m_particleSystem);
 }
 
 void StateModifier::recordChange(const StateChange& stateChange) {
