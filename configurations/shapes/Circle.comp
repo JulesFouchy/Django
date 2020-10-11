@@ -1,0 +1,33 @@
+uniform int u_NbOfParticles;
+uniform float u_aspectRatio;
+// Params
+uniform int u_count;
+uniform int u_LR;
+uniform int u_UD;
+uniform int u_wheel;
+uniform int u_ctrlWheel;
+uniform int u_shiftWheel;
+uniform int u_altWheel;
+// Random
+uniform float u_seed;
+uniform vec2 u_xySeed;
+//? float rand(float id, float seed);
+
+// The "shape" function will be used by the layout configurations
+// t is the position/progress on the shape : 0 for the beginning, 1 for the end
+// For example, if you want to draw a circle the angle of the current point will be t * 2 * PI
+
+vec2 shape(float t, vec2 center, float radius, float rotation) {
+	float angle = t * 6.28 + rotation;
+	return center + radius * vec2(cos(angle), sin(angle));
+}
+
+// float u_wheel;
+// This number is controlled by the mouse wheel
+// Is is typically used by the layouts to rotate the shapes
+// so it shouldn't be used by the shapes, or you will have your shape growing and changing at the same time
+
+// float u_shiftWheel;
+// This number is controlled by the mouse wheel while holding SHIFT
+// Is is typically used by the layouts as the size of the shapes
+// so it shouldn't be used by the shapes, or you will have your shape rotating and changing at the same time

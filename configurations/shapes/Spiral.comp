@@ -1,0 +1,19 @@
+uniform int u_NbOfParticles;
+uniform float u_aspectRatio;
+// Params
+uniform int u_count;
+uniform int u_LR;
+uniform int u_UD;
+uniform int u_wheel;
+uniform int u_ctrlWheel;
+uniform int u_shiftWheel;
+uniform int u_altWheel;
+// Random
+uniform float u_seed;
+uniform vec2 u_xySeed;
+//? float rand(float id, float seed);
+
+vec2 shape(float t, vec2 center, float radius, float rotation) {
+	float angle = t * 6.28 * (u_ctrlWheel*0.1+5.0) + rotation;
+	return center + t * radius * vec2(cos(angle), sin(angle));
+}

@@ -1,0 +1,30 @@
+//? #version 430
+
+uniform int u_NbOfParticles;
+uniform float u_aspectRatio;
+// Params
+uniform int u_count;
+uniform int u_LR;
+uniform int u_UD;
+uniform int u_wheel;
+uniform int u_ctrlWheel;
+uniform int u_shiftWheel;
+uniform int u_altWheel;
+// Random
+uniform float u_seed;
+uniform vec2 u_xySeed;
+//? float rand(float id, float seed);
+
+vec2 getPosition(uint particleID) {
+    uint nbCols = int(floor(sqrt(u_NbOfParticles * u_aspectRatio)));
+    uint nbRows = int(floor(sqrt(u_NbOfParticles / u_aspectRatio)));
+    uint idealNbPart = nbCols * nbRows;
+    uint id = particleID < idealNbPart ? particleID : (particleID - (u_NbOfParticles - idealNbPart));
+    uint col = id % nbCols;
+    uint row = id / nbCols;
+    //
+    return vec2(
+        (-1.0 + 2.0 * (float(col) + 0.5) / nbCols) * u_aspectRatio,
+            -1.0 + 2.0 * (float(row) + 0.5) / nbRows
+    );
+}

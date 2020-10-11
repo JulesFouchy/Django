@@ -1,0 +1,38 @@
+//? #version 430
+
+//? uniform int u_NbOfParticles;
+//? uniform float u_aspectRatio;
+// Parameters
+//? uniform int u_wheel;
+//? uniform int u_shiftWheel;
+//? uniform int u_altWheel;
+//? uniform int u_count;
+//? uniform int u_UD;
+//? uniform int u_LR;        // I wouldn't recommend using this one for the layouts, see comments in the bottom section
+//? uniform int u_ctrlWheel; // I wouldn't recommend using this one for the layouts, see comments in the bottom section
+//Random
+//? uniform float u_seed;
+//? uniform vec2 u_xySeed;
+//? float rand(float seedX, float seedY);
+
+//? vec2 shape(float t, vec2 center, float radius, float rotation);
+
+vec2 getPosition(uint particleID) {
+	float t = particleID / float(u_NbOfParticles);
+	vec2 center = vec2(0.);
+	float radius = u_shiftWheel*0.1 + 0.9;
+
+	int N = max(u_UD + 6, 1);
+	int id = int(floor(t * N));
+	t =          fract(t * N);
+
+	float a = 0.785398163 - id * 6.28 / N;
+	center = radius * vec2(cos(a), sin(a));
+
+	return shape(
+		t,                           // t
+		center,                      // center
+		radius,                      // radius
+		u_wheel * 3.141592653 / 24.0 // rotation
+	);
+}
