@@ -30,27 +30,29 @@ App::App(GLWindow& mainGLWindow, GLWindow& outputGLWindow)
 }
 
 void App::update() {
-	glClearColor(m_clearColor.r, m_clearColor.g, m_clearColor.b, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
-	// ---------------------
-	// ------ PHYSICS ------
-	// ---------------------
-	m_particleSystem.physicsComputeShader().bind();
-	// Send time to physics compute shader
-	m_recordManager.update(m_stateModifier); // updates time so must be called before sending it to compute shader // must be called after it's ImGui() because the latter is responsible for setting m_bDraggingOnTheTimeline
-	m_particleSystem.physicsComputeShader().setUniform1f("dt", m_recordManager.clock().deltaTime());
-	// Send wind to physics compute shader
-	m_settingsManager.get().wind().setWindOffsetInShader(m_particleSystem.physicsComputeShader(), m_recordManager.clock().time());
-	if (!Viewports::IsExporting()) {
-		// Send mouse to physics compute shader
-		m_mouseInteractions.update(m_stateModifier);
-		// Move all particles towards mouse if wheel is down
-		if (ImGui::IsMouseDown(ImGuiMouseButton_Middle))
-			m_particleSystem.applyAndRecord_SetAllRestPositions(Input::GetMouseInNormalizedRatioSpace(), m_stateModifier);
+	if (!Input::KeyIsDown(SDL_SCANCODE_CAPSLOCK)) {
+		glClearColor(m_clearColor.r, m_clearColor.g, m_clearColor.b, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+		// ---------------------
+		// ------ PHYSICS ------
+		// ---------------------
+		m_particleSystem.physicsComputeShader().bind();
+		// Send time to physics compute shader
+		m_recordManager.update(m_stateModifier); // updates time so must be called before sending it to compute shader // must be called after it's ImGui() because the latter is responsible for setting m_bDraggingOnTheTimeline
+		m_particleSystem.physicsComputeShader().setUniform1f("dt", m_recordManager.clock().deltaTime());
+		// Send wind to physics compute shader
+		m_settingsManager.get().wind().setWindOffsetInShader(m_particleSystem.physicsComputeShader(), m_recordManager.clock().time());
+		if (!Viewports::IsExporting()) {
+			// Send mouse to physics compute shader
+			m_mouseInteractions.update(m_stateModifier);
+			// Move all particles towards mouse if wheel is down
+			if (ImGui::IsMouseDown(ImGuiMouseButton_Middle))
+				m_particleSystem.applyAndRecord_SetAllRestPositions(Input::GetMouseInNormalizedRatioSpace(), m_stateModifier);
+		}
+		// Apply physics
+		m_particleSystem.updatePositions();
+		m_particleSystem.physicsComputeShader().unbind();
 	}
-	// Apply physics
-	m_particleSystem.updatePositions();
-	m_particleSystem.physicsComputeShader().unbind();
 	// ---------------------
 	// ----- RENDERING -----
 	// ---------------------
