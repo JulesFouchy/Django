@@ -48,7 +48,7 @@ int main(int argc, char *argv[]) {
 			"Django output",
 			SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
 			1280, 720,
-			SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI
+			SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_HIDDEN
 		);
 		if (outputWindow == nullptr) {
 			spdlog::critical("[SDL2] Window is null: {}", SDL_GetError());

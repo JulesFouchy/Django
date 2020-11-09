@@ -27,8 +27,6 @@ App::App(GLWindow& mainGLWindow, GLWindow& outputGLWindow)
 	int x, y;
 	SDL_GetWindowSize(m_outputGLWindow.window, &x, &y);
 	Viewports::setOutputWindowSize(x, y);
-	// Hide output window
-	outputGLWindow.hide();
 }
 
 void App::update() {
