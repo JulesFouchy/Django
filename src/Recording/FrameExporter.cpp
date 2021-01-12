@@ -31,6 +31,9 @@ void FrameExporter::startExporting(Record& selectedRecord, Renderer& renderer, s
 		// Cancel if user doesnt want to overwrite previous export
 		if (answer != boxer::Selection::Yes)
 			return;
+		else {
+			std::filesystem::remove_all(m_exportFolderPath);
+		}
 	}
 	if (MyFile::CreateFolderIfDoesntExist(m_exportFolderPath)) {
 		Viewports::setIsExporting(true);
