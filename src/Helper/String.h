@@ -18,4 +18,5 @@ namespace MyString {
 		}
 		return str;
 	}
+	std::string ReplaceAll(const std::string& str, const std::string& from, const std::string& to);
 }

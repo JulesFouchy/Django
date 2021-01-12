@@ -30,3 +30,15 @@ std::string MyString::FileExtension(const std::string& myString) {
 bool MyString::StartsWith(const char* toFind, const std::string& str) {
 	return str.rfind(toFind, 0) == 0;
 }
+
+std::string MyString::ReplaceAll(const std::string& str, const std::string& from, const std::string& to) {
+	if (from.empty())
+		return str;
+	size_t start_pos = 0;
+	std::string res = str;
+	while ((start_pos = res.find(from, start_pos)) != std::string::npos) {
+		res.replace(start_pos, from.length(), to);
+		start_pos += to.length(); // In case 'to' contains 'from', like replacing 'x' with 'yx'
+	}
+	return res;
+}
