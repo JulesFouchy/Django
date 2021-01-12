@@ -17,6 +17,30 @@ FrameExporter::FrameExporter()
 	: m_settings({ 60.f, FolderPath::Exports })
 {
 	Viewports::setExportSize(1280, 720);
+	if (MyFile::Exists(FolderPath::Settings + "/lastSessionExportSettings.json")) {
+		std::ifstream is(FolderPath::Settings + "/lastSessionExportSettings.json");
+		{
+			try {
+				cereal::JSONInputArchive archive(is);
+				archive(
+					CEREAL_NVP(m_settings)
+				);
+			}
+			catch (std::exception e) {
+				spdlog::warn("[FrameExporter::FrameExporter] Invalid lastSessionExportSettings.json file. Starting with default values instead. \n{}", e.what());
+			}
+		}
+	}
+}
+
+FrameExporter::~FrameExporter() {
+	std::ofstream os(FolderPath::Settings + "/lastSessionExportSettings.json");
+	{
+		cereal::JSONOutputArchive archive(os);
+		archive(
+			CEREAL_NVP(m_settings)
+		);
+	}
 }
 
 bool FrameExporter::startExporting(Record& selectedRecord, Renderer& renderer, std::unique_ptr<Clock>& clock, const glm::vec3& bgColor) {

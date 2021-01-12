@@ -10,12 +10,24 @@ class Clock;
 struct FrameExporterSettings {
 	float fps;
 	std::string exportFolderBasePath;
+
+private:
+	//Serialization
+	friend class cereal::access;
+	template <class Archive>
+	void serialize(Archive& archive)
+	{
+		archive(
+			CEREAL_NVP(fps),
+			CEREAL_NVP(exportFolderBasePath)
+		);
+	}
 };
 
 class FrameExporter {
 public:
 	FrameExporter();
-	~FrameExporter() = default;
+	~FrameExporter();
 
 	void exportFrame(RenderBuffer& renderBuffer);
 
