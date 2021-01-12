@@ -13,12 +13,13 @@
 #include "OpenGL/RenderBuffer.h"
 
 FrameExporter::FrameExporter()
-	: m_exportFolderPath(FolderPath::Exports)
+	: m_exportFolderBasePath(FolderPath::Exports)
 {
 	Viewports::setExportSize(1280, 720);
 }
 
 void FrameExporter::startExporting(Record& selectedRecord, Renderer& renderer, std::unique_ptr<Clock>& clock, const glm::vec3& bgColor) {
+	m_exportFolderPath = m_exportFolderBasePath + "/" + selectedRecord.name();
 	if (MyFile::CreateFolderIfDoesntExist(m_exportFolderPath)) {
 		Viewports::setIsExporting(true);
 		renderer.clearRenderBuffer(bgColor);
@@ -80,7 +81,7 @@ void FrameExporter::ImGui() {
 		Viewports::setExportSize(static_cast<int>(w), static_cast<int>(h));
 		ImGui::PopItemWidth();
 		ImGui::InputFloat("FPS", &m_fps);
-		ImGui::InputText("Export to", &m_exportFolderPath);
+		ImGui::InputText("Export to", &m_exportFolderBasePath);
 	}
 	else {
 		ImGui::Text("Remaining time :");

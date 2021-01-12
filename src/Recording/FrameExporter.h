@@ -22,6 +22,7 @@ public:
 
 private:
 	float m_fps = 60.0f;
+	std::string m_exportFolderBasePath;
 	std::string m_exportFolderPath;
 	std::string m_prefix = "";
 
