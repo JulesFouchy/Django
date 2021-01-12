@@ -42,9 +42,9 @@ void App::update() {
 		m_particleSystem.physicsComputeShader().setUniform1f("dt", m_recordManager.clock().deltaTime());
 		// Send wind to physics compute shader
 		m_settingsManager.get().wind().setWindOffsetInShader(m_particleSystem.physicsComputeShader(), m_recordManager.clock().time());
+		// Send mouse to physics compute shader
+		m_mouseInteractions.update(m_stateModifier, Viewports::IsExporting());
 		if (!Viewports::IsExporting()) {
-			// Send mouse to physics compute shader
-			m_mouseInteractions.update(m_stateModifier);
 			// Move all particles towards mouse if wheel is down
 			if (ImGui::IsMouseDown(ImGuiMouseButton_Middle))
 				m_particleSystem.applyAndRecord_SetAllRestPositions(Input::GetMouseInNormalizedRatioSpace(), m_stateModifier);

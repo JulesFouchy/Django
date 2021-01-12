@@ -7,7 +7,7 @@ public:
 	MouseInteractions() = default;
 	~MouseInteractions() = default;
 
-	void update(StateModifier& stateModifier);
+	void update(StateModifier& stateModifier, bool bIsExporting);
 
 	void setForceField(const glm::vec2& mousePos);
 	void setBurst(const glm::vec3& mousePosAndStrength);

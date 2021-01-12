@@ -6,12 +6,12 @@
 #include "Particles/ParticlesSystem.h"
 #include "Helper/Input.h"
 
-void MouseInteractions::update(StateModifier& stateModifier) {
+void MouseInteractions::update(StateModifier& stateModifier, bool bIsExporting) {
 	// Force field
-	if (ImGui::IsMouseDown(ImGuiMouseButton_Left) && !ImGui::GetIO().WantCaptureMouse)
+	if (ImGui::IsMouseDown(ImGuiMouseButton_Left) && !ImGui::GetIO().WantCaptureMouse && !bIsExporting)
 		setForceField(Input::GetMouseInNormalizedRatioSpace());
 	// Burst
-	if (ImGui::IsMouseReleased(ImGuiMouseButton_Right)) {
+	if (ImGui::IsMouseReleased(ImGuiMouseButton_Right) && !bIsExporting) {
 		float strength = pow(25.0f * ImGui::GetIO().MouseDownDurationPrev[ImGuiMouseButton_Right], 0.8f);
 		setBurst({ Input::GetMouseInNormalizedRatioSpace(), strength });
 	}
