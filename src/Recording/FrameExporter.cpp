@@ -11,6 +11,7 @@
 #include "Clock/Clock_Realtime.h"
 #include "Viewports/Viewports.h"
 #include "OpenGL/RenderBuffer.h"
+#include <Boxer/boxer.h>
 
 FrameExporter::FrameExporter()
 	: m_exportFolderBasePath(FolderPath::Exports)
@@ -20,6 +21,17 @@ FrameExporter::FrameExporter()
 
 void FrameExporter::startExporting(Record& selectedRecord, Renderer& renderer, std::unique_ptr<Clock>& clock, const glm::vec3& bgColor) {
 	m_exportFolderPath = m_exportFolderBasePath + "/" + selectedRecord.name();
+	if (MyFile::Exists(m_exportFolderPath)) {
+		boxer::Selection answer = boxer::show(
+			("The record \"" + selectedRecord.name() + "\" has already been exported. Do you want to overwrite the previously exported frames ?").c_str(),
+			"Overwrite",
+			boxer::Style::Question,
+			boxer::Buttons::YesNo
+		);
+		// Cancel if user doesnt want to overwrite previous export
+		if (answer != boxer::Selection::Yes)
+			return;
+	}
 	if (MyFile::CreateFolderIfDoesntExist(m_exportFolderPath)) {
 		Viewports::setIsExporting(true);
 		renderer.clearRenderBuffer(bgColor);

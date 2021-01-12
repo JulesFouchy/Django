@@ -61,6 +61,7 @@ add_library(STB_IMAGE STATIC "lib/stb_image/stb_image.cpp")
 add_library(STB_IMAGE_WRITE STATIC "lib/stb_image/stb_image_write.cpp")
 file(GLOB_RECURSE IMGUI_SOURCES lib/imgui/*)
 add_library(IMGUI STATIC ${IMGUI_SOURCES})
+add_subdirectory("lib/Boxer")
 
 # /////////////////////////////////////////////////////////////////////////////
 # ///////////////////////////////// INCLUDES //////////////////////////////////
@@ -88,14 +89,14 @@ add_executable(${PROJECT_NAME} ${MY_SOURCES}
     lib/nanosvg/nanosvg.cpp # compile the nanosvg library
     ${MY_INTERNAL_SHADERS} ${MY_CONFIGS} # include in the VS project so they will appear in the solution explorer
 )
-target_link_libraries(
-    ${PROJECT_NAME}
+target_link_libraries(${PROJECT_NAME}
     ${OPENGL_LIBRARIES}
     ${SDL2_LIBRARIES}
     GLAD
     STB_IMAGE
     STB_IMAGE_WRITE
     IMGUI
+    Boxer
 )
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)

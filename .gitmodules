@@ -1,0 +1,3 @@
+[submodule "lib/Boxer"]
+	path = lib/Boxer
+	url = https://github.com/aaronmjacobs/Boxer
