@@ -75,7 +75,7 @@ void FrameExporter::exportFrame(RenderBuffer& renderBuffer) {
 	renderBuffer.unbind();
 	// Write png
 	stbi_flip_vertically_on_write(1);
-	std::string filepath = m_exportFolderPath + "/" + m_prefix + MyString::ToString(m_frameCount, m_maxNbDigitsOfFrameCount) + ".png";
+	std::string filepath = m_exportFolderPath + "/" + MyString::ToString(m_frameCount, m_maxNbDigitsOfFrameCount) + ".png";
 	stbi_write_png(filepath.c_str(), width, height, 4, data, 0);
 	delete[] data;
 	// Measure frame time
