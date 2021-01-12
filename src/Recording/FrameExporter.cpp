@@ -14,13 +14,13 @@
 #include <Boxer/boxer.h>
 
 FrameExporter::FrameExporter()
-	: m_exportFolderBasePath(FolderPath::Exports)
+	: m_settings({ 60.f, FolderPath::Exports })
 {
 	Viewports::setExportSize(1280, 720);
 }
 
 bool FrameExporter::startExporting(Record& selectedRecord, Renderer& renderer, std::unique_ptr<Clock>& clock, const glm::vec3& bgColor) {
-	m_exportFolderPath = m_exportFolderBasePath + "/" + selectedRecord.name();
+	m_exportFolderPath = m_settings.exportFolderBasePath + "/" + selectedRecord.name();
 	if (MyFile::Exists(m_exportFolderPath)) {
 		boxer::Selection answer = boxer::show(
 			("The record \"" + selectedRecord.name() + "\" has already been exported. Do you want to overwrite the previously exported frames at \"" +
@@ -47,9 +47,9 @@ bool FrameExporter::startExporting(Record& selectedRecord, Renderer& renderer, s
 		m_frameCount = 0;
 		float totalExportDuration = selectedRecord.totalDuration();
 		m_timeExportStops = selectedRecord.initialTime() + totalExportDuration;
-		m_totalNbFrames = static_cast<unsigned int>(std::ceil(totalExportDuration * m_fps));
+		m_totalNbFrames = static_cast<unsigned int>(std::ceil(totalExportDuration * m_settings.fps));
 		m_maxNbDigitsOfFrameCount = static_cast<int>(std::ceil(std::log10(m_totalNbFrames)));
-		clock = std::make_unique<Clock_FixedTimestep>(m_fps, selectedRecord.initialTime());
+		clock = std::make_unique<Clock_FixedTimestep>(m_settings.fps, selectedRecord.initialTime());
 		m_frameAverageTime.clear();
 		m_lastSDLCounter = SDL_GetPerformanceCounter();
 		return true;
@@ -103,8 +103,8 @@ void FrameExporter::ImGui() {
 		MyImGui::InputUInt("H", &h);
 		Viewports::setExportSize(static_cast<int>(w), static_cast<int>(h));
 		ImGui::PopItemWidth();
-		ImGui::InputFloat("FPS", &m_fps);
-		ImGui::InputText("Export to", &m_exportFolderBasePath);
+		ImGui::InputFloat("FPS", &m_settings.fps);
+		ImGui::InputText("Export to", &m_settings.exportFolderBasePath);
 	}
 	else {
 		ImGui::Text("Remaining time :");

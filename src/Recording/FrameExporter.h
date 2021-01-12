@@ -7,6 +7,11 @@ class Record;
 class Renderer;
 class Clock;
 
+struct FrameExporterSettings {
+	float fps;
+	std::string exportFolderBasePath;
+};
+
 class FrameExporter {
 public:
 	FrameExporter();
@@ -22,8 +27,7 @@ public:
 	void ImGui();
 
 private:
-	float m_fps = 60.0f;
-	std::string m_exportFolderBasePath;
+	FrameExporterSettings m_settings;
 	std::string m_exportFolderPath;
 
 	float m_timeExportStops;
