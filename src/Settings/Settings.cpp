@@ -7,27 +7,27 @@
 
 void Settings::ImGuiWindows(StateModifier& stateModifier) {
 	if (m_bOpenTrail) {
-		ImGui::Begin("Trail", &m_bOpenTrail);
+		ImGui::Begin("Trail");
 		m_alphaTrailSettings.ImGui(stateModifier);
 		ImGui::End();
 	}
 	if (m_bOpenColors) {
-		ImGui::Begin("Colors", &m_bOpenColors);
+		ImGui::Begin("Colors");
 		m_colorSettings.ImGui(stateModifier);
 		ImGui::End();
 	}
 	if (m_bOpenWind) {
-		ImGui::Begin("Wind", &m_bOpenWind);
+		ImGui::Begin("Wind");
 		m_windSettings.ImGui(stateModifier);
 		ImGui::End();
 	}
 	if (m_bOpenPhysics) {
-		ImGui::Begin("Physics", &m_bOpenPhysics);
+		ImGui::Begin("Physics");
 		m_physicsSettings.ImGui(stateModifier);
 		ImGui::End();
 	}
 	if (m_bOpenParticles) {
-		ImGui::Begin("Particles", &m_bOpenParticles);
+		ImGui::Begin("Particles");
 		m_particleSystemSettings.ImGui(stateModifier);
 		ImGui::End();
 	}

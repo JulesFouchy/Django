@@ -224,7 +224,7 @@ void ConfigManager::setCurrentConfigAsText() {
 
 void ConfigManager::Imgui(StateModifier& stateModifier) {
     if (m_bOpenRandom) {
-        ImGui::Begin("Random", &m_bOpenRandom);
+        ImGui::Begin("Random");
         m_randParams.ImGui(stateModifier);
         ImGui::End();
     }
