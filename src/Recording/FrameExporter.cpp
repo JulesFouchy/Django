@@ -19,7 +19,7 @@ FrameExporter::FrameExporter()
 	Viewports::setExportSize(1280, 720);
 }
 
-void FrameExporter::startExporting(Record& selectedRecord, Renderer& renderer, std::unique_ptr<Clock>& clock, const glm::vec3& bgColor) {
+bool FrameExporter::startExporting(Record& selectedRecord, Renderer& renderer, std::unique_ptr<Clock>& clock, const glm::vec3& bgColor) {
 	m_exportFolderPath = m_exportFolderBasePath + "/" + selectedRecord.name();
 	if (MyFile::Exists(m_exportFolderPath)) {
 		boxer::Selection answer = boxer::show(
@@ -31,7 +31,7 @@ void FrameExporter::startExporting(Record& selectedRecord, Renderer& renderer, s
 		);
 		// Cancel if user doesnt want to overwrite previous export
 		if (answer != boxer::Selection::Yes)
-			return;
+			return false;
 		else {
 			std::filesystem::remove_all(m_exportFolderPath);
 		}
@@ -47,9 +47,11 @@ void FrameExporter::startExporting(Record& selectedRecord, Renderer& renderer, s
 		clock = std::make_unique<Clock_FixedTimestep>(m_fps, selectedRecord.initialTime());
 		m_frameAverageTime.clear();
 		m_lastSDLCounter = SDL_GetPerformanceCounter();
+		return true;
 	}
 	else {
 		spdlog::warn("[FrameExporter::startExporting] Couldn't start exporting because folder creation failed !");
+		return false;
 	}
 }
 
