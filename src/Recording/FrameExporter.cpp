@@ -23,7 +23,8 @@ void FrameExporter::startExporting(Record& selectedRecord, Renderer& renderer, s
 	m_exportFolderPath = m_exportFolderBasePath + "/" + selectedRecord.name();
 	if (MyFile::Exists(m_exportFolderPath)) {
 		boxer::Selection answer = boxer::show(
-			("The record \"" + selectedRecord.name() + "\" has already been exported. Do you want to overwrite the previously exported frames ?").c_str(),
+			("The record \"" + selectedRecord.name() + "\" has already been exported. Do you want to overwrite the previously exported frames at \"" +
+				m_exportFolderPath + "\" ?").c_str(),
 			"Overwrite",
 			boxer::Style::Question,
 			boxer::Buttons::YesNo
