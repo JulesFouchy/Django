@@ -9,7 +9,9 @@ class Clock;
 
 struct FrameExporterSettings {
 	float fps;
-	std::string exportFolderBasePath;
+	int width;
+	int height;
+	std::string folderBasePath;
 
 private:
 	//Serialization
@@ -19,7 +21,9 @@ private:
 	{
 		archive(
 			CEREAL_NVP(fps),
-			CEREAL_NVP(exportFolderBasePath)
+			CEREAL_NVP(width),
+			CEREAL_NVP(height),
+			CEREAL_NVP(folderBasePath)
 		);
 	}
 };

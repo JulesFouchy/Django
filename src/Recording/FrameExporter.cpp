@@ -14,9 +14,8 @@
 #include <Boxer/boxer.h>
 
 FrameExporter::FrameExporter()
-	: m_settings({ 60.f, FolderPath::Exports })
+	: m_settings({ 60.f, 1280, 720, FolderPath::Exports })
 {
-	Viewports::setExportSize(1280, 720);
 	if (MyFile::Exists(FolderPath::Settings + "/lastSessionExportSettings.json")) {
 		std::ifstream is(FolderPath::Settings + "/lastSessionExportSettings.json");
 		{
@@ -31,6 +30,7 @@ FrameExporter::FrameExporter()
 			}
 		}
 	}
+	Viewports::setExportSize(m_settings.width, m_settings.height);
 }
 
 FrameExporter::~FrameExporter() {
@@ -44,7 +44,7 @@ FrameExporter::~FrameExporter() {
 }
 
 bool FrameExporter::startExporting(Record& selectedRecord, Renderer& renderer, std::unique_ptr<Clock>& clock, const glm::vec3& bgColor) {
-	m_exportFolderPath = m_settings.exportFolderBasePath + "/" + selectedRecord.name();
+	m_exportFolderPath = m_settings.folderBasePath + "/" + selectedRecord.name();
 	if (MyFile::Exists(m_exportFolderPath)) {
 		boxer::Selection answer = boxer::show(
 			("The record \"" + selectedRecord.name() + "\" has already been exported. Do you want to overwrite the previously exported frames at \"" +
@@ -125,10 +125,12 @@ void FrameExporter::ImGui() {
 		unsigned int h = static_cast<unsigned int>(Viewports::getExportSize().y);
 		MyImGui::InputUInt("W", &w); ImGui::SameLine();
 		MyImGui::InputUInt("H", &h);
-		Viewports::setExportSize(static_cast<int>(w), static_cast<int>(h));
+		m_settings.width = static_cast<int>(w);
+		m_settings.height = static_cast<int>(h);
+		Viewports::setExportSize(m_settings.width, m_settings.height);
 		ImGui::PopItemWidth();
 		ImGui::InputFloat("FPS", &m_settings.fps);
-		ImGui::InputText("Export to", &m_settings.exportFolderBasePath);
+		ImGui::InputText("Export to", &m_settings.folderBasePath);
 	}
 	else {
 		ImGui::Text("Remaining time :");
