@@ -33,7 +33,12 @@ bool FrameExporter::startExporting(Record& selectedRecord, Renderer& renderer, s
 		if (answer != boxer::Selection::Yes)
 			return false;
 		else {
-			std::filesystem::remove_all(m_exportFolderPath);
+			try {
+				std::filesystem::remove_all(m_exportFolderPath);
+			}
+			catch (std::exception e) {
+				spdlog::warn("[FrameExporter::startExporting] Failed to clean the previously created frames.");
+			}
 		}
 	}
 	if (MyFile::CreateFolderIfDoesntExist(m_exportFolderPath)) {
