@@ -9,6 +9,10 @@
 #include "Clock/Clock_Realtime.h"
 #include "Constants/Textures.h"
 
+#if defined(_MSC_VER) && defined(NDEBUG)
+#pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
+#endif
+
 #ifdef _WIN32
 	#define _CRTDBG_MAP_ALLOC
 	#include <crtdbg.h>
