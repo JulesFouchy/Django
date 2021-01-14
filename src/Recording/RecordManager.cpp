@@ -65,21 +65,14 @@ void RecordManager::update(StateModifier& stateModifier) {
 
 void RecordManager::ImGuiRecordsList() {
 	size_t markedForDelete = -1;
+	bool bAllContextMenusAreClosed = true;
 	for (size_t i = 0; i < m_records.size(); ++i) {
 		bool bIsSelectedRecording = i == m_selectedRecordIdx;
-		if (i != m_recordBeingRenamedIdx) {
-			// Selectable name
-			if (ImGui::Selectable(m_records[i].name().c_str(), bIsSelectedRecording)) {
-				if (!bIsSelectedRecording) {
-					setSelectedRecord(i);
-				}
+		// Selectable record
+		if (ImGui::Selectable(m_records[i].name().c_str(), bIsSelectedRecording)) {
+			if (!bIsSelectedRecording) {
+				setSelectedRecord(i);
 			}
-		}
-		else {
-			// Rename record
-			ImGui::PushID(46824987249);
-			ImGui::InputText("", &m_newRecordName);
-			ImGui::PopID();
 		}
 		// Duration tooltip
 		if (ImGui::IsItemHovered()) {
@@ -89,15 +82,24 @@ void RecordManager::ImGuiRecordsList() {
 		}
 		// Context menu
 		if (ImGui::BeginPopupContextItem(m_records[i].name().c_str())) {
-			if (ImGui::Button("Rename")) {
-				validateRecordRenaming();
-				m_recordBeingRenamedIdx = i;
-				m_newRecordName = m_records[i].name();
-			}
-			if (ImGui::Button("Delete")) {
-				if (boxer::show((m_records[i].name() + " will be deleted. Are you sure ?").c_str(), "Delete", boxer::Style::Warning, boxer::Buttons::YesNo) == boxer::Selection::Yes) {
-					markedForDelete = i;
+			bAllContextMenusAreClosed = false;
+			if (m_recordBeingRenamedIdx != i) {
+				// Buttons
+				if (ImGui::Button("Rename")) {
+					m_recordBeingRenamedIdx = i;
+					m_newRecordName = m_records[i].name();
 				}
+				if (ImGui::Button("Delete")) {
+					if (boxer::show((m_records[i].name() + " will be deleted. Are you sure ?").c_str(), "Delete", boxer::Style::Warning, boxer::Buttons::YesNo) == boxer::Selection::Yes) {
+						markedForDelete = i;
+					}
+				}
+			}
+			else {
+				// Rename input
+				ImGui::PushID(46824987249);
+				ImGui::InputText("", &m_newRecordName);
+				ImGui::PopID();
 			}
 			ImGui::EndPopup();
 		}
@@ -105,6 +107,8 @@ void RecordManager::ImGuiRecordsList() {
 	if (markedForDelete != -1) {
 		deleteRecord(markedForDelete);
 	}
+	if (bAllContextMenusAreClosed)
+		validateRecordRenaming();
 }
 
 bool RecordManager::hasARecordSelected() {
@@ -134,5 +138,6 @@ void RecordManager::deleteRecord(size_t idx) {
 void RecordManager::validateRecordRenaming() {
 	if (m_recordBeingRenamedIdx != -1) {
 		m_records[m_recordBeingRenamedIdx].setName(m_newRecordName);
+		m_recordBeingRenamedIdx = -1;
 	}
 }
