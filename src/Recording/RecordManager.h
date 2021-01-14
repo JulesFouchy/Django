@@ -28,6 +28,7 @@ private:
 	bool hasARecordSelected();
 	Record& selectedRecord();
 	void setSelectedRecord(size_t idx);
+	void deleteRecord(size_t idx);
 
 private:
 	std::unique_ptr<Clock> m_clock;

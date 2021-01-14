@@ -10,6 +10,7 @@
 #include "Constants/FolderPath.h"
 #include "PlayState_NotStarted.h"
 #include "PlayState_Play.h"
+#include "PlayState_NoSelection.h"
 #include "Viewports/Viewports.h"
 
 RecordManager::RecordManager()
@@ -62,6 +63,7 @@ void RecordManager::update(StateModifier& stateModifier) {
 }
 
 void RecordManager::ImGuiRecordsList() {
+	size_t markedForDelete = -1;
 	for (size_t i = 0; i < m_records.size(); ++i) {
 		bool bIsSelectedRecording = i == m_selectedRecordIdx;
 		if (ImGui::Selectable(m_records[i].name().c_str(), bIsSelectedRecording)) {
@@ -74,6 +76,16 @@ void RecordManager::ImGuiRecordsList() {
 			MyImGui::TimeFormatedHMS(m_records[i].totalDuration());
 			ImGui::EndTooltip();
 		}
+		if (ImGui::BeginPopupContextItem(m_records[i].name().c_str())) {
+			if (ImGui::Button("Delete")) {
+				std::filesystem::remove(FolderPath::Records + "/" + m_records[i].name() + ".djgRecord");
+				markedForDelete = i;
+			}
+			ImGui::EndPopup();
+		}
+	}
+	if (markedForDelete != -1) {
+		deleteRecord(markedForDelete);
 	}
 }
 
@@ -87,4 +99,15 @@ Record& RecordManager::selectedRecord() {
 void RecordManager::setSelectedRecord(size_t idx) {
 	assert(m_selectedRecordIdx != idx);
 	m_selectedRecordIdx = idx;
+}
+
+void RecordManager::deleteRecord(size_t idx) {
+	m_records.erase(idx + m_records.begin());
+	if (idx == m_selectedRecordIdx) {
+		setSelectedRecord(-1);
+		m_recordPlayer.setState<PlayState_NoSelection>();
+	}
+	else if (hasARecordSelected() && m_selectedRecordIdx > idx) {
+		m_selectedRecordIdx--;
+	}
 }
