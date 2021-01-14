@@ -12,6 +12,7 @@
 #include "PlayState_Play.h"
 #include "PlayState_NoSelection.h"
 #include "Viewports/Viewports.h"
+#include <Boxer/boxer.h>
 
 RecordManager::RecordManager()
 	: m_clock(std::make_unique<Clock_Realtime>()), m_recorder(*m_clock)
@@ -78,8 +79,9 @@ void RecordManager::ImGuiRecordsList() {
 		}
 		if (ImGui::BeginPopupContextItem(m_records[i].name().c_str())) {
 			if (ImGui::Button("Delete")) {
-				std::filesystem::remove(FolderPath::Records + "/" + m_records[i].name() + ".djgRecord");
-				markedForDelete = i;
+				if (boxer::show((m_records[i].name() + " will be deleted. Are you sure ?").c_str(), "Delete", boxer::Style::Warning, boxer::Buttons::YesNo) == boxer::Selection::Yes) {
+					markedForDelete = i;
+				}
 			}
 			ImGui::EndPopup();
 		}
@@ -102,6 +104,7 @@ void RecordManager::setSelectedRecord(size_t idx) {
 }
 
 void RecordManager::deleteRecord(size_t idx) {
+	std::filesystem::remove(FolderPath::Records + "/" + m_records[idx].name() + ".djgRecord");
 	m_records.erase(idx + m_records.begin());
 	if (idx == m_selectedRecordIdx) {
 		setSelectedRecord(-1);
