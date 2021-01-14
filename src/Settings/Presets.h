@@ -7,6 +7,7 @@ namespace fs = std::filesystem;
 #include "Helper/String.h"
 #include "Helper/File.h"
 #include "Constants/FolderPath.h"
+#include "Helper/MyImGui.h"
 
 template <typename T>
 struct Preset {
@@ -35,6 +36,7 @@ public:
 				if (ImGui::Selectable(m_presets[i].name.c_str(), false)) {
 					b = true;
 					m_currentPresetName = m_presets[i].name;
+					m_currentPresetIdx = i;
 					*settingValues = m_presets[i].values;
 				}
 			}
@@ -57,21 +59,42 @@ public:
 				m_nameAvailable = !MyFile::Exists(FolderPath::Settings + "/" + m_fileExtension + m_savePresetAs + ".json") && m_savePresetAs.compare("Unsaved settings...");
 			}
 			ImGui::PopID();
+			m_bRenamePopupOpenThisFrame = false;
 		}
 		else {
-			if (ImGui::Button("Rename")) {
-
+			if (MyImGui::BeginPopupContextMenuFromButton("Rename")) {
+				if (!m_bRenamePopupOpenLastFrame) {
+					m_newPresetName = m_currentPresetName;
+				}
+				ImGui::PushID(16879654123594);
+				ImGui::InputText("", &m_newPresetName);
+				ImGui::PopID();
+				ImGui::EndPopup();
+				m_bRenamePopupOpenThisFrame = true;
+			}
+			else {
+				m_bRenamePopupOpenThisFrame = false;
+				if (m_bRenamePopupOpenLastFrame && m_currentPresetIdx != -1) {
+					std::filesystem::rename(
+						FolderPath::Settings + "/" + m_fileExtension + m_currentPresetName + ".json",
+						FolderPath::Settings + "/" + m_fileExtension + m_newPresetName     + ".json"
+					);
+					m_currentPresetName = m_newPresetName;
+					m_presets[m_currentPresetIdx].name = m_newPresetName;
+				}
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Delete")) {
 
 			}
 		}
+		m_bRenamePopupOpenLastFrame = m_bRenamePopupOpenThisFrame;
 		return b;
 	}
 
 	void setToPlaceholderSetting() {
 		m_currentPresetName = "Unsaved settings...";
+		m_currentPresetIdx = -1;
 	}
 
 private:
@@ -139,9 +162,13 @@ private:
 private:
 	const std::string m_fileExtension;
 	std::string m_currentPresetName;
+	size_t m_currentPresetIdx = -1;
 	std::vector<Preset<T>> m_presets;
 	std::string m_savePresetAs;
 	bool m_nameAvailable;
+	std::string m_newPresetName;
+	bool m_bRenamePopupOpenLastFrame = false;
+	bool m_bRenamePopupOpenThisFrame = false;
 
 private:
 	// Serialization
