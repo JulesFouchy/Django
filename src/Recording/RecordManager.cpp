@@ -137,6 +137,8 @@ void RecordManager::deleteRecord(size_t idx) {
 
 void RecordManager::validateRecordRenaming() {
 	if (m_recordBeingRenamedIdx != -1) {
+		while (MyFile::Exists(FolderPath::Records + "/" + m_newRecordName + ".djgRecord"))
+			m_newRecordName += "_";
 		m_records[m_recordBeingRenamedIdx].setName(m_newRecordName);
 		m_recordBeingRenamedIdx = -1;
 	}
