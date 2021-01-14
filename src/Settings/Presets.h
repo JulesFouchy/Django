@@ -8,6 +8,7 @@ namespace fs = std::filesystem;
 #include "Helper/File.h"
 #include "Constants/FolderPath.h"
 #include "Helper/MyImGui.h"
+#include <Boxer/boxer.h>
 
 template <typename T>
 struct Preset {
@@ -82,7 +83,14 @@ public:
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Delete")) {
-
+				if (boxer::show(("\"" + m_currentPresetName + "\" will be deleted. Are you sure ?").c_str(), "Delete", boxer::Style::Warning, boxer::Buttons::YesNo) == boxer::Selection::Yes) {
+					std::filesystem::remove(
+						FolderPath::Settings + "/" + m_fileExtension + m_currentPresetName + ".json"
+					);
+					m_presets.erase(m_currentPresetIdx + m_presets.begin());
+					setToPlaceholderSetting();
+					findPlaceholderName(FolderPath::Settings);
+				}
 			}
 		}
 		m_bRenamePopupOpenLastFrame = m_bRenamePopupOpenThisFrame;
@@ -156,7 +164,8 @@ private:
 		}
 		// Add it to current list
 		m_presets.push_back({ m_savePresetAs, settingValues });
-		sort();
+		//sort(); // it's easier to know m_currentPresetIdx if we don't sort
+		m_currentPresetIdx = m_presets.size() - 1;
 		// Give the name to the selected preset
 		m_currentPresetName = m_savePresetAs;
 		// Find new placeholder name
