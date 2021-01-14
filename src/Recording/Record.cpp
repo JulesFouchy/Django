@@ -94,7 +94,12 @@ void Record::setAndRecord_WithChecks(const StateChangeTimestamp& stateChangeTS, 
 }
 
 void Record::serialize(const std::string& folderPath) {
-	std::ofstream os(folderPath + "/" + m_name + ".djgRecord", std::ios::binary);
+	std::string filePath = folderPath + "/" + m_name;
+	while (MyFile::Exists(filePath + ".djgRecord")) {
+		filePath += "_";
+		m_name   += "_";
+	}
+	std::ofstream os(filePath + ".djgRecord", std::ios::binary);
 	{
 		cereal::BinaryOutputArchive archive(os);
 		archive(
