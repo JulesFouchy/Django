@@ -40,22 +40,33 @@ public:
 			}
 			ImGui::EndCombo();
 		}
-		if (m_nameAvailable) {
-			if (ImGui::Button("Save settings")) {
-				savePresetTo(*settingValues, FolderPath::Settings);
+		if (!m_currentPresetName.compare("Unsaved settings...")) {
+			if (m_nameAvailable) {
+				if (ImGui::Button("Save settings")) {
+					savePresetTo(*settingValues, FolderPath::Settings);
+				}
+				ImGui::SameLine();
+				ImGui::Text("as");
+			}
+			else {
+				ImGui::TextColored(ImVec4(0.74f, 0.04f, 0.04f, 1.f), "Name already used :");
 			}
 			ImGui::SameLine();
-			ImGui::Text("as");
+			ImGui::PushID(138571);
+			if (ImGui::InputText("", &m_savePresetAs)) {
+				m_nameAvailable = !MyFile::Exists(FolderPath::Settings + "/" + m_fileExtension + m_savePresetAs + ".json") && m_savePresetAs.compare("Unsaved settings...");
+			}
+			ImGui::PopID();
 		}
 		else {
-			ImGui::TextColored(ImVec4(0.74f, 0.04f, 0.04f, 1.f), "Name already used :");
+			if (ImGui::Button("Rename")) {
+
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Delete")) {
+
+			}
 		}
-		ImGui::SameLine();
-		ImGui::PushID(138571);
-		if (ImGui::InputText("", &m_savePresetAs)) {
-			m_nameAvailable = !MyFile::Exists(FolderPath::Settings + "/" + m_fileExtension + m_savePresetAs + ".json");
-		}
-		ImGui::PopID();
 		return b;
 	}
 
