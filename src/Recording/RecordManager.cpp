@@ -90,7 +90,7 @@ void RecordManager::ImGuiRecordsList() {
 					m_newRecordName = m_records[i].name();
 				}
 				if (ImGui::Button("Delete")) {
-					if (boxer::show((m_records[i].name() + " will be deleted. Are you sure ?").c_str(), "Delete", boxer::Style::Warning, boxer::Buttons::YesNo) == boxer::Selection::Yes) {
+					if (boxer::show(("\"" + m_records[i].name() + "\" will be deleted. Are you sure ?").c_str(), "Delete", boxer::Style::Warning, boxer::Buttons::YesNo) == boxer::Selection::Yes) {
 						markedForDelete = i;
 					}
 				}
