@@ -25,6 +25,7 @@ public:
 	inline const std::string& name() const { return m_name; }
 
 	void serialize(const std::string& folderPath);
+	void setName(const std::string& newName);
 
 private:
 	void deserialize(const std::string& filepath);

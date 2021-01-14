@@ -29,6 +29,7 @@ private:
 	Record& selectedRecord();
 	void setSelectedRecord(size_t idx);
 	void deleteRecord(size_t idx);
+	void validateRecordRenaming();
 
 private:
 	std::unique_ptr<Clock> m_clock;
@@ -37,6 +38,8 @@ private:
 	RecordPlayer m_recordPlayer;
 	std::vector<Record> m_records;
 	size_t m_selectedRecordIdx = -1;
+	size_t m_recordBeingRenamedIdx = -1;
+	std::string m_newRecordName;
 
 	FrameExporter m_exporter;
 };

@@ -122,3 +122,11 @@ void Record::deserialize(const std::string& filepath) {
 	}
 	m_name = MyString::FileName(filepath);
 }
+
+void Record::setName(const std::string& newName) {
+	std::filesystem::rename(
+		FolderPath::Records + "/" + m_name  + ".djgRecord",
+		FolderPath::Records + "/" + newName + ".djgRecord"
+	);
+	m_name = newName;
+}

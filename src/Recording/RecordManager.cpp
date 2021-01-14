@@ -67,17 +67,33 @@ void RecordManager::ImGuiRecordsList() {
 	size_t markedForDelete = -1;
 	for (size_t i = 0; i < m_records.size(); ++i) {
 		bool bIsSelectedRecording = i == m_selectedRecordIdx;
-		if (ImGui::Selectable(m_records[i].name().c_str(), bIsSelectedRecording)) {
-			if (!bIsSelectedRecording) {
-				setSelectedRecord(i);
+		if (i != m_recordBeingRenamedIdx) {
+			// Selectable name
+			if (ImGui::Selectable(m_records[i].name().c_str(), bIsSelectedRecording)) {
+				if (!bIsSelectedRecording) {
+					setSelectedRecord(i);
+				}
 			}
 		}
+		else {
+			// Rename record
+			ImGui::PushID(46824987249);
+			ImGui::InputText("", &m_newRecordName);
+			ImGui::PopID();
+		}
+		// Duration tooltip
 		if (ImGui::IsItemHovered()) {
 			ImGui::BeginTooltip();
 			MyImGui::TimeFormatedHMS(m_records[i].totalDuration());
 			ImGui::EndTooltip();
 		}
+		// Context menu
 		if (ImGui::BeginPopupContextItem(m_records[i].name().c_str())) {
+			if (ImGui::Button("Rename")) {
+				validateRecordRenaming();
+				m_recordBeingRenamedIdx = i;
+				m_newRecordName = m_records[i].name();
+			}
 			if (ImGui::Button("Delete")) {
 				if (boxer::show((m_records[i].name() + " will be deleted. Are you sure ?").c_str(), "Delete", boxer::Style::Warning, boxer::Buttons::YesNo) == boxer::Selection::Yes) {
 					markedForDelete = i;
@@ -112,5 +128,11 @@ void RecordManager::deleteRecord(size_t idx) {
 	}
 	else if (hasARecordSelected() && m_selectedRecordIdx > idx) {
 		m_selectedRecordIdx--;
+	}
+}
+
+void RecordManager::validateRecordRenaming() {
+	if (m_recordBeingRenamedIdx != -1) {
+		m_records[m_recordBeingRenamedIdx].setName(m_newRecordName);
 	}
 }
