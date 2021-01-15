@@ -21,8 +21,7 @@ class Presets {
 public:
 	Presets(const char* fileExtension)
 		: m_fileExtension(fileExtension + std::string(".")),
-		m_savePresetAs(findPlaceholderName(FolderPath::Settings)),
-		m_nameAvailable(true)
+		m_savePresetAs(findPlaceholderName(FolderPath::Settings))
 	{}
 	~Presets() = default;
 
@@ -42,11 +41,16 @@ public:
 		}
 		if (!m_currentPresetName.compare("Unsaved settings...")) {
 			if (m_nameAvailable) {
-				if (ImGui::Button("Save settings")) {
-					savePresetTo(*settingValues, FolderPath::Settings);
+				if (!m_nameContainsDots) {
+					if (ImGui::Button("Save settings")) {
+						savePresetTo(*settingValues, FolderPath::Settings);
+					}
+					ImGui::SameLine();
+					ImGui::Text("as");
 				}
-				ImGui::SameLine();
-				ImGui::Text("as");
+				else {
+					ImGui::TextColored(ImVec4(0.74f, 0.04f, 0.04f, 1.f), "You can't have dots (.) in the name");
+				}
 			}
 			else {
 				ImGui::TextColored(ImVec4(0.74f, 0.04f, 0.04f, 1.f), "Name already used :");
@@ -55,6 +59,7 @@ public:
 			ImGui::PushID(138571);
 			if (ImGui::InputText("", &m_savePresetAs)) {
 				m_nameAvailable = !MyFile::Exists(FolderPath::Settings + "/" + m_fileExtension + m_savePresetAs + ".json") && m_savePresetAs.compare("Unsaved settings...");
+				m_nameContainsDots = m_savePresetAs.find(".") != std::string::npos;
 			}
 			ImGui::PopID();
 			m_bRenamePopupOpenThisFrame = false;
@@ -178,7 +183,8 @@ private:
 	size_t m_currentPresetIdx = -1;
 	std::vector<Preset<T>> m_presets;
 	std::string m_savePresetAs;
-	bool m_nameAvailable;
+	bool m_nameAvailable = true;
+	bool m_nameContainsDots = false;
 	std::string m_newPresetName;
 	bool m_bRenamePopupOpenLastFrame = false;
 	bool m_bRenamePopupOpenThisFrame = false;
