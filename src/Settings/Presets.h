@@ -78,12 +78,18 @@ public:
 			else {
 				m_bRenamePopupOpenThisFrame = false;
 				if (m_bRenamePopupOpenLastFrame && m_currentPresetIdx != -1) {
-					std::filesystem::rename(
-						FolderPath::Settings + "/" + m_fileExtension + m_currentPresetName + ".json",
-						FolderPath::Settings + "/" + m_fileExtension + m_newPresetName     + ".json"
-					);
-					m_currentPresetName = m_newPresetName;
-					m_presets[m_currentPresetIdx].name = m_newPresetName;
+					const std::string newPath = FolderPath::Settings + "/" + m_fileExtension + m_newPresetName + ".json";
+					if (!MyFile::Exists(newPath)) {
+						std::filesystem::rename(
+							FolderPath::Settings + "/" + m_fileExtension + m_currentPresetName + ".json",
+							newPath
+						);
+						m_currentPresetName = m_newPresetName;
+						m_presets[m_currentPresetIdx].name = m_newPresetName;
+					}
+					else {
+						boxer::show(("\"" + m_newPresetName + "\" already exists.").c_str(), "Renaming failed", boxer::Style::Warning);
+					}
 				}
 			}
 			ImGui::SameLine();
