@@ -9,6 +9,8 @@
 #include "Clock/Clock_Realtime.h"
 #include "Constants/Textures.h"
 
+#include <nfd.hpp>
+
 #if defined(_MSC_VER) && defined(NDEBUG)
 #pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
 #endif
@@ -22,6 +24,10 @@ int main(int argc, char *argv[]) {
 	#ifdef _WIN32 // Check memory leaks
 		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	#endif
+		// ---------- Initialize nfd ---------------
+
+		NFD::Guard nfdGuard;
+
 		// ---------- Initialize spdlog ---------------
 
 		Log::Initialize();
