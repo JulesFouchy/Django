@@ -13,6 +13,7 @@
 #include "OpenGL/RenderBuffer.h"
 #include <Boxer/boxer.h>
 #include <nfd.hpp>
+#include "Constants/Textures.h"
 
 FrameExporter::FrameExporter()
 	: m_settings({ 60.f, 1280, 720, FolderPath::Exports })
@@ -131,15 +132,18 @@ void FrameExporter::ImGui() {
 		Viewports::setExportSize(m_settings.width, m_settings.height);
 		ImGui::PopItemWidth();
 		ImGui::InputFloat("FPS", &m_settings.fps);
-		ImGui::InputText("Export to", &m_settings.folderBasePath);
-		ImGui::SameLine();
-		if (ImGui::Button("Edit")) {
+		ImGui::PushID(46248921652987);
+		ImGui::InputText("", &m_settings.folderBasePath);
+		ImGui::PopID(); ImGui::SameLine();
+		if (MyImGui::ButtonWithIcon(Textures::Folder(), ImVec4(1, 1, 1, 1), ImVec4(0.1, 0.1, 0.1, 1), 1, 18, 18)) {
 			NFD::UniquePath outPath;
 			nfdresult_t result = NFD::PickFolder(outPath);
 			if (result == NFD_OKAY) {
 				m_settings.folderBasePath = outPath.get();
 			}
 		}
+		ImGui::SameLine();
+		ImGui::Text("Export to");
 	}
 	else {
 		ImGui::Text("Remaining time :");
