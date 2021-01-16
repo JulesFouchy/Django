@@ -33,7 +33,8 @@ private:
 	size_t m_currentPresetIdx = -1;
 	std::vector<BindingsPreset> m_presets;
 	std::string m_savePresetAs;
-	bool m_nameAvailable;
+	bool m_nameAvailable = true;
+	bool m_nameContainsDots = false;
 	std::string m_newPresetName;
 	bool m_bRenamePopupOpenLastFrame = false;
 	bool m_bRenamePopupOpenThisFrame = false;

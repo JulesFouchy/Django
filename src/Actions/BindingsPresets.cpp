@@ -13,8 +13,7 @@ namespace fs = std::filesystem;
 #include <Boxer/boxer.h>
 
 BindingsPresets::BindingsPresets()
-	: m_savePresetAs(findPlaceholderName()),
-	m_nameAvailable(true)
+	: m_savePresetAs(findPlaceholderName())
 {
 	if (MyFile::Exists(FolderPath::Settings + "/lastSessionBindingsPreset.json")) {
 		std::ifstream is(FolderPath::Settings + "/lastSessionBindingsPreset.json");
@@ -64,11 +63,16 @@ void BindingsPresets::ImGui(KeyBindings& keyBindings) {
 	// Save / Edit preset
 	if (!m_currentPresetName.compare("Unsaved bindings...")) {
 		if (m_nameAvailable) {
-			if (ImGui::Button("Save bindings")) {
-				savePresetTo(getFullPath(m_savePresetAs), keyBindings);
+			if (!m_nameContainsDots) {
+				if (ImGui::Button("Save bindings")) {
+					savePresetTo(getFullPath(m_savePresetAs), keyBindings);
+				}
+				ImGui::SameLine();
+				ImGui::Text("as");
 			}
-			ImGui::SameLine();
-			ImGui::Text("as");
+			else {
+				ImGui::TextColored(ImVec4(0.74f, 0.04f, 0.04f, 1.f), "You can't have dots (.) in the name");
+			}
 		}
 		else {
 			ImGui::TextColored(ImVec4(0.74f, 0.04f, 0.04f, 1.0f), "Name already used :");
@@ -77,6 +81,7 @@ void BindingsPresets::ImGui(KeyBindings& keyBindings) {
 		ImGui::PushID(18571);
 		if (ImGui::InputText("", &m_savePresetAs)) {
 			m_nameAvailable = !MyFile::Exists(getFullPath(m_savePresetAs));
+			m_nameContainsDots = m_savePresetAs.find(".") != std::string::npos;
 		}
 		ImGui::PopID();
 		m_bRenamePopupOpenThisFrame = false;
