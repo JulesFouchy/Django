@@ -8,14 +8,13 @@ namespace fs = std::filesystem;
 #include <fstream>
 #include "Helper/String.h"
 #include "Helper/File.h"
+#include "Helper/MyImGui.h"
 #include "Constants/FolderPath.h"
-
 
 BindingsPresets::BindingsPresets()
 	: m_savePresetAs(findPlaceholderName()),
 	m_nameAvailable(true)
 {
-	loadPresets();
 	if (MyFile::Exists(FolderPath::Settings + "/lastSessionBindingsPreset.json")) {
 		std::ifstream is(FolderPath::Settings + "/lastSessionBindingsPreset.json");
 		{
@@ -28,6 +27,7 @@ BindingsPresets::BindingsPresets()
 	else {
 		setPlaceholderPresetName();
 	}
+	loadPresets();
 }
 
 BindingsPresets::~BindingsPresets() {
@@ -50,34 +50,71 @@ void BindingsPresets::ImGui(KeyBindings& keyBindings) {
 		setPlaceholderPresetName();
 	}
 	if (ImGui::BeginCombo("Presets", m_currentPresetName.c_str(), 0)) {
-		for (const BindingsPreset& preset : m_presets) {
-			if (ImGui::Selectable(preset.name.c_str(), false)) {
-				m_currentPresetName = preset.name;
-				keyBindings.setupBindings(preset.filepath);
+		for (size_t i = 0; i < m_presets.size(); ++i) {
+			if (ImGui::Selectable(m_presets[i].name.c_str(), false)) {
+				m_currentPresetName = m_presets[i].name;
+				m_currentPresetIdx = i;
+				keyBindings.setupBindings(m_presets[i].filepath);
 			}
 		}
 		ImGui::EndCombo();
 	}
-	if (m_nameAvailable) {
-		if (ImGui::Button("Save bindings")) {
-			savePresetTo(getFullPath(m_savePresetAs), keyBindings);
+	ImGui::Text(std::to_string(m_currentPresetIdx).c_str()); // TODO remove me
+	// Save / Edit preset
+	if (!m_currentPresetName.compare("Unsaved bindings...")) {
+		if (m_nameAvailable) {
+			if (ImGui::Button("Save bindings")) {
+				savePresetTo(getFullPath(m_savePresetAs), keyBindings);
+			}
+			ImGui::SameLine();
+			ImGui::Text("as");
+		}
+		else {
+			ImGui::TextColored(ImVec4(0.74f, 0.04f, 0.04f, 1.0f), "Name already used :");
 		}
 		ImGui::SameLine();
-		ImGui::Text("as");
+		ImGui::PushID(18571);
+		if (ImGui::InputText("", &m_savePresetAs)) {
+			m_nameAvailable = !MyFile::Exists(getFullPath(m_savePresetAs));
+		}
+		ImGui::PopID();
+		m_bRenamePopupOpenThisFrame = false;
 	}
 	else {
-		ImGui::TextColored(ImVec4(0.74f, 0.04f, 0.04f, 1.0f), "Name already used :");
+		// Rename
+		if (MyImGui::BeginPopupContextMenuFromButton("Rename")) {
+			if (!m_bRenamePopupOpenLastFrame) {
+				m_newPresetName = m_currentPresetName;
+			}
+			ImGui::PushID(1687965412465424);
+			ImGui::InputText("", &m_newPresetName);
+			ImGui::PopID();
+			ImGui::EndPopup();
+			m_bRenamePopupOpenThisFrame = true;
+		}
+		else {
+			m_bRenamePopupOpenThisFrame = false;
+			if (m_bRenamePopupOpenLastFrame && m_currentPresetIdx != -1) {
+				std::filesystem::rename(
+					FolderPath::Settings + "/djgBindings." + m_currentPresetName + ".json",
+					FolderPath::Settings + "/djgBindings." + m_newPresetName     + ".json"
+				);
+				m_currentPresetName = m_newPresetName;
+				m_presets[m_currentPresetIdx].name = m_newPresetName;
+			}
+		}
+		ImGui::SameLine();
+		// Delete
+		if (ImGui::Button("Delete")) {
+
+		}
 	}
-	ImGui::SameLine();
-	ImGui::PushID(18571);
-	if (ImGui::InputText("", &m_savePresetAs)) {
-		m_nameAvailable = !MyFile::Exists(getFullPath(m_savePresetAs));
-	}
-	ImGui::PopID();
+	m_bRenamePopupOpenLastFrame = m_bRenamePopupOpenThisFrame;
 }
 
 void BindingsPresets::setPlaceholderPresetName() {
 	m_currentPresetName = "Unsaved bindings...";
+	m_currentPresetIdx = -1;
 }
 
 void BindingsPresets::sort() {
@@ -91,6 +128,13 @@ void BindingsPresets::sort() {
 			BindingsPreset prst = m_presets[i];
 			std::copy_backward(m_presets.begin(), i + m_presets.begin(), i + 1 + m_presets.begin());
 			m_presets[0] = prst;
+			break;
+		}
+	}
+	// Find m_currentPresetIdx
+	for (size_t i = 0; i < m_presets.size(); ++i) {
+		if (!m_presets[i].name.compare(m_currentPresetName)) {
+			m_currentPresetIdx = i;
 			break;
 		}
 	}
@@ -118,9 +162,10 @@ void BindingsPresets::savePresetTo(const std::string& filepath, KeyBindings& key
 	keyBindings.serializeBindings(filepath);
 	// Add it to current list
 	m_presets.emplace_back(filepath);
-	sort();
 	// Give the name to the selected preset
 	m_currentPresetName = m_savePresetAs;
+	//
+	sort();
 	// Find new placeholder name
 	m_savePresetAs = findPlaceholderName();
 }

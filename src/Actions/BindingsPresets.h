@@ -30,7 +30,11 @@ private:
 
 private:
 	std::string m_currentPresetName;
+	size_t m_currentPresetIdx = -1;
 	std::vector<BindingsPreset> m_presets;
 	std::string m_savePresetAs;
 	bool m_nameAvailable;
+	std::string m_newPresetName;
+	bool m_bRenamePopupOpenLastFrame = false;
+	bool m_bRenamePopupOpenThisFrame = false;
 };
