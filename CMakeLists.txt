@@ -62,6 +62,7 @@ add_library(STB_IMAGE_WRITE STATIC "lib/stb_image/stb_image_write.cpp")
 file(GLOB_RECURSE IMGUI_SOURCES lib/imgui/*)
 add_library(IMGUI STATIC ${IMGUI_SOURCES})
 add_subdirectory("lib/Boxer")
+add_subdirectory("lib/nativefiledialog-extended/src")
 
 # /////////////////////////////////////////////////////////////////////////////
 # ///////////////////////////////// INCLUDES //////////////////////////////////
@@ -75,6 +76,7 @@ include_directories(
     lib/glm
     lib/color/src
     lib/cereal-1.3.0/include/
+    lib/nativefiledialog-extended/src/include
     lib
     src
     res
@@ -97,6 +99,7 @@ target_link_libraries(${PROJECT_NAME}
     STB_IMAGE_WRITE
     IMGUI
     Boxer
+    nfd
 )
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)

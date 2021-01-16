@@ -1,3 +1,6 @@
 [submodule "lib/Boxer"]
 	path = lib/Boxer
 	url = https://github.com/aaronmjacobs/Boxer
+[submodule "lib/nativefiledialog-extended"]
+	path = lib/nativefiledialog-extended
+	url = https://github.com/JulesFouchy/nativefiledialog-extended
