@@ -59,7 +59,6 @@ void BindingsPresets::ImGui(KeyBindings& keyBindings) {
 		}
 		ImGui::EndCombo();
 	}
-	ImGui::Text(std::to_string(m_currentPresetIdx).c_str()); // TODO remove me
 	// Save / Edit preset
 	if (!m_currentPresetName.compare("Unsaved bindings...")) {
 		if (m_nameAvailable) {
@@ -101,13 +100,19 @@ void BindingsPresets::ImGui(KeyBindings& keyBindings) {
 		else {
 			m_bRenamePopupOpenThisFrame = false;
 			if (m_bRenamePopupOpenLastFrame && m_currentPresetIdx != -1) {
-				std::filesystem::rename(
-					FolderPath::Settings + "/djgBindings." + m_currentPresetName + ".json",
-					FolderPath::Settings + "/djgBindings." + m_newPresetName     + ".json"
-				);
-				m_currentPresetName = m_newPresetName;
-				m_presets[m_currentPresetIdx].name = m_newPresetName;
-				sort();
+				const std::string newPath = FolderPath::Settings + "/djgBindings." + m_newPresetName + ".json";
+				if (!MyFile::Exists(newPath)) {
+					std::filesystem::rename(
+						FolderPath::Settings + "/djgBindings." + m_currentPresetName + ".json",
+						newPath
+					);
+					m_currentPresetName = m_newPresetName;
+					m_presets[m_currentPresetIdx].name = m_newPresetName;
+					sort();
+				}
+				else {
+					boxer::show(("\"" + m_newPresetName + "\" already exists.").c_str(), "Renaming failed", boxer::Style::Warning);
+				}
 			}
 		}
 		ImGui::SameLine();
