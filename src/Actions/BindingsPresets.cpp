@@ -10,6 +10,7 @@ namespace fs = std::filesystem;
 #include "Helper/File.h"
 #include "Helper/MyImGui.h"
 #include "Constants/FolderPath.h"
+#include <Boxer/boxer.h>
 
 BindingsPresets::BindingsPresets()
 	: m_savePresetAs(findPlaceholderName()),
@@ -106,7 +107,14 @@ void BindingsPresets::ImGui(KeyBindings& keyBindings) {
 		ImGui::SameLine();
 		// Delete
 		if (ImGui::Button("Delete")) {
-
+			if (boxer::show(("\"" + m_currentPresetName + "\" will be deleted. Are you sure ?").c_str(), "Delete", boxer::Style::Warning, boxer::Buttons::YesNo) == boxer::Selection::Yes) {
+				std::filesystem::remove(
+					FolderPath::Settings + "/djgBindings." + m_currentPresetName + ".json"
+				);
+				m_presets.erase(m_currentPresetIdx + m_presets.begin());
+				findPlaceholderName();
+				setPlaceholderPresetName();
+			}
 		}
 	}
 	m_bRenamePopupOpenLastFrame = m_bRenamePopupOpenThisFrame;
