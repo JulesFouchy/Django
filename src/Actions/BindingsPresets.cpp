@@ -102,6 +102,7 @@ void BindingsPresets::ImGui(KeyBindings& keyBindings) {
 				);
 				m_currentPresetName = m_newPresetName;
 				m_presets[m_currentPresetIdx].name = m_newPresetName;
+				sort();
 			}
 		}
 		ImGui::SameLine();
