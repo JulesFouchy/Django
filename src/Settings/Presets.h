@@ -86,6 +86,7 @@ public:
 						);
 						m_currentPresetName = m_newPresetName;
 						m_presets[m_currentPresetIdx].name = m_newPresetName;
+						sort();
 					}
 					else {
 						boxer::show(("\"" + m_newPresetName + "\" already exists.").c_str(), "Renaming failed", boxer::Style::Warning);
@@ -99,8 +100,8 @@ public:
 						FolderPath::Settings + "/" + m_fileExtension + m_currentPresetName + ".json"
 					);
 					m_presets.erase(m_currentPresetIdx + m_presets.begin());
-					setToPlaceholderSetting();
 					findPlaceholderName(FolderPath::Settings);
+					setToPlaceholderSetting();
 				}
 			}
 		}
@@ -125,6 +126,13 @@ private:
 				Preset<T> prst = m_presets[i];
 				std::copy_backward(m_presets.begin(), i + m_presets.begin(), i + 1 + m_presets.begin());
 				m_presets[0] = prst;
+				break;
+			}
+		}
+		// Find m_currentPresetIdx
+		for (size_t i = 0; i < m_presets.size(); ++i) {
+			if (!m_presets[i].name.compare(m_currentPresetName)) {
+				m_currentPresetIdx = i;
 				break;
 			}
 		}
@@ -156,13 +164,6 @@ private:
 			}
 		}
 		sort();
-		// Find m_currentPresetIdx
-		for (size_t i = 0; i < m_presets.size(); ++i) {
-			if (!m_presets[i].name.compare(m_currentPresetName)) {
-				m_currentPresetIdx = i;
-				break;
-			}
-		}
 	}
 
 	void savePresetTo(T& settingValues, const std::string& folderPath) {
@@ -175,10 +176,10 @@ private:
 		}
 		// Add it to current list
 		m_presets.push_back({ m_savePresetAs, settingValues });
-		//sort(); // it's easier to know m_currentPresetIdx if we don't sort
-		m_currentPresetIdx = m_presets.size() - 1;
 		// Give the name to the selected preset
 		m_currentPresetName = m_savePresetAs;
+		//
+		sort();
 		// Find new placeholder name
 		m_savePresetAs = findPlaceholderName(folderPath);
 	}
