@@ -36,7 +36,7 @@ public:
 	void exportFrame(RenderBuffer& renderBuffer);
 
 	/// Returns true iff the export started successfully
-	bool startExporting(Record& selectedRecord, Renderer& renderer, std::unique_ptr<Clock>& clock, const glm::vec3& bgColor);
+	bool startExporting(Record& selectedRecord, Renderer& renderer, std::unique_ptr<Clock>& clock);
 	void stopExporting(Renderer& renderer, std::unique_ptr<Clock>& clock);
 
 	void update(Renderer& renderer, std::unique_ptr<Clock>& clock);

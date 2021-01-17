@@ -32,7 +32,7 @@ void RecordManager::ImGui(std::unique_ptr<Clock>& clock, StateModifier& stateMod
 	if (hasARecordSelected()) {
 		if (!Viewports::IsExporting()) {
 			if (ImGui::Button("Export")) {
-				if (m_exporter.startExporting(selectedRecord(), stateModifier.renderer(), clock, stateModifier.settingsManager().get().colors().backgroundColor())) {
+				if (m_exporter.startExporting(selectedRecord(), stateModifier.renderer(), clock)) {
 					selectedRecord().startPlaying(stateModifier);
 					m_recordPlayer.setState<PlayState_Play>(selectedRecord(), clock->time());
 				}

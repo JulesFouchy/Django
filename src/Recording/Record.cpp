@@ -1,6 +1,8 @@
 #include "Record.h"
 
 #include "StateModifier.h"
+#include "Renderer.h"
+#include "Settings/SettingsManager.h"
 #include "Helper/Time.h"
 #include "Helper/String.h"
 #include <cereal/archives/binary.hpp>
@@ -29,6 +31,7 @@ void Record::recordStateChange(const StateChange& stateChange, float timestamp) 
 bool Record::startPlaying(StateModifier& stateModifier) {
 	m_prevTime = 0.0f;
 	stateModifier.setApplyAndRecord(m_startState);
+	stateModifier.renderer().clearRenderBuffer(stateModifier.settingsManager().get().colors().backgroundColor());
 	m_nextStateChangeIdx = 0;
 	return m_stateChangesTimeline.size() != 0;
 }

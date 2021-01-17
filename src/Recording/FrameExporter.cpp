@@ -45,7 +45,7 @@ FrameExporter::~FrameExporter() {
 	}
 }
 
-bool FrameExporter::startExporting(Record& selectedRecord, Renderer& renderer, std::unique_ptr<Clock>& clock, const glm::vec3& bgColor) {
+bool FrameExporter::startExporting(Record& selectedRecord, Renderer& renderer, std::unique_ptr<Clock>& clock) {
 	m_exportFolderPath = m_settings.folderBasePath + "/" + selectedRecord.name();
 	if (MyFile::Exists(m_exportFolderPath)) {
 		boxer::Selection answer = boxer::show(
@@ -69,7 +69,6 @@ bool FrameExporter::startExporting(Record& selectedRecord, Renderer& renderer, s
 	}
 	if (MyFile::CreateFolderIfDoesntExist(m_exportFolderPath)) {
 		Viewports::setIsExporting(true);
-		renderer.clearRenderBuffer(bgColor);
 		m_frameCount = 0;
 		float totalExportDuration = selectedRecord.totalDuration();
 		m_timeExportStops = selectedRecord.initialTime() + totalExportDuration;
