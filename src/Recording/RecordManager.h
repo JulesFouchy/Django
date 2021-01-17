@@ -5,6 +5,7 @@
 #include "Recorder.h"
 #include "RecordPlayer.h"
 #include "FrameExporter.h"
+#include "OpenGL/ComputeShader.h"
 
 class StateModifier;
 
@@ -42,4 +43,5 @@ private:
 	std::string m_newRecordName;
 
 	FrameExporter m_exporter;
+	ComputeShader m_resetParticlesPosAndSpeedShader;
 };

@@ -4,6 +4,7 @@
 #include "Clock/Clock_Realtime.h"
 #include "StateModifier.h"
 #include "Settings/SettingsManager.h"
+#include "Particles/ParticlesSystem.h"
 #include "Configurations/ConfigManager.h"
 #include "Helper/MyImGui.h"
 #include "Helper/File.h"
@@ -15,7 +16,7 @@
 #include <Boxer/boxer.h>
 
 RecordManager::RecordManager()
-	: m_clock(std::make_unique<Clock_Realtime>()), m_recorder(*m_clock)
+	: m_clock(std::make_unique<Clock_Realtime>()), m_recorder(*m_clock), m_resetParticlesPosAndSpeedShader("internal-shaders/resetParticlePositionAndSpeed.comp")
 {
 	// Load records
 	if (MyFile::Exists(FolderPath::Records)) {
@@ -33,8 +34,14 @@ void RecordManager::ImGui(std::unique_ptr<Clock>& clock, StateModifier& stateMod
 		if (!Viewports::IsExporting()) {
 			if (ImGui::Button("Export")) {
 				if (m_exporter.startExporting(selectedRecord(), stateModifier.renderer(), clock)) {
+					// Play record
 					selectedRecord().startPlaying(stateModifier);
 					m_recordPlayer.setState<PlayState_Play>(selectedRecord(), clock->time());
+					// Reset particles' positions and speeds
+					unsigned int nbParticles = stateModifier.particleSystem().getNbParticles();
+					m_resetParticlesPosAndSpeedShader.get().bind();
+					m_resetParticlesPosAndSpeedShader.get().setUniform1i("u_NbOfParticles", nbParticles);
+					m_resetParticlesPosAndSpeedShader.compute(nbParticles);
 				}
 			}
 		}
