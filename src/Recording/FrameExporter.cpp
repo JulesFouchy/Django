@@ -137,7 +137,11 @@ void FrameExporter::ImGui() {
 		ImGui::PopID(); ImGui::SameLine();
 		if (MyImGui::ButtonWithIcon(Textures::Folder(), ImVec4(1, 1, 1, 1), ImVec4(0.1, 0.1, 0.1, 1), 1, 18, 18)) {
 			NFD::UniquePath outPath;
-			nfdresult_t result = NFD::PickFolder(outPath);
+			nfdresult_t result;
+			if (MyFile::Exists(m_settings.folderBasePath))
+				result = NFD::PickFolder(outPath, m_settings.folderBasePath.c_str());
+			else
+				result = NFD::PickFolder(outPath);
 			if (result == NFD_OKAY) {
 				m_settings.folderBasePath = outPath.get();
 			}
