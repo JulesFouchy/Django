@@ -5,6 +5,7 @@
 #include <imgui_impl_opengl3.h>
 
 #include <debug_break/debug_break.h>
+#include "Framework/GlDebugCallback.h"
 
 #include "Clock/Clock_Realtime.h"
 #include "Constants/Textures.h"
@@ -52,6 +53,9 @@ int main(int argc, char *argv[]) {
 		SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 		SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
 		SDL_SetHint(SDL_HINT_VIDEO_MINIMIZE_ON_FOCUS_LOSS, "0");
+#ifndef NDEBUG
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);
+#endif
 
 		// Output window
 		SDL_Window* outputWindow = SDL_CreateWindow(
@@ -88,6 +92,20 @@ int main(int argc, char *argv[]) {
 			spdlog::critical("[Glad] Glad not init");
 			debug_break();
 		}
+
+		// OpenGL Debugging
+#ifndef NDEBUG
+		int flags; glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
+		if (flags & GL_CONTEXT_FLAG_DEBUG_BIT) {
+			glEnable(GL_DEBUG_OUTPUT);
+			glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+			glDebugMessageCallback(GLDebugCallback, nullptr);
+			glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+		}
+		else {
+			spdlog::warn("Couldn't setup OpenGL Debugging");
+		}
+#endif
 
 		// ------- Initialize ImGUI ------------
 
