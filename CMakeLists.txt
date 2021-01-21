@@ -2,40 +2,13 @@
 cmake_minimum_required(VERSION 3.16)
 project(DJANGO C CXX)
 
-set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-
 # /////////////////////////////////////////////////////////////////////////////
 # ////////////////////////////// PROJECT FILES ////////////////////////////////
 # /////////////////////////////////////////////////////////////////////////////
 
-################################ -------- ######
 file(GLOB_RECURSE MY_SOURCES src/*)
 file(GLOB_RECURSE MY_INTERNAL_SHADERS internal-shaders/*)
 file(GLOB_RECURSE MY_CONFIGS configurations/*)
-
-# Recreate folder architecture inside visual studio solution (might work for other IDEs as well)
-# src
-foreach(_source IN ITEMS ${MY_SOURCES})
-    get_filename_component(_source_path "${_source}" PATH)
-    string(REPLACE "${CMAKE_SOURCE_DIR}" "" _group_path "${_source_path}")
-    string(REPLACE "/" "\\" _group_path "${_group_path}")
-    source_group("${_group_path}" FILES "${_source}")
-endforeach()
-# internal-shaders
-foreach(_source IN ITEMS ${MY_INTERNAL_SHADERS})
-    get_filename_component(_source_path "${_source}" PATH)
-    string(REPLACE "${CMAKE_SOURCE_DIR}" "" _group_path "${_source_path}")
-    string(REPLACE "/" "\\" _group_path "${_group_path}")
-    source_group("${_group_path}" FILES "${_source}")
-endforeach()
-# configurations
-foreach(_source IN ITEMS ${MY_CONFIGS})
-    get_filename_component(_source_path "${_source}" PATH)
-    string(REPLACE "${CMAKE_SOURCE_DIR}" "" _group_path "${_source_path}")
-    string(REPLACE "/" "\\" _group_path "${_group_path}")
-    source_group("${_group_path}" FILES "${_source}")
-endforeach()
-################################ -------- ######
 
 # /////////////////////////////////////////////////////////////////////////////
 # /////////////////////////////// DEPENDENCIES ////////////////////////////////
@@ -104,11 +77,18 @@ target_link_libraries(${PROJECT_NAME}
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
 
+# Recreate folder architecture inside visual studio solution (might work for other IDEs as well)
+include("Cool/CMake-Helpers/VS_helpers.cmake")
+VS_RegisterFiles("${MY_SOURCES}")
+VS_RegisterFiles("${MY_INTERNAL_SHADERS}")
+VS_RegisterFiles("${MY_CONFIGS}")
+
 if (UNIX)
     target_link_libraries(${PROJECT_NAME} -ldl)
 endif()
 
-if (WIN32) # Copy .dll to build folder
+# Copy .dll to build folder
+if (WIN32)
     add_custom_command(
         TARGET ${PROJECT_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
@@ -116,35 +96,12 @@ if (WIN32) # Copy .dll to build folder
         $<TARGET_FILE_DIR:${PROJECT_NAME}>
     )
 endif()
-
-# Copy internal-shaders folder after a build
-add_custom_command(
-    TARGET ${PROJECT_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-    ${CMAKE_SOURCE_DIR}/internal-shaders/
-    $<TARGET_FILE_DIR:${PROJECT_NAME}>/internal-shaders
-)
-# And copy settings folder
-add_custom_command(
-    TARGET ${PROJECT_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-    ${CMAKE_SOURCE_DIR}/settings/
-    $<TARGET_FILE_DIR:${PROJECT_NAME}>/settings
-)
-# And copy configurations folder
-add_custom_command(
-    TARGET ${PROJECT_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-    ${CMAKE_SOURCE_DIR}/configurations/
-    $<TARGET_FILE_DIR:${PROJECT_NAME}>/configurations
-)
-# And copy icons folder
-add_custom_command(
-    TARGET ${PROJECT_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-    ${CMAKE_SOURCE_DIR}/icons/
-    $<TARGET_FILE_DIR:${PROJECT_NAME}>/icons
-)
+# Add a post build operation to copy folders to the output folder (where the executable is created)
+include("Cool/CMake-Helpers/copy_folder_to_the_output_folder.cmake")
+copy_folder_to_the_output_folder("internal-shaders")
+copy_folder_to_the_output_folder("settings")
+copy_folder_to_the_output_folder("configurations")
+copy_folder_to_the_output_folder("icons")
 # And copy imgui.ini
 add_custom_command(
     TARGET ${PROJECT_NAME} POST_BUILD
@@ -152,10 +109,6 @@ add_custom_command(
         ${CMAKE_SOURCE_DIR}/imgui.ini
         $<TARGET_FILE_DIR:${PROJECT_NAME}>/imgui.ini
 )
-# Setup working directory in Visual Studio (to access the res folder) :
-set_target_properties(
-    ${PROJECT_NAME} PROPERTIES
-    VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
 
 # /////////////////////////////////////////////////////////////////////////////
 # ////////////////////////// PRECOMPILED HEADER ! /////////////////////////////
