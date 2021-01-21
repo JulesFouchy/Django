@@ -6,6 +6,8 @@ public:
 	inline const std::vector<SDL_Scancode>& secondRow() { return m_secondRow; }
 	inline const std::vector<SDL_Scancode>& thirdRow() { return m_thirdRow; }
 
+	inline bool isSettingKeyboardLayout() { return m_bSettingLayout; }
+
 	void onKeyUp(SDL_Scancode scancode);
 
 	void ImGui();

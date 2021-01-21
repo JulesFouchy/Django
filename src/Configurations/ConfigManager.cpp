@@ -235,13 +235,15 @@ void ConfigManager::ImGuiOpenWindowCheckbox() {
 }
 
 void ConfigManager::onKeyPressed(SDL_Scancode scancode, char keysym, StateModifier& stateModifier) {
-    // Text config
-    if (m_currConfigType != ConfigType::TEXT || !m_textConfig.onKeyPressed(scancode, keysym, stateModifier)) {
-        // Parameters
-        if (!m_params.onKeyPressed(scancode, stateModifier)) {
-            // Actions
-            if (const Action* action = m_keyBindings.getAction(scancode)) {
-                applyAndRecord_Action(*action, stateModifier);
+    if (!m_keyBindings.isSettingKeyboardLayout()) {
+        // Text config
+        if (m_currConfigType != ConfigType::TEXT || !m_textConfig.onKeyPressed(scancode, keysym, stateModifier)) {
+            // Parameters
+            if (!m_params.onKeyPressed(scancode, stateModifier)) {
+                // Actions
+                if (const Action* action = m_keyBindings.getAction(scancode)) {
+                    applyAndRecord_Action(*action, stateModifier);
+                }
             }
         }
     }

@@ -21,8 +21,10 @@ public:
 	void onKeyUp(SDL_Scancode scancode);
 
 	inline std::unordered_map<std::string, ActionBinding*>& getAllActionBindingsOfType(ActionType type) { return m_allActionsByType[type]; }
-
+	
 	const Action* getActionByRef(const ActionRef& actionRef) const;
+
+	inline bool isSettingKeyboardLayout() { return m_keyboardLayout.isSettingKeyboardLayout(); }
 
 private:
 	void resetBindings();
