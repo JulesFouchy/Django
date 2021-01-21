@@ -62,6 +62,7 @@ include_directories(
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
 add_executable(${PROJECT_NAME} ${MY_SOURCES}
     lib/nanosvg/nanosvg.cpp # compile the nanosvg library
+    "${CMAKE_SOURCE_DIR}/windows-app-ressources/django.rc" # add ressources for Windows (app icon)
     ${MY_INTERNAL_SHADERS} ${MY_CONFIGS} # include in the VS project so they will appear in the solution explorer
 )
 target_link_libraries(${PROJECT_NAME}
