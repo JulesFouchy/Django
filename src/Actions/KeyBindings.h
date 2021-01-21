@@ -17,6 +17,7 @@ public:
 	void addAction(Action action, int type);
 	void setupBindings(const std::string& presetFilepath, bool clearExistingBndings = true);
 	void ImGui(StateModifier& stateModifier);
+	inline void ImGuiWindow() { m_keyboardLayout.ImGuiWindow(); }
 	void onKeyUp(SDL_Scancode scancode);
 
 	inline std::unordered_map<std::string, ActionBinding*>& getAllActionBindingsOfType(ActionType type) { return m_allActionsByType[type]; }
@@ -31,8 +32,6 @@ private:
 	void clearAllBindings();
 	void serializeBindings(const std::string& filepath);
 	std::vector<ActionRef> readBindingsFrom(const std::string& filepath);
-	
-	void startSettingKeyboardLayout();
 
 	bool hasBinding(const ActionBinding* actionBinding);
 	bool isKeyAvailable(SDL_Scancode scancode);

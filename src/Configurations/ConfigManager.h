@@ -20,6 +20,7 @@ public:
 	void Imgui(StateModifier& stateModifier);
 	void ImGuiOpenWindowCheckbox();
 	inline void ImGuiKeyBindings(StateModifier& stateModifier) { m_keyBindings.ImGui(stateModifier); }
+	inline void ImGuiWindow() { m_keyBindings.ImGuiWindow(); }
 
 	inline void onWheel(int delta, bool bNoStandardScroll, StateModifier& stateModifier) { m_params.onWheel(delta, bNoStandardScroll, stateModifier); }
 	void onKeyPressed(SDL_Scancode scancode, char keysym, StateModifier& stateModifier);

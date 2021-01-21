@@ -132,6 +132,8 @@ void App::update() {
 				m_configManager.ImGuiKeyBindings(m_stateModifier);
 				ImGui::End();
 			}
+			//
+			m_configManager.ImGuiWindow();
 		}
 		// Recording
 		if (m_bOpenRecordings) {

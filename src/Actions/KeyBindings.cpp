@@ -221,19 +221,13 @@ SDL_Scancode KeyBindings::findFirstFromRight(std::vector<SDL_Scancode> row) {
 	return SDL_SCANCODE_UNKNOWN;
 }
 
-void KeyBindings::startSettingKeyboardLayout() {
-
-}
-
 void KeyBindings::ImGui(StateModifier& stateModifier) {
 	// Keyboard
 	ImGui_KeyboardRow(m_keyboardLayout.firstRow(),  0.0f                             , stateModifier);
 	ImGui_KeyboardRow(m_keyboardLayout.secondRow(), KEY_OFFSET_PROP * KEY_SIZE       , stateModifier);
 	ImGui_KeyboardRow(m_keyboardLayout.thirdRow(),  KEY_OFFSET_PROP * KEY_SIZE * 2.0f, stateModifier);
 	ImGui::NewLine();
-	if (ImGui::Button("Set keyboard layout")) {
-		startSettingKeyboardLayout();
-	}
+	m_keyboardLayout.ImGui();
 	// List of configurations without a binding
 	bool b = false;
 	bool bSameLine = false;
