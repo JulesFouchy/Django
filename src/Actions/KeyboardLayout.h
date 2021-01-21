@@ -6,14 +6,18 @@ public:
 	inline const std::vector<SDL_Scancode>& secondRow() { return m_secondRow; }
 	inline const std::vector<SDL_Scancode>& thirdRow() { return m_thirdRow; }
 
+	void onKeyUp(SDL_Scancode scancode);
+
 	void ImGui();
 	void ImGuiWindow();
 
 private:
 	void startSettingKeyboardLayout();
+	std::vector<SDL_Scancode>& getCurrentRow();
 
 private:
 	bool m_bSettingLayout = false;
+	int m_settingRowIdx = 0;
 	std::vector<SDL_Scancode> m_firstRow = {
 		SDL_SCANCODE_Q,
 		SDL_SCANCODE_W,

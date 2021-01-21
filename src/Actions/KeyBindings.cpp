@@ -70,8 +70,10 @@ KeyBindings::~KeyBindings() {
 }
 
 void KeyBindings::onKeyUp(SDL_Scancode scancode) {
-	if (!ImGui::GetIO().WantTextInput)
+	if (!ImGui::GetIO().WantTextInput) {
+		m_keyboardLayout.onKeyUp(scancode);
 		m_keyReleasedLastDate[scancode] = SDL_GetTicks();
+	}
 }
 
 const Action* KeyBindings::getAction(SDL_Scancode scancode) {
