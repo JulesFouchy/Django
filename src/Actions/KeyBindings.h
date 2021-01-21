@@ -48,7 +48,6 @@ private:
 	bool m_mouseWasDraggingLastFrame = false;
 	BindingsPresets m_presets;
 	size_t nextAvailableKeyIdx = 0;
-	std::vector<SDL_Scancode> allKeys;
 	std::vector<SDL_Scancode> firstRow = {
 		SDL_SCANCODE_Q,
 		SDL_SCANCODE_W,

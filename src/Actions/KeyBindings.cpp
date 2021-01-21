@@ -55,13 +55,6 @@ KeyBindings::KeyBindings() {
 	addAction(textAction, ActionType_MISCELLANEOUS);
 	addAction(rerollRandomAction, ActionType_MISCELLANEOUS);
 
-	for (SDL_Scancode key : firstRow)
-		allKeys.push_back(key);
-	for (SDL_Scancode key : secondRow)
-		allKeys.push_back(key);
-	for (SDL_Scancode key : thirdRow)
-		allKeys.push_back(key);
-
 	int nbKeys;
 	SDL_GetKeyboardState(&nbKeys);
 	m_keyReleasedLastDate = new Uint32[nbKeys];
