@@ -2,6 +2,7 @@
 
 #include "ActionsByType.h"
 #include "BindingsPresets.h"
+#include "KeyboardLayout.h"
 
 class StateModifier;
 
@@ -30,6 +31,8 @@ private:
 	void clearAllBindings();
 	void serializeBindings(const std::string& filepath);
 	std::vector<ActionRef> readBindingsFrom(const std::string& filepath);
+	
+	void startSettingKeyboardLayout();
 
 	bool hasBinding(const ActionBinding* actionBinding);
 	bool isKeyAvailable(SDL_Scancode scancode);
@@ -48,44 +51,5 @@ private:
 	bool m_mouseWasDraggingLastFrame = false;
 	BindingsPresets m_presets;
 	size_t m_nextAvailableKeyIdx = 0;
-	std::vector<SDL_Scancode> m_firstRow = {
-		SDL_SCANCODE_Q,
-		SDL_SCANCODE_W,
-		SDL_SCANCODE_E,
-		SDL_SCANCODE_R,
-		SDL_SCANCODE_T,
-		SDL_SCANCODE_Y,
-		SDL_SCANCODE_U,
-		SDL_SCANCODE_I,
-		SDL_SCANCODE_O,
-		SDL_SCANCODE_P,
-		SDL_SCANCODE_LEFTBRACKET,
-		SDL_SCANCODE_RIGHTBRACKET,
-		SDL_SCANCODE_BACKSLASH,
-	};
-	std::vector<SDL_Scancode> m_secondRow = {
-		SDL_SCANCODE_A,
-		SDL_SCANCODE_S,
-		SDL_SCANCODE_D,
-		SDL_SCANCODE_F,
-		SDL_SCANCODE_G,
-		SDL_SCANCODE_H,
-		SDL_SCANCODE_J,
-		SDL_SCANCODE_K,
-		SDL_SCANCODE_L,
-		SDL_SCANCODE_SEMICOLON,
-		SDL_SCANCODE_APOSTROPHE,
-	};
-	std::vector<SDL_Scancode> m_thirdRow = {
-		SDL_SCANCODE_Z,
-		SDL_SCANCODE_X,
-		SDL_SCANCODE_C,
-		SDL_SCANCODE_V,
-		SDL_SCANCODE_B,
-		SDL_SCANCODE_N,
-		SDL_SCANCODE_M,
-		SDL_SCANCODE_COMMA,
-		SDL_SCANCODE_PERIOD,
-		SDL_SCANCODE_SLASH,
-	};
+	KeyboardLayout m_keyboardLayout;
 };

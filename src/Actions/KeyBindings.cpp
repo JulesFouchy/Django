@@ -134,7 +134,7 @@ void KeyBindings::setupBindings(const std::string& presetFilepath, bool clearExi
 	for (const auto& kv : m_allActionsByType[ActionType::LAYOUT]) {
 		if (std::find(ignoredActions.begin(), ignoredActions.end(), kv.second->action.ref) == ignoredActions.end()) {
 			if (!hasBinding(kv.second)) {
-				SDL_Scancode scancode = findFirstFromLeft(m_secondRow);
+				SDL_Scancode scancode = findFirstFromLeft(m_keyboardLayout.secondRow());
 				if (scancode != SDL_SCANCODE_UNKNOWN)
 					setBinding(kv.second, scancode);
 				else
@@ -146,9 +146,9 @@ void KeyBindings::setupBindings(const std::string& presetFilepath, bool clearExi
 	for (const auto& kv : m_allActionsByType[ActionType::SHAPE]) {
 		if (std::find(ignoredActions.begin(), ignoredActions.end(), kv.second->action.ref) == ignoredActions.end()) {
 			if (!hasBinding(kv.second)) {
-				SDL_Scancode scancode = findFirstFromLeft(m_firstRow);
+				SDL_Scancode scancode = findFirstFromLeft(m_keyboardLayout.firstRow());
 				if (scancode == SDL_SCANCODE_UNKNOWN)
-					scancode = findFirstFromRight(m_secondRow);
+					scancode = findFirstFromRight(m_keyboardLayout.secondRow());
 				if (scancode != SDL_SCANCODE_UNKNOWN)
 					setBinding(kv.second, scancode);
 				else
@@ -160,9 +160,9 @@ void KeyBindings::setupBindings(const std::string& presetFilepath, bool clearExi
 	for (const auto& kv : m_allActionsByType[ActionType::SVG_SHAPE]) {
 		if (std::find(ignoredActions.begin(), ignoredActions.end(), kv.second->action.ref) == ignoredActions.end()) {
 			if (!hasBinding(kv.second)) {
-				SDL_Scancode scancode = findFirstFromLeft(m_firstRow);
+				SDL_Scancode scancode = findFirstFromLeft(m_keyboardLayout.firstRow());
 				if (scancode == SDL_SCANCODE_UNKNOWN)
-					scancode = findFirstFromRight(m_secondRow);
+					scancode = findFirstFromRight(m_keyboardLayout.secondRow());
 				if (scancode != SDL_SCANCODE_UNKNOWN)
 					setBinding(kv.second, scancode);
 				else
@@ -174,9 +174,9 @@ void KeyBindings::setupBindings(const std::string& presetFilepath, bool clearExi
 	for (const auto& kv : m_allActionsByType[ActionType::STANDALONE]) {
 		if (std::find(ignoredActions.begin(), ignoredActions.end(), kv.second->action.ref) == ignoredActions.end()) {
 			if (!hasBinding(kv.second)) {
-				SDL_Scancode scancode = findFirstFromLeft(m_thirdRow);
+				SDL_Scancode scancode = findFirstFromLeft(m_keyboardLayout.thirdRow());
 				if (scancode == SDL_SCANCODE_UNKNOWN) {
-					scancode = findFirstFromRight(m_secondRow);
+					scancode = findFirstFromRight(m_keyboardLayout.secondRow());
 				}
 				if (scancode != SDL_SCANCODE_UNKNOWN)
 					setBinding(kv.second, scancode);
@@ -221,12 +221,19 @@ SDL_Scancode KeyBindings::findFirstFromRight(std::vector<SDL_Scancode> row) {
 	return SDL_SCANCODE_UNKNOWN;
 }
 
+void KeyBindings::startSettingKeyboardLayout() {
+
+}
+
 void KeyBindings::ImGui(StateModifier& stateModifier) {
 	// Keyboard
-	ImGui_KeyboardRow(m_firstRow,  0.0f                             , stateModifier);
-	ImGui_KeyboardRow(m_secondRow, KEY_OFFSET_PROP * KEY_SIZE       , stateModifier);
-	ImGui_KeyboardRow(m_thirdRow,  KEY_OFFSET_PROP * KEY_SIZE * 2.0f, stateModifier);
+	ImGui_KeyboardRow(m_keyboardLayout.firstRow(),  0.0f                             , stateModifier);
+	ImGui_KeyboardRow(m_keyboardLayout.secondRow(), KEY_OFFSET_PROP * KEY_SIZE       , stateModifier);
+	ImGui_KeyboardRow(m_keyboardLayout.thirdRow(),  KEY_OFFSET_PROP * KEY_SIZE * 2.0f, stateModifier);
 	ImGui::NewLine();
+	if (ImGui::Button("Set keyboard layout")) {
+		startSettingKeyboardLayout();
+	}
 	// List of configurations without a binding
 	bool b = false;
 	bool bSameLine = false;
