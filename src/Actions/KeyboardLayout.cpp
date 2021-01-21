@@ -1,5 +1,9 @@
 #include "KeyboardLayout.h"
 
+KeyboardLayout::KeyboardLayout(std::function<void()> onLayoutChange)
+	: m_endSettingKeyboardLayout(onLayoutChange)
+{}
+
 void KeyboardLayout::startSettingKeyboardLayout() {
 	m_firstRow.clear();
 	m_secondRow.clear();
@@ -14,6 +18,7 @@ void KeyboardLayout::onKeyUp(SDL_Scancode scancode) {
 			m_settingRowIdx++;
 			if (m_settingRowIdx == 3) {
 				m_bSettingLayout = false;
+				m_endSettingKeyboardLayout();
 			}
 		}
 		else if (scancode == SDL_SCANCODE_BACKSPACE) {

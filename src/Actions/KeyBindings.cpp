@@ -51,7 +51,9 @@ private:
 	}
 };
 
-KeyBindings::KeyBindings() {
+KeyBindings::KeyBindings()
+	: m_keyboardLayout([this]() { setupBindings("", true); })
+{
 	addAction(textAction, ActionType_MISCELLANEOUS);
 	addAction(rerollRandomAction, ActionType_MISCELLANEOUS);
 
