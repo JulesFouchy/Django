@@ -2,7 +2,6 @@
 
 class KeyboardLayout {
 public:
-	KeyboardLayout(std::function<void()> onLayoutChange);
 	inline const std::vector<SDL_Scancode>& firstRow() { return m_firstRow; }
 	inline const std::vector<SDL_Scancode>& secondRow() { return m_secondRow; }
 	inline const std::vector<SDL_Scancode>& thirdRow() { return m_thirdRow; }
@@ -19,7 +18,6 @@ private:
 private:
 	bool m_bSettingLayout = false;
 	int m_settingRowIdx = 0;
-	std::function<void()> m_endSettingKeyboardLayout;
 	std::vector<SDL_Scancode> m_firstRow = {
 		SDL_SCANCODE_Q,
 		SDL_SCANCODE_W,
