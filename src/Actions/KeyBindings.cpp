@@ -134,7 +134,7 @@ void KeyBindings::setupBindings(const std::string& presetFilepath, bool clearExi
 	for (const auto& kv : m_allActionsByType[ActionType::LAYOUT]) {
 		if (std::find(ignoredActions.begin(), ignoredActions.end(), kv.second->action.ref) == ignoredActions.end()) {
 			if (!hasBinding(kv.second)) {
-				SDL_Scancode scancode = findFirstFromLeft(secondRow);
+				SDL_Scancode scancode = findFirstFromLeft(m_secondRow);
 				if (scancode != SDL_SCANCODE_UNKNOWN)
 					setBinding(kv.second, scancode);
 				else
@@ -146,9 +146,9 @@ void KeyBindings::setupBindings(const std::string& presetFilepath, bool clearExi
 	for (const auto& kv : m_allActionsByType[ActionType::SHAPE]) {
 		if (std::find(ignoredActions.begin(), ignoredActions.end(), kv.second->action.ref) == ignoredActions.end()) {
 			if (!hasBinding(kv.second)) {
-				SDL_Scancode scancode = findFirstFromLeft(firstRow);
+				SDL_Scancode scancode = findFirstFromLeft(m_firstRow);
 				if (scancode == SDL_SCANCODE_UNKNOWN)
-					scancode = findFirstFromRight(secondRow);
+					scancode = findFirstFromRight(m_secondRow);
 				if (scancode != SDL_SCANCODE_UNKNOWN)
 					setBinding(kv.second, scancode);
 				else
@@ -160,9 +160,9 @@ void KeyBindings::setupBindings(const std::string& presetFilepath, bool clearExi
 	for (const auto& kv : m_allActionsByType[ActionType::SVG_SHAPE]) {
 		if (std::find(ignoredActions.begin(), ignoredActions.end(), kv.second->action.ref) == ignoredActions.end()) {
 			if (!hasBinding(kv.second)) {
-				SDL_Scancode scancode = findFirstFromLeft(firstRow);
+				SDL_Scancode scancode = findFirstFromLeft(m_firstRow);
 				if (scancode == SDL_SCANCODE_UNKNOWN)
-					scancode = findFirstFromRight(secondRow);
+					scancode = findFirstFromRight(m_secondRow);
 				if (scancode != SDL_SCANCODE_UNKNOWN)
 					setBinding(kv.second, scancode);
 				else
@@ -174,9 +174,9 @@ void KeyBindings::setupBindings(const std::string& presetFilepath, bool clearExi
 	for (const auto& kv : m_allActionsByType[ActionType::STANDALONE]) {
 		if (std::find(ignoredActions.begin(), ignoredActions.end(), kv.second->action.ref) == ignoredActions.end()) {
 			if (!hasBinding(kv.second)) {
-				SDL_Scancode scancode = findFirstFromLeft(thirdRow);
+				SDL_Scancode scancode = findFirstFromLeft(m_thirdRow);
 				if (scancode == SDL_SCANCODE_UNKNOWN) {
-					scancode = findFirstFromRight(secondRow);
+					scancode = findFirstFromRight(m_secondRow);
 				}
 				if (scancode != SDL_SCANCODE_UNKNOWN)
 					setBinding(kv.second, scancode);
@@ -223,9 +223,9 @@ SDL_Scancode KeyBindings::findFirstFromRight(std::vector<SDL_Scancode> row) {
 
 void KeyBindings::ImGui(StateModifier& stateModifier) {
 	// Keyboard
-	ImGui_KeyboardRow(firstRow,  0.0f                             , stateModifier);
-	ImGui_KeyboardRow(secondRow, KEY_OFFSET_PROP * KEY_SIZE       , stateModifier);
-	ImGui_KeyboardRow(thirdRow,  KEY_OFFSET_PROP * KEY_SIZE * 2.0f, stateModifier);
+	ImGui_KeyboardRow(m_firstRow,  0.0f                             , stateModifier);
+	ImGui_KeyboardRow(m_secondRow, KEY_OFFSET_PROP * KEY_SIZE       , stateModifier);
+	ImGui_KeyboardRow(m_thirdRow,  KEY_OFFSET_PROP * KEY_SIZE * 2.0f, stateModifier);
 	ImGui::NewLine();
 	// List of configurations without a binding
 	bool b = false;

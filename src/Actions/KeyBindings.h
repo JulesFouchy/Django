@@ -47,8 +47,8 @@ private:
 	Uint32* m_keyReleasedLastDate;
 	bool m_mouseWasDraggingLastFrame = false;
 	BindingsPresets m_presets;
-	size_t nextAvailableKeyIdx = 0;
-	std::vector<SDL_Scancode> firstRow = {
+	size_t m_nextAvailableKeyIdx = 0;
+	std::vector<SDL_Scancode> m_firstRow = {
 		SDL_SCANCODE_Q,
 		SDL_SCANCODE_W,
 		SDL_SCANCODE_E,
@@ -63,7 +63,7 @@ private:
 		SDL_SCANCODE_RIGHTBRACKET,
 		SDL_SCANCODE_BACKSLASH,
 	};
-	std::vector<SDL_Scancode> secondRow = {
+	std::vector<SDL_Scancode> m_secondRow = {
 		SDL_SCANCODE_A,
 		SDL_SCANCODE_S,
 		SDL_SCANCODE_D,
@@ -76,7 +76,7 @@ private:
 		SDL_SCANCODE_SEMICOLON,
 		SDL_SCANCODE_APOSTROPHE,
 	};
-	std::vector<SDL_Scancode> thirdRow = {
+	std::vector<SDL_Scancode> m_thirdRow = {
 		SDL_SCANCODE_Z,
 		SDL_SCANCODE_X,
 		SDL_SCANCODE_C,
