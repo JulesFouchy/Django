@@ -171,11 +171,13 @@ std::string BindingsPresets::findPlaceholderName() {
 }
 
 void BindingsPresets::loadPresets() {
-	for (const auto& entry : fs::directory_iterator(FolderPath::Settings)) {
-		if (!MyString::FileName(MyString::FileName(entry.path().string())).compare("djgBindings"))
-			m_presets.emplace_back(entry.path().string());
+	if (MyFile::Exists(FolderPath::Settings)) {
+		for (const auto& entry : fs::directory_iterator(FolderPath::Settings)) {
+			if (!MyString::FileName(MyString::FileName(entry.path().string())).compare("djgBindings"))
+				m_presets.emplace_back(entry.path().string());
+		}
+		sort();
 	}
-	sort();
 }
 
 void BindingsPresets::savePresetTo(const std::string& filepath, KeyBindings& keyBindings) {

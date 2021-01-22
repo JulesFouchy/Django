@@ -151,21 +151,23 @@ private:
 	}
 
 	void loadPresetsFrom(const std::string& folderPath) {
-		for (const auto& file : fs::directory_iterator(folderPath)) {
-			if (!file.path().filename().replace_extension("").replace_extension(".").string().compare(m_fileExtension)) {
-				std::string name = file.path().filename().replace_extension("").extension().string().erase(0, 1);
-				T values;
-				std::ifstream is(file.path());
-				{
-					cereal::JSONInputArchive archive(is);
-					archive(
-						values
-					);
+		if (MyFile::Exists(folderPath)) {
+			for (const auto& file : fs::directory_iterator(folderPath)) {
+				if (!file.path().filename().replace_extension("").replace_extension(".").string().compare(m_fileExtension)) {
+					std::string name = file.path().filename().replace_extension("").extension().string().erase(0, 1);
+					T values;
+					std::ifstream is(file.path());
+					{
+						cereal::JSONInputArchive archive(is);
+						archive(
+							values
+						);
+					}
+					m_presets.push_back({ name, values });
 				}
-				m_presets.push_back({ name, values });
 			}
+			sort();
 		}
-		sort();
 	}
 
 	void savePresetTo(T& settingValues, const std::string& folderPath) {
