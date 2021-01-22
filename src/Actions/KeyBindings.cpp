@@ -9,7 +9,7 @@
 #include <fstream>
 #include "Helper/File.h"
 
-#include "Constants/FolderPath.h"
+#include "Constants/Path.h"
 
 static constexpr float KEY_SIZE = 55.0f;
 static constexpr float KEY_OFFSET_PROP = 0.2f;
@@ -62,7 +62,7 @@ KeyBindings::KeyBindings() {
 		m_keyReleasedLastDate[i] = 0;
 
 	// Try load Keyboard Layout
-	const std::string& path = FolderPath::LastSession_KeyboardLayout;
+	const std::string& path = Path::LastSession_KeyboardLayout;
 	if (MyFile::Exists(path)) {
 		std::ifstream is(path);
 		{
@@ -75,14 +75,14 @@ KeyBindings::KeyBindings() {
 }
 
 KeyBindings::~KeyBindings() {
-	serializeBindings(FolderPath::LastSession_Bindings);
+	serializeBindings(Path::LastSession_Bindings);
 	for (ActionBinding action : m_allActionsOwner) {
 		GLCall(glDeleteTextures(1, &action.action.thumbnailTextureID));
 	}
 	delete[] m_keyReleasedLastDate;
 	// Save Keyboard Layout
-	MyFile::CreateFolderIfDoesntExist(FolderPath::LastSession);
-	const std::string& path = FolderPath::LastSession_KeyboardLayout;
+	MyFile::CreateFolderIfDoesntExist(Path::LastSession);
+	const std::string& path = Path::LastSession_KeyboardLayout;
 	std::ofstream os(path);
 	{
 		cereal::JSONOutputArchive archive(os);

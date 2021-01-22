@@ -5,7 +5,7 @@
 SettingsManager::SettingsManager()
 	: m_currentSettings(), m_defaultSettings()
 {
-	const std::string& path = FolderPath::LastSession_Settings;
+	const std::string& path = Path::LastSession_Settings;
 	if (MyFile::Exists(path)) {
 		try {
 			m_currentSettings.deserializeFrom(path);
@@ -17,5 +17,5 @@ SettingsManager::SettingsManager()
 }
 
 SettingsManager::~SettingsManager() {
-	m_currentSettings.serializeTo(FolderPath::LastSession_Settings);
+	m_currentSettings.serializeTo(Path::LastSession_Settings);
 }

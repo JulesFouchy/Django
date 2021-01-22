@@ -3,7 +3,7 @@
 #include <filesystem>
 #include "Helper/String.h"
 
-namespace FolderPath {
+namespace Path {
 	const std::string Presets     = std::filesystem::current_path().string() + "/presets";
 	const std::string Records     = std::filesystem::current_path().string() + "/records";
 	const std::string Exports     = MyString::ReplaceAll(std::filesystem::current_path().string(), "\\", "/") + "/exports";

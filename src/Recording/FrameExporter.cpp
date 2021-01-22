@@ -1,6 +1,6 @@
 #include "FrameExporter.h"
 
-#include "Constants/FolderPath.h"
+#include "Constants/Path.h"
 #include <stb_image/stb_image_write.h>
 #include "Helper/String.h"
 #include "Helper/File.h"
@@ -16,9 +16,9 @@
 #include "Constants/Textures.h"
 
 FrameExporter::FrameExporter()
-	: m_settings({ 60.f, 1280, 720, FolderPath::Exports })
+	: m_settings({ 60.f, 1280, 720, Path::Exports })
 {
-	const std::string& path = FolderPath::LastSession_ExportSettings;
+	const std::string& path = Path::LastSession_ExportSettings;
 	if (MyFile::Exists(path)) {
 		std::ifstream is(path);
 		{
@@ -37,7 +37,7 @@ FrameExporter::FrameExporter()
 }
 
 FrameExporter::~FrameExporter() {
-	std::ofstream os(FolderPath::LastSession_ExportSettings);
+	std::ofstream os(Path::LastSession_ExportSettings);
 	{
 		cereal::JSONOutputArchive archive(os);
 		archive(

@@ -9,13 +9,13 @@ namespace fs = std::filesystem;
 #include "Helper/String.h"
 #include "Helper/File.h"
 #include "Helper/MyImGui.h"
-#include "Constants/FolderPath.h"
+#include "Constants/Path.h"
 #include <Boxer/boxer.h>
 
 BindingsPresets::BindingsPresets()
 	: m_savePresetAs(findPlaceholderName())
 {
-	const std::string& path = FolderPath::LastSession_BindingsPreset;
+	const std::string& path = Path::LastSession_BindingsPreset;
 	if (MyFile::Exists(path)) {
 		std::ifstream is(path);
 		{
@@ -32,7 +32,7 @@ BindingsPresets::BindingsPresets()
 }
 
 BindingsPresets::~BindingsPresets() {
-	std::ofstream os(FolderPath::LastSession_BindingsPreset);
+	std::ofstream os(Path::LastSession_BindingsPreset);
 	{
 		cereal::JSONOutputArchive archive(os);
 		archive(
@@ -42,7 +42,7 @@ BindingsPresets::~BindingsPresets() {
 }
 
 std::string BindingsPresets::getFullPath(const std::string& name) {
-	return FolderPath::Presets + "/djgBindings." + name + ".json";
+	return Path::Presets + "/djgBindings." + name + ".json";
 }
 
 void BindingsPresets::ImGui(KeyBindings& keyBindings) {
@@ -101,10 +101,10 @@ void BindingsPresets::ImGui(KeyBindings& keyBindings) {
 		else {
 			m_bRenamePopupOpenThisFrame = false;
 			if (m_bRenamePopupOpenLastFrame && m_currentPresetIdx != -1) {
-				const std::string newPath = FolderPath::Presets + "/djgBindings." + m_newPresetName + ".json";
+				const std::string newPath = Path::Presets + "/djgBindings." + m_newPresetName + ".json";
 				if (!MyFile::Exists(newPath)) {
 					std::filesystem::rename(
-						FolderPath::Presets + "/djgBindings." + m_currentPresetName + ".json",
+						Path::Presets + "/djgBindings." + m_currentPresetName + ".json",
 						newPath
 					);
 					m_currentPresetName = m_newPresetName;
@@ -121,7 +121,7 @@ void BindingsPresets::ImGui(KeyBindings& keyBindings) {
 		if (ImGui::Button("Delete")) {
 			if (boxer::show(("\"" + m_currentPresetName + "\" will be deleted. Are you sure ?").c_str(), "Delete", boxer::Style::Warning, boxer::Buttons::YesNo) == boxer::Selection::Yes) {
 				std::filesystem::remove(
-					FolderPath::Presets + "/djgBindings." + m_currentPresetName + ".json"
+					Path::Presets + "/djgBindings." + m_currentPresetName + ".json"
 				);
 				m_presets.erase(m_currentPresetIdx + m_presets.begin());
 				findPlaceholderName();
@@ -171,8 +171,8 @@ std::string BindingsPresets::findPlaceholderName() {
 }
 
 void BindingsPresets::loadPresets() {
-	if (MyFile::Exists(FolderPath::Presets)) {
-		for (const auto& entry : fs::directory_iterator(FolderPath::Presets)) {
+	if (MyFile::Exists(Path::Presets)) {
+		for (const auto& entry : fs::directory_iterator(Path::Presets)) {
 			if (!MyString::FileName(MyString::FileName(entry.path().string())).compare("djgBindings"))
 				m_presets.emplace_back(entry.path().string());
 		}

@@ -8,7 +8,7 @@
 #include "Configurations/ConfigManager.h"
 #include "Helper/MyImGui.h"
 #include "Helper/File.h"
-#include "Constants/FolderPath.h"
+#include "Constants/Path.h"
 #include "PlayState_NotStarted.h"
 #include "PlayState_Play.h"
 #include "PlayState_NoSelection.h"
@@ -19,8 +19,8 @@ RecordManager::RecordManager()
 	: m_clock(std::make_unique<Clock_Realtime>()), m_recorder(*m_clock), m_resetParticlesPosAndSpeedShader("internal-shaders/resetParticlePositionAndSpeed.comp")
 {
 	// Load records
-	if (MyFile::Exists(FolderPath::Records)) {
-		for (auto& entry : std::filesystem::directory_iterator(FolderPath::Records)) {
+	if (MyFile::Exists(Path::Records)) {
+		for (auto& entry : std::filesystem::directory_iterator(Path::Records)) {
 			m_records.emplace_back(entry.path().string());
 		}
 	}
@@ -131,7 +131,7 @@ void RecordManager::setSelectedRecord(size_t idx) {
 }
 
 void RecordManager::deleteRecord(size_t idx) {
-	std::filesystem::remove(FolderPath::Records + "/" + m_records[idx].name() + ".djgRecord");
+	std::filesystem::remove(Path::Records + "/" + m_records[idx].name() + ".djgRecord");
 	m_records.erase(idx + m_records.begin());
 	if (idx == m_selectedRecordIdx) {
 		setSelectedRecord(-1);
@@ -144,7 +144,7 @@ void RecordManager::deleteRecord(size_t idx) {
 
 void RecordManager::validateRecordRenaming() {
 	if (m_recordBeingRenamedIdx != -1) {
-		while (MyFile::Exists(FolderPath::Records + "/" + m_newRecordName + ".djgRecord"))
+		while (MyFile::Exists(Path::Records + "/" + m_newRecordName + ".djgRecord"))
 			m_newRecordName += "_";
 		m_records[m_recordBeingRenamedIdx].setName(m_newRecordName);
 		m_recordBeingRenamedIdx = -1;

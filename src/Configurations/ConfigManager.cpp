@@ -9,7 +9,7 @@ namespace fs = std::filesystem;
 #include "Helper/File.h"
 #include "Helper/String.h"
 #include "Helper/Random.h"
-#include "Constants/FolderPath.h"
+#include "Constants/Path.h"
 #include "StateModifier.h"
 
 static const std::string VERSION = "#version 430";
@@ -192,7 +192,7 @@ ConfigManager::ConfigManager() {
     }
 
     // Setup Bindings
-    m_keyBindings.setupBindings(FolderPath::LastSession_Bindings);
+    m_keyBindings.setupBindings(Path::LastSession_Bindings);
 }
 
 Configuration& ConfigManager::get() {

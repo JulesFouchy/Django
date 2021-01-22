@@ -3,7 +3,7 @@
 #include "Helper/MyImGui.h"
 #include "Constants/Textures.h"
 #include "Helper/File.h"
-#include "Constants/FolderPath.h"
+#include "Constants/Path.h"
 #include "State.h"
 #include "StateModifier.h"
 #include "Clock/Clock.h"
@@ -32,8 +32,8 @@ void Recorder::stop(float currentTime) {
 	m_record.onRecordingStops(currentTime);
 	m_bIsRecording = false;
 	// Serialize record
-	MyFile::CreateFolderIfDoesntExist(FolderPath::Records);
-	m_record.serialize(FolderPath::Records);
+	MyFile::CreateFolderIfDoesntExist(Path::Records);
+	m_record.serialize(Path::Records);
 }
 
 bool Recorder::ImGui(float time, const StateModifier& stateModifier) {
