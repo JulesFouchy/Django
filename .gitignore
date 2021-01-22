@@ -16,3 +16,5 @@ records/
 exports/
 
 settings/lastSessionExportSettings.json
+
+cache-last-session/

@@ -60,4 +60,16 @@ private:
 		SDL_SCANCODE_PERIOD,
 		SDL_SCANCODE_SLASH,
 	};
+
+	// Serialization
+	friend class cereal::access;
+	template <class Archive>
+	void serialize(Archive& archive)
+	{
+		archive(
+			CEREAL_NVP(m_firstRow),
+			CEREAL_NVP(m_secondRow),
+			CEREAL_NVP(m_thirdRow)
+		);
+	}
 };
