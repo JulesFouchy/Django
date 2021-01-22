@@ -61,35 +61,16 @@ KeyBindings::KeyBindings() {
 	for (int i = 0; i < nbKeys; ++i)
 		m_keyReleasedLastDate[i] = 0;
 
-	// Try load Keyboard Layout
-	const std::string& path = Path::LastSession_KeyboardLayout;
-	if (MyFile::Exists(path)) {
-		std::ifstream is(path);
-		{
-			cereal::JSONInputArchive archive(is);
-			archive(
-				m_keyboardLayout
-			);
-		}
-	}
+	Cool::Serialization::FromJSON(m_keyboardLayout, Path::LastSession_KeyboardLayout.c_str());
 }
 
 KeyBindings::~KeyBindings() {
 	serializeBindings(Path::LastSession_Bindings);
+	Cool::Serialization::ToJSON(m_keyboardLayout, Path::LastSession_KeyboardLayout.c_str());
 	for (ActionBinding action : m_allActionsOwner) {
 		GLCall(glDeleteTextures(1, &action.action.thumbnailTextureID));
 	}
 	delete[] m_keyReleasedLastDate;
-	// Save Keyboard Layout
-	MyFile::CreateFolderIfDoesntExist(Path::LastSession);
-	const std::string& path = Path::LastSession_KeyboardLayout;
-	std::ofstream os(path);
-	{
-		cereal::JSONOutputArchive archive(os);
-		archive(
-			m_keyboardLayout
-		);
-	}
 }
 
 void KeyBindings::onKeyUp(SDL_Scancode scancode) {

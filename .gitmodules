@@ -7,3 +7,12 @@
 [submodule "Cool/CMake-Helpers"]
 	path = Cool/CMake-Helpers
 	url = https://github.com/CoolOpenGL/CMake-Helpers
+[submodule "Cool/Serialization"]
+	path = Cool/Serialization
+	url = https://github.com/CoolOpenGL/Serialization
+[submodule "Cool/File"]
+	path = Cool/File
+	url = https://github.com/CoolOpenGL/File
+[submodule "Cool/Log"]
+	path = Cool/Log
+	url = https://github.com/CoolOpenGL/Log

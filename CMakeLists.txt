@@ -2,11 +2,27 @@
 cmake_minimum_required(VERSION 3.16)
 project(Django C CXX)
 
+# Declare the Cool modules that we use
+set(COOL_MODULES
+    Serialization
+    File
+    Log
+)
+add_compile_definitions(__COOL_GLM)
+
+# Set the path where all the Cool modules are stored. It is required by all the Cool IncludeMe.cmake files
+set(PATH_TO_COOL ${CMAKE_SOURCE_DIR}/Cool)
+
+# Grab all the Cool source files
+foreach(cool_module IN ITEMS ${COOL_MODULES})
+    list(APPEND COOL_SOURCES "${PATH_TO_COOL}/${cool_module}/src/*")
+endforeach()
+
 # /////////////////////////////////////////////////////////////////////////////
 # ////////////////////////////// PROJECT FILES ////////////////////////////////
 # /////////////////////////////////////////////////////////////////////////////
 
-file(GLOB_RECURSE MY_SOURCES src/*)
+file(GLOB_RECURSE MY_SOURCES src/* ${COOL_SOURCES})
 file(GLOB_RECURSE MY_INTERNAL_SHADERS internal-shaders/*)
 file(GLOB_RECURSE MY_CONFIGS configurations/*)
 
@@ -48,7 +64,6 @@ include_directories(
     lib/imgui
     lib/glm
     lib/color/src
-    lib/cereal-1.3.0/include/
     lib/nativefiledialog-extended/src/include
     lib
     src
@@ -65,6 +80,7 @@ add_executable(${PROJECT_NAME} ${MY_SOURCES}
     "${CMAKE_SOURCE_DIR}/windows-app-ressources/django.rc" # add ressources for Windows (app icon)
     ${MY_INTERNAL_SHADERS} ${MY_CONFIGS} # include in the VS project so they will appear in the solution explorer
 )
+
 target_link_libraries(${PROJECT_NAME}
     ${OPENGL_LIBRARIES}
     ${SDL2_LIBRARIES}
@@ -75,6 +91,11 @@ target_link_libraries(${PROJECT_NAME}
     Boxer
     nfd
 )
+
+# Include Cool CMake things
+foreach(cool_module IN ITEMS ${COOL_MODULES})
+    include("${PATH_TO_COOL}/${cool_module}/IncludeMe.cmake")
+endforeach()
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
 
@@ -125,10 +146,6 @@ target_precompile_headers(${PROJECT_NAME}
     <glad/glad.h>
     <SDL2/SDL.h>
     <spdlog/spdlog.h>
-    <cereal/access.hpp>
-    <cereal/types/vector.hpp>
-    <cereal/types/string.hpp>
-    <cereal/types/memory.hpp>
   # std
     <vector>
     <string>
@@ -139,5 +156,6 @@ target_precompile_headers(${PROJECT_NAME}
   # Project Code
     [["Debugging/Log.h"]]
     [["Debugging/glException.h"]]
-    [["Helper/glmCereal.h"]]
+    [["Cool/Serialization/JsonFile.h"]]
+    [["Cool/Serialization/GlmSerialization.h"]]
 )
