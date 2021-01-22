@@ -15,8 +15,9 @@ namespace fs = std::filesystem;
 BindingsPresets::BindingsPresets()
 	: m_savePresetAs(findPlaceholderName())
 {
-	if (MyFile::Exists(FolderPath::Settings + "/lastSessionBindingsPreset.json")) {
-		std::ifstream is(FolderPath::Settings + "/lastSessionBindingsPreset.json");
+	const std::string& path = FolderPath::LastSession_BindingsPreset;
+	if (MyFile::Exists(path)) {
+		std::ifstream is(path);
 		{
 			cereal::JSONInputArchive archive(is);
 			archive(
@@ -31,7 +32,7 @@ BindingsPresets::BindingsPresets()
 }
 
 BindingsPresets::~BindingsPresets() {
-	std::ofstream os(FolderPath::Settings + "/lastSessionBindingsPreset.json");
+	std::ofstream os(FolderPath::LastSession_BindingsPreset);
 	{
 		cereal::JSONOutputArchive archive(os);
 		archive(

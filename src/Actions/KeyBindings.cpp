@@ -75,7 +75,7 @@ KeyBindings::KeyBindings() {
 }
 
 KeyBindings::~KeyBindings() {
-	serializeBindings(FolderPath::Settings + "/lastSessionBindings.json");
+	serializeBindings(FolderPath::LastSession_Bindings);
 	for (ActionBinding action : m_allActionsOwner) {
 		GLCall(glDeleteTextures(1, &action.action.thumbnailTextureID));
 	}

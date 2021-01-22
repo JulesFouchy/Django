@@ -192,7 +192,7 @@ ConfigManager::ConfigManager() {
     }
 
     // Setup Bindings
-    m_keyBindings.setupBindings(FolderPath::Settings + "/lastSessionBindings.json");
+    m_keyBindings.setupBindings(FolderPath::LastSession_Bindings);
 }
 
 Configuration& ConfigManager::get() {

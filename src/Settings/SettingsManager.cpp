@@ -5,9 +5,10 @@
 SettingsManager::SettingsManager()
 	: m_currentSettings(), m_defaultSettings()
 {
-	if (MyFile::Exists(lastSessionFilePath())) {
+	const std::string& path = FolderPath::LastSession_Settings;
+	if (MyFile::Exists(path)) {
 		try {
-			m_currentSettings.deserializeFrom(lastSessionFilePath());
+			m_currentSettings.deserializeFrom(path);
 		}
 		catch (const std::exception& e) {
 			spdlog::warn("lastSession.json is corrupted :\n {}",  e.what());
@@ -16,12 +17,5 @@ SettingsManager::SettingsManager()
 }
 
 SettingsManager::~SettingsManager() {
-	m_currentSettings.serializeTo(lastSessionFilePath());
-}
-
-std::string SettingsManager::settingsFolder() {
-	return MyFile::RootDir + "/settings";
-}
-std::string SettingsManager::lastSessionFilePath() {
-	return settingsFolder() + "/lastSessionSettings.json";
+	m_currentSettings.serializeTo(FolderPath::LastSession_Settings);
 }

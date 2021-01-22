@@ -18,8 +18,9 @@
 FrameExporter::FrameExporter()
 	: m_settings({ 60.f, 1280, 720, FolderPath::Exports })
 {
-	if (MyFile::Exists(FolderPath::Settings + "/lastSessionExportSettings.json")) {
-		std::ifstream is(FolderPath::Settings + "/lastSessionExportSettings.json");
+	const std::string& path = FolderPath::LastSession_ExportSettings;
+	if (MyFile::Exists(path)) {
+		std::ifstream is(path);
 		{
 			try {
 				cereal::JSONInputArchive archive(is);
@@ -36,7 +37,7 @@ FrameExporter::FrameExporter()
 }
 
 FrameExporter::~FrameExporter() {
-	std::ofstream os(FolderPath::Settings + "/lastSessionExportSettings.json");
+	std::ofstream os(FolderPath::LastSession_ExportSettings);
 	{
 		cereal::JSONOutputArchive archive(os);
 		archive(
