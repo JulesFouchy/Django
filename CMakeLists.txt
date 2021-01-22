@@ -100,7 +100,7 @@ endif()
 # Add a post build operation to copy folders to the output folder (where the executable is created)
 include("Cool/CMake-Helpers/copy_folder_to_the_output_folder.cmake")
 copy_folder_to_the_output_folder("internal-shaders")
-copy_folder_to_the_output_folder("settings")
+copy_folder_to_the_output_folder("presets")
 copy_folder_to_the_output_folder("configurations")
 copy_folder_to_the_output_folder("icons")
 # And copy imgui.ini

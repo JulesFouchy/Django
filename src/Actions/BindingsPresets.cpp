@@ -42,7 +42,7 @@ BindingsPresets::~BindingsPresets() {
 }
 
 std::string BindingsPresets::getFullPath(const std::string& name) {
-	return FolderPath::Settings + "/djgBindings." + name + ".json";
+	return FolderPath::Presets + "/djgBindings." + name + ".json";
 }
 
 void BindingsPresets::ImGui(KeyBindings& keyBindings) {
@@ -101,10 +101,10 @@ void BindingsPresets::ImGui(KeyBindings& keyBindings) {
 		else {
 			m_bRenamePopupOpenThisFrame = false;
 			if (m_bRenamePopupOpenLastFrame && m_currentPresetIdx != -1) {
-				const std::string newPath = FolderPath::Settings + "/djgBindings." + m_newPresetName + ".json";
+				const std::string newPath = FolderPath::Presets + "/djgBindings." + m_newPresetName + ".json";
 				if (!MyFile::Exists(newPath)) {
 					std::filesystem::rename(
-						FolderPath::Settings + "/djgBindings." + m_currentPresetName + ".json",
+						FolderPath::Presets + "/djgBindings." + m_currentPresetName + ".json",
 						newPath
 					);
 					m_currentPresetName = m_newPresetName;
@@ -121,7 +121,7 @@ void BindingsPresets::ImGui(KeyBindings& keyBindings) {
 		if (ImGui::Button("Delete")) {
 			if (boxer::show(("\"" + m_currentPresetName + "\" will be deleted. Are you sure ?").c_str(), "Delete", boxer::Style::Warning, boxer::Buttons::YesNo) == boxer::Selection::Yes) {
 				std::filesystem::remove(
-					FolderPath::Settings + "/djgBindings." + m_currentPresetName + ".json"
+					FolderPath::Presets + "/djgBindings." + m_currentPresetName + ".json"
 				);
 				m_presets.erase(m_currentPresetIdx + m_presets.begin());
 				findPlaceholderName();
@@ -171,8 +171,8 @@ std::string BindingsPresets::findPlaceholderName() {
 }
 
 void BindingsPresets::loadPresets() {
-	if (MyFile::Exists(FolderPath::Settings)) {
-		for (const auto& entry : fs::directory_iterator(FolderPath::Settings)) {
+	if (MyFile::Exists(FolderPath::Presets)) {
+		for (const auto& entry : fs::directory_iterator(FolderPath::Presets)) {
 			if (!MyString::FileName(MyString::FileName(entry.path().string())).compare("djgBindings"))
 				m_presets.emplace_back(entry.path().string());
 		}

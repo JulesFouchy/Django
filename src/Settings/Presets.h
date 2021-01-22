@@ -21,9 +21,9 @@ class Presets {
 public:
 	Presets(const char* fileExtension)
 		: m_fileExtension(fileExtension + std::string(".")),
-		m_savePresetAs(findPlaceholderName(FolderPath::Settings))
+		m_savePresetAs(findPlaceholderName(FolderPath::Presets))
 	{
-		loadPresetsFrom(FolderPath::Settings);
+		loadPresetsFrom(FolderPath::Presets);
 	}
 	~Presets() = default;
 
@@ -45,7 +45,7 @@ public:
 			if (m_nameAvailable) {
 				if (!m_nameContainsDots) {
 					if (ImGui::Button("Save settings")) {
-						savePresetTo(*settingValues, FolderPath::Settings);
+						savePresetTo(*settingValues, FolderPath::Presets);
 					}
 					ImGui::SameLine();
 					ImGui::Text("as");
@@ -60,7 +60,7 @@ public:
 			ImGui::SameLine();
 			ImGui::PushID(138571);
 			if (ImGui::InputText("", &m_savePresetAs)) {
-				m_nameAvailable = !MyFile::Exists(FolderPath::Settings + "/" + m_fileExtension + m_savePresetAs + ".json") && m_savePresetAs.compare("Unsaved settings...");
+				m_nameAvailable = !MyFile::Exists(FolderPath::Presets + "/" + m_fileExtension + m_savePresetAs + ".json") && m_savePresetAs.compare("Unsaved settings...");
 				m_nameContainsDots = m_savePresetAs.find(".") != std::string::npos;
 			}
 			ImGui::PopID();
@@ -80,10 +80,10 @@ public:
 			else {
 				m_bRenamePopupOpenThisFrame = false;
 				if (m_bRenamePopupOpenLastFrame && m_currentPresetIdx != -1) {
-					const std::string newPath = FolderPath::Settings + "/" + m_fileExtension + m_newPresetName + ".json";
+					const std::string newPath = FolderPath::Presets + "/" + m_fileExtension + m_newPresetName + ".json";
 					if (!MyFile::Exists(newPath)) {
 						std::filesystem::rename(
-							FolderPath::Settings + "/" + m_fileExtension + m_currentPresetName + ".json",
+							FolderPath::Presets + "/" + m_fileExtension + m_currentPresetName + ".json",
 							newPath
 						);
 						m_currentPresetName = m_newPresetName;
@@ -99,10 +99,10 @@ public:
 			if (ImGui::Button("Delete")) {
 				if (boxer::show(("\"" + m_currentPresetName + "\" will be deleted. Are you sure ?").c_str(), "Delete", boxer::Style::Warning, boxer::Buttons::YesNo) == boxer::Selection::Yes) {
 					std::filesystem::remove(
-						FolderPath::Settings + "/" + m_fileExtension + m_currentPresetName + ".json"
+						FolderPath::Presets + "/" + m_fileExtension + m_currentPresetName + ".json"
 					);
 					m_presets.erase(m_currentPresetIdx + m_presets.begin());
-					findPlaceholderName(FolderPath::Settings);
+					findPlaceholderName(FolderPath::Presets);
 					setToPlaceholderSetting();
 				}
 			}
