@@ -171,6 +171,7 @@ private:
 	}
 
 	void savePresetTo(T& settingValues, const std::string& folderPath) {
+		MyFile::CreateFolderIfDoesntExist(folderPath);
 		std::ofstream os(folderPath + "/" + m_fileExtension + m_savePresetAs + ".json");
 		{
 			cereal::JSONOutputArchive archive(os);
