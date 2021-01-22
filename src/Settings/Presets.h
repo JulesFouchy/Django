@@ -22,7 +22,9 @@ public:
 	Presets(const char* fileExtension)
 		: m_fileExtension(fileExtension + std::string(".")),
 		m_savePresetAs(findPlaceholderName(FolderPath::Settings))
-	{}
+	{
+		loadPresetsFrom(FolderPath::Settings);
+	}
 	~Presets() = default;
 
 	bool ImGui(T* settingValues) {
@@ -186,7 +188,7 @@ private:
 
 private:
 	const std::string m_fileExtension;
-	std::string m_currentPresetName;
+	std::string m_currentPresetName = "Unsaved settings...";
 	size_t m_currentPresetIdx = -1;
 	std::vector<Preset<T>> m_presets;
 	std::string m_savePresetAs;
@@ -200,18 +202,10 @@ private:
 	// Serialization
 	friend class cereal::access;
 	template <class Archive>
-	void save(Archive& archive) const
+	void serialize(Archive& archive)
 	{
 		archive(
 			CEREAL_NVP(m_currentPresetName)
 		);
-	}
-	template <class Archive>
-	void load(Archive& archive)
-	{
-		archive(
-			CEREAL_NVP(m_currentPresetName)
-		);
-		loadPresetsFrom(FolderPath::Settings);
 	}
 };
