@@ -131,7 +131,11 @@ private:
 				break;
 			}
 		}
-		// Find m_currentPresetIdx
+		//
+		computeCurrentPresetIdx();
+	}
+
+	void computeCurrentPresetIdx() {
 		for (size_t i = 0; i < m_presets.size(); ++i) {
 			if (!m_presets[i].name.compare(m_currentPresetName)) {
 				m_currentPresetIdx = i;
@@ -205,10 +209,18 @@ private:
 	// Serialization
 	friend class cereal::access;
 	template <class Archive>
-	void serialize(Archive& archive)
+	void save(Archive& archive) const
 	{
 		archive(
 			CEREAL_NVP(m_currentPresetName)
 		);
+	}
+	template <class Archive>
+	void load(Archive& archive)
+	{
+		archive(
+			CEREAL_NVP(m_currentPresetName)
+		);
+		computeCurrentPresetIdx();
 	}
 };
