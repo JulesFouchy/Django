@@ -233,44 +233,46 @@ void KeyBindings::ImGui(StateModifier& stateModifier) {
 	ImGui_KeyboardRow(m_keyboardLayout.secondRow(), KEY_OFFSET_PROP * KEY_SIZE       , stateModifier);
 	ImGui_KeyboardRow(m_keyboardLayout.thirdRow(),  KEY_OFFSET_PROP * KEY_SIZE * 2.0f, stateModifier);
 	ImGui::NewLine();
-	m_keyboardLayout.ImGui();
-	// List of configurations without a binding
-	bool b = false;
-	bool bSameLine = false;
-	for (auto it = m_allActionsByType.begin(); it != m_allActionsByType.end(); ++it) {
-		if (!hasBinding(it->second)) {
-			bSameLine = false;
-			if (!b) {
-				ImGui::Separator();
-				ImGui::Text("Configurations without bindings : ");
-				ImGui::SameLine();
-				if (ImGui::Button("Auto-distribute them")) {
-					setupBindings("", false);
+	if (LiveMode::IsOff()) {
+		m_keyboardLayout.ImGui();
+		// List of configurations without a binding
+		bool b = false;
+		bool bSameLine = false;
+		for (auto it = m_allActionsByType.begin(); it != m_allActionsByType.end(); ++it) {
+			if (!hasBinding(it->second)) {
+				bSameLine = false;
+				if (!b) {
+					ImGui::Separator();
+					ImGui::Text("Configurations without bindings : ");
+					ImGui::SameLine();
+					if (ImGui::Button("Auto-distribute them")) {
+						setupBindings("", false);
+					}
+					b = true;
 				}
-				b = true;
-			}
-			ActionBinding* actionBinding = it->second;
-			float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
-			if (actionBinding->action.thumbnailTextureID != -1) {
-				ImGui_DragNDropKey(SDL_SCANCODE_UNKNOWN, actionBinding);
-			}
-			else {
-				ImGui::TextDisabled(actionBinding->action.ref.name.c_str());
-			}
-			float last_button_x2 = ImGui::GetItemRectMax().x;
-			float next_button_x2 = last_button_x2 + ImGui::GetStyle().ItemSpacing.x + KEY_SIZE;
-			if (next_button_x2 < window_visible_x2) {
-				ImGui::SameLine();
-				bSameLine = true;
+				ActionBinding* actionBinding = it->second;
+				float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
+				if (actionBinding->action.thumbnailTextureID != -1) {
+					ImGui_DragNDropKey(SDL_SCANCODE_UNKNOWN, actionBinding);
+				}
+				else {
+					ImGui::TextDisabled(actionBinding->action.ref.name.c_str());
+				}
+				float last_button_x2 = ImGui::GetItemRectMax().x;
+				float next_button_x2 = last_button_x2 + ImGui::GetStyle().ItemSpacing.x + KEY_SIZE;
+				if (next_button_x2 < window_visible_x2) {
+					ImGui::SameLine();
+					bSameLine = true;
+				}
 			}
 		}
+		if (bSameLine)
+			ImGui::NewLine(); // cancel the last SameLine that wasn't used
+		// Presets
+		ImGui::Separator();
+		m_presets.ImGui(*this);
+		//
 	}
-	if (bSameLine)
-		ImGui::NewLine(); // cancel the last SameLine that wasn't used
-	// Presets
-	ImGui::Separator();
-	m_presets.ImGui(*this);
-	//
 	m_mouseWasDraggingLastFrame = ImGui::IsMouseDragging(0);
 }
 
@@ -310,37 +312,41 @@ void KeyBindings::ImGui_DragNDropKey(SDL_Scancode scancode, ActionBinding* actio
 			ImGui::EndTooltip();
 		}
 		// Right-click to delete
-		if (scancode != SDL_SCANCODE_UNKNOWN) {
-			if (ImGui::BeginPopupContextItem("")) {
-				if (ImGui::Button("Remove binding")) {
-					setBinding(actionBinding, SDL_SCANCODE_UNKNOWN);
-					m_presets.setPlaceholderPresetName();
+		if (LiveMode::IsOff()) {
+			if (scancode != SDL_SCANCODE_UNKNOWN) {
+				if (ImGui::BeginPopupContextItem("")) {
+					if (ImGui::Button("Remove binding")) {
+						setBinding(actionBinding, SDL_SCANCODE_UNKNOWN);
+						m_presets.setPlaceholderPresetName();
+					}
+					ImGui::EndPopup();
 				}
-				ImGui::EndPopup();
 			}
 		}
 	}
 	// Drag'n Drop !
-	if (actionBinding) {
-		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
-		{
-			ImGui::SetDragDropPayload("KEYBOARD_KEY", &actionBinding, sizeof(ActionBinding*));
-			ImGui_KeyboardKey(SDL_SCANCODE_UNKNOWN, textureID, (bool)actionBinding, false); // Preview
-			ImGui::EndDragDropSource();
+	if (LiveMode::IsOff()) {
+		if (actionBinding) {
+			if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
+			{
+				ImGui::SetDragDropPayload("KEYBOARD_KEY", &actionBinding, sizeof(ActionBinding*));
+				ImGui_KeyboardKey(SDL_SCANCODE_UNKNOWN, textureID, (bool)actionBinding, false); // Preview
+				ImGui::EndDragDropSource();
+			}
 		}
-	}
-	if (ImGui::BeginDragDropTarget())
-	{
-		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("KEYBOARD_KEY"))
+		if (ImGui::BeginDragDropTarget())
 		{
-			IM_ASSERT(payload->DataSize == sizeof(ActionBinding*));
-			if (actionBinding)
-				swapBindings(*((ActionBinding**)payload->Data), actionBinding);
-			else
-				setBinding(*((ActionBinding**)payload->Data), scancode);
-			m_presets.setPlaceholderPresetName();
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("KEYBOARD_KEY"))
+			{
+				IM_ASSERT(payload->DataSize == sizeof(ActionBinding*));
+				if (actionBinding)
+					swapBindings(*((ActionBinding**)payload->Data), actionBinding);
+				else
+					setBinding(*((ActionBinding**)payload->Data), scancode);
+				m_presets.setPlaceholderPresetName();
+			}
+			ImGui::EndDragDropTarget();
 		}
-		ImGui::EndDragDropTarget();
 	}
 }
 
