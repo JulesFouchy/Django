@@ -30,7 +30,7 @@ void Record::recordStateChange(const StateChange& stateChange, float timestamp) 
 
 bool Record::startPlaying(StateModifier& stateModifier, bool bSetInitialColor) {
 	m_prevTime = 0.0f;
-	stateModifier.setApplyAndRecord(m_startState);
+	stateModifier.setApplyAndRecord(m_startState, bSetInitialColor);
 	if (bSetInitialColor)
 		stateModifier.renderer().clearRenderBuffer(stateModifier.settingsManager().get().colors().backgroundColor());
 	m_nextStateChangeIdx = 0;

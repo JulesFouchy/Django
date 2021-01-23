@@ -211,7 +211,7 @@ State StateModifier::getCurrentState() const {
 	return state;
 }
 
-void StateModifier::setApplyAndRecord(const State& state) {
+void StateModifier::setApplyAndRecord(const State& state, bool bSetInitialColor) {
 	m_configManager.setConfigParams(state.configParams);
 	recordChange({ StateChangeType::Param, state.configParams });
 	m_configManager.setRandParams(state.randomParams);
@@ -222,7 +222,8 @@ void StateModifier::setApplyAndRecord(const State& state) {
 	m_configManager.applyAndRecord_ActionRef(state.lastLayout, *this);
 	m_configManager.applyAndRecord_ActionRef(state.currentAction, *this);
 	m_settingsManager.get().alphaTrail().setValues(state.alphaTrailValues);
-	m_settingsManager.get().colors()    .setValues(state.colorValues);
+	if (bSetInitialColor)
+		m_settingsManager.get().colors().setValues(state.colorValues);
 	m_settingsManager.get().partSystem().setValues(state.particleSystemValues);
 	m_settingsManager.get().physics()   .setValues(state.physicsValues);
 	m_settingsManager.get().wind()      .setValues(state.windValues);
