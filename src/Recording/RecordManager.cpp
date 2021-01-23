@@ -29,31 +29,34 @@ RecordManager::RecordManager()
 
 void RecordManager::ImGui(std::unique_ptr<Clock>& clock, StateModifier& stateModifier) {
 	// Exporter
-	m_exporter.ImGui();
-	if (hasARecordSelected()) {
-		if (!Viewports::IsExporting()) {
-			if (ImGui::Button("Export")) {
-				if (m_exporter.startExporting(selectedRecord(), stateModifier.renderer(), clock)) {
-					// Play record
-					selectedRecord().startPlaying(stateModifier);
-					m_recordPlayer.setState<PlayState_Play>(selectedRecord(), clock->time());
-					// Reset particles' positions and speeds
-					unsigned int nbParticles = stateModifier.particleSystem().getNbParticles();
-					m_resetParticlesPosAndSpeedShader.get().bind();
-					m_resetParticlesPosAndSpeedShader.get().setUniform1i("u_NbOfParticles", nbParticles);
-					m_resetParticlesPosAndSpeedShader.compute(nbParticles);
+	if (LiveMode::IsOff()) {
+		m_exporter.ImGui();
+		if (hasARecordSelected()) {
+			if (!Viewports::IsExporting()) {
+				if (ImGui::Button("Export")) {
+					if (m_exporter.startExporting(selectedRecord(), stateModifier.renderer(), clock)) {
+						// Play record
+						selectedRecord().startPlaying(stateModifier);
+						m_recordPlayer.setState<PlayState_Play>(selectedRecord(), clock->time());
+						// Reset particles' positions and speeds
+						unsigned int nbParticles = stateModifier.particleSystem().getNbParticles();
+						m_resetParticlesPosAndSpeedShader.get().bind();
+						m_resetParticlesPosAndSpeedShader.get().setUniform1i("u_NbOfParticles", nbParticles);
+						m_resetParticlesPosAndSpeedShader.compute(nbParticles);
+					}
 				}
 			}
-		}
-		else {
-			if (ImGui::Button("Stop exporting")) {
-				m_exporter.stopExporting(stateModifier.renderer(), clock);
-				m_recordPlayer.setState<PlayState_NotStarted>(selectedRecord());
+			else {
+				if (ImGui::Button("Stop exporting")) {
+					m_exporter.stopExporting(stateModifier.renderer(), clock);
+					m_recordPlayer.setState<PlayState_NotStarted>(selectedRecord());
+				}
 			}
 		}
 	}
 	if (!Viewports::IsExporting()) {
-		ImGui::Separator();
+		if (LiveMode::IsOff())
+			ImGui::Separator();
 		// Recorder
 		if (m_recorder.ImGui(m_clock->time(), stateModifier)) // finished recording
 			m_records.push_back(m_recorder.getRecord());
@@ -88,27 +91,29 @@ void RecordManager::ImGuiRecordsList() {
 			ImGui::EndTooltip();
 		}
 		// Context menu
-		if (ImGui::BeginPopupContextItem(m_records[i].name().c_str())) {
-			bAllContextMenusAreClosed = false;
-			if (m_recordBeingRenamedIdx != i) {
-				// Buttons
-				if (ImGui::Button("Rename")) {
-					m_recordBeingRenamedIdx = i;
-					m_newRecordName = m_records[i].name();
-				}
-				if (ImGui::Button("Delete")) {
-					if (boxer::show(("\"" + m_records[i].name() + "\" will be deleted. Are you sure ?").c_str(), "Delete", boxer::Style::Warning, boxer::Buttons::YesNo) == boxer::Selection::Yes) {
-						markedForDelete = i;
+		if (LiveMode::IsOff()) {
+			if (ImGui::BeginPopupContextItem(m_records[i].name().c_str())) {
+				bAllContextMenusAreClosed = false;
+				if (m_recordBeingRenamedIdx != i) {
+					// Buttons
+					if (ImGui::Button("Rename")) {
+						m_recordBeingRenamedIdx = i;
+						m_newRecordName = m_records[i].name();
+					}
+					if (ImGui::Button("Delete")) {
+						if (boxer::show(("\"" + m_records[i].name() + "\" will be deleted. Are you sure ?").c_str(), "Delete", boxer::Style::Warning, boxer::Buttons::YesNo) == boxer::Selection::Yes) {
+							markedForDelete = i;
+						}
 					}
 				}
+				else {
+					// Rename input
+					ImGui::PushID(46824987249);
+					ImGui::InputText("", &m_newRecordName);
+					ImGui::PopID();
+				}
+				ImGui::EndPopup();
 			}
-			else {
-				// Rename input
-				ImGui::PushID(46824987249);
-				ImGui::InputText("", &m_newRecordName);
-				ImGui::PopID();
-			}
-			ImGui::EndPopup();
 		}
 	}
 	if (markedForDelete != -1) {

@@ -40,8 +40,10 @@ bool Recorder::ImGui(float time, const StateModifier& stateModifier) {
 	bool b = false;
 	if (!isRecording()) {
 		// Start recording
-		if (MyImGui::ButtonWithIcon(Textures::Record(), ImVec4(1.0f, 0.0f, 0.0f, 1.0f)))
-			start(stateModifier.getCurrentState());
+		if (LiveMode::IsOff()) {
+			if (MyImGui::ButtonWithIcon(Textures::Record(), ImVec4(1.0f, 0.0f, 0.0f, 1.0f)))
+				start(stateModifier.getCurrentState());
+		}
 	}
 	else {
 		// Stop recording
