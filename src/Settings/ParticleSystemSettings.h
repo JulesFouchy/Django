@@ -26,7 +26,8 @@ public:
 	~ParticleSystemSettings() = default;
 
 	void ImGui(StateModifier& stateModifier);
-	void ImGuiPresets(StateModifier& stateModifier);
+	bool ImGuiPresets(StateModifier& stateModifier);
+	inline void focusImGuiWindow() { m_bShouldGrabFocus = true; }
 
 	void applyAndRecord(StateModifier& stateModifier);
 	void applyAndRecord_NbParticles(StateModifier& stateModifier);
@@ -42,6 +43,7 @@ public:
 private:
 	ParticleSystemSettingsValues m_values;
 	Presets<ParticleSystemSettingsValues> m_presets;
+	bool m_bShouldGrabFocus = false;
 
 private:
 	// Serialization

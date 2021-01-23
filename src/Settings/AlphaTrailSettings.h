@@ -34,7 +34,8 @@ public:
 	~AlphaTrailSettings() = default;
 
 	void ImGui(StateModifier& stateModifier);
-	void ImGuiPresets(StateModifier& stateModifier);
+	bool ImGuiPresets(StateModifier& stateModifier);
+	inline void focusImGuiWindow() { m_bShouldGrabFocus = true; }
 
 	void setEnabled_ApplyAndRecordAll(bool bEnabled, StateModifier& stateModifier);
 	void setApplyAndRecord_Enabled(bool bEnabled, StateModifier& stateModifier);
@@ -57,6 +58,7 @@ private:
 private:
 	AlphaTrailSettingsValues m_values;
 	Presets<AlphaTrailSettingsValues> m_presets;
+	bool m_bShouldGrabFocus = false;
 
 private:
 	// Serialization

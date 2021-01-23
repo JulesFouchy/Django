@@ -10,6 +10,10 @@ PhysicsSettings::PhysicsSettings()
 {}
 
 void PhysicsSettings::ImGui(StateModifier& stateModifier) {
+	if (m_bShouldGrabFocus) {
+		ImGui::SetWindowFocus();
+		m_bShouldGrabFocus = false;
+	}
 	bool b = false;
 	if (ImGui::SliderFloat("Pulsation", &m_values.pulsation, 0, 20)) {
 		b = true;
@@ -31,10 +35,12 @@ void PhysicsSettings::ImGui(StateModifier& stateModifier) {
 		m_presets.setToPlaceholderSetting();
 }
 
-void PhysicsSettings::ImGuiPresets(StateModifier& stateModifier) {
+bool PhysicsSettings::ImGuiPresets(StateModifier& stateModifier) {
 	if (m_presets.ImGuiDropdown("Physics", &m_values)) {
 		applyAndRecord(stateModifier);
+		return true;
 	}
+	return false;
 }
 
 void PhysicsSettings::applyAndRecord(StateModifier& stateModifier) {

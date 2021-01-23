@@ -46,7 +46,8 @@ public:
 	~ColorSettings() = default;
 
 	void ImGui(StateModifier& stateModifier);
-	void ImGuiPresets(StateModifier& stateModifier);
+	bool ImGuiPresets(StateModifier& stateModifier);
+	inline void focusImGuiWindow() { m_bShouldGrabFocus = true; }
 
 	void applyAndRecord(StateModifier& stateModifier);
 	void applyAndRecord_BackgroundColor(StateModifier& stateModifier);
@@ -75,6 +76,7 @@ public:
 private:
 	ColorSettingsValues m_values;
 	Presets<ColorSettingsValues> m_presets;
+	bool m_bShouldGrabFocus = false;
 
 private:
 	// Serialization

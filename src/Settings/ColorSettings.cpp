@@ -9,6 +9,10 @@ ColorSettings::ColorSettings()
 {}
 
 void ColorSettings::ImGui(StateModifier& stateModifier) {
+	if (m_bShouldGrabFocus) {
+		ImGui::SetWindowFocus();
+		m_bShouldGrabFocus = false;
+	}
 	// Background
 	if (ImGui::ColorEdit3("Background Color", (float*)&m_values.bgColor[0])) {
 		m_presets.setToPlaceholderSetting();
@@ -84,10 +88,12 @@ void ColorSettings::ImGui(StateModifier& stateModifier) {
 	}
 }
 
-void ColorSettings::ImGuiPresets(StateModifier& stateModifier) {
+bool ColorSettings::ImGuiPresets(StateModifier& stateModifier) {
 	if (m_presets.ImGuiDropdown("Colors", &m_values)) {
 		applyAndRecord(stateModifier);
+		return true;
 	}
+	return false;
 }
 
 void ColorSettings::applyAndRecord(StateModifier& stateModifier) {

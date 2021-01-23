@@ -35,11 +35,16 @@ void Settings::ImGuiWindows(StateModifier& stateModifier) {
 
 void Settings::ImGuiMainWindow(StateModifier& stateModifier) {
 	ImGui::Begin("Presets");
-	m_physicsSettings.ImGuiPresets(stateModifier);
-	m_windSettings.ImGuiPresets(stateModifier);
-	m_alphaTrailSettings.ImGuiPresets(stateModifier);
-	m_colorSettings.ImGuiPresets(stateModifier);
-	m_particleSystemSettings.ImGuiPresets(stateModifier);
+	if (m_physicsSettings.ImGuiPresets(stateModifier))
+		m_physicsSettings.focusImGuiWindow();
+	if (m_windSettings.ImGuiPresets(stateModifier))
+		m_windSettings.focusImGuiWindow();
+	if (m_alphaTrailSettings.ImGuiPresets(stateModifier))
+		m_alphaTrailSettings.focusImGuiWindow();
+	if (m_colorSettings.ImGuiPresets(stateModifier))
+		m_colorSettings.focusImGuiWindow();
+	if (m_particleSystemSettings.ImGuiPresets(stateModifier))
+		m_particleSystemSettings.focusImGuiWindow();
 	ImGui::End();
 }
 

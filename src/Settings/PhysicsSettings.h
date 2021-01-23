@@ -50,7 +50,8 @@ public:
 	~PhysicsSettings() = default;
 
 	void ImGui(StateModifier& stateModifier);
-	void ImGuiPresets(StateModifier& stateModifier);
+	bool ImGuiPresets(StateModifier& stateModifier);
+	inline void focusImGuiWindow() { m_bShouldGrabFocus = true; }
 
 	void applyAndRecord(StateModifier& stateModifier);
 	void applyAndRecord_Pulsation(StateModifier& stateModifier);
@@ -69,6 +70,7 @@ private:
 private:
 	PhysicsSettingsValues m_values;
 	Presets<PhysicsSettingsValues> m_presets;
+	bool m_bShouldGrabFocus = false;
 
 private:
 	// Serialization

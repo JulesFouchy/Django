@@ -52,7 +52,8 @@ public:
 	~WindSettings() = default;
 
 	void ImGui(StateModifier& stateModifier);
-	void ImGuiPresets(StateModifier& stateModifier);
+	bool ImGuiPresets(StateModifier& stateModifier);
+	inline void focusImGuiWindow() { m_bShouldGrabFocus = true; }
 
 	void applyAndRecord(StateModifier& stateModifier);
 	void applyAndRecord_Frequency(StateModifier& stateModifier);
@@ -83,6 +84,7 @@ private:
 	WindSettingsValues m_values;
 	Presets<WindSettingsValues> m_presets;
 	WindDirectionSettingsValues m_dirValues;
+	bool m_bShouldGrabFocus = false;
 
 private:
 	// Serialization

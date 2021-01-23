@@ -11,6 +11,10 @@ AlphaTrailSettings::AlphaTrailSettings()
 {}
 
 void AlphaTrailSettings::ImGui(StateModifier& stateModifier) {
+	if (m_bShouldGrabFocus) {
+		ImGui::SetWindowFocus();
+		m_bShouldGrabFocus = false;
+	}
 	bool bEnabled = m_values.bEnabled;
 	if (ImGui::Checkbox("Enabled", &bEnabled)) {
 		setApplyAndRecord_Enabled(bEnabled, stateModifier);
@@ -45,13 +49,15 @@ void AlphaTrailSettings::ImGui(StateModifier& stateModifier) {
 	}
 }
 
-void AlphaTrailSettings::ImGuiPresets(StateModifier& stateModifier) {
+bool AlphaTrailSettings::ImGuiPresets(StateModifier& stateModifier) {
 	bool bPrevEnabled = m_values.bEnabled;
 	if (m_presets.ImGuiDropdown("Trail", &m_values)) {
 		bool bEnabled = m_values.bEnabled;
 		m_values.bEnabled = bPrevEnabled;
 		setEnabled_ApplyAndRecordAll(bEnabled, stateModifier);
+		return true;
 	}
+	return false;
 }
 
 void AlphaTrailSettings::applyGLBlendState() {

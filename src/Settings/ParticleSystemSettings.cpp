@@ -10,6 +10,10 @@ ParticleSystemSettings::ParticleSystemSettings()
 {}
 
 void ParticleSystemSettings::ImGui(StateModifier& stateModifier) {
+    if (m_bShouldGrabFocus) {
+        ImGui::SetWindowFocus();
+        m_bShouldGrabFocus = false;
+    }
     // Nb of particles
     if (ImGui::SliderInt("Nb of particles", (int*)&m_values.nbParticles, 1, 100000)) {
         m_presets.setToPlaceholderSetting();
@@ -25,10 +29,12 @@ void ParticleSystemSettings::ImGui(StateModifier& stateModifier) {
         applyAndRecord(stateModifier);
 }
 
-void ParticleSystemSettings::ImGuiPresets(StateModifier& stateModifier) {
+bool ParticleSystemSettings::ImGuiPresets(StateModifier& stateModifier) {
     if (m_presets.ImGuiDropdown("Particles", &m_values)) {
         applyAndRecord(stateModifier);
+        return true;
     }
+    return false;
 }
 
 void ParticleSystemSettings::applyAndRecord(StateModifier& stateModifier) {

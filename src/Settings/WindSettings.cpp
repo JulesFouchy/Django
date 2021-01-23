@@ -11,6 +11,10 @@ WindSettings::WindSettings()
 {}
 
 void WindSettings::ImGui(StateModifier& stateModifier) {
+	if (m_bShouldGrabFocus) {
+		ImGui::SetWindowFocus();
+		m_bShouldGrabFocus = false;
+	}
 	if (ImGui::SliderFloat("Frequency", &m_values.noiseFrequency, 0.0f, 1.5f)) {
 		m_presets.setToPlaceholderSetting();
 		applyAndRecord_Frequency(stateModifier);
@@ -33,10 +37,12 @@ void WindSettings::ImGui(StateModifier& stateModifier) {
 		applyAndRecord(stateModifier);
 }
 
-void WindSettings::ImGuiPresets(StateModifier& stateModifier) {
+bool WindSettings::ImGuiPresets(StateModifier& stateModifier) {
 	if (m_presets.ImGuiDropdown("Wind", &m_values)) {
 		applyAndRecord(stateModifier);
+		return true;
 	}
+	return false;
 }
 
 void WindSettings::applyAndRecord(StateModifier& stateModifier) {
