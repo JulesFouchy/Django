@@ -90,29 +90,43 @@ public:
 				}
 				else {
 					m_bRenamePopupOpenThisFrame = false;
-					if (m_bRenamePopupOpenLastFrame && m_currentPresetIdx != -1) {
-						const std::string newPath = Path::Presets + "/" + m_fileExtension + m_newPresetName + ".json";
-						if (!MyFile::Exists(newPath)) {
-							std::filesystem::rename(
-								Path::Presets + "/" + m_fileExtension + m_currentPresetName + ".json",
-								newPath
-							);
-							m_currentPresetName = m_newPresetName;
-							m_presets[m_currentPresetIdx].name = m_newPresetName;
-							sort();
+					if (m_bRenamePopupOpenLastFrame) {
+						computeCurrentPresetIdx(); // Could have been changed by playing a record
+						if (m_currentPresetIdx != -1) {
+							const std::string newPath = Path::Presets + "/" + m_fileExtension + m_newPresetName + ".json";
+							if (!MyFile::Exists(newPath)) {
+								std::filesystem::rename(
+									Path::Presets + "/" + m_fileExtension + m_currentPresetName + ".json",
+									newPath
+								);
+								m_currentPresetName = m_newPresetName;
+								m_presets[m_currentPresetIdx].name = m_newPresetName;
+								sort();
+							}
+							else {
+								boxer::show(("\"" + m_newPresetName + "\" already exists.").c_str(), "Renaming failed", boxer::Style::Warning);
+							}
 						}
 						else {
-							boxer::show(("\"" + m_newPresetName + "\" already exists.").c_str(), "Renaming failed", boxer::Style::Warning);
+							boxer::show("Actually this preset isn't saved on your computer, it was just set by a record.\nYou will now be able to \"Save settings\" if you want to.", "Renaming failed", boxer::Style::Info);
+							findPlaceholderName(Path::Presets);
+							setToPlaceholderSetting();
 						}
 					}
 				}
 				ImGui::SameLine();
 				if (ImGui::Button("Delete")) {
 					if (boxer::show(("\"" + m_currentPresetName + "\" will be deleted. Are you sure ?").c_str(), "Delete", boxer::Style::Warning, boxer::Buttons::YesNo) == boxer::Selection::Yes) {
-						std::filesystem::remove(
-							Path::Presets + "/" + m_fileExtension + m_currentPresetName + ".json"
-						);
-						m_presets.erase(m_currentPresetIdx + m_presets.begin());
+						computeCurrentPresetIdx(); // Could have been changed by playing a record
+						if (m_currentPresetIdx != -1) {
+							std::filesystem::remove(
+								Path::Presets + "/" + m_fileExtension + m_currentPresetName + ".json"
+							);
+							m_presets.erase(m_currentPresetIdx + m_presets.begin());
+						}
+						else {
+							boxer::show("Actually this preset isn't saved on your computer, it was just set by a record.\nYou will now be able to \"Save settings\" if you want to.", "Deleting failed", boxer::Style::Info);
+						}
 						findPlaceholderName(Path::Presets);
 						setToPlaceholderSetting();
 					}
