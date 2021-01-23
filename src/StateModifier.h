@@ -18,7 +18,7 @@ public:
 
 	void setAndRecord(const StateChange& stateChange);
 	void setApplyAndRecord(const StateChange& stateChange);
-	void setApplyAndRecord(const State& state, bool bSetInitialColor = false);
+	void setApplyAndRecord(const State& state, bool bSetInitialColorAndParticles = false);
 	void apply();
 	void applyAndRecord_CurrentAction();
 	void applyAndRecord_AllSettings();
