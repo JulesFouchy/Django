@@ -88,11 +88,7 @@ void App::update() {
 			ImGui::BeginMainMenuBar();
 			if (ImGui::BeginMenu("RenderAreas")) {
 				ImGui::ColorEdit3("Empty space color", &m_clearColor[0]);
-				bool bIsOutputWindowOpen = Viewports::IsOutputWindowOpen();
-				if (ImGui::Checkbox("Show output window", &bIsOutputWindowOpen)) {
-					setIsOutputWindowOpen(bIsOutputWindowOpen);
-				}
-				if (!bIsOutputWindowOpen) {
+				if (!Viewports::IsOutputWindowOpen()) {
 					Viewports::ImGuiConstrainAppViewRatio();
 				}
 				ImGui::EndMenu();
@@ -111,6 +107,10 @@ void App::update() {
 			}
 			if (ImGui::BeginMenu("Live")) {
 				LiveMode::ImGui();
+				bool bIsOutputWindowOpen = Viewports::IsOutputWindowOpen();
+				if (ImGui::Checkbox("Show output window", &bIsOutputWindowOpen)) {
+					setIsOutputWindowOpen(bIsOutputWindowOpen);
+				}
 				ImGui::EndMenu();
 			}
 			ImGui::EndMainMenuBar();
