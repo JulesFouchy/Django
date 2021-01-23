@@ -46,6 +46,7 @@ public:
 	~ColorSettings() = default;
 
 	void ImGui(StateModifier& stateModifier);
+	void ImGuiPresets(StateModifier& stateModifier);
 
 	void applyAndRecord(StateModifier& stateModifier);
 	void applyAndRecord_BackgroundColor(StateModifier& stateModifier);

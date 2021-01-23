@@ -35,7 +35,11 @@ void Settings::ImGuiWindows(StateModifier& stateModifier) {
 
 void Settings::ImGuiMainWindow(StateModifier& stateModifier) {
 	ImGui::Begin("Presets");
+	m_physicsSettings.ImGuiPresets(stateModifier);
+	m_windSettings.ImGuiPresets(stateModifier);
 	m_alphaTrailSettings.ImGuiPresets(stateModifier);
+	m_colorSettings.ImGuiPresets(stateModifier);
+	m_particleSystemSettings.ImGuiPresets(stateModifier);
 	ImGui::End();
 }
 

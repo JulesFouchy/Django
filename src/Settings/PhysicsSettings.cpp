@@ -31,6 +31,12 @@ void PhysicsSettings::ImGui(StateModifier& stateModifier) {
 		m_presets.setToPlaceholderSetting();
 }
 
+void PhysicsSettings::ImGuiPresets(StateModifier& stateModifier) {
+	if (m_presets.ImGuiDropdown("Physics", &m_values)) {
+		applyAndRecord(stateModifier);
+	}
+}
+
 void PhysicsSettings::applyAndRecord(StateModifier& stateModifier) {
 	m_values.computePhysicalParameters();
 	setStiffnessInShader(stateModifier.particleSystem().physicsComputeShader());

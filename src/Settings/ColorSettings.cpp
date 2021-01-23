@@ -84,6 +84,12 @@ void ColorSettings::ImGui(StateModifier& stateModifier) {
 	}
 }
 
+void ColorSettings::ImGuiPresets(StateModifier& stateModifier) {
+	if (m_presets.ImGuiDropdown("Colors", &m_values)) {
+		applyAndRecord(stateModifier);
+	}
+}
+
 void ColorSettings::applyAndRecord(StateModifier& stateModifier) {
 	applyAndRecord_BackgroundColor(stateModifier);
 	stateModifier.recordChange({ StateChangeType::Color_GradientMode, m_values.bColorModeHueGradient });

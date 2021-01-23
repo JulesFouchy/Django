@@ -33,6 +33,12 @@ void WindSettings::ImGui(StateModifier& stateModifier) {
 		applyAndRecord(stateModifier);
 }
 
+void WindSettings::ImGuiPresets(StateModifier& stateModifier) {
+	if (m_presets.ImGuiDropdown("Wind", &m_values)) {
+		applyAndRecord(stateModifier);
+	}
+}
+
 void WindSettings::applyAndRecord(StateModifier& stateModifier) {
 	applyAndRecord_Frequency(stateModifier);
 	applyAndRecord_MinStrength(stateModifier);

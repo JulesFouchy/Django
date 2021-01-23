@@ -25,6 +25,12 @@ void ParticleSystemSettings::ImGui(StateModifier& stateModifier) {
         applyAndRecord(stateModifier);
 }
 
+void ParticleSystemSettings::ImGuiPresets(StateModifier& stateModifier) {
+    if (m_presets.ImGuiDropdown("Particles", &m_values)) {
+        applyAndRecord(stateModifier);
+    }
+}
+
 void ParticleSystemSettings::applyAndRecord(StateModifier& stateModifier) {
     applyAndRecord_NbParticles(stateModifier);
     applyAndRecord_ParticleRadius(stateModifier);
