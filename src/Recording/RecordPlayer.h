@@ -21,7 +21,6 @@ public:
 
 private:
 	std::unique_ptr<PlayState> m_playState;
-	Record* m_record = nullptr;
 	float m_startTime;
 	bool m_bDoRecordsLoop = true;
 	bool m_bDraggingOnTheTimeline = false;
