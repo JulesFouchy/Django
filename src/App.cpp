@@ -109,6 +109,10 @@ void App::update() {
 #endif
 				ImGui::EndMenu();
 			}
+			if (ImGui::BeginMenu("Live")) {
+				LiveMode::ImGui();
+				ImGui::EndMenu();
+			}
 			ImGui::EndMainMenuBar();
 #ifndef NDEBUG
 			// Debug

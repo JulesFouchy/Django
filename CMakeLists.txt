@@ -158,4 +158,5 @@ target_precompile_headers(${PROJECT_NAME}
     [["Debugging/glException.h"]]
     [["Cool/Serialization/JsonFile.h"]]
     [["Cool/Serialization/GlmSerialization.h"]]
+    [["LiveMode.h"]]
 )
