@@ -36,7 +36,7 @@ void PlayState_Play::ImGui(Record* selectedRecord, float time, RecordPlayer& rec
 	ImGui::SameLine();
 	// Stop
 	if (MyImGui::ButtonWithIcon(Textures::Stop())) {
-		changeState = [&](){ recordPlayer.setState<PlayState_NotStarted>(m_record); };
+		changeState = [&](){ recordPlayer.setState<PlayState_NotStarted>(m_record, false); };
 	}
 	// Timeline
 	float t = time - m_startTime;
