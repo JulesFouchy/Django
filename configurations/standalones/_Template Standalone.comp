@@ -41,6 +41,7 @@ vec2 getPosition(uint particleID) {
 // float rand(float id, float seed);
 // float u_seed;
 // vec2 u_xySeed;
+// Returns a value between -1 and 1
 // The intended usage is, to get a random float :
 //	 rand(id, u_seed)
 // Or, to get a random vec2 :
