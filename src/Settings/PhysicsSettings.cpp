@@ -49,6 +49,7 @@ void PhysicsSettings::applyAndRecord(StateModifier& stateModifier) {
 	setDampingInShader  (stateModifier.particleSystem().physicsComputeShader());
 	stateModifier.recordChange({ StateChangeType::Physics_Pulsation,    m_values.pulsation });
 	stateModifier.recordChange({ StateChangeType::Physics_DampingRatio, m_values.dampingRatio });
+	applyAndRecord_PresetName(stateModifier);
 }
 
 void PhysicsSettings::applyAndRecord_Pulsation(StateModifier& stateModifier) {
@@ -74,4 +75,8 @@ void PhysicsSettings::setDampingInShader(ShaderPipeline& physicsCompute) {
 	physicsCompute.bind();
 	physicsCompute.setUniform1f("u_Damping", m_values.getDamping());
 	physicsCompute.unbind();
+}
+
+void PhysicsSettings::applyAndRecord_PresetName(StateModifier& stateModifier) {
+	stateModifier.recordChange({ StateChangeType::Physics_PresetName, m_presets.getPresetName() });
 }

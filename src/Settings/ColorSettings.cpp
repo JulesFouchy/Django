@@ -107,6 +107,8 @@ void ColorSettings::applyAndRecord(StateModifier& stateModifier) {
 	stateModifier.recordChange({ StateChangeType::Color_ColorEnd,     m_values.particleColorEnd });
 	// Apply only once
 	stateModifier.particleSystem().applyParticleColors(m_values);
+	//
+	applyAndRecord_PresetName(stateModifier);
 }
 
 void ColorSettings::applyAndRecord_BackgroundColor(StateModifier& stateModifier) {
@@ -147,4 +149,8 @@ void ColorSettings::applyAndRecord_ColorStart(StateModifier& stateModifier) {
 void ColorSettings::applyAndRecord_ColorEnd(StateModifier& stateModifier) {
 	stateModifier.particleSystem().applyParticleColors(m_values);
 	stateModifier.recordChange({ StateChangeType::Color_ColorEnd, m_values.particleColorEnd });
+}
+
+void ColorSettings::applyAndRecord_PresetName(StateModifier& stateModifier) {
+	stateModifier.recordChange({ StateChangeType::Color_PresetName, m_presets.getPresetName() });
 }

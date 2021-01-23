@@ -27,6 +27,9 @@ public:
 	}
 	~Presets() = default;
 
+	inline const std::string& getPresetName() { return m_currentPresetName; }
+	inline void setPresetName(const std::string& newName) { m_currentPresetName = newName; }
+
 	bool ImGuiDropdown(const char* label, T* settingValues) {
 		bool b = false;
 		if (ImGui::BeginCombo(label, m_currentPresetName.c_str(), 0)) {

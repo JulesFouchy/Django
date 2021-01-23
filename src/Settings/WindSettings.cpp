@@ -51,6 +51,7 @@ void WindSettings::applyAndRecord(StateModifier& stateModifier) {
 	applyAndRecord_MaxStrength(stateModifier);
 	applyAndRecord_Speed(stateModifier);
 	applyAndRecord_Direction(stateModifier);
+	applyAndRecord_PresetName(stateModifier);
 }
 
 void WindSettings::applyAndRecord_Frequency(StateModifier& stateModifier) {
@@ -92,4 +93,8 @@ void WindSettings::setMaxStrengthInShader(ShaderPipeline& physicsCompute) {
 void WindSettings::setDirectionInShader(ShaderPipeline& physicsCompute) {
 	physicsCompute.bind();
 	physicsCompute.setUniform1f("u_windDirectionAngle", m_dirValues.directionAngle);
+}
+
+void WindSettings::applyAndRecord_PresetName(StateModifier& stateModifier) {
+	stateModifier.recordChange({ StateChangeType::Wind_PresetName, m_presets.getPresetName() });
 }

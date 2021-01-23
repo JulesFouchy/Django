@@ -40,6 +40,7 @@ bool ParticleSystemSettings::ImGuiPresets(StateModifier& stateModifier) {
 void ParticleSystemSettings::applyAndRecord(StateModifier& stateModifier) {
     applyAndRecord_NbParticles(stateModifier);
     applyAndRecord_ParticleRadius(stateModifier);
+    applyAndRecord_PresetName(stateModifier);
 }
 
 void ParticleSystemSettings::applyAndRecord_NbParticles(StateModifier& stateModifier) {
@@ -54,4 +55,8 @@ void ParticleSystemSettings::applyAndRecord_NbParticles(StateModifier& stateModi
 void ParticleSystemSettings::applyAndRecord_ParticleRadius(StateModifier& stateModifier) {
     stateModifier.particleSystem().recomputeVBO(m_values.particleRadiusRelToHeight);
     stateModifier.recordChange({ StateChangeType::Particles_Radius, m_values.particleRadiusRelToHeight });
+}
+
+void ParticleSystemSettings::applyAndRecord_PresetName(StateModifier& stateModifier) {
+    stateModifier.recordChange({ StateChangeType::Particles_PresetName, m_presets.getPresetName() });
 }

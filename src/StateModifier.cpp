@@ -73,6 +73,10 @@ void StateModifier::setApplyAndRecord(const StateChange& stateChange) {
 		m_settingsManager.get().alphaTrail().setMinAlpha(std::get<float>(stateChange.value));
 		m_settingsManager.get().alphaTrail().applyAndRecord_MinAlpha(*this);
 		break;
+	case StateChangeType::AlphaTrail_PresetName:
+		m_settingsManager.get().alphaTrail().setPresetName(std::get<std::string>(stateChange.value));
+		m_settingsManager.get().alphaTrail().applyAndRecord_PresetName(*this);
+		break;
 	case StateChangeType::Color_Background:
 		m_settingsManager.get().colors().setBackgroundColor(std::get<glm::vec3>(stateChange.value));
 		m_settingsManager.get().colors().applyAndRecord_BackgroundColor(*this);
@@ -105,6 +109,10 @@ void StateModifier::setApplyAndRecord(const StateChange& stateChange) {
 		m_settingsManager.get().colors().setColorEnd(std::get<glm::vec3>(stateChange.value));
 		m_settingsManager.get().colors().applyAndRecord_ColorEnd(*this);
 		break;
+	case StateChangeType::Color_PresetName:
+		m_settingsManager.get().colors().setPresetName(std::get<std::string>(stateChange.value));
+		m_settingsManager.get().colors().applyAndRecord_PresetName(*this);
+		break;
 	case StateChangeType::Particles_Number:
 		m_settingsManager.get().partSystem().setNbParticles(std::get<unsigned int>(stateChange.value));
 		m_settingsManager.get().partSystem().applyAndRecord_NbParticles(*this);
@@ -113,6 +121,10 @@ void StateModifier::setApplyAndRecord(const StateChange& stateChange) {
 		m_settingsManager.get().partSystem().setRadius(std::get<float>(stateChange.value));
 		m_settingsManager.get().partSystem().applyAndRecord_ParticleRadius(*this);
 		break;
+	case StateChangeType::Particles_PresetName:
+		m_settingsManager.get().partSystem().setPresetName(std::get<std::string>(stateChange.value));
+		m_settingsManager.get().partSystem().applyAndRecord_PresetName(*this);
+		break;
 	case StateChangeType::Physics_Pulsation:
 		m_settingsManager.get().physics().setPulsation(std::get<float>(stateChange.value));
 		m_settingsManager.get().physics().applyAndRecord_Pulsation(*this);
@@ -120,6 +132,10 @@ void StateModifier::setApplyAndRecord(const StateChange& stateChange) {
 	case StateChangeType::Physics_DampingRatio:
 		m_settingsManager.get().physics().setDampingRatio(std::get<float>(stateChange.value));
 		m_settingsManager.get().physics().applyAndRecord_DampingRatio(*this);
+		break;
+	case StateChangeType::Physics_PresetName:
+		m_settingsManager.get().physics().setPresetName(std::get<std::string>(stateChange.value));
+		m_settingsManager.get().physics().applyAndRecord_PresetName(*this);
 		break;
 	case StateChangeType::Wind_Frequency:
 		m_settingsManager.get().wind().setFrequency(std::get<float>(stateChange.value));
@@ -140,6 +156,10 @@ void StateModifier::setApplyAndRecord(const StateChange& stateChange) {
 	case StateChangeType::Wind_Direction:
 		m_settingsManager.get().wind().setDirection(std::get<float>(stateChange.value));
 		m_settingsManager.get().wind().applyAndRecord_Direction(*this);
+		break;
+	case StateChangeType::Wind_PresetName:
+		m_settingsManager.get().wind().setPresetName(std::get<std::string>(stateChange.value));
+		m_settingsManager.get().wind().applyAndRecord_PresetName(*this);
 		break;
 	case StateChangeType::Random:
 		m_configManager.setRandParams(std::get<RandomParams>(stateChange.value));

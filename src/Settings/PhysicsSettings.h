@@ -56,9 +56,11 @@ public:
 	void applyAndRecord(StateModifier& stateModifier);
 	void applyAndRecord_Pulsation(StateModifier& stateModifier);
 	void applyAndRecord_DampingRatio(StateModifier& stateModifier);
+	void applyAndRecord_PresetName(StateModifier& stateModifier);
 
-	inline void setPulsation(float pulsation)       { m_values.pulsation = pulsation;       m_presets.setToPlaceholderSetting(); }
-	inline void setDampingRatio(float dampingRatio) { m_values.dampingRatio = dampingRatio; m_presets.setToPlaceholderSetting(); }
+	inline void setPulsation(float pulsation)          { m_values.pulsation = pulsation;       m_presets.setToPlaceholderSetting(); }
+	inline void setDampingRatio(float dampingRatio)    { m_values.dampingRatio = dampingRatio; m_presets.setToPlaceholderSetting(); }
+	inline void setPresetName(const std::string& name) { m_presets.setPresetName(name); }
 
 	inline const PhysicsSettingsValues& getValues() const { return m_values; }
 	inline void setValues(const PhysicsSettingsValues& values) { m_values = values; m_presets.setToPlaceholderSetting(); }

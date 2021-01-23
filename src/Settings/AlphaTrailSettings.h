@@ -43,11 +43,13 @@ public:
 	void applyAndRecord_Decay(StateModifier& stateModifier);
 	void applyAndRecord_Threshold(StateModifier& stateModifier);
 	void applyAndRecord_MinAlpha(StateModifier& stateModifier);
+	void applyAndRecord_PresetName(StateModifier& stateModifier);
 
-	inline void setFixResiduals(bool bFixResiduals) { m_values.bFixResiduals = bFixResiduals; m_presets.setToPlaceholderSetting(); }
-	inline void setDecay(float decay)               { m_values.decay = decay;                 m_presets.setToPlaceholderSetting(); }
-	inline void setThreshold(float threshold)       { m_values.threshold = threshold;         m_presets.setToPlaceholderSetting(); }
-	inline void setMinAlpha(float minAlpha)         { m_values.minAlpha = minAlpha;           m_presets.setToPlaceholderSetting(); }
+	inline void setFixResiduals(bool bFixResiduals)    { m_values.bFixResiduals = bFixResiduals; m_presets.setToPlaceholderSetting(); }
+	inline void setDecay(float decay)                  { m_values.decay = decay;                 m_presets.setToPlaceholderSetting(); }
+	inline void setThreshold(float threshold)          { m_values.threshold = threshold;         m_presets.setToPlaceholderSetting(); }
+	inline void setMinAlpha(float minAlpha)            { m_values.minAlpha = minAlpha;           m_presets.setToPlaceholderSetting(); }
+	inline void setPresetName(const std::string& name) { m_presets.setPresetName(name); }
 
 	inline const AlphaTrailSettingsValues& getValues() const { return m_values; }
 	inline void setValues(const AlphaTrailSettingsValues& values) { m_values = values; m_presets.setToPlaceholderSetting(); }

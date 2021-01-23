@@ -61,12 +61,14 @@ public:
 	void applyAndRecord_MaxStrength(StateModifier& stateModifier);
 	void applyAndRecord_Speed(StateModifier& stateModifier);
 	void applyAndRecord_Direction(StateModifier& stateModifier);
+	void applyAndRecord_PresetName(StateModifier& stateModifier);
 
-	inline void setFrequency(float frequency)     { m_values.noiseFrequency = frequency; m_presets.setToPlaceholderSetting(); }
-	inline void setMinStrength(float minStrength) { m_values.minStrength = minStrength;  m_presets.setToPlaceholderSetting(); }
-	inline void setMaxStrength(float maxStrength) { m_values.maxStrength = maxStrength;  m_presets.setToPlaceholderSetting(); }
-	inline void setSpeed(float speed)             { m_values.speed = speed;              m_presets.setToPlaceholderSetting(); }
-	inline void setDirection(float angle)         { m_dirValues.directionAngle = angle;  m_presets.setToPlaceholderSetting(); m_dirValues.computeDirection(); }
+	inline void setFrequency(float frequency)          { m_values.noiseFrequency = frequency; m_presets.setToPlaceholderSetting(); }
+	inline void setMinStrength(float minStrength)      { m_values.minStrength = minStrength;  m_presets.setToPlaceholderSetting(); }
+	inline void setMaxStrength(float maxStrength)      { m_values.maxStrength = maxStrength;  m_presets.setToPlaceholderSetting(); }
+	inline void setSpeed(float speed)                  { m_values.speed = speed;              m_presets.setToPlaceholderSetting(); }
+	inline void setDirection(float angle)              { m_dirValues.directionAngle = angle;  m_presets.setToPlaceholderSetting(); m_dirValues.computeDirection(); }
+	inline void setPresetName(const std::string& name) { m_presets.setPresetName(name); }
 
 	void setWindOffsetInShader(ShaderPipeline& physicsCompute, float time);
 

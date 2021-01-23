@@ -58,6 +58,7 @@ public:
 	void applyAndRecord_Value(StateModifier& stateModifier);
 	void applyAndRecord_ColorStart(StateModifier& stateModifier);
 	void applyAndRecord_ColorEnd(StateModifier& stateModifier);
+	void applyAndRecord_PresetName(StateModifier& stateModifier);
 
 	inline void setBackgroundColor(const glm::vec3& col)   { m_values.bgColor = col;                      m_presets.setToPlaceholderSetting(); }
 	inline void setGradientMode(bool bIsHueMode)           { m_values.bColorModeHueGradient = bIsHueMode; m_presets.setToPlaceholderSetting(); }
@@ -67,6 +68,7 @@ public:
 	inline void setValue(float value)                      { m_values.particleValue = value;              m_presets.setToPlaceholderSetting(); }
 	inline void setColorStart(const glm::vec3& colorStart) { m_values.particleColorStart = colorStart;    m_presets.setToPlaceholderSetting(); }
 	inline void setColorEnd(const glm::vec3& colorEnd)     { m_values.particleColorEnd = colorEnd;        m_presets.setToPlaceholderSetting(); }
+	inline void setPresetName(const std::string& name)     { m_presets.setPresetName(name); }
 
 	// Getters
 	inline const glm::vec3& backgroundColor() { return m_values.bgColor; }

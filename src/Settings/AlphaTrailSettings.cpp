@@ -73,6 +73,7 @@ void AlphaTrailSettings::setEnabled_ApplyAndRecordAll(bool bEnabled, StateModifi
 	applyAndRecord_Decay(stateModifier);
 	applyAndRecord_Threshold(stateModifier);
 	applyAndRecord_MinAlpha(stateModifier);
+	applyAndRecord_PresetName(stateModifier);
 }
 
 void AlphaTrailSettings::setApplyAndRecord_Enabled(bool bEnabled, StateModifier& stateModifier) {
@@ -107,4 +108,8 @@ void AlphaTrailSettings::applyAndRecord_Threshold(StateModifier& stateModifier) 
 void AlphaTrailSettings::applyAndRecord_MinAlpha(StateModifier& stateModifier) {
 	stateModifier.recordChange({ StateChangeType::AlphaTrail_MinAlpha, m_values.minAlpha});
 	// There is nothing to do to apply, the current value is used every frame
+}
+
+void AlphaTrailSettings::applyAndRecord_PresetName(StateModifier& stateModifier) {
+	stateModifier.recordChange({ StateChangeType::AlphaTrail_PresetName, m_presets.getPresetName() });
 }
