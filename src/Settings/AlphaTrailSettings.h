@@ -34,6 +34,7 @@ public:
 	~AlphaTrailSettings() = default;
 
 	void ImGui(StateModifier& stateModifier);
+	void ImGuiPresets(StateModifier& stateModifier);
 
 	void setEnabled_ApplyAndRecordAll(bool bEnabled, StateModifier& stateModifier);
 	void setApplyAndRecord_Enabled(bool bEnabled, StateModifier& stateModifier);

@@ -27,10 +27,9 @@ public:
 	}
 	~Presets() = default;
 
-	bool ImGui(T* settingValues) {
-		ImGui::Separator();
+	bool ImGuiDropdown(const char* label, T* settingValues) {
 		bool b = false;
-		if (ImGui::BeginCombo("Presets", m_currentPresetName.c_str(), 0)) {
+		if (ImGui::BeginCombo(label, m_currentPresetName.c_str(), 0)) {
 			for (size_t i = 0; i < m_presets.size(); i++) {
 				if (ImGui::Selectable(m_presets[i].name.c_str(), false)) {
 					b = true;
@@ -41,6 +40,12 @@ public:
 			}
 			ImGui::EndCombo();
 		}
+		return b;
+	}
+
+	bool ImGui(T* settingValues) {
+		ImGui::Separator();
+		bool b = ImGuiDropdown("Presets", settingValues);
 		if (LiveMode::IsOff()) {
 			// Save preset
 			if (!m_currentPresetName.compare("Unsaved settings...")) {

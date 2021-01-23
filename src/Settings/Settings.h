@@ -12,6 +12,7 @@ public:
 	~Settings() = default;
 
 	void ImGuiWindows(StateModifier& stateModifier);
+	void ImGuiMainWindow(StateModifier& stateModifier);
 	void ImGuiOpenWindowsCheckboxes();
 	void applyAndRecord(StateModifier& stateModifier);
 

@@ -82,9 +82,9 @@ void App::update() {
 	// ----------------------------
 	// ---------- IMGUI -----------
 	// ----------------------------
-	// ImGui windows
 	if (m_bShowGUI) {
 		if (!Viewports::IsExporting()) {
+			// MENUS
 			ImGui::BeginMainMenuBar();
 			if (ImGui::BeginMenu("RenderAreas")) {
 				ImGui::ColorEdit3("Empty space color", &m_clearColor[0]);
@@ -114,6 +114,7 @@ void App::update() {
 				ImGui::EndMenu();
 			}
 			ImGui::EndMainMenuBar();
+			// WINDOWS
 #ifndef NDEBUG
 			// Debug
 			if (m_bOpenDebug) {
@@ -130,6 +131,7 @@ void App::update() {
 			// Settings
 			m_configManager.Imgui(m_stateModifier);
 			m_stateModifier.settingsManager().get().ImGuiWindows(m_stateModifier);
+			m_stateModifier.settingsManager().get().ImGuiMainWindow(m_stateModifier);
 			// Key bindings
 			if (m_bOpenKeyBindings) {
 				ImGui::Begin("Key Bindings", &m_bOpenKeyBindings);

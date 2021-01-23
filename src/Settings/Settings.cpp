@@ -33,6 +33,12 @@ void Settings::ImGuiWindows(StateModifier& stateModifier) {
 	}
 }
 
+void Settings::ImGuiMainWindow(StateModifier& stateModifier) {
+	ImGui::Begin("Presets");
+	m_alphaTrailSettings.ImGuiPresets(stateModifier);
+	ImGui::End();
+}
+
 void Settings::ImGuiOpenWindowsCheckboxes() {
 	ImGui::Checkbox("Trail",     &m_bOpenTrail);
 	ImGui::Checkbox("Colors",    &m_bOpenColors);
