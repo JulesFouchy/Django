@@ -17,7 +17,7 @@ void PlayState_Play::update(float time, RecordPlayer& recordPlayer, StateModifie
 	if (!m_record.updatePlaying(time - m_startTime, stateModifier)
 	&& !m_bDraggingOnTheTimeline) { // Prevent the playing from stopping just because we dragged the time cursor outside of the timeline
 		bool bStartLoopingAgain = !Viewports::IsExporting();
-		recordPlayer.setState<PlayState_NotStarted>(m_record, bStartLoopingAgain);
+		recordPlayer.setState<PlayState_NotStarted>(m_record, recordPlayer.doRecordsLoop());
 	}
 	//
 	m_bDraggingOnTheTimeline = false; // Reset every frame. It is set by the ImGui() method before the call to update()

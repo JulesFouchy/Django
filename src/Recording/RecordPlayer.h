@@ -12,6 +12,7 @@ public:
 
 	void update(float time, StateModifier& stateModifier);
 	void ImGui (Record* selectedRecord, float time, StateModifier& stateModifier);
+	inline bool doRecordsLoop() { return m_bDoRecordsLoop; }
 
 	template<typename T, typename... Args>
 	void setState(Args&&... args) {
@@ -22,6 +23,6 @@ private:
 	std::unique_ptr<PlayState> m_playState;
 	Record* m_record = nullptr;
 	float m_startTime;
-
+	bool m_bDoRecordsLoop = true;
 	bool m_bDraggingOnTheTimeline = false;
 };

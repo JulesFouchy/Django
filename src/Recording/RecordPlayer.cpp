@@ -16,4 +16,5 @@ void RecordPlayer::update(float time, StateModifier& stateModifier) {
 
 void RecordPlayer::ImGui(Record* selectedRecord, float time, StateModifier& stateModifier) {
 	m_playState->ImGui(selectedRecord, time, *this, stateModifier);
+	ImGui::Checkbox("Records do loop", &m_bDoRecordsLoop);
 }
