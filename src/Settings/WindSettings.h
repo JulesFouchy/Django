@@ -69,6 +69,7 @@ public:
 	inline void setSpeed(float speed)                  { m_values.speed = speed;              m_presets.setToPlaceholderSetting(); }
 	inline void setDirection(float angle)              { m_dirValues.directionAngle = angle;  m_presets.setToPlaceholderSetting(); m_dirValues.computeDirection(); }
 	inline void setPresetName(const std::string& name) { m_presets.setPresetName(name); }
+	inline const std::string& getPresetName() { return m_presets.getPresetName(); }
 
 	void setWindOffsetInShader(ShaderPipeline& physicsCompute, float time);
 

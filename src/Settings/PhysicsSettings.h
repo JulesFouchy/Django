@@ -61,6 +61,7 @@ public:
 	inline void setPulsation(float pulsation)          { m_values.pulsation = pulsation;       m_presets.setToPlaceholderSetting(); }
 	inline void setDampingRatio(float dampingRatio)    { m_values.dampingRatio = dampingRatio; m_presets.setToPlaceholderSetting(); }
 	inline void setPresetName(const std::string& name) { m_presets.setPresetName(name); }
+	inline const std::string& getPresetName() { return m_presets.getPresetName(); }
 
 	inline const PhysicsSettingsValues& getValues() const { return m_values; }
 	inline void setValues(const PhysicsSettingsValues& values) { m_values = values; m_presets.setToPlaceholderSetting(); }

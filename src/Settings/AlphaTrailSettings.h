@@ -50,6 +50,7 @@ public:
 	inline void setThreshold(float threshold)          { m_values.threshold = threshold;         m_presets.setToPlaceholderSetting(); }
 	inline void setMinAlpha(float minAlpha)            { m_values.minAlpha = minAlpha;           m_presets.setToPlaceholderSetting(); }
 	inline void setPresetName(const std::string& name) { m_presets.setPresetName(name); }
+	inline const std::string& getPresetName() { return m_presets.getPresetName(); }
 
 	inline const AlphaTrailSettingsValues& getValues() const { return m_values; }
 	inline void setValues(const AlphaTrailSettingsValues& values) { m_values = values; m_presets.setToPlaceholderSetting(); }

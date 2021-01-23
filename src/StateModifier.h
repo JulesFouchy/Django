@@ -8,7 +8,7 @@ class RecordManager;
 class MouseInteractions;
 
 struct StateChange;
-struct State;
+#include "Recording/State.h"
 struct Action;
 
 class StateModifier {

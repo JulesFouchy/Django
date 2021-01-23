@@ -37,6 +37,7 @@ public:
 	inline void setNbParticles(unsigned int nbParticles) { m_values.nbParticles = nbParticles;          m_presets.setToPlaceholderSetting(); }
 	inline void setRadius(float radius)                  { m_values.particleRadiusRelToHeight = radius; m_presets.setToPlaceholderSetting(); }
 	inline void setPresetName(const std::string& name)   { m_presets.setPresetName(name); }
+	inline const std::string& getPresetName() { return m_presets.getPresetName(); }
 
 	inline unsigned int nbParticles() { return m_values.nbParticles; }
 	inline const ParticleSystemSettingsValues& getValues() const { return m_values; }

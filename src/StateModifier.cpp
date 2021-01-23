@@ -215,19 +215,24 @@ void StateModifier::recordChange(const StateChange& stateChange) {
 
 State StateModifier::getCurrentState() const {
 	State state;
-	state.timestamp            = m_recordManager.clock().time();
-	state.lastShape            = m_configManager.getLastShapeAsActionRef();
-	state.lastLayout           = m_configManager.getLastLayoutAsActionRef();
-	state.currentAction        = m_configManager.getCurrentConfigAsActionRef();
-	state.alphaTrailValues     = m_settingsManager.get().alphaTrail().getValues();
-	state.colorValues          = m_settingsManager.get().colors().getValues();
-	state.particleSystemValues = m_settingsManager.get().partSystem().getValues();
-	state.physicsValues        = m_settingsManager.get().physics().getValues();
-	state.windValues           = m_settingsManager.get().wind().getValues();
-	state.windDirectionAngle   = m_settingsManager.get().wind().getDirAngle();
-	state.configParams         = m_configManager.configParams();
-	state.randomParams         = m_configManager.randParams();
-	state.textConfigValue      = m_configManager.textConfig().getText();
+	state.timestamp                = m_recordManager.clock().time();
+	state.lastShape                = m_configManager.getLastShapeAsActionRef();
+	state.lastLayout               = m_configManager.getLastLayoutAsActionRef();
+	state.currentAction            = m_configManager.getCurrentConfigAsActionRef();
+	state.alphaTrailValues         = m_settingsManager.get().alphaTrail().getValues();
+	state.colorValues              = m_settingsManager.get().colors().getValues();
+	state.particleSystemValues     = m_settingsManager.get().partSystem().getValues();
+	state.physicsValues            = m_settingsManager.get().physics().getValues();
+	state.windValues               = m_settingsManager.get().wind().getValues();
+	state.windDirectionAngle       = m_settingsManager.get().wind().getDirAngle();
+	state.configParams             = m_configManager.configParams();
+	state.randomParams             = m_configManager.randParams();
+	state.textConfigValue          = m_configManager.textConfig().getText();
+	state.alphaTrailPresetName     = m_settingsManager.get().alphaTrail().getPresetName();
+	state.colorPresetName          = m_settingsManager.get().colors().getPresetName();
+	state.particleSystemPresetName = m_settingsManager.get().partSystem().getPresetName();
+	state.physicsPresetName        = m_settingsManager.get().physics().getPresetName();
+	state.windPresetName           = m_settingsManager.get().wind().getPresetName();
 	return state;
 }
 
@@ -241,13 +246,18 @@ void StateModifier::setApplyAndRecord(const State& state, bool bSetInitialColorA
 	m_configManager.applyAndRecord_ActionRef(state.lastShape, *this);
 	m_configManager.applyAndRecord_ActionRef(state.lastLayout, *this);
 	m_configManager.applyAndRecord_ActionRef(state.currentAction, *this);
-	m_settingsManager.get().alphaTrail().setValues(state.alphaTrailValues);
 	if (bSetInitialColorAndParticles) {
 		m_settingsManager.get().colors().setValues(state.colorValues);
+		m_settingsManager.get().colors().setPresetName(state.colorPresetName);
 		m_settingsManager.get().partSystem().setValues(state.particleSystemValues);
+		m_settingsManager.get().partSystem().setPresetName(state.particleSystemPresetName);
 	}
-	m_settingsManager.get().physics()   .setValues(state.physicsValues);
-	m_settingsManager.get().wind()      .setValues(state.windValues);
-	m_settingsManager.get().wind()      .setDirection(state.windDirectionAngle);
+	m_settingsManager.get().alphaTrail().setValues(state.alphaTrailValues);
+	m_settingsManager.get().alphaTrail().setPresetName(state.alphaTrailPresetName);
+	m_settingsManager.get().physics().setValues(state.physicsValues);
+	m_settingsManager.get().physics().setPresetName(state.physicsPresetName);
+	m_settingsManager.get().wind().setValues(state.windValues);
+	m_settingsManager.get().wind().setDirection(state.windDirectionAngle);
+	m_settingsManager.get().wind().setPresetName(state.windPresetName);
 	applyAndRecord_AllSettings();
 }

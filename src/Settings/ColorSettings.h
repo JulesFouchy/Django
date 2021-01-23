@@ -69,6 +69,7 @@ public:
 	inline void setColorStart(const glm::vec3& colorStart) { m_values.particleColorStart = colorStart;    m_presets.setToPlaceholderSetting(); }
 	inline void setColorEnd(const glm::vec3& colorEnd)     { m_values.particleColorEnd = colorEnd;        m_presets.setToPlaceholderSetting(); }
 	inline void setPresetName(const std::string& name)     { m_presets.setPresetName(name); }
+	inline const std::string& getPresetName() { return m_presets.getPresetName(); }
 
 	// Getters
 	inline const glm::vec3& backgroundColor() { return m_values.bgColor; }

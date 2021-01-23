@@ -25,6 +25,11 @@ struct State {
 	ConfigParams configParams;
 	RandomParams randomParams;
 	std::string textConfigValue;
+	std::string alphaTrailPresetName;
+	std::string colorPresetName;
+	std::string particleSystemPresetName;
+	std::string physicsPresetName;
+	std::string windPresetName;
 
 private:
 	//Serialization
@@ -45,7 +50,12 @@ private:
 			CEREAL_NVP(windDirectionAngle),
 			CEREAL_NVP(configParams),
 			CEREAL_NVP(randomParams),
-			CEREAL_NVP(textConfigValue)
+			CEREAL_NVP(textConfigValue),
+			CEREAL_NVP(alphaTrailPresetName),
+			CEREAL_NVP(colorPresetName),
+			CEREAL_NVP(particleSystemPresetName),
+			CEREAL_NVP(physicsPresetName),
+			CEREAL_NVP(windPresetName)
 		);
 	}
 };
