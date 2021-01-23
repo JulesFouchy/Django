@@ -28,10 +28,11 @@ void Record::recordStateChange(const StateChange& stateChange, float timestamp) 
 	m_stateChangesTimeline.emplace_back(stateChange, timestamp);
 }
 
-bool Record::startPlaying(StateModifier& stateModifier) {
+bool Record::startPlaying(StateModifier& stateModifier, bool bSetInitialColor) {
 	m_prevTime = 0.0f;
 	stateModifier.setApplyAndRecord(m_startState);
-	stateModifier.renderer().clearRenderBuffer(stateModifier.settingsManager().get().colors().backgroundColor());
+	if (bSetInitialColor)
+		stateModifier.renderer().clearRenderBuffer(stateModifier.settingsManager().get().colors().backgroundColor());
 	m_nextStateChangeIdx = 0;
 	return m_stateChangesTimeline.size() != 0;
 }

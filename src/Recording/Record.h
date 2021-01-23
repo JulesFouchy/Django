@@ -16,7 +16,7 @@ public:
 	inline void onRecordingStops(float currentTime) { m_totalDuration = currentTime - m_startState.timestamp; }
 
 	void recordStateChange(const StateChange& stateChange, float timestamp);
-	bool startPlaying(StateModifier& stateModifier); // Returns true iff we should keep playing the record
+	bool startPlaying(StateModifier& stateModifier, bool bSetInitialColor = false); // Returns true iff we should keep playing the record
 	bool updatePlaying(float time, StateModifier& stateModifier); // Returns true iff we should keep playing the record
 
 	bool setTime(float newTime, StateModifier& stateModifier); // Returns true iff we should keep playing the record

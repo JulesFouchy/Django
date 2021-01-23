@@ -36,7 +36,7 @@ void RecordManager::ImGui(std::unique_ptr<Clock>& clock, StateModifier& stateMod
 				if (ImGui::Button("Export")) {
 					if (m_exporter.startExporting(selectedRecord(), stateModifier.renderer(), clock)) {
 						// Play record
-						selectedRecord().startPlaying(stateModifier);
+						selectedRecord().startPlaying(stateModifier, true);
 						m_recordPlayer.setState<PlayState_Play>(selectedRecord(), clock->time());
 						// Reset particles' positions and speeds
 						unsigned int nbParticles = stateModifier.particleSystem().getNbParticles();
