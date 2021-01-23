@@ -49,7 +49,7 @@ void RecordManager::ImGui(std::unique_ptr<Clock>& clock, StateModifier& stateMod
 			else {
 				if (ImGui::Button("Stop exporting")) {
 					m_exporter.stopExporting(stateModifier.renderer(), clock);
-					m_recordPlayer.setState<PlayState_NotStarted>(selectedRecord());
+					m_recordPlayer.setState<PlayState_NotStarted>(selectedRecord(), false);
 				}
 			}
 		}
