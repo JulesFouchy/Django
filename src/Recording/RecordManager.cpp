@@ -24,8 +24,10 @@ RecordManager::RecordManager()
 			m_records.emplace_back(entry.path().string());
 		}
 	}
-	if (m_records.size() > 0)
+	if (m_records.size() > 0) {
 		setSelectedRecord(0);
+		m_recordPlayer.setState<PlayState_NotStarted>(selectedRecord(), false);
+	}
 }
 
 void RecordManager::ImGui(std::unique_ptr<Clock>& clock, StateModifier& stateModifier) {
