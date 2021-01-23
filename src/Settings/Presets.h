@@ -41,74 +41,81 @@ public:
 			}
 			ImGui::EndCombo();
 		}
-		if (!m_currentPresetName.compare("Unsaved settings...")) {
-			if (m_nameAvailable) {
-				if (!m_nameContainsDots) {
-					if (ImGui::Button("Save settings")) {
-						savePresetTo(*settingValues, Path::Presets);
-					}
-					ImGui::SameLine();
-					ImGui::Text("as");
-				}
-				else {
-					ImGui::TextColored(ImVec4(0.74f, 0.04f, 0.04f, 1.f), "You can't have dots (.) in the name");
-				}
-			}
-			else {
-				ImGui::TextColored(ImVec4(0.74f, 0.04f, 0.04f, 1.f), "Name already used :");
-			}
-			ImGui::SameLine();
-			ImGui::PushID(138571);
-			if (ImGui::InputText("", &m_savePresetAs)) {
-				m_nameAvailable = !MyFile::Exists(Path::Presets + "/" + m_fileExtension + m_savePresetAs + ".json") && m_savePresetAs.compare("Unsaved settings...");
-				m_nameContainsDots = m_savePresetAs.find(".") != std::string::npos;
-			}
-			ImGui::PopID();
-			m_bRenamePopupOpenThisFrame = false;
-		}
-		else {
-			if (MyImGui::BeginPopupContextMenuFromButton("Rename")) {
-				if (!m_bRenamePopupOpenLastFrame) {
-					m_newPresetName = m_currentPresetName;
-				}
-				ImGui::PushID(16879654123594);
-				ImGui::InputText("", &m_newPresetName);
-				ImGui::PopID();
-				ImGui::EndPopup();
-				m_bRenamePopupOpenThisFrame = true;
-			}
-			else {
-				m_bRenamePopupOpenThisFrame = false;
-				if (m_bRenamePopupOpenLastFrame && m_currentPresetIdx != -1) {
-					const std::string newPath = Path::Presets + "/" + m_fileExtension + m_newPresetName + ".json";
-					if (!MyFile::Exists(newPath)) {
-						std::filesystem::rename(
-							Path::Presets + "/" + m_fileExtension + m_currentPresetName + ".json",
-							newPath
-						);
-						m_currentPresetName = m_newPresetName;
-						m_presets[m_currentPresetIdx].name = m_newPresetName;
-						sort();
+		if (LiveMode::IsOff()) {
+			// Save preset
+			if (!m_currentPresetName.compare("Unsaved settings...")) {
+				if (m_nameAvailable) {
+					if (!m_nameContainsDots) {
+						if (ImGui::Button("Save settings")) {
+							savePresetTo(*settingValues, Path::Presets);
+						}
+						ImGui::SameLine();
+						ImGui::Text("as");
 					}
 					else {
-						boxer::show(("\"" + m_newPresetName + "\" already exists.").c_str(), "Renaming failed", boxer::Style::Warning);
+						ImGui::TextColored(ImVec4(0.74f, 0.04f, 0.04f, 1.f), "You can't have dots (.) in the name");
+					}
+				}
+				else {
+					ImGui::TextColored(ImVec4(0.74f, 0.04f, 0.04f, 1.f), "Name already used :");
+				}
+				ImGui::SameLine();
+				ImGui::PushID(138571);
+				if (ImGui::InputText("", &m_savePresetAs)) {
+					m_nameAvailable = !MyFile::Exists(Path::Presets + "/" + m_fileExtension + m_savePresetAs + ".json") && m_savePresetAs.compare("Unsaved settings...");
+					m_nameContainsDots = m_savePresetAs.find(".") != std::string::npos;
+				}
+				ImGui::PopID();
+				m_bRenamePopupOpenThisFrame = false;
+			}
+			// Rename / Delete preset
+			else {
+				if (MyImGui::BeginPopupContextMenuFromButton("Rename")) {
+					if (!m_bRenamePopupOpenLastFrame) {
+						m_newPresetName = m_currentPresetName;
+					}
+					ImGui::PushID(16879654123594);
+					ImGui::InputText("", &m_newPresetName);
+					ImGui::PopID();
+					ImGui::EndPopup();
+					m_bRenamePopupOpenThisFrame = true;
+				}
+				else {
+					m_bRenamePopupOpenThisFrame = false;
+					if (m_bRenamePopupOpenLastFrame && m_currentPresetIdx != -1) {
+						const std::string newPath = Path::Presets + "/" + m_fileExtension + m_newPresetName + ".json";
+						if (!MyFile::Exists(newPath)) {
+							std::filesystem::rename(
+								Path::Presets + "/" + m_fileExtension + m_currentPresetName + ".json",
+								newPath
+							);
+							m_currentPresetName = m_newPresetName;
+							m_presets[m_currentPresetIdx].name = m_newPresetName;
+							sort();
+						}
+						else {
+							boxer::show(("\"" + m_newPresetName + "\" already exists.").c_str(), "Renaming failed", boxer::Style::Warning);
+						}
+					}
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("Delete")) {
+					if (boxer::show(("\"" + m_currentPresetName + "\" will be deleted. Are you sure ?").c_str(), "Delete", boxer::Style::Warning, boxer::Buttons::YesNo) == boxer::Selection::Yes) {
+						std::filesystem::remove(
+							Path::Presets + "/" + m_fileExtension + m_currentPresetName + ".json"
+						);
+						m_presets.erase(m_currentPresetIdx + m_presets.begin());
+						findPlaceholderName(Path::Presets);
+						setToPlaceholderSetting();
 					}
 				}
 			}
-			ImGui::SameLine();
-			if (ImGui::Button("Delete")) {
-				if (boxer::show(("\"" + m_currentPresetName + "\" will be deleted. Are you sure ?").c_str(), "Delete", boxer::Style::Warning, boxer::Buttons::YesNo) == boxer::Selection::Yes) {
-					std::filesystem::remove(
-						Path::Presets + "/" + m_fileExtension + m_currentPresetName + ".json"
-					);
-					m_presets.erase(m_currentPresetIdx + m_presets.begin());
-					findPlaceholderName(Path::Presets);
-					setToPlaceholderSetting();
-				}
-			}
+			m_bRenamePopupOpenLastFrame = m_bRenamePopupOpenThisFrame;
+			return b;
 		}
-		m_bRenamePopupOpenLastFrame = m_bRenamePopupOpenThisFrame;
-		return b;
+		else {
+			m_bRenamePopupOpenThisFrame = false;
+		}
 	}
 
 	void setToPlaceholderSetting() {
