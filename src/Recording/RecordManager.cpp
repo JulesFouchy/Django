@@ -24,7 +24,8 @@ RecordManager::RecordManager()
 			m_records.emplace_back(entry.path().string());
 		}
 	}
-	m_selectedRecordIdx = m_records.size() - 1;
+	if (m_records.size() > 0)
+		setSelectedRecord(0);
 }
 
 void RecordManager::ImGui(std::unique_ptr<Clock>& clock, StateModifier& stateModifier) {
@@ -58,8 +59,10 @@ void RecordManager::ImGui(std::unique_ptr<Clock>& clock, StateModifier& stateMod
 		if (LiveMode::IsOff())
 			ImGui::Separator();
 		// Recorder
-		if (m_recorder.ImGui(m_clock->time(), stateModifier)) // finished recording
+		if (m_recorder.ImGui(m_clock->time(), stateModifier)) { // finished recording
 			m_records.push_back(m_recorder.getRecord());
+			deselectRecord(); // push_back can invalidate references to the record (held by PlayState). So we deselect any record to prevent problems.
+		}
 		// Record player
 		m_recordPlayer.ImGui(potentialSelectedRecord(), m_clock->time(), stateModifier);
 		// Records list
@@ -131,20 +134,18 @@ Record& RecordManager::selectedRecord() {
 	return m_records[m_selectedRecordIdx];
 }
 void RecordManager::setSelectedRecord(size_t idx) {
-	assert(m_selectedRecordIdx != idx);
+	assert(m_selectedRecordIdx != idx || idx == -1);
 	m_selectedRecordIdx = idx;
+}
+void RecordManager::deselectRecord() {
+	setSelectedRecord(-1);
+	m_recordPlayer.setState<PlayState_NoSelection>();
 }
 
 void RecordManager::deleteRecord(size_t idx) {
 	std::filesystem::remove(Path::Records + "/" + m_records[idx].name() + ".djgRecord");
 	m_records.erase(idx + m_records.begin());
-	if (idx == m_selectedRecordIdx) {
-		setSelectedRecord(-1);
-		m_recordPlayer.setState<PlayState_NoSelection>();
-	}
-	else if (hasARecordSelected() && m_selectedRecordIdx > idx) {
-		m_selectedRecordIdx--;
-	}
+	deselectRecord();
 }
 
 void RecordManager::validateRecordRenaming() {

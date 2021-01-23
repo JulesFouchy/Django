@@ -29,6 +29,7 @@ private:
 	bool hasARecordSelected();
 	Record& selectedRecord();
 	void setSelectedRecord(size_t idx);
+	void deselectRecord();
 	void deleteRecord(size_t idx);
 	void validateRecordRenaming();
 
