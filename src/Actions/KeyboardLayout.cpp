@@ -41,7 +41,7 @@ std::vector<SDL_Scancode>& KeyboardLayout::getCurrentRow() {
 }
 
 void KeyboardLayout::ImGui() {
-	if (ImGui::Button("Set keyboard layout")) {
+	if (ImGui::Button("Configure your Keyboard Layout")) {
 		startSettingKeyboardLayout();
 	}
 }
@@ -49,7 +49,7 @@ void KeyboardLayout::ImGui() {
 void KeyboardLayout::ImGuiWindow() {
 	if (m_bSettingLayout) {
 		ImGui::Begin("Enter your keyboard layout");
-		ImGui::Text("Please type in all the keys of the first row of your keyboard, in order from left to right.\nThen press ENTER\nThen do the same for the second row\nThen press ENTER\nThen do the same for the third row\nThen press ENTER\n\nNB : you can press backspace to delete the key you just typed in");
+		ImGui::Text("Please type in all the keys of the first row of your keyboard, in order from left to right (Q, W, E, ...)\nThen press ENTER\nThen do the same for the second row\nThen press ENTER\nThen do the same for the third row\nThen press ENTER\n\nNB : you can press backspace to delete the key you just typed in");
 		ImGui::End();
 	}
 }
