@@ -8,8 +8,8 @@
 #include "RecordPlayer.h"
 #include "Record.h"
 
-PlayState_NotStarted::PlayState_NotStarted(Record& record)
-	: m_record(record)
+PlayState_NotStarted::PlayState_NotStarted(Record& record, bool bStartJustAfterThat)
+	: m_record(record), m_bStartJustAfterThat(bStartJustAfterThat)
 {}
 
 void PlayState_NotStarted::ImGui(Record* selectedRecord, float time, RecordPlayer& recordPlayer, StateModifier& stateModifier) {
@@ -19,9 +19,19 @@ void PlayState_NotStarted::ImGui(Record* selectedRecord, float time, RecordPlaye
 		changeState = [&](){ recordPlayer.setState<PlayState_NotStarted>(*selectedRecord); };
 	}
 	// Play
-	if (MyImGui::ButtonWithIcon(Textures::Play())) {
+	if (!m_bStartJustAfterThat) {
+		if (MyImGui::ButtonWithIcon(Textures::Play())) {
+			m_record.startPlaying(stateModifier);
+			changeState = [&]() { recordPlayer.setState<PlayState_Play>(m_record, time); };
+		}
+	}
+	else {
+		// To prevent icons flashing for a fraction of a second we act as if we are already playing
+		MyImGui::ButtonWithIcon(Textures::Pause()); ImGui::SameLine();
+		MyImGui::ButtonWithIcon(Textures::Stop());
+		// Start playing
 		m_record.startPlaying(stateModifier);
-		changeState = [&](){ recordPlayer.setState<PlayState_Play>(m_record, time); };
+		changeState = [&]() { recordPlayer.setState<PlayState_Play>(m_record, time); };
 	}
 	// Timeline
 	float t = 0.0f;

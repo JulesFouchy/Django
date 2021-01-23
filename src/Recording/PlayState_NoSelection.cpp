@@ -9,5 +9,5 @@
 void PlayState_NoSelection::ImGui(Record* selectedRecord, float time, RecordPlayer& recordPlayer, StateModifier& stateModifier) {
 	MyImGui::ButtonWithIconDisabled(Textures::Play(), "No record selected");
 	if (selectedRecord)
-		recordPlayer.setState<PlayState_NotStarted>(*selectedRecord);
+		recordPlayer.setState<PlayState_NotStarted>(*selectedRecord, false);
 }

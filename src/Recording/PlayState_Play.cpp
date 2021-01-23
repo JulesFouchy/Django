@@ -7,6 +7,7 @@
 #include "RecordPlayer.h"
 #include "Helper/MyImGui.h"
 #include "Constants/Textures.h"
+#include "Viewports/Viewports.h"
 
 PlayState_Play::PlayState_Play(Record& record, float startTime)
 	: m_record(record), m_startTime(startTime)
@@ -14,8 +15,10 @@ PlayState_Play::PlayState_Play(Record& record, float startTime)
 
 void PlayState_Play::update(float time, RecordPlayer& recordPlayer, StateModifier& stateModifier) {
 	if (!m_record.updatePlaying(time - m_startTime, stateModifier)
-		&& !m_bDraggingOnTheTimeline) // Prevent the playing from stopping just because we dragged the time cursor outside of the timeline
-		recordPlayer.setState<PlayState_NotStarted>(m_record);
+	&& !m_bDraggingOnTheTimeline) { // Prevent the playing from stopping just because we dragged the time cursor outside of the timeline
+		bool bStartLoopingAgain = !Viewports::IsExporting();
+		recordPlayer.setState<PlayState_NotStarted>(m_record, bStartLoopingAgain);
+	}
 	//
 	m_bDraggingOnTheTimeline = false; // Reset every frame. It is set by the ImGui() method before the call to update()
 }
