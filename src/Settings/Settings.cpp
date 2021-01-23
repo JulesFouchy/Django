@@ -6,11 +6,6 @@
 #include <fstream>
 
 void Settings::ImGuiWindows(StateModifier& stateModifier) {
-	if (m_bOpenWind) {
-		ImGui::Begin("Wind");
-		m_windSettings.ImGui(stateModifier);
-		ImGui::End();
-	}
 	if (m_bOpenParticles) {
 		ImGui::Begin("Particles");
 		m_particleSystemSettings.ImGui(stateModifier);
@@ -24,6 +19,11 @@ void Settings::ImGuiWindows(StateModifier& stateModifier) {
 	if (m_bOpenTrail) {
 		ImGui::Begin("Trail");
 		m_alphaTrailSettings.ImGui(stateModifier);
+		ImGui::End();
+	}
+	if (m_bOpenWind) {
+		ImGui::Begin("Wind");
+		m_windSettings.ImGui(stateModifier);
 		ImGui::End();
 	}
 	if (m_bOpenPhysics) {
