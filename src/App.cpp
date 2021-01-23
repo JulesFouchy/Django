@@ -128,8 +128,8 @@ void App::update() {
 				ImGui::ShowDemoWindow(&m_bShowImGUIDemoWindow);
 #endif
 			// Settings
-			m_stateModifier.settingsManager().get().ImGuiWindows(m_stateModifier);
 			m_configManager.Imgui(m_stateModifier);
+			m_stateModifier.settingsManager().get().ImGuiWindows(m_stateModifier);
 			// Key bindings
 			if (m_bOpenKeyBindings) {
 				ImGui::Begin("Key Bindings", &m_bOpenKeyBindings);
