@@ -1,18 +1,18 @@
 {
     "value0": {
-        "bgColor.r": 9.999899930335233e-7,
-        "bgColor.g": 9.999911299019005e-7,
-        "bgColor.b": 9.999999974752428e-7,
+        "bgColor.r": 0.003676474094390869,
+        "bgColor.g": 0.010945722460746766,
+        "bgColor.b": 0.25,
         "bColorModeHueGradient": true,
         "particlesHueStart": 0.0,
         "particlesHueEnd": 360.0,
         "particleSaturation": 80.0,
         "particleValue": 80.0,
         "particleColorStart.r": 1.0,
-        "particleColorStart.g": 0.0,
-        "particleColorStart.b": 0.0,
-        "particleColorEnd.r": 0.0,
-        "particleColorEnd.g": 0.0,
-        "particleColorEnd.b": 1.0
+        "particleColorStart.g": 0.8578431606292725,
+        "particleColorStart.b": 0.9252980947494507,
+        "particleColorEnd.r": 1.0,
+        "particleColorEnd.g": 0.44117671251296999,
+        "particleColorEnd.b": 0.0
     }
 }

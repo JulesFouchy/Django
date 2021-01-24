@@ -1,0 +1,9 @@
+{
+    "value0": {
+        "bEnabled": true,
+        "bFixResiduals": false,
+        "decay": 9.473999977111817,
+        "threshold": 0.20499999821186067,
+        "minAlpha": 0.1289999932050705
+    }
+}
