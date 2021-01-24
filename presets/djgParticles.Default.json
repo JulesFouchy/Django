@@ -1,5 +1,6 @@
 {
     "value0": {
+        "cereal_class_version": 0,
         "nbParticles": 70000,
         "particleRadiusRelToHeight": 0.00800000037997961
     }

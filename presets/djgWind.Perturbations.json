@@ -1,5 +1,6 @@
 {
     "value0": {
+        "cereal_class_version": 0,
         "noiseFrequency": 1.3300000429153443,
         "minStrength": -0.04800000041723251,
         "maxStrength": 0.9679999947547913,

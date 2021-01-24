@@ -1,5 +1,6 @@
 {
     "value0": {
+        "cereal_class_version": 0,
         "bEnabled": true,
         "bFixResiduals": true,
         "decay": 1.4149999618530274,

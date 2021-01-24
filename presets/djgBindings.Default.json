@@ -1,7 +1,9 @@
 {
     "boundActionsRefs": [
         {
+            "cereal_class_version": 0,
             "actionRef": {
+                "cereal_class_version": 0,
                 "name": "Text",
                 "type": 4
             },
