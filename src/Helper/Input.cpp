@@ -16,6 +16,11 @@ bool Input::CtrlOrCmdIsDown() {
 #endif
 }
 
+bool Input::ShiftIsDown() {
+	const Uint8* state = SDL_GetKeyboardState(NULL);
+	return state[SDL_SCANCODE_LSHIFT] || state[SDL_SCANCODE_RSHIFT];
+}
+
 glm::vec2 Input::GetMouseInPixels() {
 	int x, y;
 	SDL_GetMouseState(&x, &y);
