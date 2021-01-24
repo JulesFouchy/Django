@@ -89,6 +89,13 @@ void RecordManager::ImGuiRecordsList() {
 				setSelectedRecord(i);
 			}
 		}
+		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
+		{
+			ActionBinding bla({ "ohla", 0, ActionType::SHAPE });
+			ImGui::SetDragDropPayload("KEYBOARD_KEY", &bla, sizeof(ActionBinding*));
+			//ImGui_KeyboardKey(SDL_SCANCODE_UNKNOWN, textureID, (bool)actionBinding, false); // Preview
+			ImGui::EndDragDropSource();
+		}
 		// Duration tooltip
 		if (ImGui::IsItemHovered()) {
 			ImGui::BeginTooltip();
