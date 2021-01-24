@@ -2,6 +2,7 @@
 
 class KeyboardLayout {
 public:
+	inline const std::vector<SDL_Scancode>& numbersRow() { return m_numbersRow; }
 	inline const std::vector<SDL_Scancode>& firstRow() { return m_firstRow; }
 	inline const std::vector<SDL_Scancode>& secondRow() { return m_secondRow; }
 	inline const std::vector<SDL_Scancode>& thirdRow() { return m_thirdRow; }
@@ -20,6 +21,20 @@ private:
 private:
 	bool m_bSettingLayout = false;
 	int m_settingRowIdx = 0;
+	std::vector<SDL_Scancode> m_numbersRow = {
+		SDL_SCANCODE_1,
+		SDL_SCANCODE_2,
+		SDL_SCANCODE_3,
+		SDL_SCANCODE_4,
+		SDL_SCANCODE_5,
+		SDL_SCANCODE_6,
+		SDL_SCANCODE_7,
+		SDL_SCANCODE_8,
+		SDL_SCANCODE_9,
+		SDL_SCANCODE_0,
+		SDL_SCANCODE_MINUS,
+		SDL_SCANCODE_EQUALS,
+	};
 	std::vector<SDL_Scancode> m_firstRow = {
 		SDL_SCANCODE_Q,
 		SDL_SCANCODE_W,
@@ -67,6 +82,7 @@ private:
 	void serialize(Archive& archive)
 	{
 		archive(
+			CEREAL_NVP(m_numbersRow),
 			CEREAL_NVP(m_firstRow),
 			CEREAL_NVP(m_secondRow),
 			CEREAL_NVP(m_thirdRow)
