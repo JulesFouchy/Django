@@ -9,20 +9,32 @@ bool ConfigParams::onKeyPressed(SDL_Scancode scancode, StateModifier& stateModif
     switch (scancode) {
     // LR
     case SDL_SCANCODE_LEFT:
-        LR--;
+        if (Input::CtrlOrCmdIsDown() || Input::ShiftIsDown())
+            LR -= 6;
+        else
+            LR--;
         b = true;
         break;
     case SDL_SCANCODE_RIGHT:
-        LR++;
+        if (Input::CtrlOrCmdIsDown() || Input::ShiftIsDown())
+            LR += 6;
+        else
+            LR++;
         b = true;
         break;
     // UD
     case SDL_SCANCODE_DOWN:
-        UD--;
+        if (Input::CtrlOrCmdIsDown() || Input::ShiftIsDown())
+            UD -= 6;
+        else
+            UD--;
         b = true;
         break;
     case SDL_SCANCODE_UP:
-        UD++;
+        if (Input::CtrlOrCmdIsDown() || Input::ShiftIsDown())
+            UD += 6;
+        else
+            UD++;
         b = true;
         break;
     }
