@@ -30,7 +30,6 @@ void ConfigGPU::applyTo(ParticleSystem& particleSystem, const ConfigParams& para
     //
     m_computeShader.get().setUniform1i("u_NbOfParticles", particleSystem.getNbParticles());
     m_computeShader.get().setUniform1f("u_aspectRatio", Viewports::RenderSize().aspectRatio());
-    m_computeShader.get().setUniform1i("u_count", params.getCount());
     m_computeShader.get().setUniform1i("u_LR", params.getLR());
     m_computeShader.get().setUniform1i("u_UD", params.getUD());
     m_computeShader.get().setUniform1i("u_wheel", params.getWheel());

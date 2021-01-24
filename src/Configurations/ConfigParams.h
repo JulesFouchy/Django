@@ -12,7 +12,6 @@ public:
 	void setApplyAndRecord_ShiftWheel(int value, StateModifier& stateModifier);
 	void setApplyAndRecord_AltWheel  (int value, StateModifier& stateModifier);
 
-	inline int getCount()      const { return count; }
 	inline int getLR()         const { return LR; }
 	inline int getUD()         const { return UD; }
 	inline int getWheel()      const { return wheel; }
@@ -21,7 +20,6 @@ public:
 	inline int getAltWheel()   const { return altWheel; }
 
 private:
-	int count      = 5;
 	int LR         = 0;
 	int UD         = 0;
 	int wheel      = 0;
@@ -36,7 +34,6 @@ private:
 	void serialize(Archive& archive)
 	{
 		archive(
-			CEREAL_NVP(count),
 			CEREAL_NVP(LR),
 			CEREAL_NVP(UD),
 			CEREAL_NVP(wheel),

@@ -102,7 +102,6 @@ void ThumbnailFactory::createAndApplyComputeShader(const std::string& shaderSrc)
     computeShader.get().bind();
     computeShader.get().setUniform1i("u_NbOfParticles", NB_PARTICLES);
     computeShader.get().setUniform1f("u_aspectRatio", 1.0f);
-    computeShader.get().setUniform1i("u_count", params.getCount());
     computeShader.get().setUniform1i("u_LR", params.getLR());
     computeShader.get().setUniform1i("u_UD", params.getUD());
     computeShader.get().setUniform1i("u_wheel", params.getWheel());
