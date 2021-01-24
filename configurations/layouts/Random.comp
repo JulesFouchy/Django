@@ -5,7 +5,6 @@
 //? uniform int u_NbOfParticles;
 //? uniform float u_aspectRatio;
 //? // Params
-//? uniform int u_count;
 //? uniform int u_LR;
 //? uniform int u_UD;
 //? uniform int u_wheel;
@@ -18,8 +17,9 @@
 //? float rand(float id, float seed);
 
 vec2 getPosition(uint particleID) {
-    int clusterSize = u_NbOfParticles / u_count;
-    int clusterID = min(int(particleID) / clusterSize, u_count-1);
+    int N = u_UD + 5;
+    int clusterSize = u_NbOfParticles / N;
+    int clusterID = min(int(particleID) / clusterSize, N-1);
     float clusterCoord = (particleID % clusterSize) / float(clusterSize);
 
     vec2 center = vec2(rand(clusterID, u_seed + u_xySeed.y), rand(clusterID, u_seed + u_xySeed.x));

@@ -1,7 +1,6 @@
 uniform int u_NbOfParticles;
 uniform float u_aspectRatio;
 // Params
-uniform int u_count;
 uniform int u_LR;
 uniform int u_UD;
 uniform int u_wheel;
@@ -21,13 +20,3 @@ vec2 shape(float t, vec2 center, float radius, float rotation) {
 	float angle = t * 6.28 + rotation;
 	return center + radius * vec2(cos(angle), sin(angle));
 }
-
-// float u_wheel;
-// This number is controlled by the mouse wheel
-// Is is typically used by the layouts to rotate the shapes
-// so it shouldn't be used by the shapes, or you will have your shape growing and changing at the same time
-
-// float u_shiftWheel;
-// This number is controlled by the mouse wheel while holding SHIFT
-// Is is typically used by the layouts as the size of the shapes
-// so it shouldn't be used by the shapes, or you will have your shape rotating and changing at the same time

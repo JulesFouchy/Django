@@ -1,5 +1,5 @@
 //? #version 430
-//? uniform int u_NbOfParticles; uniform float u_aspectRatio; uniform int u_count; uniform int u_LR; uniform int u_UD; uniform int u_wheel; uniform int u_ctrlWheel; uniform int u_shiftWheel; uniform int u_altWheel; uniform float u_seed; uniform vec2 u_xySeed; float rand(float seedX, float seedY);
+//? uniform int u_NbOfParticles; uniform float u_aspectRatio; uniform int u_LR; uniform int u_UD; uniform int u_wheel; uniform int u_ctrlWheel; uniform int u_shiftWheel; uniform int u_altWheel; uniform float u_seed; uniform vec2 u_xySeed; float rand(float seedX, float seedY);
 
 //? vec2 shape(float t, vec2 center, float radius, float rotation);
 

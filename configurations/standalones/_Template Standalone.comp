@@ -7,7 +7,6 @@ uniform int u_wheel;
 uniform int u_ctrlWheel;
 uniform int u_shiftWheel;
 uniform int u_altWheel;
-uniform int u_count;
 uniform int u_LR;
 uniform int u_UD;
 // Random
@@ -50,7 +49,7 @@ vec2 getPosition(uint particleID) {
 // u_seed and u_xySeed can be controlled from the Random panel in the app
 
 // A lot of values are available to you when you create a configuration :
-// Please note that all the parameters default to 0 at the beginnning of the application (except u_count which starts at 5), so you should add your own offset to have the default value you want
+// Please note that all the parameters default to 0 at the beginnning of the application, so you should add your own offset to have the default value you want
 // For example, if you want a radius of 1 by default, you should use u_shiftWheel + 1.0
 // Also all the parameters change by 1 each time, so you probably want to adapt the rate of change :
 // u_shiftWheel * 0.1 to change in steps of 0.1
@@ -75,13 +74,6 @@ vec2 getPosition(uint particleID) {
 
 // int u_altWheel;
 // This number is controlled by the mouse wheel while holding ALT
-// Is is typically used as a parameter for the layouts or standalones
-
-// int u_count;
-// This number is controlled with the + and - keys, as well as the numbers (from the keypad as well as the row above qwerty)
-// Its default value is 5 at the start of the app
-// +/- change the count by 1
-// The numbers 0, 1, 2... set the count to respectively 0, 1, 2, 4, 8, 16 etc.
 // Is is typically used as a parameter for the layouts or standalones
 
 // uniform int u_LR;

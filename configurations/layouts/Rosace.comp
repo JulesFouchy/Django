@@ -6,7 +6,6 @@
 //? uniform int u_wheel;
 //? uniform int u_shiftWheel;
 //? uniform int u_altWheel;
-//? uniform int u_count;
 //? uniform int u_UD;
 //? uniform int u_LR;        // I wouldn't recommend using this one for the layouts, see comments in the bottom section
 //? uniform int u_ctrlWheel; // I wouldn't recommend using this one for the layouts, see comments in the bottom section

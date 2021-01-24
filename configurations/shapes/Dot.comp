@@ -7,8 +7,7 @@ uniform int u_LR;
 uniform int u_ctrlWheel;
 uniform int u_wheel;	 
 uniform int u_shiftWheel;
-uniform int u_altWheel;	 
-uniform int u_count;	 
+uniform int u_altWheel;
 uniform int u_UD;		 
 // Random
 uniform float u_seed;
