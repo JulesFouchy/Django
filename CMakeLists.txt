@@ -1,6 +1,6 @@
 # Set standards
 cmake_minimum_required(VERSION 3.16)
-project(Django C CXX)
+project(Django LANGUAGES C CXX VERSION 1.0.0)
 
 # Declare the Cool modules that we use
 set(COOL_MODULES
@@ -98,6 +98,7 @@ foreach(cool_module IN ITEMS ${COOL_MODULES})
 endforeach()
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
+set_property(TARGET ${PROJECT_NAME} PROPERTY COMPILE_DEFINITIONS "__DJANGO_WINDOW_NAME=\"Django ${CMAKE_PROJECT_VERSION}\"")
 
 # Recreate folder architecture inside visual studio solution (might work for other IDEs as well)
 include("Cool/CMake-Helpers/VS_helpers.cmake")

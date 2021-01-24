@@ -71,7 +71,7 @@ int main(int argc, char *argv[]) {
 		GLWindow outputGLWindow(outputWindow);
 		// Main window
 		SDL_Window* mainWindow = SDL_CreateWindow(
-			"Django",
+			__DJANGO_WINDOW_NAME, // Variable #defined in the CMake
 			SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
 			1280, 720,
 			SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI 
