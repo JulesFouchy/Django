@@ -208,7 +208,7 @@ void App::onEvent(const SDL_Event& e) {
 
 		case SDL_KEYDOWN:
 			if (!ImGui::GetIO().WantTextInput) {
-				if (e.key.keysym.sym == 'h' && Input::KeyIsDown(SDL_SCANCODE_LCTRL))
+				if (e.key.keysym.sym == 'h' && Input::CtrlOrCmdIsDown())
 					m_bShowGUI = !m_bShowGUI;
 				else {
 					m_configManager.onKeyPressed(e.key.keysym.scancode, e.key.keysym.sym, m_stateModifier);
@@ -218,7 +218,7 @@ void App::onEvent(const SDL_Event& e) {
 
 		case SDL_KEYUP:
 			if (!ImGui::GetIO().WantTextInput) {
-				if (!(e.key.keysym.sym == 'h') || !Input::KeyIsDown(SDL_SCANCODE_LCTRL))
+				if (!(e.key.keysym.sym == 'h') || !Input::CtrlOrCmdIsDown())
 					m_configManager.onKeyUp(e.key.keysym.scancode);
 			}
 			break;

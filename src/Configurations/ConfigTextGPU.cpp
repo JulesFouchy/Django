@@ -20,7 +20,7 @@ bool ConfigTextGPU::onKeyPressed(SDL_Scancode scancode, char keysym, StateModifi
 	bool bHandled = false;
 	if (m_bCaptureKeys) {
 		if (scancode == SDL_SCANCODE_BACKSPACE) {
-			if (Input::KeyIsDown(SDL_SCANCODE_LCTRL) || Input::KeyIsDown(SDL_SCANCODE_RCTRL)) {
+			if (Input::CtrlOrCmdIsDown()) {
 				setApplyAndRecord_SupprAllChars(stateModifier);
 			}
 			else {

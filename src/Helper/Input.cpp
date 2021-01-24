@@ -7,6 +7,15 @@ bool Input::KeyIsDown(SDL_Scancode key) {
 	return state[key];
 }
 
+bool Input::CtrlOrCmdIsDown() {
+	const Uint8* state = SDL_GetKeyboardState(NULL);
+#if __APPLE__
+	return state[SDL_SCANCODE_LGUI]  || state[SDL_SCANCODE_RGUI];
+#else
+	return state[SDL_SCANCODE_LCTRL] || state[SDL_SCANCODE_RCTRL];
+#endif
+}
+
 glm::vec2 Input::GetMouseInPixels() {
 	int x, y;
 	SDL_GetMouseState(&x, &y);

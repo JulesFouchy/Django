@@ -34,7 +34,7 @@ bool ConfigParams::onKeyPressed(SDL_Scancode scancode, StateModifier& stateModif
 }
 
 void ConfigParams::onWheel(int delta, bool bNoStandardScroll, StateModifier& stateModifier) {
-    if (Input::KeyIsDown(SDL_SCANCODE_LCTRL) || Input::KeyIsDown(SDL_SCANCODE_RCTRL)) {
+    if (Input::CtrlOrCmdIsDown()) {
         setApplyAndRecord_CtrlWheel(ctrlWheel + delta, stateModifier);
     }
     else if (Input::KeyIsDown(SDL_SCANCODE_LSHIFT) || Input::KeyIsDown(SDL_SCANCODE_RSHIFT)) {
