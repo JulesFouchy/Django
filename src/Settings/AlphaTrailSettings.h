@@ -38,7 +38,7 @@ public:
 	inline void focusImGuiWindow() { m_bShouldGrabFocus = true; }
 
 	void setEnabled_ApplyAndRecordAll(bool bEnabled, StateModifier& stateModifier);
-	void setApplyAndRecord_Enabled(bool bEnabled, StateModifier& stateModifier);
+	void setApplyAndRecord_Enabled(bool bEnabled, StateModifier& stateModifier, bool bCanSetToPlaceholderSetting = true);
 	void applyAndRecord_FixResiduals(StateModifier& stateModifier);
 	void applyAndRecord_Decay(StateModifier& stateModifier);
 	void applyAndRecord_Threshold(StateModifier& stateModifier);

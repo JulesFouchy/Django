@@ -68,7 +68,7 @@ void AlphaTrailSettings::applyGLBlendState() {
 }
 
 void AlphaTrailSettings::setEnabled_ApplyAndRecordAll(bool bEnabled, StateModifier& stateModifier) {
-	setApplyAndRecord_Enabled(bEnabled, stateModifier);
+	setApplyAndRecord_Enabled(bEnabled, stateModifier, false);
 	stateModifier.recordChange({ StateChangeType::AlphaTrail_FixResiduals, m_values.bFixResiduals });
 	applyAndRecord_Decay(stateModifier);
 	applyAndRecord_Threshold(stateModifier);
@@ -76,14 +76,15 @@ void AlphaTrailSettings::setEnabled_ApplyAndRecordAll(bool bEnabled, StateModifi
 	applyAndRecord_PresetName(stateModifier);
 }
 
-void AlphaTrailSettings::setApplyAndRecord_Enabled(bool bEnabled, StateModifier& stateModifier) {
+void AlphaTrailSettings::setApplyAndRecord_Enabled(bool bEnabled, StateModifier& stateModifier, bool bCanSetToPlaceholderSetting) {
 	// Clear if we are transitionning from no trail to trail
 	if (!m_values.bEnabled && bEnabled)
 		stateModifier.renderer().clearRenderBuffer(stateModifier.settingsManager().get().colors().backgroundColor());
 	// Set
 	if (m_values.bEnabled != bEnabled) {
 		m_values.bEnabled = bEnabled;
-		m_presets.setToPlaceholderSetting();
+		if (bCanSetToPlaceholderSetting)
+			m_presets.setToPlaceholderSetting();
 	}
 	// Apply and record
 	applyGLBlendState();
