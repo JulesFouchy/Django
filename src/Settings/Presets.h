@@ -238,14 +238,14 @@ private:
 	// Serialization
 	friend class cereal::access;
 	template <class Archive>
-	void save(Archive& archive) const
+	void save(Archive& archive, std::uint32_t const version) const
 	{
 		archive(
 			CEREAL_NVP(m_currentPresetName)
 		);
 	}
 	template <class Archive>
-	void load(Archive& archive)
+	void load(Archive& archive, std::uint32_t const version)
 	{
 		archive(
 			CEREAL_NVP(m_currentPresetName)

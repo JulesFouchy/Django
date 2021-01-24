@@ -14,7 +14,7 @@ private:
 	//Serialization
 	friend class cereal::access;
 	template <class Archive>
-	void serialize(Archive& archive)
+	void serialize(Archive& archive, std::uint32_t const version)
 	{
 		archive(
 			CEREAL_NVP(noiseFrequency),
@@ -37,7 +37,7 @@ private:
 	//Serialization
 	friend class cereal::access;
 	template <class Archive>
-	void serialize(Archive& archive)
+	void serialize(Archive& archive, std::uint32_t const version)
 	{
 		archive(
 			CEREAL_NVP(directionAngle)
@@ -93,7 +93,7 @@ private:
 	// Serialization
 	friend class cereal::access;
 	template <class Archive>
-	void serialize(Archive& archive)
+	void serialize(Archive& archive, std::uint32_t const version)
 	{
 		archive(
 			CEREAL_NVP(m_values),
