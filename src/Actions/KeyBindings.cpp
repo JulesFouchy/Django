@@ -306,8 +306,8 @@ void KeyBindings::ImGui_DragNDropKey(SDL_Scancode scancode, ActionBinding* actio
 	// Draw Key
 	ImGui_KeyboardKey(scancode, textureID, (bool)actionBinding, isKeyPressed);
 	if (actionBinding) {
-		// Name on hover for Layout actions and actions with no thumbnail
-		if (ImGui::IsItemHovered() && (actionBinding->action.ref.type == ActionType::LAYOUT || actionBinding->action.ref.type == ActionType::STANDALONE || actionBinding->action.thumbnailTextureID == -1)) {
+		// Name on hover
+		if (ImGui::IsItemHovered()) {
 			ImGui::BeginTooltip();
 			ImGui::Text(actionBinding->action.ref.name.c_str());
 			ImGui::EndTooltip();
