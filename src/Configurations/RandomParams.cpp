@@ -20,6 +20,7 @@ void RandomParams::ImGui(StateModifier& stateModifier) {
     if (LiveMode::ShowHelpMarkers()) {
         ImGui::SameLine();
         MyImGui::HelpMarker(R"V0G0N(Changing this number changes the random values used in some configurations (Like the "Random" layout).
+You can also achieve the same effect by pressing Space.
 )V0G0N");
     }
     if (ImGui::DragFloat2("X/Y Seed", &xySeed[0])) {
