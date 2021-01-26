@@ -1,6 +1,6 @@
 # Set standards
 cmake_minimum_required(VERSION 3.16)
-project(Django LANGUAGES C CXX VERSION 1.0.0)
+project(Django LANGUAGES C CXX VERSION 1.1.0)
 
 # Declare the Cool modules that we use
 set(COOL_MODULES
