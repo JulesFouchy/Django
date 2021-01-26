@@ -10,11 +10,11 @@ unsigned int Textures::m_recordID    = -1;
 unsigned int Textures::m_folderID    = -1;
 
 void Textures::_LoadAll() {
-	m_playID      = LoadTexture("icons/play.png");
-	m_pauseID     = LoadTexture("icons/pause.png");
-	m_stopID      = LoadTexture("icons/stop.png");
-	m_recordID    = LoadTexture("icons/record.png");
-	m_folderID    = LoadTexture("icons/folder.png");
+	m_playID      = LoadTexture("internal-icons/play.png");
+	m_pauseID     = LoadTexture("internal-icons/pause.png");
+	m_stopID      = LoadTexture("internal-icons/stop.png");
+	m_recordID    = LoadTexture("internal-icons/record.png");
+	m_folderID    = LoadTexture("internal-icons/folder.png");
 }
 
 void Textures::_DestroyAll() {

@@ -124,7 +124,7 @@ include("Cool/CMake-Helpers/copy_folder_to_the_output_folder.cmake")
 copy_folder_to_the_output_folder("internal-shaders")
 copy_folder_to_the_output_folder("presets")
 copy_folder_to_the_output_folder("configurations")
-copy_folder_to_the_output_folder("icons")
+copy_folder_to_the_output_folder("internal-icons")
 # And copy imgui.ini
 add_custom_command(
     TARGET ${PROJECT_NAME} POST_BUILD
