@@ -105,7 +105,8 @@ void AppFramework::update() {
 	// Events
 	SDL_Event e;
 	while (SDL_PollEvent(&e)) {
-		ImGui_ImplSDL2_ProcessEvent(&e);
+		if ((e.type != SDL_KEYDOWN && e.type != SDL_KEYUP) || ImGui::GetIO().WantTextInput)
+			ImGui_ImplSDL2_ProcessEvent(&e);
 		onEvent(e);
 		m_app.onEvent(e);
 	}
