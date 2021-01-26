@@ -20,7 +20,7 @@ void ColorSettings::ImGui(StateModifier& stateModifier) {
 	}
 	// Particles
 	// Choose mode
-	const char* items[] = { "Hue gradient", "Color Gradient" };
+	const char* items[] = { "Hue Gradient", "Color Gradient" };
 	const char* item_current = items[m_values.bColorModeHueGradient ? 0 : 1];
 	if (ImGui::BeginCombo("Gradient mode", item_current, 0))
 	{
@@ -37,6 +37,12 @@ void ColorSettings::ImGui(StateModifier& stateModifier) {
 				ImGui::SetItemDefaultFocus();
 		}
 		ImGui::EndCombo();
+	}
+	if (LiveMode::ShowHelpMarkers()) {
+		ImGui::SameLine();
+		MyImGui::HelpMarker(R"V0G0N(The "Hue Gradient" mode will express colors as HSV (Hue Saturation Value) and make a gradient along the Hue.
+The "Color Gradient" mode will make a standard gradient between two colors.
+)V0G0N");
 	}
 	// Hue gradient mode
 	if (m_values.bColorModeHueGradient) {
@@ -57,14 +63,29 @@ void ColorSettings::ImGui(StateModifier& stateModifier) {
 		}
 		ImGui::PopID();
 		ImGui::PopItemWidth();
+		if (LiveMode::ShowHelpMarkers()) {
+			ImGui::SameLine();
+			MyImGui::HelpMarker(R"V0G0N(The Hue decides if you have a red color, or green, or yellow, or etc.
+)V0G0N");
+		}
 		//
 		if (ImGui::SliderFloat("Saturation", &m_values.particleSaturation, 0, 100)) {
 			m_presets.setToPlaceholderSetting();
 			applyAndRecord_Saturation(stateModifier);
 		}
+		if (LiveMode::ShowHelpMarkers()) {
+			ImGui::SameLine();
+			MyImGui::HelpMarker(R"V0G0N(The Saturation decides if you have a very vivid color, or a greyish one.
+)V0G0N");
+		}
 		if (ImGui::SliderFloat("Value", &m_values.particleValue, 0, 100)) {
 			m_presets.setToPlaceholderSetting();
 			applyAndRecord_Value(stateModifier);
+		}
+		if (LiveMode::ShowHelpMarkers()) {
+			ImGui::SameLine();
+			MyImGui::HelpMarker(R"V0G0N(The Value decides if you have a bright color, or a dark one.
+)V0G0N");
 		}
 	}
 	// Color gradient mode

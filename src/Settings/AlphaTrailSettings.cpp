@@ -24,12 +24,19 @@ void AlphaTrailSettings::ImGui(StateModifier& stateModifier) {
 			m_presets.setToPlaceholderSetting();
 			applyAndRecord_Decay(stateModifier);
 		}
+		if (LiveMode::ShowHelpMarkers()) {
+			ImGui::SameLine();
+			MyImGui::HelpMarker(R"V0G0N(Controls how fast the trail disappears. For example setting it to 0 makes the trail permanent.
+)V0G0N");
+		}
 		if (ImGui::Checkbox("Fix Residuals", &m_values.bFixResiduals)) {
 			m_presets.setToPlaceholderSetting();
 			applyAndRecord_FixResiduals(stateModifier);
 		}
-		ImGui::SameLine();
-		MyImGui::HelpMarker("For very small values of Trail Decay, some artifacts appear.\nCheck this only if you see them, since the fix comes at a small performance cost.");
+		if (LiveMode::ShowHelpMarkers()) {
+			ImGui::SameLine();
+			MyImGui::HelpMarker("For very small values of Trail Decay, some artifacts appear.\nCheck this only if you see them, since the fix comes at a small performance cost.");
+		}
 		if (m_values.bFixResiduals) {
 			if (ImGui::SliderFloat("Threshold", &m_values.threshold, 0.0f, 0.5f)) {
 				m_presets.setToPlaceholderSetting();

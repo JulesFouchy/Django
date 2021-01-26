@@ -1,5 +1,7 @@
 #include "KeyboardLayout.h"
 
+#include "Helper/MyImGui.h"
+
 void KeyboardLayout::startSettingKeyboardLayout() {
 	m_numbersRow.clear();
 	m_firstRow.clear();
@@ -46,6 +48,12 @@ std::vector<SDL_Scancode>& KeyboardLayout::getCurrentRow() {
 void KeyboardLayout::ImGui() {
 	if (ImGui::Button("Configure your Keyboard Layout")) {
 		startSettingKeyboardLayout();
+	}
+	if (LiveMode::ShowHelpMarkers()) {
+		ImGui::SameLine();
+		MyImGui::HelpMarker(R"V0G0N(The virtual keyboard you see above might not match your keyboard perfectly.
+To fix this, just press the button and you will be presented with instructions.
+)V0G0N");
 	}
 }
 

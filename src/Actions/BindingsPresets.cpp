@@ -50,6 +50,11 @@ void BindingsPresets::ImGui(KeyBindings& keyBindings) {
 		keyBindings.resetBindings();
 		setPlaceholderPresetName();
 	}
+	if (LiveMode::ShowHelpMarkers()) {
+		ImGui::SameLine();
+		MyImGui::HelpMarker(R"V0G0N(Django can automatically give a binding to every configuration. And you can then drag and drop them around to adapt the shortcuts as you like.
+)V0G0N");
+	}
 	if (ImGui::BeginCombo("Presets", m_currentPresetName.c_str(), 0)) {
 		for (size_t i = 0; i < m_presets.size(); ++i) {
 			if (ImGui::Selectable(m_presets[i].name.c_str(), false)) {

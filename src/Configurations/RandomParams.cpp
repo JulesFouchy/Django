@@ -17,9 +17,19 @@ void RandomParams::ImGui(StateModifier& stateModifier) {
         stateModifier.recordChange({ StateChangeType::Random_Seed, seed });
         stateModifier.apply();
     }
+    if (LiveMode::ShowHelpMarkers()) {
+        ImGui::SameLine();
+        MyImGui::HelpMarker(R"V0G0N(Changing this number changes the random values used in some configurations (Like the "Random" layout).
+)V0G0N");
+    }
     if (ImGui::DragFloat2("X/Y Seed", &xySeed[0])) {
         stateModifier.recordChange({ StateChangeType::Random_XYSeed, xySeed });
         stateModifier.apply();
+    }
+    if (LiveMode::ShowHelpMarkers()) {
+        ImGui::SameLine();
+        MyImGui::HelpMarker(R"V0G0N(Changing this number changes the random values used in some configurations, but only along one axis.
+)V0G0N");
     }
 }
 

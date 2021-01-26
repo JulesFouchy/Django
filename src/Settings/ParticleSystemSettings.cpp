@@ -19,10 +19,21 @@ void ParticleSystemSettings::ImGui(StateModifier& stateModifier) {
         m_presets.setToPlaceholderSetting();
         applyAndRecord_NbParticles(stateModifier);
     }
+    if (LiveMode::ShowHelpMarkers()) {
+        ImGui::SameLine();
+        MyImGui::HelpMarker(R"V0G0N(The shapes are made of thousands of small points (a.k.a. particles), and you can choose excatly how many there are.
+)V0G0N");
+    }
     // Particles Radius
     if (ImGui::SliderFloat("Particles' Radius", &m_values.particleRadiusRelToHeight, 0.0f, 0.1f)) {
         m_presets.setToPlaceholderSetting();
         applyAndRecord_ParticleRadius(stateModifier);
+    }
+    if (LiveMode::ShowHelpMarkers()) {
+        ImGui::SameLine();
+        MyImGui::HelpMarker(R"V0G0N(The size of each particle, expressed as a fraction of the height of the window.
+For example setting the radius to 0.5 makes it so that the particles take half of the height of the window.
+)V0G0N");
     }
     //
     if (m_presets.ImGui(&m_values))

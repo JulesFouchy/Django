@@ -15,18 +15,23 @@ void PhysicsSettings::ImGui(StateModifier& stateModifier) {
 		m_bShouldGrabFocus = false;
 	}
 	bool b = false;
-	if (ImGui::SliderFloat("Pulsation", &m_values.pulsation, 0, 20)) {
+	if (ImGui::SliderFloat("Rigidity", &m_values.pulsation, 0, 20)) {
 		b = true;
 		applyAndRecord_Pulsation(stateModifier);
 	}
-	if (ImGui::SliderFloat("Damping Ratio", &m_values.dampingRatio, 0, 2)) {
+	if (LiveMode::ShowHelpMarkers()) {
+		ImGui::SameLine();
+		MyImGui::HelpMarker(R"V0G0N(Controls how rigid the shapes are and how fast the particles move (NB : the speed of the particles is also influenced by the Damping)
+)V0G0N");
+	}
+	if (ImGui::SliderFloat("Damping", &m_values.dampingRatio, 0, 2)) {
 		b = true;
 		applyAndRecord_DampingRatio(stateModifier);
 	}
-	if (ImGui::Button("Perfect")) {
-		b = true;
-		setDampingRatio(1.0f);
-		applyAndRecord_DampingRatio(stateModifier);
+	if (LiveMode::ShowHelpMarkers()) {
+		ImGui::SameLine();
+		MyImGui::HelpMarker(R"V0G0N(Controls how much the particles oscillate. Set it to 0 for endless oscillations. After 1 there are no more oscillations, and the bigger the value the slower the particles get.
+)V0G0N");
 	}
 	if (m_presets.ImGui(&m_values)) {
 		applyAndRecord(stateModifier);

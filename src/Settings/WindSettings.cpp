@@ -19,20 +19,40 @@ void WindSettings::ImGui(StateModifier& stateModifier) {
 		m_presets.setToPlaceholderSetting();
 		applyAndRecord_Frequency(stateModifier);
 	}
+	if (LiveMode::ShowHelpMarkers()) {
+		ImGui::SameLine();
+		MyImGui::HelpMarker(R"V0G0N(A small frequency means that the movement is very uniform accross the whole screen, while a big one will give more chaotic results.
+)V0G0N");
+	}
 	if (ImGui::SliderFloat2("Strength range", &m_values.minStrength, -1.0f, 2.0f)) {
 		m_presets.setToPlaceholderSetting();
 		applyAndRecord_MinStrength(stateModifier);
 		applyAndRecord_MaxStrength(stateModifier);
 	}
+	if (LiveMode::ShowHelpMarkers()) {
+		ImGui::SameLine();
+		MyImGui::HelpMarker(R"V0G0N(Controls how strong the perturbations can be.
+)V0G0N");
+	}
 	if (ImGui::SliderFloat("Speed", &m_values.speed, 0.0f, 1.5f)) {
 		m_presets.setToPlaceholderSetting();
 		applyAndRecord_Speed(stateModifier);
+	}
+	if (LiveMode::ShowHelpMarkers()) {
+		ImGui::SameLine();
+		MyImGui::HelpMarker(R"V0G0N(Controls how fast the location of the perturbations move.
+)V0G0N");
 	}
 	if (MyImGui::AngleWheel("Direction", &m_dirValues.directionAngle)) {
 		// direction isn't actually handled by presets, so don't change placeholderSettings
 		m_dirValues.computeDirection();
 		applyAndRecord_Direction(stateModifier);
 	}
+//	if (LiveMode::ShowHelpMarkers()) {
+//		ImGui::SameLine();
+//		MyImGui::HelpMarker(R"V0G0N(Controls in which direction the perturbations move.
+//)V0G0N");
+//	}
 	if (m_presets.ImGui(&m_values))
 		applyAndRecord(stateModifier);
 }

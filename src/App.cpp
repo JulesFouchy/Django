@@ -111,6 +111,11 @@ void App::update() {
 				if (ImGui::Checkbox("Show output window", &bIsOutputWindowOpen)) {
 					setIsOutputWindowOpen(bIsOutputWindowOpen);
 				}
+				if (LiveMode::ShowHelpMarkers()) {
+					ImGui::SameLine();
+					MyImGui::HelpMarker(R"V0G0N(Opens a second window showing only the output image. This is the one that you should project / stream for your audience.
+)V0G0N");
+				}
 				ImGui::EndMenu();
 			}
 			ImGui::EndMainMenuBar();
