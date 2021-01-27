@@ -36,14 +36,45 @@ void Recorder::stop(float currentTime) {
 	m_record.serialize(Path::Records);
 }
 
+void Recorder::startCountdownBeforeRecording() {
+	m_bIsCountingDown = true;
+	m_timeToStart = std::chrono::steady_clock::now() + std::chrono::seconds(m_delayToStartRecordingInS);
+}
+
 bool Recorder::ImGui(float time, const StateModifier& stateModifier) {
 	bool b = false;
 	if (!isRecording()) {
 		// Start recording
-		//if (LiveMode::IsOff()) {
-			if (MyImGui::ButtonWithIcon(Textures::Record(), ImVec4(1.0f, 0.0f, 0.0f, 1.0f)))
+		if (MyImGui::ButtonWithIcon(Textures::Record(), ImVec4(1.0f, 0.0f, 0.0f, 1.0f)))
+			start(stateModifier.getCurrentState());
+		if (ImGui::BeginPopupContextItem()) {
+			if (ImGui::Button("Start with delay")) {
+				startCountdownBeforeRecording();
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::SameLine();
+			ImGui::Text("of");
+			ImGui::PushID(37);
+			ImGui::SliderInt("seconds.", &m_delayToStartRecordingInS, 0, 10);
+			ImGui::PopID();
+			ImGui::EndPopup();
+		}
+		// Show delay before record starts
+		std::chrono::duration<float> delta = m_timeToStart - std::chrono::steady_clock::now();
+		if (m_bIsCountingDown) {
+			if (delta.count() < 0.f) {
+				m_bIsCountingDown = false;
 				start(stateModifier.getCurrentState());
-		//}
+			}
+			else {
+				ImGui::SameLine();
+				ImGui::Text("Starting in %i", static_cast<int>(std::ceil(delta.count())));
+			}
+		}
+		if (LiveMode::ShowHelpMarkers()) {
+			ImGui::SameLine();
+			MyImGui::HelpMarker("Will start recording. You can also right click it to get a countdown before the recording starts.");
+		}
 	}
 	else {
 		// Stop recording

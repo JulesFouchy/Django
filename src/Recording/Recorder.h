@@ -19,6 +19,7 @@ public:
 private:
 	void start(const State& currentState);
 	void stop(float currentTime);
+	void startCountdownBeforeRecording();
 
 	inline bool isRecording() { return m_bIsRecording; }
 
@@ -26,6 +27,9 @@ private:
 	float m_startTime;
 	Record m_record;
 	bool m_bIsRecording = false;
+	int m_delayToStartRecordingInS = 3;
+	bool m_bIsCountingDown = false;
+	std::chrono::steady_clock::time_point m_timeToStart;
 
 	Clock& m_clock; // we only need it to grab time in the destructor, because we can't pass it as an argument there
 };
