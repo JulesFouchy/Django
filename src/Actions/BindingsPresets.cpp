@@ -10,7 +10,7 @@ namespace fs = std::filesystem;
 #include "Helper/File.h"
 #include "Helper/MyImGui.h"
 #include "Constants/Path.h"
-#include <Boxer/boxer.h>
+#include <boxer/boxer.h>
 
 BindingsPresets::BindingsPresets()
 	: m_savePresetAs(findPlaceholderName())

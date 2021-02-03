@@ -8,7 +8,7 @@ namespace fs = std::filesystem;
 #include "Helper/File.h"
 #include "Constants/Path.h"
 #include "Helper/MyImGui.h"
-#include <Boxer/boxer.h>
+#include <boxer/boxer.h>
 
 template <typename T>
 struct Preset {

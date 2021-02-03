@@ -11,7 +11,7 @@
 #include "Clock/Clock_Realtime.h"
 #include "Viewports/Viewports.h"
 #include "OpenGL/RenderBuffer.h"
-#include <Boxer/boxer.h>
+#include <boxer/boxer.h>
 #include <nfd.hpp>
 #include "Constants/Textures.h"
 

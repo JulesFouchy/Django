@@ -3,6 +3,7 @@
 #include "ActionsByType.h"
 #include "BindingsPresets.h"
 #include "KeyboardLayout.h"
+#include <list>
 
 class StateModifier;
 

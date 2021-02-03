@@ -13,7 +13,7 @@
 #include "PlayState_Play.h"
 #include "PlayState_NoSelection.h"
 #include "Viewports/Viewports.h"
-#include <Boxer/boxer.h>
+#include <boxer/boxer.h>
 
 RecordManager::RecordManager()
 	: m_clock(std::make_unique<Clock_Realtime>()), m_recorder(*m_clock), m_resetParticlesPosAndSpeedShader("internal-shaders/resetParticlePositionAndSpeed.comp")
