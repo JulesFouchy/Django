@@ -18,24 +18,10 @@
         },
         {
             "actionRef": {
-                "name": "803Z",
-                "type": 1
-            },
-            "scancode": 19
-        },
-        {
-            "actionRef": {
                 "name": "Butterfly",
                 "type": 1
             },
             "scancode": 18
-        },
-        {
-            "actionRef": {
-                "name": "Childish Star",
-                "type": 0
-            },
-            "scancode": 21
         },
         {
             "actionRef": {
@@ -64,6 +50,13 @@
                 "type": 0
             },
             "scancode": 23
+        },
+        {
+            "actionRef": {
+                "name": "Simple Star",
+                "type": 0
+            },
+            "scancode": 21
         },
         {
             "actionRef": {
