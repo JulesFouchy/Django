@@ -18,3 +18,5 @@ exports/
 settings/lastSessionExportSettings.json
 
 cache-last-session/
+
+Django-Installer/
