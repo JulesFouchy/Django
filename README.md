@@ -2,7 +2,7 @@
 
 [http://django-vjing.com/](http://django-vjing.com/)
 
-<iframe width="962" height="541" src="https://www.youtube.com/embed/ILEdhbt9lL0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+[![Django Trailer](http://img.youtube.com/vi/ILEdhbt9lL0/0.jpg)](http://www.youtube.com/watch?v=ILEdhbt9lL0 "Django Trailer")
 
 Django is a VJing app based on a particle system.
 Everything is computed on the GPU, making it very efficient.
