@@ -5,7 +5,9 @@
 #include "RandomParams.h"
 
 #include "Helper/File.h"
-#include "Viewports/Viewports.h"
+#include <Cool/App/RenderState.h>
+
+using namespace Cool;
 
 ConfigGPU::ConfigGPU(ConfigGPU&& o) noexcept
     : m_computeShader(std::move(o.m_computeShader))
@@ -29,7 +31,7 @@ void ConfigGPU::applyTo(ParticleSystem& particleSystem, const ConfigParams& para
     m_computeShader.get().bind();
     //
     m_computeShader.get().setUniform1i("u_NbOfParticles", particleSystem.getNbParticles());
-    m_computeShader.get().setUniform1f("u_aspectRatio", Viewports::RenderSize().aspectRatio());
+    m_computeShader.get().setUniform1f("u_aspectRatio", RenderState::Size().aspectRatio());
     m_computeShader.get().setUniform1i("u_LR", params.getLR());
     m_computeShader.get().setUniform1i("u_UD", params.getUD());
     m_computeShader.get().setUniform1i("u_wheel", params.getWheel());

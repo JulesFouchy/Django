@@ -1,11 +1,13 @@
 #include "ConfigTextGPU.h"
 
 #include "Particles/ParticlesSystem.h"
-#include "Viewports/Viewports.h"
+#include <Cool/App/RenderState.h>
 #include "Helper/File.h"
-#include "Helper/Input.h"
+#include <Cool/App/Input.h>
 #include "StateModifier.h"
 #include "Recording/StateChange.h"
+
+using namespace Cool;
 
 ConfigTextGPU::ConfigTextGPU()
 	: Configuration("Text"), m_lettersSSBO(5, GL_DYNAMIC_READ), m_offsetsSSBO(6, GL_DYNAMIC_READ)
@@ -20,12 +22,12 @@ bool ConfigTextGPU::onKeyPressed(SDL_Scancode scancode, char keysym, StateModifi
 	bool bHandled = false;
 	if (m_bCaptureKeys) {
 		if (scancode == SDL_SCANCODE_BACKSPACE) {
-			if (Input::CtrlOrCmdIsDown()) {
-				setApplyAndRecord_SupprAllChars(stateModifier);
-			}
-			else {
-				setApplyAndRecord_SupprOneChar(stateModifier);
-			}
+			//if (Input::CtrlOrCmdIsDown()) {
+			//	setApplyAndRecord_SupprAllChars(stateModifier);
+			//}
+			//else {
+			//	setApplyAndRecord_SupprOneChar(stateModifier);
+			//}
 			bHandled = true;
 		}
 		else {
@@ -39,7 +41,7 @@ void ConfigTextGPU::applyTo(ParticleSystem& particleSystem, const ConfigParams& 
 	m_computeShader.get().bind();
 	//
 	m_computeShader.get().setUniform1i("u_NbOfParticles", particleSystem.getNbParticles());
-	m_computeShader.get().setUniform1f("u_aspectRatio", Viewports::RenderSize().aspectRatio());
+	m_computeShader.get().setUniform1f("u_aspectRatio", RenderState::Size().aspectRatio());
 	m_computeShader.get().setUniform1i("u_nbLetters", m_nbLetters);
 	//
 	m_computeShader.compute(particleSystem.getNbParticles());

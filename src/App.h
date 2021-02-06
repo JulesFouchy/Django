@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Framework/GLWindow.h"
+#include <Cool/App/IApp.h>
+#include <Cool/App/OpenGLWindow.h>
 
 #include "OpenGL/ShaderPipeline.h"
 #include "Particles/ParticlesSystem.h"
@@ -11,9 +12,11 @@
 #include "MouseInteractions.h"
 #include "StateModifier.h"
 
-class App {
+using namespace Cool;
+
+class App : public Cool::IApp {
 public:
-	App(GLWindow& mainGLWindow, GLWindow& outputGLWindow);
+	App(OpenGLWindow& mainWindow, OpenGLWindow& outputWindow);
 	~App() = default;
 
 	void update();
@@ -44,6 +47,6 @@ private:
 	bool m_bOpenDebug = true;
 #endif
 
-	GLWindow& m_mainGLWindow;
-	GLWindow& m_outputGLWindow;
+	OpenGLWindow& m_mainWindow;
+	OpenGLWindow& m_outputWindow;
 };

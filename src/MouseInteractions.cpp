@@ -4,16 +4,18 @@
 #include "Recording/StateChange.h"
 #include "OpenGL/ShaderPipeline.h"
 #include "Particles/ParticlesSystem.h"
-#include "Helper/Input.h"
+#include <Cool/App/Input.h>
+
+using namespace Cool;
 
 void MouseInteractions::update(StateModifier& stateModifier, bool bIsExporting) {
 	// Force field
 	if (ImGui::IsMouseDown(ImGuiMouseButton_Left) && !ImGui::GetIO().WantCaptureMouse && !bIsExporting)
-		setForceField(Input::GetMouseInNormalizedRatioSpace());
+		setForceField(Input::MouseInNormalizedRatioSpace());
 	// Burst
 	if (ImGui::IsMouseReleased(ImGuiMouseButton_Right) && !bIsExporting) {
 		float strength = pow(25.0f * ImGui::GetIO().MouseDownDurationPrev[ImGuiMouseButton_Right], 0.8f);
-		setBurst({ Input::GetMouseInNormalizedRatioSpace(), strength });
+		setBurst({ Input::MouseInNormalizedRatioSpace(), strength });
 	}
 	// Apply
 	ShaderPipeline& physicsCompute = stateModifier.particleSystem().physicsComputeShader();

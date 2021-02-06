@@ -1,8 +1,10 @@
 #include "DrawOnTextureFramebuffer.h"
 
-#include "Viewports/Viewports.h"
+#include <Cool/App/RenderState.h>
 
 #include "Debugging/glException.h"
+
+using namespace Cool;
 
 DrawOnTextureFramebuffer::DrawOnTextureFramebuffer() {
 	GLCall(glGenFramebuffers(1, &m_frameBufferId));
@@ -26,5 +28,5 @@ void DrawOnTextureFramebuffer::setRenderTarget_Screen(){
 	// Unbind FrameBuffer
 	GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
 	// Set viewport
-	glViewport(0, 0, Viewports::getWindowSize().x, Viewports::getWindowSize().y);
+	glViewport(0, 0, RenderState::getWindowSize().x, RenderState::getWindowSize().y);
 }

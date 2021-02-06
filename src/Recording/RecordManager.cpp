@@ -12,8 +12,10 @@
 #include "PlayState_NotStarted.h"
 #include "PlayState_Play.h"
 #include "PlayState_NoSelection.h"
-#include "Viewports/Viewports.h"
+#include <Cool/App/RenderState.h>
 #include <boxer/boxer.h>
+
+using namespace Cool;
 
 RecordManager::RecordManager()
 	: m_clock(std::make_unique<Clock_Realtime>()), m_recorder(*m_clock), m_resetParticlesPosAndSpeedShader("internal-shaders/resetParticlePositionAndSpeed.comp")
@@ -35,7 +37,7 @@ void RecordManager::ImGui(std::unique_ptr<Clock>& clock, StateModifier& stateMod
 	if (LiveMode::IsOff()) {
 		m_exporter.ImGui();
 		if (hasARecordSelected()) {
-			if (!Viewports::IsExporting()) {
+			if (!RenderState::IsExporting()) {
 				if (ImGui::Button("Export")) {
 					if (m_exporter.startExporting(selectedRecord(), stateModifier.renderer(), clock)) {
 						// Play record
@@ -57,7 +59,7 @@ void RecordManager::ImGui(std::unique_ptr<Clock>& clock, StateModifier& stateMod
 			}
 		}
 	}
-	if (!Viewports::IsExporting()) {
+	if (!RenderState::IsExporting()) {
 		if (LiveMode::IsOff())
 			ImGui::Separator();
 		// Recorder

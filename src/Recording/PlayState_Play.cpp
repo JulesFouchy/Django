@@ -7,7 +7,9 @@
 #include "RecordPlayer.h"
 #include "Helper/MyImGui.h"
 #include "Constants/Textures.h"
-#include "Viewports/Viewports.h"
+#include <Cool/App/RenderState.h>
+
+using namespace Cool;
 
 PlayState_Play::PlayState_Play(Record& record, float startTime)
 	: m_record(record), m_startTime(startTime)
@@ -16,7 +18,7 @@ PlayState_Play::PlayState_Play(Record& record, float startTime)
 void PlayState_Play::update(float time, RecordPlayer& recordPlayer, StateModifier& stateModifier) {
 	if (!m_record.updatePlaying(time - m_startTime, stateModifier)
 	&& !m_bDraggingOnTheTimeline) { // Prevent the playing from stopping just because we dragged the time cursor outside of the timeline
-		bool bStartLoopingAgain = !Viewports::IsExporting();
+		bool bStartLoopingAgain = !RenderState::IsExporting();
 		recordPlayer.setState<PlayState_NotStarted>(m_record, recordPlayer.doRecordsLoop());
 	}
 	//

@@ -4,11 +4,11 @@ project(Django LANGUAGES C CXX VERSION 1.1.0)
 
 # Declare the Cool modules that we use
 set(COOL_MODULES
+    Log
+	App
     Serialization
     File
-    Log
 )
-add_compile_definitions(__COOL_GLM)
 
 # Set the path where all the Cool modules are stored. It is required by all the Cool IncludeMe.cmake files
 set(PATH_TO_COOL ${CMAKE_SOURCE_DIR}/Cool)
@@ -30,8 +30,6 @@ file(GLOB_RECURSE MY_CONFIGS configurations/*)
 # /////////////////////////////// DEPENDENCIES ////////////////////////////////
 # /////////////////////////////////////////////////////////////////////////////
 
-find_package(OpenGL REQUIRED)
-
 # On windows
 if (WIN32) 
     set(SDL2_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/lib/SDL2-2.0.10/include)
@@ -42,14 +40,12 @@ if (WIN32)
 else()
     find_package(SDL2 REQUIRED)
 endif()
+add_compile_definitions(SDL_MAIN_HANDLED)
 
 # ------------------------------ BUILD IF NEEDED ------------------------------
 
-add_library(GLAD STATIC "lib/glad/src/glad.c")
 add_library(STB_IMAGE STATIC "lib/stb_image/stb_image.cpp")
 add_library(STB_IMAGE_WRITE STATIC "lib/stb_image/stb_image_write.cpp")
-file(GLOB_RECURSE IMGUI_SOURCES lib/imgui/*)
-add_library(IMGUI STATIC ${IMGUI_SOURCES})
 add_subdirectory("lib/Boxer")
 add_subdirectory("lib/nativefiledialog-extended/src")
 
@@ -60,10 +56,6 @@ add_subdirectory("lib/nativefiledialog-extended/src")
 include_directories(
     ${OPENGL_INCLUDE_DIR}
     ${SDL2_INCLUDE_DIRS}
-    lib/glad/include
-    lib/imgui
-    lib/glm
-    lib/color/src
     lib/nativefiledialog-extended/src/include
     lib
     src
@@ -84,10 +76,8 @@ add_executable(${PROJECT_NAME} ${MY_SOURCES}
 target_link_libraries(${PROJECT_NAME}
     ${OPENGL_LIBRARIES}
     ${SDL2_LIBRARIES}
-    GLAD
     STB_IMAGE
     STB_IMAGE_WRITE
-    IMGUI
     Boxer
     nfd
 )
@@ -140,11 +130,6 @@ add_custom_command(
 target_precompile_headers(${PROJECT_NAME}
   PRIVATE
   # Libraries
-    <imgui/imgui.h>
-    <imgui/misc/cpp/imgui_stdlib.h>
-    <glm/vec2.hpp>
-    <glm/vec3.hpp>
-    <glad/glad.h>
     <SDL2/SDL.h>
     <spdlog/spdlog.h>
   # std

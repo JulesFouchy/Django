@@ -9,11 +9,13 @@
 #include "Record.h"
 #include "Clock/Clock_FixedTimestep.h"
 #include "Clock/Clock_Realtime.h"
-#include "Viewports/Viewports.h"
+#include <Cool/App/RenderState.h>
 #include "OpenGL/RenderBuffer.h"
 #include <boxer/boxer.h>
 #include <nfd.hpp>
 #include "Constants/Textures.h"
+
+using namespace Cool;
 
 FrameExporter::FrameExporter()
 	: m_settings({ 60.f, 1280, 720, Path::Exports })
@@ -33,7 +35,7 @@ FrameExporter::FrameExporter()
 			}
 		}
 	}
-	Viewports::setExportSize(m_settings.width, m_settings.height);
+	RenderState::setExportSize(m_settings.width, m_settings.height);
 }
 
 FrameExporter::~FrameExporter() {
@@ -69,7 +71,7 @@ bool FrameExporter::startExporting(Record& selectedRecord, Renderer& renderer, s
 		}
 	}
 	if (MyFile::CreateFolderIfDoesntExist(m_exportFolderPath)) {
-		Viewports::setIsExporting(true);
+		RenderState::setIsExporting(true);
 		m_frameCount = 0;
 		float totalExportDuration = selectedRecord.totalDuration();
 		m_timeExportStops = selectedRecord.initialTime() + totalExportDuration;
@@ -88,7 +90,7 @@ bool FrameExporter::startExporting(Record& selectedRecord, Renderer& renderer, s
 
 void FrameExporter::stopExporting(Renderer& renderer, std::unique_ptr<Clock>& clock) {
 	clock = std::make_unique<Clock_Realtime>();
-	Viewports::setIsExporting(false);
+	RenderState::setIsExporting(false);
 }
 
 void FrameExporter::exportFrame(RenderBuffer& renderBuffer) {
@@ -112,7 +114,7 @@ void FrameExporter::exportFrame(RenderBuffer& renderBuffer) {
 }
 
 void FrameExporter::update(Renderer& renderer, std::unique_ptr<Clock>& clock) {
-	if (Viewports::IsExporting()) {
+	if (RenderState::IsExporting()) {
 		if (clock->time() > m_timeExportStops) {
 			stopExporting(renderer, clock);
 		}
@@ -120,16 +122,16 @@ void FrameExporter::update(Renderer& renderer, std::unique_ptr<Clock>& clock) {
 }
 
 void FrameExporter::ImGui() {
-	if (!Viewports::IsExporting()) {
+	if (!RenderState::IsExporting()) {
 		ImGui::Text("Resolution : "); ImGui::SameLine();
 		ImGui::PushItemWidth(50);
-		unsigned int w = static_cast<unsigned int>(Viewports::getExportSize().x);
-		unsigned int h = static_cast<unsigned int>(Viewports::getExportSize().y);
+		unsigned int w = static_cast<unsigned int>(RenderState::getExportSize().x);
+		unsigned int h = static_cast<unsigned int>(RenderState::getExportSize().y);
 		MyImGui::InputUInt("W", &w); ImGui::SameLine();
 		MyImGui::InputUInt("H", &h);
 		m_settings.width = static_cast<int>(w);
 		m_settings.height = static_cast<int>(h);
-		Viewports::setExportSize(m_settings.width, m_settings.height);
+		RenderState::setExportSize(m_settings.width, m_settings.height);
 		ImGui::PopItemWidth();
 		ImGui::InputFloat("FPS", &m_settings.fps);
 		ImGui::PushID(46248921652987);

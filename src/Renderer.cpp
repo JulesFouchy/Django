@@ -1,7 +1,9 @@
 #include "Renderer.h"
 
 #include "Settings/AlphaTrailSettings.h"
-#include "Viewports/Viewports.h"
+#include <Cool/App/RenderState.h>
+
+using namespace Cool;
 
 Renderer::Renderer()
 	: m_fullScreenVAOWithUVs(true)
@@ -47,7 +49,7 @@ void Renderer::onRenderBegin(float dt, const glm::vec3& bgColor, const AlphaTrai
 }
 
 void Renderer::onRenderSizeChanged(const glm::vec3& bgColor) {
-	const glm::ivec2& size = Viewports::RenderSize().size();
+	const glm::ivec2& size = RenderState::Size().size();
 	m_renderBuffer    .setSize(size.x, size.y);
 	m_prevFrameTexture.setSize(size.x, size.y);
 	clearRenderBuffer(bgColor);

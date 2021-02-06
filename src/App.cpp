@@ -1,16 +1,16 @@
 #include "App.h"
 
-#include "Viewports/Viewports.h"
-#include "Helper/Input.h"
+#include <Cool/App/RenderState.h>
+#include <Cool/App/Input.h>
 #ifndef NDEBUG
 #include "Helper/MyImGui.h"
 #endif
 
-App::App(GLWindow& mainGLWindow, GLWindow& outputGLWindow)
+App::App(OpenGLWindow& mainWindow, OpenGLWindow& outputWindow)
 	: m_stateModifier(m_particleSystem, m_settingsManager, m_configManager, m_renderer, m_recordManager, m_mouseInteractions),
-	  m_mainGLWindow(mainGLWindow), m_outputGLWindow(outputGLWindow)
+	  m_mainWindow(mainWindow), m_outputWindow(outputWindow)
 {
-	Viewports::setRenderSizeChangedCallback([this]() {onRenderSizeChanged(); });
+	RenderState::SubscribeToSizeChanges([this]() {onRenderSizeChanged(); });
 	//
 	glEnable(GL_DEPTH_TEST);
 	// glEnable(GL_BLEND); // This is already handled by Alpha Trail Settings
@@ -24,13 +24,13 @@ App::App(GLWindow& mainGLWindow, GLWindow& outputGLWindow)
 	//
 	m_stateModifier.applyAndRecord_AllSettings();
 	// Get output window size
-	int x, y;
-	SDL_GetWindowSize(m_outputGLWindow.window, &x, &y);
-	Viewports::setOutputWindowSize(x, y);
+	int w, h;
+	glfwGetWindowSize(m_outputWindow.get(), &w, &h);
+	//Viewports::setOutputWindowSize(w, h);
 }
 
 void App::update() {
-	if (!Input::KeyIsDown(SDL_SCANCODE_CAPSLOCK)) {
+	if (!Input::KeyIsDown(GLFW_KEY_CAPS_LOCK)) {
 		glClearColor(m_clearColor.r, m_clearColor.g, m_clearColor.b, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		// ---------------------
@@ -43,11 +43,11 @@ void App::update() {
 		// Send wind to physics compute shader
 		m_settingsManager.get().wind().setWindOffsetInShader(m_particleSystem.physicsComputeShader(), m_recordManager.clock().time());
 		// Send mouse to physics compute shader
-		m_mouseInteractions.update(m_stateModifier, Viewports::IsExporting());
-		if (!Viewports::IsExporting()) {
+		m_mouseInteractions.update(m_stateModifier, RenderState::IsExporting());
+		if (!RenderState::IsExporting()) {
 			// Move all particles towards mouse if wheel is down
 			if (ImGui::IsMouseDown(ImGuiMouseButton_Middle))
-				m_particleSystem.applyAndRecord_SetAllRestPositions(Input::GetMouseInNormalizedRatioSpace(), m_stateModifier);
+				m_particleSystem.applyAndRecord_SetAllRestPositions(Input::MouseInNormalizedRatioSpace(), m_stateModifier);
 		}
 		// Apply physics
 		m_particleSystem.updatePositions();
@@ -63,34 +63,34 @@ void App::update() {
 	m_particleSystem.draw();
 	// Blit render buffer to screen
 	m_renderer.renderBuffer().blitToScreen(
-		Viewports::SwapYConvention(Viewports::AppView().botLeft()),
-		Viewports::SwapYConvention(Viewports::AppView().topRight())
+		RenderState::SwapYConvention(RenderState::InAppRenderArea().botLeft()),
+		RenderState::SwapYConvention(RenderState::InAppRenderArea().topRight())
 	);
 	// Render on output window
-	if (Viewports::IsOutputWindowOpen()) {
-		m_outputGLWindow.makeCurrent();
-		m_renderer.renderBuffer().blitToScreen(
-			{ 0, 0 },
-			Viewports::getOutputWindowSize()
-		);
-		SDL_GL_SwapWindow(m_outputGLWindow.window);
-		m_mainGLWindow.makeCurrent();
-	}
+	//if (Viewports::IsOutputWindowOpen()) {
+		//m_outputWindow.makeCurrent();
+		//m_renderer.renderBuffer().blitToScreen(
+		//	{ 0, 0 },
+		//	Viewports::getOutputWindowSize()
+		//);
+		//SDL_GL_SwapWindow(m_outputGLWindow.window);
+		//m_mainGLWindow.makeCurrent();
+	//}
 	// Export
-	if (Viewports::IsExporting())
+	if (RenderState::IsExporting())
 		m_recordManager.exporter().exportFrame(m_renderer.renderBuffer());
 	// ----------------------------
 	// ---------- IMGUI -----------
 	// ----------------------------
 	if (m_bShowGUI) {
-		if (!Viewports::IsExporting()) {
+		if (!RenderState::IsExporting()) {
 			// MENUS
 			ImGui::BeginMainMenuBar();
 			if (ImGui::BeginMenu("RenderAreas")) {
 				ImGui::ColorEdit3("Empty space color", &m_clearColor[0]);
-				if (!Viewports::IsOutputWindowOpen()) {
-					Viewports::ImGuiConstrainAppViewRatio();
-				}
+				//if (!RenderState::IsOutputWindowOpen()) {
+				//	RenderState::ImGuiConstrainAppViewRatio();
+				//}
 				ImGui::EndMenu();
 			}
 			if (ImGui::BeginMenu("Windows")) {
@@ -107,10 +107,10 @@ void App::update() {
 			}
 			if (ImGui::BeginMenu("Live")) {
 				LiveMode::ImGui();
-				bool bIsOutputWindowOpen = Viewports::IsOutputWindowOpen();
-				if (ImGui::Checkbox("Show output window", &bIsOutputWindowOpen)) {
-					setIsOutputWindowOpen(bIsOutputWindowOpen);
-				}
+				//bool bIsOutputWindowOpen = Viewports::IsOutputWindowOpen();
+				//if (ImGui::Checkbox("Show output window", &bIsOutputWindowOpen)) {
+				//	setIsOutputWindowOpen(bIsOutputWindowOpen);
+				//}
 				if (LiveMode::ShowHelpMarkers()) {
 					ImGui::SameLine();
 					MyImGui::HelpMarker(R"V0G0N(Opens a second window showing only the output image. This is the one that you should project / stream for your audience.
@@ -127,7 +127,7 @@ void App::update() {
 				MyImGui::TimeFormatedHMS(m_recordManager.clock().time());
 				ImGui::Checkbox("Show Demo Window", &m_bShowImGUIDemoWindow);
 				ImGui::Text("Application average %.1f FPS", ImGui::GetIO().Framerate);
-				ImGui::Text("Render Size : %d %d", Viewports::RenderSize().width(), Viewports::RenderSize().height());
+				ImGui::Text("Render Size : %d %d", RenderState::Size().width(), RenderState::Size().height());
 				ImGui::End();
 			}
 			if (m_bShowImGUIDemoWindow) // Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
@@ -156,20 +156,20 @@ void App::update() {
 }
 
 void App::onEvent(const SDL_Event& e) {
-	m_outputGLWindow.checkForFullscreenToggles(e);
-	if (e.type == SDL_WINDOWEVENT && e.window.windowID == SDL_GetWindowID(m_outputGLWindow.window)) {
-		switch (e.window.event) {
-		case SDL_WINDOWEVENT_RESIZED:
-			int x, y;
-			SDL_GetWindowSize(m_outputGLWindow.window, &x, &y);
-			Viewports::setOutputWindowSize(x, y);
-			break;
-		case SDL_WINDOWEVENT_CLOSE:
-			setIsOutputWindowOpen(false);
-			break;
-		}
-	}
-	if (!Viewports::IsExporting()) {
+	//m_outputGLWindow.checkForFullscreenToggles(e);
+	//if (e.type == SDL_WINDOWEVENT && e.window.windowID == SDL_GetWindowID(m_outputGLWindow.window)) {
+	//	switch (e.window.event) {
+	//	case SDL_WINDOWEVENT_RESIZED:
+	//		int x, y;
+	//		SDL_GetWindowSize(m_outputGLWindow.window, &x, &y);
+	//		Viewports::setOutputWindowSize(x, y);
+	//		break;
+	//	case SDL_WINDOWEVENT_CLOSE:
+	//		setIsOutputWindowOpen(false);
+	//		break;
+	//	}
+	//}
+	/*if (!RenderState::IsExporting()) {
 		switch (e.type) {
 
 		case SDL_MOUSEMOTION:
@@ -231,20 +231,20 @@ void App::onEvent(const SDL_Event& e) {
 		default:
 			break;
 		}
-	}
+	}*/
 }
 
 void App::onRenderSizeChanged() {
 	m_renderer.onRenderSizeChanged(m_settingsManager.get().colors().backgroundColor());
 	m_particlePipeline.bind();
-	m_particlePipeline.setUniform1f("u_invAspectRatio", 1.0f / Viewports::RenderSize().aspectRatio());
+	m_particlePipeline.setUniform1f("u_invAspectRatio", 1.0f / RenderState::Size().aspectRatio());
 	m_stateModifier.apply(); // some configs depend on the aspect ratio 
 }
 
 void App::setIsOutputWindowOpen(bool isOpen) {
-	Viewports::setIsOutputWindowOpen(isOpen);
-	if (isOpen)
-		m_outputGLWindow.show();
-	else
-		m_outputGLWindow.hide();
+	//Viewports::setIsOutputWindowOpen(isOpen);
+	//if (isOpen)
+	//	m_outputGLWindow.show();
+	//else
+	//	m_outputGLWindow.hide();
 }

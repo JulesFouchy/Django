@@ -2,62 +2,62 @@
 
 #include "StateModifier.h"
 #include "Recording/StateChange.h"
-#include "Helper/Input.h"
+#include <Cool/App/Input.h>
 
 bool ConfigParams::onKeyPressed(SDL_Scancode scancode, StateModifier& stateModifier) {
     bool b = false;
-    switch (scancode) {
+    //switch (scancode) {
     // LR
-    case SDL_SCANCODE_LEFT:
-        if (Input::CtrlOrCmdIsDown() || Input::ShiftIsDown())
-            LR -= 6;
-        else
-            LR--;
-        b = true;
-        break;
-    case SDL_SCANCODE_RIGHT:
-        if (Input::CtrlOrCmdIsDown() || Input::ShiftIsDown())
-            LR += 6;
-        else
-            LR++;
-        b = true;
-        break;
-    // UD
-    case SDL_SCANCODE_DOWN:
-        if (Input::CtrlOrCmdIsDown() || Input::ShiftIsDown())
-            UD -= 6;
-        else
-            UD--;
-        b = true;
-        break;
-    case SDL_SCANCODE_UP:
-        if (Input::CtrlOrCmdIsDown() || Input::ShiftIsDown())
-            UD += 6;
-        else
-            UD++;
-        b = true;
-        break;
-    }
-    if (b) {
-        stateModifier.apply();
-        stateModifier.recordChange({ StateChangeType::Param_KeyPressed, scancode });
-    }
+    //case SDL_SCANCODE_LEFT:
+    //    if (Input::CtrlOrCmdIsDown() || Input::ShiftIsDown())
+    //        LR -= 6;
+    //    else
+    //        LR--;
+    //    b = true;
+    //    break;
+    //case SDL_SCANCODE_RIGHT:
+    //    if (Input::CtrlOrCmdIsDown() || Input::ShiftIsDown())
+    //        LR += 6;
+    //    else
+    //        LR++;
+    //    b = true;
+    //    break;
+    //// UD
+    //case SDL_SCANCODE_DOWN:
+    //    if (Input::CtrlOrCmdIsDown() || Input::ShiftIsDown())
+    //        UD -= 6;
+    //    else
+    //        UD--;
+    //    b = true;
+    //    break;
+    //case SDL_SCANCODE_UP:
+    //    if (Input::CtrlOrCmdIsDown() || Input::ShiftIsDown())
+    //        UD += 6;
+    //    else
+    //        UD++;
+    //    b = true;
+    //    break;
+    //}
+    //if (b) {
+    //    stateModifier.apply();
+    //    stateModifier.recordChange({ StateChangeType::Param_KeyPressed, scancode });
+    //}
     return b;
 }
 
 void ConfigParams::onWheel(int delta, bool bNoStandardScroll, StateModifier& stateModifier) {
-    if (Input::CtrlOrCmdIsDown()) {
-        setApplyAndRecord_CtrlWheel(ctrlWheel + delta, stateModifier);
-    }
-    else if (Input::ShiftIsDown()) {
-        setApplyAndRecord_ShiftWheel(shiftWheel + delta, stateModifier);
-    }
-    else if (Input::KeyIsDown(SDL_SCANCODE_LALT) || Input::KeyIsDown(SDL_SCANCODE_RALT)) {
-        setApplyAndRecord_AltWheel(altWheel + delta, stateModifier);
-    }
-    else if (!bNoStandardScroll) {
-        setApplyAndRecord_Wheel(wheel + delta, stateModifier);
-    }
+    //if (Input::CtrlOrCmdIsDown()) {
+    //    setApplyAndRecord_CtrlWheel(ctrlWheel + delta, stateModifier);
+    //}
+    //else if (Input::ShiftIsDown()) {
+    //    setApplyAndRecord_ShiftWheel(shiftWheel + delta, stateModifier);
+    //}
+    //else if (Input::KeyIsDown(SDL_SCANCODE_LALT) || Input::KeyIsDown(SDL_SCANCODE_RALT)) {
+    //    setApplyAndRecord_AltWheel(altWheel + delta, stateModifier);
+    //}
+    //else if (!bNoStandardScroll) {
+    //    setApplyAndRecord_Wheel(wheel + delta, stateModifier);
+    //}
 }
 
 void ConfigParams::setApplyAndRecord_Wheel(int value, StateModifier& stateModifier) {
