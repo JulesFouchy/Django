@@ -33,6 +33,7 @@ int main() {
 	// App
 	App app(mainWindow, outputWindow);
 	Cool::AppManager appManager(mainWindow, app);
+	appManager.DontForwardKeyEventsToImGui();
 	appManager.run();
 	// Shutdown
 	Textures::_DestroyAll();
