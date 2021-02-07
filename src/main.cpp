@@ -14,19 +14,20 @@ int main() {
 	// Init Glfw and set OpenGL version to 4.3
 	Cool::OpenGLWindowingSystem windowingSystem(4, 3);
 	// Create the windows and the shared OpenGL context
+	glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 	Cool::OpenGLWindow outputWindow = windowingSystem.createWindow(
 		"Django output",
 		1280, 720
 	);
-	glfwHideWindow(outputWindow.get());
+	glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
+#ifdef NDEBUG
+	glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
+#endif
 	Cool::OpenGLWindow mainWindow = windowingSystem.createWindow(
 		__DJANGO_WINDOW_NAME, // Variable #defined in the CMake
 		1280, 720,
 		outputWindow.get()
 	);
-#ifdef NDEBUG
-	glfwMaximizeWindow(mainWindow.get());
-#endif
 	// Init
 	Textures::_LoadAll();
 	// App
