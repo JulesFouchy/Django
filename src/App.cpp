@@ -285,9 +285,11 @@ void App::onRenderSizeChanged() {
 void App::closeOutputWindow() {
 	m_outputWindow.escapeFullScreen();
 	glfwHideWindow(m_outputWindow.get());
+	m_mainWindow.enableVSync();
 }
 
 void App::openOutputWindow() {
+	m_mainWindow.disableVSync();
 	glfwSetWindowShouldClose(m_outputWindow.get(), GLFW_FALSE);
 	glfwShowWindow(m_outputWindow.get());
 }
