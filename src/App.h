@@ -19,12 +19,17 @@ public:
 	App(OpenGLWindow& mainWindow, OpenGLWindow& outputWindow);
 	~App() = default;
 
-	void update();
-	void onEvent(const SDL_Event& e);
+	void update() override;
+	void ImGuiWindows() override;
+	void ImGuiMenus() override;
 
-	void onRenderSizeChanged();
+	void onKeyboardEvent(int key, int scancode, int action, int mods) override;
+	void onMouseButtonEvent(int button, int action, int mods) override;
+	void onScrollEvent(double xOffset, double yOffset) override;
+	void onMouseMoveEvent(double xPos, double yPos) override;
 
 private:
+	void onRenderSizeChanged();
 	void setIsOutputWindowOpen(bool isOpen);
 
 private:

@@ -79,83 +79,94 @@ void App::update() {
 	// Export
 	if (RenderState::IsExporting())
 		m_recordManager.exporter().exportFrame(m_renderer.renderBuffer());
-	// ----------------------------
-	// ---------- IMGUI -----------
-	// ----------------------------
-	if (m_bShowGUI) {
-		if (!RenderState::IsExporting()) {
-			// MENUS
-			ImGui::BeginMainMenuBar();
-			if (ImGui::BeginMenu("RenderAreas")) {
-				ImGui::ColorEdit3("Empty space color", &m_clearColor[0]);
-				//if (!RenderState::IsOutputWindowOpen()) {
-				//	RenderState::ImGuiConstrainAppViewRatio();
-				//}
-				ImGui::EndMenu();
-			}
-			if (ImGui::BeginMenu("Windows")) {
-				ImGui::Checkbox("Key Bindings", &m_bOpenKeyBindings);
-				ImGui::Checkbox("Recordings", &m_bOpenRecordings);
-				ImGui::Separator();
-				m_stateModifier.settingsManager().get().ImGuiOpenWindowsCheckboxes();
-				m_configManager.ImGuiOpenWindowCheckbox();
-#ifndef NDEBUG
-				ImGui::Separator();
-				ImGui::Checkbox("Debug", &m_bOpenDebug);
-#endif
-				ImGui::EndMenu();
-			}
-			if (ImGui::BeginMenu("Live")) {
-				LiveMode::ImGui();
-				//bool bIsOutputWindowOpen = Viewports::IsOutputWindowOpen();
-				//if (ImGui::Checkbox("Show output window", &bIsOutputWindowOpen)) {
-				//	setIsOutputWindowOpen(bIsOutputWindowOpen);
-				//}
-				if (LiveMode::ShowHelpMarkers()) {
-					ImGui::SameLine();
-					MyImGui::HelpMarker(R"V0G0N(Opens a second window showing only the output image. This is the one that you should project / stream for your audience.
-)V0G0N");
-				}
-				ImGui::EndMenu();
-			}
-			ImGui::EndMainMenuBar();
-			// WINDOWS
-#ifndef NDEBUG
-			// Debug
-			if (m_bOpenDebug) {
-				ImGui::Begin("Debug", &m_bOpenDebug);
-				MyImGui::TimeFormatedHMS(m_recordManager.clock().time());
-				ImGui::Checkbox("Show Demo Window", &m_bShowImGUIDemoWindow);
-				ImGui::Text("Application average %.1f FPS", ImGui::GetIO().Framerate);
-				ImGui::Text("Render Size : %d %d", RenderState::Size().width(), RenderState::Size().height());
-				ImGui::End();
-			}
-			if (m_bShowImGUIDemoWindow) // Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-				ImGui::ShowDemoWindow(&m_bShowImGUIDemoWindow);
-#endif
-			// Settings
-			m_configManager.Imgui(m_stateModifier);
-			m_stateModifier.settingsManager().get().ImGuiWindows(m_stateModifier);
-			m_stateModifier.settingsManager().get().ImGuiMainWindow(m_stateModifier);
-			// Key bindings
-			if (m_bOpenKeyBindings) {
-				ImGui::Begin("Key Bindings", &m_bOpenKeyBindings);
-				m_configManager.ImGuiKeyBindings(m_stateModifier);
-				ImGui::End();
-			}
-			//
-			m_configManager.ImGuiWindow();
-		}
-		// Recording
-		if (m_bOpenRecordings) {
-			ImGui::Begin("Recording", &m_bOpenRecordings);
-			m_recordManager.ImGui(m_recordManager.clockPtrRef(), m_stateModifier); // must be called before m_recordManager.update()
-			ImGui::End();
-		}
+	// ImGui Recording Window
+	if (m_bOpenRecordings) {
+		ImGui::Begin("Recording", &m_bOpenRecordings);
+		m_recordManager.ImGui(m_recordManager.clockPtrRef(), m_stateModifier); // must be called before m_recordManager.update()
+		ImGui::End();
 	}
 }
 
-void App::onEvent(const SDL_Event& e) {
+void App::ImGuiWindows() {
+#ifndef NDEBUG
+	// Debug
+	if (m_bOpenDebug) {
+		ImGui::Begin("Debug", &m_bOpenDebug);
+		MyImGui::TimeFormatedHMS(m_recordManager.clock().time());
+		ImGui::Checkbox("Show Demo Window", &m_bShowImGUIDemoWindow);
+		ImGui::Text("Application average %.1f FPS", ImGui::GetIO().Framerate);
+		ImGui::Text("Render Size : %d %d", RenderState::Size().width(), RenderState::Size().height());
+		ImGui::End();
+	}
+	if (m_bShowImGUIDemoWindow) // Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
+		ImGui::ShowDemoWindow(&m_bShowImGUIDemoWindow);
+#endif
+	// Settings
+	m_configManager.Imgui(m_stateModifier);
+	m_stateModifier.settingsManager().get().ImGuiWindows(m_stateModifier);
+	m_stateModifier.settingsManager().get().ImGuiMainWindow(m_stateModifier);
+	// Key bindings
+	if (m_bOpenKeyBindings) {
+		ImGui::Begin("Key Bindings", &m_bOpenKeyBindings);
+		m_configManager.ImGuiKeyBindings(m_stateModifier);
+		ImGui::End();
+	}
+	//
+	m_configManager.ImGuiWindow();
+}
+
+void App::ImGuiMenus() {
+	if (ImGui::BeginMenu("RenderAreas")) {
+		ImGui::ColorEdit3("Empty space color", &m_clearColor[0]);
+		//if (!RenderState::IsOutputWindowOpen()) {
+		//	RenderState::ImGuiConstrainAppViewRatio();
+		//}
+		ImGui::EndMenu();
+	}
+	if (ImGui::BeginMenu("Windows")) {
+		ImGui::Checkbox("Key Bindings", &m_bOpenKeyBindings);
+		ImGui::Checkbox("Recordings", &m_bOpenRecordings);
+		ImGui::Separator();
+		m_stateModifier.settingsManager().get().ImGuiOpenWindowsCheckboxes();
+		m_configManager.ImGuiOpenWindowCheckbox();
+#ifndef NDEBUG
+		ImGui::Separator();
+		ImGui::Checkbox("Debug", &m_bOpenDebug);
+#endif
+		ImGui::EndMenu();
+	}
+	if (ImGui::BeginMenu("Live")) {
+		LiveMode::ImGui();
+		//bool bIsOutputWindowOpen = Viewports::IsOutputWindowOpen();
+		//if (ImGui::Checkbox("Show output window", &bIsOutputWindowOpen)) {
+		//	setIsOutputWindowOpen(bIsOutputWindowOpen);
+		//}
+		if (LiveMode::ShowHelpMarkers()) {
+			ImGui::SameLine();
+			MyImGui::HelpMarker(R"V0G0N(Opens a second window showing only the output image. This is the one that you should project / stream for your audience.
+)V0G0N");
+		}
+		ImGui::EndMenu();
+	}
+}
+
+void App::onKeyboardEvent(int key, int scancode, int action, int mods) {
+
+}
+
+void App::onMouseButtonEvent(int button, int action, int mods) {
+
+}
+
+void App::onScrollEvent(double xOffset, double yOffset) {
+
+}
+
+void App::onMouseMoveEvent(double xPos, double yPos) {
+
+}
+
+//void App::onEvent(const SDL_Event& e) {
 	//m_outputGLWindow.checkForFullscreenToggles(e);
 	//if (e.type == SDL_WINDOWEVENT && e.window.windowID == SDL_GetWindowID(m_outputGLWindow.window)) {
 	//	switch (e.window.event) {
@@ -232,7 +243,7 @@ void App::onEvent(const SDL_Event& e) {
 			break;
 		}
 	}*/
-}
+//}
 
 void App::onRenderSizeChanged() {
 	m_renderer.onRenderSizeChanged(m_settingsManager.get().colors().backgroundColor());
