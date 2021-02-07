@@ -21,7 +21,7 @@ public:
 	void setupBindings(const std::string& presetFilepath, bool clearExistingBndings = true);
 	void ImGui(StateModifier& stateModifier);
 	inline void ImGuiWindow() { m_keyboardLayout.ImGuiWindow(); }
-	void onKeyUp(int keycode);
+	void onKeyUp(GLFW_Keycode keycode);
 
 	inline std::unordered_map<std::string, ActionBinding*>& getAllActionBindingsOfType(ActionType type) { return m_allActionsByType[type]; }
 	

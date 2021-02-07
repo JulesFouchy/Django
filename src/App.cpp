@@ -169,7 +169,10 @@ void App::ImGuiMenus() {
 
 void App::onKeyboardEvent(int key, int scancode, int action, int mods) {
 	if (!RenderState::IsExporting() && !ImGui::GetIO().WantTextInput) {
-		m_configManager.onKeyPressed(key, mods, m_stateModifier);
+		if (action == GLFW_PRESS)
+			m_configManager.onKeyPressed(key, mods, m_stateModifier);
+		else if (action == GLFW_RELEASE)
+			m_configManager.onKeyUp(key);
 	}
 }
 
@@ -192,36 +195,6 @@ void App::onMouseMoveEvent(double xpos, double ypos) {
 
 	}
 }
-
-//void App::onEvent(const SDL_Event& e) {
-	/*if (!RenderState::IsExporting()) {
-		switch (e.type) {
-
-
-
-
-		case SDL_KEYDOWN:
-			if (!ImGui::GetIO().WantTextInput) {
-				if (e.key.keysym.sym == 'h' && Input::CtrlOrCmdIsDown())
-					m_bShowGUI = !m_bShowGUI;
-				else {
-					m_configManager.onKeyPressed(e.key.keysym.scancode, e.key.keysym.sym, m_stateModifier);
-				}
-			}
-			break;
-
-		case SDL_KEYUP:
-			if (!ImGui::GetIO().WantTextInput) {
-				if (!(e.key.keysym.sym == 'h') || !Input::CtrlOrCmdIsDown())
-					m_configManager.onKeyUp(e.key.keysym.scancode);
-			}
-			break;
-
-		default:
-			break;
-		}
-	}*/
-//}
 
 void App::onRenderSizeChanged() {
 	m_renderer.onRenderSizeChanged(m_settingsManager.get().colors().backgroundColor());

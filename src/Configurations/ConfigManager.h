@@ -24,7 +24,7 @@ public:
 
 	inline void onWheel(int delta, bool bNoStandardScroll, StateModifier& stateModifier) { m_params.onWheel(delta, bNoStandardScroll, stateModifier); }
 	void onKeyPressed(int keycode, int mods, StateModifier& stateModifier);
-	inline void onKeyUp(SDL_Scancode scancode) { m_keyBindings.onKeyUp(scancode); }
+	inline void onKeyUp(int keycode) { m_keyBindings.onKeyUp(keycode); }
 
 	void applyAndRecord_ActionRef(const ActionRef& actionRef, StateModifier& stateModifier);
 
