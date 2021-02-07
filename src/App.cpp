@@ -6,11 +6,18 @@
 #include "Helper/MyImGui.h"
 #endif
 
+static void output_window_key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+	OpenGLWindow* outputWindow = reinterpret_cast<OpenGLWindow*>(glfwGetWindowUserPointer(window));
+	outputWindow->checkForFullscreenToggles(key, scancode, action, mods);
+}
+
 App::App(OpenGLWindow& mainWindow, OpenGLWindow& outputWindow)
 	: m_stateModifier(m_particleSystem, m_settingsManager, m_configManager, m_renderer, m_recordManager, m_mouseInteractions),
 	  m_mainWindow(mainWindow), m_outputWindow(outputWindow)
 {
 	RenderState::SubscribeToSizeChanges([this]() {onRenderSizeChanged(); });
+	glfwSetKeyCallback(m_outputWindow.get(), output_window_key_callback);
+	glfwSetWindowUserPointer(m_outputWindow.get(), reinterpret_cast<void*>(&m_outputWindow));
 	//
 	glEnable(GL_DEPTH_TEST);
 	// glEnable(GL_BLEND); // This is already handled by Alpha Trail Settings
@@ -85,9 +92,23 @@ void App::update() {
 		m_recordManager.ImGui(m_recordManager.clockPtrRef(), m_stateModifier); // must be called before m_recordManager.update()
 		ImGui::End();
 	}
+	// TODO make out window current
+	// glfwPollEvents();
 }
 
 void App::ImGuiWindows() {
+	// Settings
+	m_configManager.Imgui(m_stateModifier);
+	m_stateModifier.settingsManager().get().ImGuiWindows(m_stateModifier);
+	m_stateModifier.settingsManager().get().ImGuiMainWindow(m_stateModifier);
+	// Key bindings
+	if (m_bOpenKeyBindings) {
+		ImGui::Begin("Key Bindings", &m_bOpenKeyBindings);
+		m_configManager.ImGuiKeyBindings(m_stateModifier);
+		ImGui::End();
+	}
+	// Configurations
+	m_configManager.ImGuiWindow();
 #ifndef NDEBUG
 	// Debug
 	if (m_bOpenDebug) {
@@ -101,18 +122,6 @@ void App::ImGuiWindows() {
 	if (m_bShowImGUIDemoWindow) // Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
 		ImGui::ShowDemoWindow(&m_bShowImGUIDemoWindow);
 #endif
-	// Settings
-	m_configManager.Imgui(m_stateModifier);
-	m_stateModifier.settingsManager().get().ImGuiWindows(m_stateModifier);
-	m_stateModifier.settingsManager().get().ImGuiMainWindow(m_stateModifier);
-	// Key bindings
-	if (m_bOpenKeyBindings) {
-		ImGui::Begin("Key Bindings", &m_bOpenKeyBindings);
-		m_configManager.ImGuiKeyBindings(m_stateModifier);
-		ImGui::End();
-	}
-	//
-	m_configManager.ImGuiWindow();
 }
 
 void App::ImGuiMenus() {
@@ -151,19 +160,27 @@ void App::ImGuiMenus() {
 }
 
 void App::onKeyboardEvent(int key, int scancode, int action, int mods) {
+	if (!RenderState::IsExporting() && !ImGui::GetIO().WantTextInput) {
 
+	}
 }
 
 void App::onMouseButtonEvent(int button, int action, int mods) {
+	if (!RenderState::IsExporting() && !ImGui::GetIO().WantCaptureMouse) {
 
+	}
 }
 
 void App::onScrollEvent(double xOffset, double yOffset) {
+	if (!RenderState::IsExporting() && !ImGui::GetIO().WantCaptureMouse) {
 
+	}
 }
 
-void App::onMouseMoveEvent(double xPos, double yPos) {
+void App::onMouseMoveEvent(double xpos, double ypos) {
+	if (!RenderState::IsExporting() && !ImGui::GetIO().WantCaptureMouse) {
 
+	}
 }
 
 //void App::onEvent(const SDL_Event& e) {
@@ -249,7 +266,7 @@ void App::onRenderSizeChanged() {
 	m_renderer.onRenderSizeChanged(m_settingsManager.get().colors().backgroundColor());
 	m_particlePipeline.bind();
 	m_particlePipeline.setUniform1f("u_invAspectRatio", 1.0f / RenderState::Size().aspectRatio());
-	m_stateModifier.apply(); // some configs depend on the aspect ratio 
+	m_stateModifier.apply(); // some configs depend on the aspect ratio
 }
 
 void App::setIsOutputWindowOpen(bool isOpen) {
