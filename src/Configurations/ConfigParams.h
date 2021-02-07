@@ -7,6 +7,8 @@ public:
 	bool onKeyPressed(int keycode, int mods, StateModifier& stateModifier);
 	void onWheel(int delta, bool bNoStandardScroll, StateModifier& stateModifier);
 
+	void setApplyAndRecord_LR        (int value, StateModifier& stateModifier);
+	void setApplyAndRecord_UD        (int value, StateModifier& stateModifier);
 	void setApplyAndRecord_Wheel     (int value, StateModifier& stateModifier);
 	void setApplyAndRecord_CtrlWheel (int value, StateModifier& stateModifier);
 	void setApplyAndRecord_ShiftWheel(int value, StateModifier& stateModifier);

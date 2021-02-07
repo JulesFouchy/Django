@@ -175,9 +175,12 @@ void StateModifier::setApplyAndRecord(const StateChange& stateChange) {
 		m_configManager.setConfigParams(std::get<ConfigParams>(stateChange.value));
 		recordChange({ StateChangeType::Param, std::get<ConfigParams>(stateChange.value) });
 		break;
-	//case StateChangeType::Param_KeyPressed:
-	//	m_configManager.configParams().onKeyPressed(std::get<SDL_Scancode>(stateChange.value), *this);
-	//	break;
+	case StateChangeType::Param_LR:
+		m_configManager.configParams().setApplyAndRecord_LR(std::get<int>(stateChange.value), *this);
+		break;
+	case StateChangeType::Param_UD:
+		m_configManager.configParams().setApplyAndRecord_UD(std::get<int>(stateChange.value), *this);
+		break;
 	case StateChangeType::Param_Wheel:
 		m_configManager.configParams().setApplyAndRecord_Wheel(std::get<int>(stateChange.value), *this);
 		break;

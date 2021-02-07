@@ -7,44 +7,37 @@
 using namespace Cool;
 
 bool ConfigParams::onKeyPressed(int keycode, int mods, StateModifier& stateModifier) {
-    bool b = false;
     switch (keycode) {
     // LR
     case GLFW_KEY_LEFT:
         if (mods & (GLFW_MOD_CONTROL | GLFW_MOD_SHIFT))
-            LR -= 6;
+            setApplyAndRecord_LR(LR - 6, stateModifier);
         else
-            LR--;
-        b = true;
-        break;
+            setApplyAndRecord_LR(LR - 1, stateModifier);
+        return true;
     case GLFW_KEY_RIGHT:
         if (mods & (GLFW_MOD_CONTROL | GLFW_MOD_SHIFT))
-            LR += 6;
+            setApplyAndRecord_LR(LR + 6, stateModifier);
         else
-            LR++;
-        b = true;
-        break;
+            setApplyAndRecord_LR(LR + 1, stateModifier);
+        return true;
     // UD
     case GLFW_KEY_DOWN:
         if (mods & (GLFW_MOD_CONTROL | GLFW_MOD_SHIFT))
-            UD -= 6;
+            setApplyAndRecord_UD(UD - 6, stateModifier);
         else
-            UD--;
-        b = true;
-        break;
+            setApplyAndRecord_UD(UD - 1, stateModifier);
+        return true;
     case GLFW_KEY_UP:
         if (mods & (GLFW_MOD_CONTROL | GLFW_MOD_SHIFT))
-            UD += 6;
+            setApplyAndRecord_UD(UD + 6, stateModifier);
         else
-            UD++;
-        b = true;
-        break;
+            setApplyAndRecord_UD(UD + 1, stateModifier);
+        return true;
+     //
+    default:
+        return false;
     }
-    if (b) {
-        //stateModifier.apply();
-        //stateModifier.recordChange({ StateChangeType::Param_KeyPressed, scancode }); // TODO FIXME : record new value instead of key press
-    }
-    return b;
 }
 
 void ConfigParams::onWheel(int delta, bool bNoStandardScroll, StateModifier& stateModifier) {
@@ -60,6 +53,18 @@ void ConfigParams::onWheel(int delta, bool bNoStandardScroll, StateModifier& sta
     else if (!bNoStandardScroll) {
         setApplyAndRecord_Wheel(wheel + delta, stateModifier);
     }
+}
+
+void ConfigParams::setApplyAndRecord_LR(int value, StateModifier& stateModifier) {
+    LR = value;
+    stateModifier.apply();
+    stateModifier.recordChange({ StateChangeType::Param_LR, value });
+}
+
+void ConfigParams::setApplyAndRecord_UD(int value, StateModifier& stateModifier) {
+    UD = value;
+    stateModifier.apply();
+    stateModifier.recordChange({ StateChangeType::Param_UD, value });
 }
 
 void ConfigParams::setApplyAndRecord_Wheel(int value, StateModifier& stateModifier) {
