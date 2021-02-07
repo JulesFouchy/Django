@@ -21,7 +21,8 @@ int main() {
 	glfwHideWindow(outputWindow.get());
 	Cool::OpenGLWindow mainWindow = windowingSystem.createWindow(
 		__DJANGO_WINDOW_NAME, // Variable #defined in the CMake
-		1280, 720
+		1280, 720,
+		outputWindow.get()
 	);
 #ifdef NDEBUG
 	glfwMaximizeWindow(mainWindow.get());

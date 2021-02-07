@@ -77,15 +77,16 @@ void App::update() {
 		RenderState::SwapYConvention(RenderState::InAppRenderArea().topRight())
 	);
 	// Render on output window
-	//if (Viewports::IsOutputWindowOpen()) {
-		//m_outputWindow.makeCurrent();
-		//m_renderer.renderBuffer().blitToScreen(
-		//	{ 0, 0 },
-		//	Viewports::getOutputWindowSize()
-		//);
-		//SDL_GL_SwapWindow(m_outputGLWindow.window);
-		//m_mainGLWindow.makeCurrent();
-	//}
+	if (glfwGetWindowAttrib(m_outputWindow.get(), GLFW_VISIBLE)) {
+		m_outputWindow.makeCurrent();
+		int w, h; glfwGetWindowSize(m_outputWindow.get(), &w, &h);
+		m_renderer.renderBuffer().blitToScreen(
+			{ 0, 0 },
+			{ w, h }
+		);
+		glfwSwapBuffers(m_outputWindow.get());
+		m_mainWindow.makeCurrent();
+	}
 	// Export
 	if (RenderState::IsExporting())
 		m_recordManager.exporter().exportFrame(m_renderer.renderBuffer());
