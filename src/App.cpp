@@ -43,8 +43,6 @@ App::App(OpenGLWindow& mainWindow, OpenGLWindow& outputWindow)
 
 void App::update() {
 	if (!Input::KeyIsDown(GLFW_KEY_CAPS_LOCK)) {
-		glClearColor(m_clearColor.r, m_clearColor.g, m_clearColor.b, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
 		// ---------------------
 		// ------ PHYSICS ------
 		// ---------------------
@@ -137,13 +135,6 @@ void App::ImGuiWindows() {
 }
 
 void App::ImGuiMenus() {
-	if (ImGui::BeginMenu("RenderAreas")) {
-		ImGui::ColorEdit3("Empty space color", &m_clearColor[0]);
-		//if (!RenderState::IsOutputWindowOpen()) {
-		//	RenderState::ImGuiConstrainAppViewRatio();
-		//}
-		ImGui::EndMenu();
-	}
 	if (ImGui::BeginMenu("Windows")) {
 		ImGui::Checkbox("Key Bindings", &m_bOpenKeyBindings);
 		ImGui::Checkbox("Recordings", &m_bOpenRecordings);
@@ -256,5 +247,5 @@ void App::openOutputWindow() {
 	int w, h; glfwGetWindowSize(m_outputWindow.get(), &w, &h);
 	RenderState::setPreviewAspectRatio(w / (float)h);
 	RenderState::setPreviewNbPixels(w * h);
-	RenderState::disablePreviewControlThroughUI("Currently disabled :\nThe preview size is currently linked to the output window's size.");
+	RenderState::disablePreviewControlThroughUI("Controlling the size is currently disabled :\nThe preview size is currently linked to the output window's size.");
 }
