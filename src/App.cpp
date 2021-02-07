@@ -13,6 +13,7 @@ static void output_window_key_callback(GLFWwindow* window, int key, int scancode
 
 static void output_window_resize_callback(GLFWwindow* window, int w, int h) {
 	RenderState::setPreviewAspectRatio(w / (float)h);
+	RenderState::setPreviewNbPixels(w * h);
 }
 
 App::App(OpenGLWindow& mainWindow, OpenGLWindow& outputWindow)
@@ -242,6 +243,8 @@ void App::closeOutputWindow() {
 	glfwHideWindow(m_outputWindow.get());
 	m_mainWindow.enableVSync();
 	RenderState::setPreviewAspectRatioControl(false);
+	RenderState::setPreviewNbPixelsControl(false);
+	RenderState::enablePreviewControlThroughUI();
 }
 
 void App::openOutputWindow() {
@@ -249,6 +252,9 @@ void App::openOutputWindow() {
 	glfwSetWindowShouldClose(m_outputWindow.get(), GLFW_FALSE);
 	glfwShowWindow(m_outputWindow.get());
 	RenderState::setPreviewAspectRatioControl(true);
+	RenderState::setPreviewNbPixelsControl(true);
 	int w, h; glfwGetWindowSize(m_outputWindow.get(), &w, &h);
 	RenderState::setPreviewAspectRatio(w / (float)h);
+	RenderState::setPreviewNbPixels(w * h);
+	RenderState::disablePreviewControlThroughUI("Currently disabled :\nThe preview size is currently linked to the output window's size.");
 }
