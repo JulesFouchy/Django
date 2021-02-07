@@ -190,7 +190,7 @@ void App::onMouseButtonEvent(int button, int action, int mods) {
 
 void App::onScrollEvent(double xOffset, double yOffset) {
 	if (!RenderState::IsExporting()) {
-		m_configManager.onWheel(yOffset, ImGui::GetIO().WantCaptureMouse, m_stateModifier);
+		m_configManager.onWheel(static_cast<int>(yOffset), ImGui::GetIO().WantCaptureMouse, m_stateModifier);
 	}
 }
 
