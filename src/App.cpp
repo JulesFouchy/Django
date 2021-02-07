@@ -103,6 +103,7 @@ void App::update() {
 	//glfwPollEvents();
 	if (glfwWindowShouldClose(m_outputWindow.get())) {
 		closeOutputWindow();
+		glfwSetWindowShouldClose(m_outputWindow.get(), GLFW_FALSE);
 	}
 	//glfwMakeContextCurrent(m_mainWindow.get());
 }
@@ -249,7 +250,6 @@ void App::closeOutputWindow() {
 
 void App::openOutputWindow() {
 	m_mainWindow.disableVSync();
-	glfwSetWindowShouldClose(m_outputWindow.get(), GLFW_FALSE);
 	glfwShowWindow(m_outputWindow.get());
 	RenderState::setPreviewAspectRatioControl(true);
 	RenderState::setPreviewNbPixelsControl(true);
