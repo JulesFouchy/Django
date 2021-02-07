@@ -11,6 +11,10 @@ static void output_window_key_callback(GLFWwindow* window, int key, int scancode
 	outputWindow->checkForFullscreenToggles(key, scancode, action, mods);
 }
 
+static void output_window_resize_callback(GLFWwindow* window, int w, int h) {
+	RenderState::setPreviewAspectRatio(w / (float)h);
+}
+
 App::App(OpenGLWindow& mainWindow, OpenGLWindow& outputWindow)
 	: m_stateModifier(m_particleSystem, m_settingsManager, m_configManager, m_renderer, m_recordManager, m_mouseInteractions),
 	  m_mainWindow(mainWindow), m_outputWindow(outputWindow)
@@ -18,6 +22,7 @@ App::App(OpenGLWindow& mainWindow, OpenGLWindow& outputWindow)
 	RenderState::SubscribeToSizeChanges([this]() {onRenderSizeChanged(); });
 	// Output window
 	glfwSetKeyCallback(m_outputWindow.get(), output_window_key_callback);
+	glfwSetWindowSizeCallback(m_outputWindow.get(), output_window_resize_callback);
 	glfwSetWindowUserPointer(m_outputWindow.get(), reinterpret_cast<void*>(&m_outputWindow));
 	glfwSetWindowAttrib(m_outputWindow.get(), GLFW_AUTO_ICONIFY, GLFW_FALSE);
 	glfwSetWindowAttrib(m_outputWindow.get(), GLFW_FOCUS_ON_SHOW, GLFW_FALSE);
@@ -286,10 +291,14 @@ void App::closeOutputWindow() {
 	m_outputWindow.escapeFullScreen();
 	glfwHideWindow(m_outputWindow.get());
 	m_mainWindow.enableVSync();
+	RenderState::setPreviewAspectRatioControl(false);
 }
 
 void App::openOutputWindow() {
 	m_mainWindow.disableVSync();
 	glfwSetWindowShouldClose(m_outputWindow.get(), GLFW_FALSE);
 	glfwShowWindow(m_outputWindow.get());
+	RenderState::setPreviewAspectRatioControl(true);
+	int w, h; glfwGetWindowSize(m_outputWindow.get(), &w, &h);
+	RenderState::setPreviewAspectRatio(w / (float)h);
 }
