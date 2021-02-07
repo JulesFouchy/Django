@@ -38,10 +38,6 @@ App::App(OpenGLWindow& mainWindow, OpenGLWindow& outputWindow)
 	m_settingsManager.get().partSystem().applyAndRecord_NbParticles(m_stateModifier); // Very important. Makes sure the partSystem SSBOs are initialized before applying any config
 	//
 	m_stateModifier.applyAndRecord_AllSettings();
-	// Get output window size
-	int w, h;
-	glfwGetWindowSize(m_outputWindow.get(), &w, &h);
-	//Viewports::setOutputWindowSize(w, h);
 }
 
 void App::update() {
@@ -180,19 +176,21 @@ void App::ImGuiMenus() {
 
 void App::onKeyboardEvent(int key, int scancode, int action, int mods) {
 	if (!RenderState::IsExporting() && !ImGui::GetIO().WantTextInput) {
-
+		m_configManager.onKeyPressed(key, mods, m_stateModifier);
 	}
 }
 
 void App::onMouseButtonEvent(int button, int action, int mods) {
 	if (!RenderState::IsExporting() && !ImGui::GetIO().WantCaptureMouse) {
-
+		if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_RELEASE) {
+			m_stateModifier.applyAndRecord_CurrentAction();
+		}
 	}
 }
 
 void App::onScrollEvent(double xOffset, double yOffset) {
-	if (!RenderState::IsExporting() && !ImGui::GetIO().WantCaptureMouse) {
-
+	if (!RenderState::IsExporting()) {
+		m_configManager.onWheel(yOffset, ImGui::GetIO().WantCaptureMouse, m_stateModifier);
 	}
 }
 
@@ -203,58 +201,10 @@ void App::onMouseMoveEvent(double xpos, double ypos) {
 }
 
 //void App::onEvent(const SDL_Event& e) {
-	//if (e.type == SDL_WINDOWEVENT && e.window.windowID == SDL_GetWindowID(m_outputGLWindow.window)) {
-	//	switch (e.window.event) {
-	//	case SDL_WINDOWEVENT_RESIZED:
-	//		int x, y;
-	//		SDL_GetWindowSize(m_outputGLWindow.window, &x, &y);
-	//		Viewports::setOutputWindowSize(x, y);
-	//		break;
-	//	case SDL_WINDOWEVENT_CLOSE:
-	//		setIsOutputWindowOpen(false);
-	//		break;
-	//	}
-	//}
 	/*if (!RenderState::IsExporting()) {
 		switch (e.type) {
 
-		case SDL_MOUSEMOTION:
-			if (!ImGui::GetIO().WantCaptureMouse) {
 
-			}
-			break;
-
-		case SDL_MOUSEWHEEL:
-			m_configManager.onWheel(e.wheel.y, ImGui::GetIO().WantCaptureMouse, m_stateModifier);
-			break;
-
-		case SDL_MOUSEBUTTONDOWN:
-			if (!ImGui::GetIO().WantCaptureMouse) {
-				if (e.button.button == SDL_BUTTON_LEFT) {
-
-				}
-				else if (e.button.button == SDL_BUTTON_RIGHT) {
-
-				}
-				else if (e.button.button == SDL_BUTTON_MIDDLE) {
-
-				}
-			}
-			break;
-
-		case SDL_MOUSEBUTTONUP:
-			if (!ImGui::GetIO().WantCaptureMouse) {
-				if (e.button.button == SDL_BUTTON_LEFT) {
-
-				}
-				else if (e.button.button == SDL_BUTTON_RIGHT) {
-
-				}
-				else if (e.button.button == SDL_BUTTON_MIDDLE) {
-					m_stateModifier.applyAndRecord_CurrentAction();
-				}
-			}
-			break;
 
 
 		case SDL_KEYDOWN:

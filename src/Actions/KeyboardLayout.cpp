@@ -11,25 +11,25 @@ void KeyboardLayout::startSettingKeyboardLayout() {
 	m_settingRowIdx = 0;
 }
 
-void KeyboardLayout::onKeyUp(SDL_Scancode scancode) {
+void KeyboardLayout::onKeyUp(GLFW_Keycode keycode) {
 	if (m_bSettingLayout) {
-		if (scancode == SDL_SCANCODE_RETURN) {
+		if (keycode == GLFW_KEY_ENTER) {
 			m_settingRowIdx++;
 			if (m_settingRowIdx == 4) {
 				m_bSettingLayout = false;
 			}
 		}
-		else if (scancode == SDL_SCANCODE_BACKSPACE) {
+		else if (keycode == GLFW_KEY_BACKSPACE) {
 			if (getCurrentRow().size() > 0)
 				getCurrentRow().pop_back();
 		}
 		else {
-			getCurrentRow().push_back(scancode);
+			getCurrentRow().push_back(keycode);
 		}
 	}
 }
 
-std::vector<SDL_Scancode>& KeyboardLayout::getCurrentRow() {
+std::vector<GLFW_Keycode>& KeyboardLayout::getCurrentRow() {
 	switch (m_settingRowIdx) {
 	case 0:
 		return m_numbersRow;

@@ -1,13 +1,15 @@
 #pragma once
 
+using GLFW_Keycode = int;
+
 struct ActionBinding {
 	Action action;
-	SDL_Scancode scancode;
+	GLFW_Keycode keycode;
 
-	ActionBinding(Action action, SDL_Scancode scancode)
-		: action(action), scancode(scancode)
+	ActionBinding(Action action, GLFW_Keycode keycode)
+		: action(action), keycode(keycode)
 	{}
 	ActionBinding(Action action)
-		: action(action), scancode(SDL_SCANCODE_UNKNOWN)
+		: action(action), keycode(GLFW_KEY_UNKNOWN)
 	{}
 };

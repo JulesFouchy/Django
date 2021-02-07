@@ -28,13 +28,13 @@ static const Action rerollRandomAction(
 
 struct ActionRefAndBinding {
 	ActionRef actionRef;
-	SDL_Scancode scancode;
+	GLFW_Keycode keycode;
 
-	ActionRefAndBinding(const ActionRef& actionRef, SDL_Scancode scancode)
-		: actionRef(actionRef), scancode(scancode)
+	ActionRefAndBinding(const ActionRef& actionRef, GLFW_Keycode keycode)
+		: actionRef(actionRef), keycode(keycode)
 	{}
-	ActionRefAndBinding(const std::string& name, ActionType type, SDL_Scancode scancode)
-		: actionRef(name, type), scancode(scancode)
+	ActionRefAndBinding(const std::string& name, ActionType type, GLFW_Keycode keycode)
+		: actionRef(name, type), keycode(keycode)
 	{}
 	ActionRefAndBinding() = default;
 
@@ -46,7 +46,7 @@ private:
 	{
 		archive(
 			CEREAL_NVP(actionRef),
-			CEREAL_NVP(scancode)
+			CEREAL_NVP(keycode)
 		);
 	}
 };
@@ -73,15 +73,15 @@ KeyBindings::~KeyBindings() {
 	delete[] m_keyReleasedLastDate;
 }
 
-void KeyBindings::onKeyUp(SDL_Scancode scancode) {
+void KeyBindings::onKeyUp(GLFW_Keycode keycode) {
 	if (!ImGui::GetIO().WantTextInput) {
-		m_keyboardLayout.onKeyUp(scancode);
-		m_keyReleasedLastDate[scancode] = SDL_GetTicks();
+		m_keyboardLayout.onKeyUp(keycode);
+		m_keyReleasedLastDate[keycode] = SDL_GetTicks();
 	}
 }
 
-const Action* KeyBindings::getAction(SDL_Scancode scancode) {
-	auto it = m_boundActions.find(scancode);
+const Action* KeyBindings::getAction(GLFW_Keycode keycode) {
+	auto it = m_boundActions.find(keycode);
 	if (it != m_boundActions.end()) {
 		return &it->second->action;
 	}
@@ -103,26 +103,26 @@ void KeyBindings::addAction(Action action, int type) {
 	}
 }
 
-void KeyBindings::setBinding(ActionBinding* actionBinding, SDL_Scancode scancode) {
+void KeyBindings::setBinding(ActionBinding* actionBinding, GLFW_Keycode keycode) {
 	// Erase the binding previously attached to scancode
-	if (m_boundActions.find((int)scancode) != m_boundActions.end()) {
-		m_boundActions[scancode]->scancode = SDL_SCANCODE_UNKNOWN;
+	if (m_boundActions.find(keycode) != m_boundActions.end()) {
+		m_boundActions[keycode]->keycode = GLFW_KEY_UNKNOWN;
 	}
 	// Erase the old binding of actionBinding
-	if (m_boundActions.find((int)actionBinding->scancode) != m_boundActions.end()) {
-		m_boundActions.erase(actionBinding->scancode);
+	if (m_boundActions.find(actionBinding->keycode) != m_boundActions.end()) {
+		m_boundActions.erase(actionBinding->keycode);
 	}
 	// Set the new binding
-	actionBinding->scancode = scancode;
-	m_boundActions[scancode] = actionBinding;
+	actionBinding->keycode = keycode;
+	m_boundActions[keycode] = actionBinding;
 }
 
 void KeyBindings::swapBindings(ActionBinding* actionBinding1, ActionBinding* actionBinding2) {
-	std::swap(actionBinding1->scancode, actionBinding2->scancode);
-	if (actionBinding1->scancode != SDL_SCANCODE_UNKNOWN)
-		m_boundActions[actionBinding1->scancode] = actionBinding1;
-	if (actionBinding2->scancode != SDL_SCANCODE_UNKNOWN)
-		m_boundActions[actionBinding2->scancode] = actionBinding2;
+	std::swap(actionBinding1->keycode, actionBinding2->keycode);
+	if (actionBinding1->keycode != GLFW_KEY_UNKNOWN)
+		m_boundActions[actionBinding1->keycode] = actionBinding1;
+	if (actionBinding2->keycode != GLFW_KEY_UNKNOWN)
+		m_boundActions[actionBinding2->keycode] = actionBinding2;
 }
 
 void KeyBindings::resetBindings() {
@@ -140,9 +140,9 @@ void KeyBindings::setupBindings(const std::string& presetFilepath, bool clearExi
 	for (const auto& kv : m_allActionsByType[ActionType::LAYOUT]) {
 		if (std::find(ignoredActions.begin(), ignoredActions.end(), kv.second->action.ref) == ignoredActions.end()) {
 			if (!hasBinding(kv.second)) {
-				SDL_Scancode scancode = findFirstFromLeft(m_keyboardLayout.secondRow());
-				if (scancode != SDL_SCANCODE_UNKNOWN)
-					setBinding(kv.second, scancode);
+				GLFW_Keycode keycode = findFirstFromLeft(m_keyboardLayout.secondRow());
+				if (keycode != GLFW_KEY_UNKNOWN)
+					setBinding(kv.second, keycode);
 				else
 					spdlog::warn("Couldn't give a binding to '{}' layout because there was no more room on second row !", kv.second->action.ref.name);
 			}
@@ -152,11 +152,11 @@ void KeyBindings::setupBindings(const std::string& presetFilepath, bool clearExi
 	for (const auto& kv : m_allActionsByType[ActionType::SHAPE]) {
 		if (std::find(ignoredActions.begin(), ignoredActions.end(), kv.second->action.ref) == ignoredActions.end()) {
 			if (!hasBinding(kv.second)) {
-				SDL_Scancode scancode = findFirstFromLeft(m_keyboardLayout.firstRow());
-				if (scancode == SDL_SCANCODE_UNKNOWN)
-					scancode = findFirstFromRight(m_keyboardLayout.secondRow());
-				if (scancode != SDL_SCANCODE_UNKNOWN)
-					setBinding(kv.second, scancode);
+				GLFW_Keycode keycode = findFirstFromLeft(m_keyboardLayout.firstRow());
+				if (keycode == GLFW_KEY_UNKNOWN)
+					keycode = findFirstFromRight(m_keyboardLayout.secondRow());
+				if (keycode != GLFW_KEY_UNKNOWN)
+					setBinding(kv.second, keycode);
 				else
 					spdlog::warn("Couldn't give a binding to '{}' shape because there was no more room on first and second row !", kv.second->action.ref.name);
 			}
@@ -166,11 +166,11 @@ void KeyBindings::setupBindings(const std::string& presetFilepath, bool clearExi
 	for (const auto& kv : m_allActionsByType[ActionType::SVG_SHAPE]) {
 		if (std::find(ignoredActions.begin(), ignoredActions.end(), kv.second->action.ref) == ignoredActions.end()) {
 			if (!hasBinding(kv.second)) {
-				SDL_Scancode scancode = findFirstFromLeft(m_keyboardLayout.firstRow());
-				if (scancode == SDL_SCANCODE_UNKNOWN)
-					scancode = findFirstFromRight(m_keyboardLayout.secondRow());
-				if (scancode != SDL_SCANCODE_UNKNOWN)
-					setBinding(kv.second, scancode);
+				GLFW_Keycode keycode = findFirstFromLeft(m_keyboardLayout.firstRow());
+				if (keycode == GLFW_KEY_UNKNOWN)
+					keycode = findFirstFromRight(m_keyboardLayout.secondRow());
+				if (keycode != GLFW_KEY_UNKNOWN)
+					setBinding(kv.second, keycode);
 				else
 					spdlog::warn("Couldn't give a binding to '{}' svg-shape because there was no more room on first and second row !", kv.second->action.ref.name);
 			}
@@ -180,12 +180,12 @@ void KeyBindings::setupBindings(const std::string& presetFilepath, bool clearExi
 	for (const auto& kv : m_allActionsByType[ActionType::STANDALONE]) {
 		if (std::find(ignoredActions.begin(), ignoredActions.end(), kv.second->action.ref) == ignoredActions.end()) {
 			if (!hasBinding(kv.second)) {
-				SDL_Scancode scancode = findFirstFromLeft(m_keyboardLayout.thirdRow());
-				if (scancode == SDL_SCANCODE_UNKNOWN) {
-					scancode = findFirstFromRight(m_keyboardLayout.secondRow());
+				GLFW_Keycode keycode = findFirstFromLeft(m_keyboardLayout.thirdRow());
+				if (keycode == GLFW_KEY_UNKNOWN) {
+					keycode = findFirstFromRight(m_keyboardLayout.secondRow());
 				}
-				if (scancode != SDL_SCANCODE_UNKNOWN)
-					setBinding(kv.second, scancode);
+				if (keycode != GLFW_KEY_UNKNOWN)
+					setBinding(kv.second, keycode);
 				else
 					spdlog::warn("Couldn't give a binding to '{}' standalone because there was no more room on third and second row !", kv.second->action.ref.name);
 			}
@@ -204,27 +204,27 @@ void KeyBindings::setupMiscellaneousBindings() {
 }
 
 bool KeyBindings::hasBinding(const ActionBinding* actionBinding) {
-	return actionBinding->scancode != SDL_SCANCODE_UNKNOWN;
+	return actionBinding->keycode != GLFW_KEY_UNKNOWN;
 }
 
-bool KeyBindings::isKeyAvailable(SDL_Scancode scancode) {
-	return m_boundActions.find(scancode) == m_boundActions.end();
+bool KeyBindings::isKeyAvailable(GLFW_Keycode keycode) {
+	return m_boundActions.find(keycode) == m_boundActions.end();
 }
 
-SDL_Scancode KeyBindings::findFirstFromLeft(std::vector<SDL_Scancode> row) {
+GLFW_Keycode KeyBindings::findFirstFromLeft(const std::vector<GLFW_Keycode>& row) {
 	for (size_t i = 0; i < row.size(); ++i) {
 		if (isKeyAvailable(row[i]))
 			return row[i];
 	}
-	return SDL_SCANCODE_UNKNOWN;
+	return GLFW_KEY_UNKNOWN;
 }
 
-SDL_Scancode KeyBindings::findFirstFromRight(std::vector<SDL_Scancode> row) {
+GLFW_Keycode KeyBindings::findFirstFromRight(const std::vector<GLFW_Keycode>& row) {
 	for (int i = row.size() - 1; i >= 0; --i) {
 		if (isKeyAvailable(row[i]))
 			return row[i];
 	}
-	return SDL_SCANCODE_UNKNOWN;
+	return GLFW_KEY_UNKNOWN;
 }
 
 void KeyBindings::ImGui(StateModifier& stateModifier) {
@@ -277,14 +277,14 @@ void KeyBindings::ImGui(StateModifier& stateModifier) {
 	m_mouseWasDraggingLastFrame = ImGui::IsMouseDragging(0);
 }
 
-void KeyBindings::ImGui_KeyboardRow(const std::vector<SDL_Scancode>& row, float indent, StateModifier& stateModifier) {
+void KeyBindings::ImGui_KeyboardRow(const std::vector<GLFW_Keycode>& row, float indent, StateModifier& stateModifier) {
 	ImGui::Indent(indent);
-	for (SDL_Scancode scancode : row) {
-		ImGui::PushID((int)scancode + 333);
-		ImGui_DragNDropKey(scancode);
+	for (GLFW_Keycode keycode : row) {
+		ImGui::PushID(keycode + 333);
+		ImGui_DragNDropKey(keycode);
 		if (ImGui::IsItemDeactivated() && !m_mouseWasDraggingLastFrame) {
-			stateModifier.configManager().onKeyPressed(scancode, 0, stateModifier); // pass invalid keysym (a.k.a neither a letter nor space) so that it doesn't write if text config is on
-			onKeyUp(scancode);
+			stateModifier.configManager().onKeyPressed(keycode, 0, stateModifier); // pass invalid keysym (a.k.a neither a letter nor space) so that it doesn't write if text config is on
+			onKeyUp(keycode);
 		}
 		ImGui::PopID();
 		ImGui::SameLine();
@@ -293,18 +293,18 @@ void KeyBindings::ImGui_KeyboardRow(const std::vector<SDL_Scancode>& row, float 
 	ImGui::Spacing();
 }
 
-void KeyBindings::ImGui_DragNDropKey(SDL_Scancode scancode, ActionBinding* actionBinding) {
+void KeyBindings::ImGui_DragNDropKey(GLFW_Keycode keycode, ActionBinding* actionBinding) {
 	// Get key state
 	const Uint8* keyboardState = SDL_GetKeyboardState(NULL);
 	if (!actionBinding) {
-		auto it = m_boundActions.find(scancode);
+		auto it = m_boundActions.find(keycode);
 		if (it != m_boundActions.end())
 			actionBinding = it->second;
 	}
 	unsigned int textureID = actionBinding ? actionBinding->action.thumbnailTextureID : -1;
-	bool isKeyPressed = keyboardState[scancode] && !ImGui::GetIO().WantTextInput;
+	bool isKeyPressed = keyboardState[keycode] && !ImGui::GetIO().WantTextInput;
 	// Draw Key
-	ImGui_KeyboardKey(scancode, textureID, (bool)actionBinding, isKeyPressed);
+	ImGui_KeyboardKey(keycode, textureID, (bool)actionBinding, isKeyPressed);
 	if (actionBinding) {
 		// Name on hover
 		if (ImGui::IsItemHovered()) {
@@ -314,10 +314,10 @@ void KeyBindings::ImGui_DragNDropKey(SDL_Scancode scancode, ActionBinding* actio
 		}
 		// Right-click to delete
 		if (LiveMode::IsOff()) {
-			if (scancode != SDL_SCANCODE_UNKNOWN) {
+			if (keycode != GLFW_KEY_UNKNOWN) {
 				if (ImGui::BeginPopupContextItem("")) {
 					if (ImGui::Button("Remove binding")) {
-						setBinding(actionBinding, SDL_SCANCODE_UNKNOWN);
+						setBinding(actionBinding, GLFW_KEY_UNKNOWN);
 						m_presets.setPlaceholderPresetName();
 					}
 					ImGui::EndPopup();
@@ -331,7 +331,7 @@ void KeyBindings::ImGui_DragNDropKey(SDL_Scancode scancode, ActionBinding* actio
 			if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
 			{
 				ImGui::SetDragDropPayload("KEYBOARD_KEY", &actionBinding, sizeof(ActionBinding*));
-				ImGui_KeyboardKey(SDL_SCANCODE_UNKNOWN, textureID, (bool)actionBinding, false); // Preview
+				ImGui_KeyboardKey(GLFW_KEY_UNKNOWN, textureID, (bool)actionBinding, false); // Preview
 				ImGui::EndDragDropSource();
 			}
 		}
@@ -343,7 +343,7 @@ void KeyBindings::ImGui_DragNDropKey(SDL_Scancode scancode, ActionBinding* actio
 				if (actionBinding)
 					swapBindings(*((ActionBinding**)payload->Data), actionBinding);
 				else
-					setBinding(*((ActionBinding**)payload->Data), scancode);
+					setBinding(*((ActionBinding**)payload->Data), keycode);
 				m_presets.setPlaceholderPresetName();
 			}
 			ImGui::EndDragDropTarget();
@@ -351,13 +351,13 @@ void KeyBindings::ImGui_DragNDropKey(SDL_Scancode scancode, ActionBinding* actio
 	}
 }
 
-bool KeyBindings::ImGui_KeyboardKey(SDL_Scancode scancode, unsigned int textureID, bool hasAnActionBound, bool isKeyPressed) {
+bool KeyBindings::ImGui_KeyboardKey(GLFW_Keycode keycode, unsigned int textureID, bool hasAnActionBound, bool isKeyPressed) {
 	//
 	ImGuiStyle& style = ImGui::GetStyle();
 	//
 	ImVec2 p = ImGui::GetCursorScreenPos();
 	// Detect clic
-	ImGui::PushID((int)scancode+1294);
+	ImGui::PushID(keycode + 1294);
 	ImGui::InvisibleButton("", ImVec2(KEY_SIZE, KEY_SIZE));
 	bool is_active = ImGui::IsItemActive();
 	bool is_hovered = ImGui::IsItemHovered();
@@ -369,7 +369,7 @@ bool KeyBindings::ImGui_KeyboardKey(SDL_Scancode scancode, unsigned int textureI
 	ImU32 col32;
 	ImVec4 backgroundColor = style.Colors[hasAnActionBound ? (textureID != -1 ? ImGuiCol_WindowBg : ImGuiCol_Border) : ImGuiCol_FrameBg];
 	static constexpr float ttl = 0.3f; // in seconds
-	float t = (SDL_GetTicks() - m_keyReleasedLastDate[scancode]) * 0.001f / ttl;
+	float t = (SDL_GetTicks() - m_keyReleasedLastDate[keycode]) * 0.001f / ttl;
 	bool isKeyActiveRecently = isKeyPressed || t < 1.0f;
 	if (isKeyActiveRecently) {
 		ImVec4 activeColor = style.Colors[ImGuiCol_FrameBgActive];
@@ -402,7 +402,9 @@ bool KeyBindings::ImGui_KeyboardKey(SDL_Scancode scancode, unsigned int textureI
 	else {
 		draw_list->AddRectFilled(p, pMax, col32, KEY_ROUNDING);
 	}
-	draw_list->AddText(NULL, fontSize, ImVec2(p.x + KEY_SIZE * 0.5f - fontSize * 0.25f, p.y + KEY_SIZE * 0.5f - fontSize * 0.45f), col32text, SDL_GetKeyName(SDL_GetKeyFromScancode(scancode)));
+	const char* keyName = glfwGetKeyName(keycode, 0);
+	if (keyName)
+		draw_list->AddText(NULL, fontSize, ImVec2(p.x + KEY_SIZE * 0.5f - fontSize * 0.25f, p.y + KEY_SIZE * 0.5f - fontSize * 0.45f), col32text, keyName);
 
 	ImGui::PopID();
 	return is_active;
@@ -412,8 +414,8 @@ void KeyBindings::serializeBindings(const std::string& filepath) {
 	std::vector<ActionRefAndBinding> boundActionsRefs;
 	std::vector<ActionRef> actionsWithNoBinding;
 	for (const ActionBinding& actionBinding : m_allActionsOwner) {
-		if (actionBinding.scancode != SDL_SCANCODE_UNKNOWN)
-			boundActionsRefs.emplace_back(actionBinding.action.ref, actionBinding.scancode);
+		if (actionBinding.keycode != GLFW_KEY_UNKNOWN)
+			boundActionsRefs.emplace_back(actionBinding.action.ref, actionBinding.keycode);
 		else
 			actionsWithNoBinding.emplace_back(actionBinding.action.ref);
 	}
@@ -440,7 +442,7 @@ std::vector<ActionRef> KeyBindings::readBindingsFrom(const std::string& filepath
 	}
 	for (const auto& actionRefAndBinding : boundActionsRefs) {
 		if (ActionBinding* actionBinding = m_allActionsByType.tryFind(actionRefAndBinding.actionRef)) {
-			setBinding(actionBinding, actionRefAndBinding.scancode);
+			setBinding(actionBinding, actionRefAndBinding.keycode);
 		}
 	}
 	return actionsWithNoBinding;

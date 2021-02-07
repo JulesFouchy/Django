@@ -1,27 +1,29 @@
 #pragma once
 
+using GLFW_Keycode = int;
+
 class KeyboardLayout {
 public:
-	inline const std::vector<SDL_Scancode>& numbersRow() { return m_numbersRow; }
-	inline const std::vector<SDL_Scancode>& firstRow() { return m_firstRow; }
-	inline const std::vector<SDL_Scancode>& secondRow() { return m_secondRow; }
-	inline const std::vector<SDL_Scancode>& thirdRow() { return m_thirdRow; }
+	inline const std::vector<GLFW_Keycode>& numbersRow() { return m_numbersRow; }
+	inline const std::vector<GLFW_Keycode>& firstRow() { return m_firstRow; }
+	inline const std::vector<GLFW_Keycode>& secondRow() { return m_secondRow; }
+	inline const std::vector<GLFW_Keycode>& thirdRow() { return m_thirdRow; }
 
 	inline bool isSettingKeyboardLayout() { return m_bSettingLayout; }
 
-	void onKeyUp(SDL_Scancode scancode);
+	void onKeyUp(GLFW_Keycode keycode);
 
 	void ImGui();
 	void ImGuiWindow();
 
 private:
 	void startSettingKeyboardLayout();
-	std::vector<SDL_Scancode>& getCurrentRow();
+	std::vector<GLFW_Keycode>& getCurrentRow();
 
 private:
 	bool m_bSettingLayout = false;
 	int m_settingRowIdx = 0;
-	std::vector<SDL_Scancode> m_numbersRow = {
+	std::vector<GLFW_Keycode> m_numbersRow = {
 		SDL_SCANCODE_1,
 		SDL_SCANCODE_2,
 		SDL_SCANCODE_3,
@@ -35,7 +37,7 @@ private:
 		SDL_SCANCODE_MINUS,
 		SDL_SCANCODE_EQUALS,
 	};
-	std::vector<SDL_Scancode> m_firstRow = {
+	std::vector<GLFW_Keycode> m_firstRow = {
 		SDL_SCANCODE_Q,
 		SDL_SCANCODE_W,
 		SDL_SCANCODE_E,
@@ -50,7 +52,7 @@ private:
 		SDL_SCANCODE_RIGHTBRACKET,
 		SDL_SCANCODE_BACKSLASH,
 	};
-	std::vector<SDL_Scancode> m_secondRow = {
+	std::vector<GLFW_Keycode> m_secondRow = {
 		SDL_SCANCODE_A,
 		SDL_SCANCODE_S,
 		SDL_SCANCODE_D,
@@ -63,7 +65,7 @@ private:
 		SDL_SCANCODE_SEMICOLON,
 		SDL_SCANCODE_APOSTROPHE,
 	};
-	std::vector<SDL_Scancode> m_thirdRow = {
+	std::vector<GLFW_Keycode> m_thirdRow = {
 		SDL_SCANCODE_Z,
 		SDL_SCANCODE_X,
 		SDL_SCANCODE_C,

@@ -234,14 +234,14 @@ void ConfigManager::ImGuiOpenWindowCheckbox() {
     ImGui::Checkbox("Random", &m_bOpenRandom);
 }
 
-void ConfigManager::onKeyPressed(SDL_Scancode scancode, char keysym, StateModifier& stateModifier) {
+void ConfigManager::onKeyPressed(int keycode, int mods, StateModifier& stateModifier) {
     if (!m_keyBindings.isSettingKeyboardLayout()) {
         // Text config
-        if (m_currConfigType != ConfigType::TEXT || !m_textConfig.onKeyPressed(scancode, keysym, stateModifier)) {
+        if (m_currConfigType != ConfigType::TEXT || !m_textConfig.onKeyPressed(keycode, mods, stateModifier)) {
             // Parameters
-            if (!m_params.onKeyPressed(scancode, stateModifier)) {
+            if (!m_params.onKeyPressed(keycode, mods, stateModifier)) {
                 // Actions
-                if (const Action* action = m_keyBindings.getAction(scancode)) {
+                if (const Action* action = m_keyBindings.getAction(keycode)) {
                     applyAndRecord_Action(*action, stateModifier);
                 }
             }

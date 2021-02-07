@@ -4,44 +4,44 @@
 #include "Recording/StateChange.h"
 #include <Cool/App/Input.h>
 
-bool ConfigParams::onKeyPressed(SDL_Scancode scancode, StateModifier& stateModifier) {
+bool ConfigParams::onKeyPressed(int keycode, int mods, StateModifier& stateModifier) {
     bool b = false;
-    //switch (scancode) {
+    switch (keycode) {
     // LR
-    //case SDL_SCANCODE_LEFT:
-    //    if (Input::CtrlOrCmdIsDown() || Input::ShiftIsDown())
-    //        LR -= 6;
-    //    else
-    //        LR--;
-    //    b = true;
-    //    break;
-    //case SDL_SCANCODE_RIGHT:
-    //    if (Input::CtrlOrCmdIsDown() || Input::ShiftIsDown())
-    //        LR += 6;
-    //    else
-    //        LR++;
-    //    b = true;
-    //    break;
-    //// UD
-    //case SDL_SCANCODE_DOWN:
-    //    if (Input::CtrlOrCmdIsDown() || Input::ShiftIsDown())
-    //        UD -= 6;
-    //    else
-    //        UD--;
-    //    b = true;
-    //    break;
-    //case SDL_SCANCODE_UP:
-    //    if (Input::CtrlOrCmdIsDown() || Input::ShiftIsDown())
-    //        UD += 6;
-    //    else
-    //        UD++;
-    //    b = true;
-    //    break;
-    //}
-    //if (b) {
-    //    stateModifier.apply();
-    //    stateModifier.recordChange({ StateChangeType::Param_KeyPressed, scancode });
-    //}
+    case GLFW_KEY_LEFT:
+        if (mods & (GLFW_MOD_CONTROL | GLFW_MOD_SHIFT))
+            LR -= 6;
+        else
+            LR--;
+        b = true;
+        break;
+    case GLFW_KEY_RIGHT:
+        if (mods & (GLFW_MOD_CONTROL | GLFW_MOD_SHIFT))
+            LR += 6;
+        else
+            LR++;
+        b = true;
+        break;
+    // UD
+    case GLFW_KEY_DOWN:
+        if (mods & (GLFW_MOD_CONTROL | GLFW_MOD_SHIFT))
+            UD -= 6;
+        else
+            UD--;
+        b = true;
+        break;
+    case GLFW_KEY_UP:
+        if (mods & (GLFW_MOD_CONTROL | GLFW_MOD_SHIFT))
+            UD += 6;
+        else
+            UD++;
+        b = true;
+        break;
+    }
+    if (b) {
+        //stateModifier.apply();
+        //stateModifier.recordChange({ StateChangeType::Param_KeyPressed, scancode }); // TODO FIXME : record new value instead of key press
+    }
     return b;
 }
 

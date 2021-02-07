@@ -12,12 +12,12 @@ public:
 	~ConfigTextGPU() = default;
 
 	void applyTo(ParticleSystem& particleSystem, const ConfigParams& params, const RandomParams& randParams) override;
-	bool onKeyPressed(SDL_Scancode scancode, char keysym, StateModifier& stateModifer);
+	bool onKeyPressed(int keycode, int mods, StateModifier& stateModifer);
 
 	inline void setCaptureKeys(bool b) { m_bCaptureKeys = b; }
 	inline void toggleCaptureKeys() { setCaptureKeys(!m_bCaptureKeys); }
 
-	bool setApplyAndRecord_AddOneChar(char keysym, StateModifier& stateModifier);
+	bool setApplyAndRecord_AddOneChar(int keycode, StateModifier& stateModifier);
 	void setApplyAndRecord_SupprOneChar (StateModifier& stateModifer);
 	void setApplyAndRecord_SupprAllChars(StateModifier& stateModifer);
 

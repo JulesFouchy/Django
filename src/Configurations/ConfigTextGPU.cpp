@@ -18,20 +18,20 @@ ConfigTextGPU::ConfigTextGPU()
 	uploadData();
 }
 
-bool ConfigTextGPU::onKeyPressed(SDL_Scancode scancode, char keysym, StateModifier& stateModifier) {
+bool ConfigTextGPU::onKeyPressed(int keycode, int mods, StateModifier& stateModifier) {
 	bool bHandled = false;
 	if (m_bCaptureKeys) {
-		if (scancode == SDL_SCANCODE_BACKSPACE) {
-			//if (Input::CtrlOrCmdIsDown()) {
-			//	setApplyAndRecord_SupprAllChars(stateModifier);
-			//}
-			//else {
-			//	setApplyAndRecord_SupprOneChar(stateModifier);
-			//}
+		if (keycode == GLFW_KEY_BACKSPACE) {
+			if (mods & GLFW_MOD_CONTROL) {
+				setApplyAndRecord_SupprAllChars(stateModifier);
+			}
+			else {
+				setApplyAndRecord_SupprOneChar(stateModifier);
+			}
 			bHandled = true;
 		}
 		else {
-			bHandled |= setApplyAndRecord_AddOneChar(keysym, stateModifier);
+			bHandled |= setApplyAndRecord_AddOneChar(keycode, stateModifier);
 		}
 	}
 	return bHandled;
@@ -68,7 +68,13 @@ void ConfigTextGPU::uploadData() {
 	m_offsetsSSBO.uploadData(offsets.size(), offsets.data());
 }
 
-bool ConfigTextGPU::setApplyAndRecord_AddOneChar(char keysym, StateModifier& stateModifer) {
+bool ConfigTextGPU::setApplyAndRecord_AddOneChar(int keycode, StateModifier& stateModifer) {
+	const char* str = glfwGetKeyName(keycode, 0);
+	char keysym;
+	if (strlen(str) == 1)
+		keysym = str[0];
+	else
+		return false;
 	bool b = ('a' <= keysym && keysym <= 'z') || keysym == ' ';
 	if (b) {
 		m_text += keysym;
