@@ -30,7 +30,8 @@ public:
 
 private:
 	void onRenderSizeChanged();
-	void setIsOutputWindowOpen(bool isOpen);
+	void closeOutputWindow();
+	void openOutputWindow();
 
 private:
 	bool m_bShowImGUIDemoWindow = false;

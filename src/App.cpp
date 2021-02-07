@@ -92,8 +92,13 @@ void App::update() {
 		m_recordManager.ImGui(m_recordManager.clockPtrRef(), m_stateModifier); // must be called before m_recordManager.update()
 		ImGui::End();
 	}
-	// TODO make out window current
-	// glfwPollEvents();
+	//
+	//glfwMakeContextCurrent(m_outputWindow.get());
+	//glfwPollEvents();
+	if (glfwWindowShouldClose(m_outputWindow.get())) {
+		closeOutputWindow();
+	}
+	//glfwMakeContextCurrent(m_mainWindow.get());
 }
 
 void App::ImGuiWindows() {
@@ -146,10 +151,15 @@ void App::ImGuiMenus() {
 	}
 	if (ImGui::BeginMenu("Live")) {
 		LiveMode::ImGui();
-		//bool bIsOutputWindowOpen = Viewports::IsOutputWindowOpen();
-		//if (ImGui::Checkbox("Show output window", &bIsOutputWindowOpen)) {
-		//	setIsOutputWindowOpen(bIsOutputWindowOpen);
-		//}
+		bool bIsOutputWindowOpen = glfwGetWindowAttrib(m_outputWindow.get(), GLFW_VISIBLE);
+		if (ImGui::Checkbox("Show output window", &bIsOutputWindowOpen)) {
+			if (bIsOutputWindowOpen) {
+				openOutputWindow();
+			}
+			else {
+				closeOutputWindow();
+			}
+		}
 		if (LiveMode::ShowHelpMarkers()) {
 			ImGui::SameLine();
 			MyImGui::HelpMarker(R"V0G0N(Opens a second window showing only the output image. This is the one that you should project / stream for your audience.
@@ -184,7 +194,6 @@ void App::onMouseMoveEvent(double xpos, double ypos) {
 }
 
 //void App::onEvent(const SDL_Event& e) {
-	//m_outputGLWindow.checkForFullscreenToggles(e);
 	//if (e.type == SDL_WINDOWEVENT && e.window.windowID == SDL_GetWindowID(m_outputGLWindow.window)) {
 	//	switch (e.window.event) {
 	//	case SDL_WINDOWEVENT_RESIZED:
@@ -269,10 +278,12 @@ void App::onRenderSizeChanged() {
 	m_stateModifier.apply(); // some configs depend on the aspect ratio
 }
 
-void App::setIsOutputWindowOpen(bool isOpen) {
-	//Viewports::setIsOutputWindowOpen(isOpen);
-	//if (isOpen)
-	//	m_outputGLWindow.show();
-	//else
-	//	m_outputGLWindow.hide();
+void App::closeOutputWindow() {
+	m_outputWindow.escapeFullScreen();
+	glfwHideWindow(m_outputWindow.get());
+}
+
+void App::openOutputWindow() {
+	glfwSetWindowShouldClose(m_outputWindow.get(), GLFW_FALSE);
+	glfwShowWindow(m_outputWindow.get());
 }
