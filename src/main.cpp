@@ -17,7 +17,8 @@ int main() {
 	Cool::OpenGLWindow outputWindow = windowingSystem.createWindow(
 		"Django output",
 		1280, 720
-	); // TODO hide and don't minimize on focus loss
+	);
+	glfwHideWindow(outputWindow.get());
 	Cool::OpenGLWindow mainWindow = windowingSystem.createWindow(
 		__DJANGO_WINDOW_NAME, // Variable #defined in the CMake
 		1280, 720

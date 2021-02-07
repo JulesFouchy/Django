@@ -16,8 +16,11 @@ App::App(OpenGLWindow& mainWindow, OpenGLWindow& outputWindow)
 	  m_mainWindow(mainWindow), m_outputWindow(outputWindow)
 {
 	RenderState::SubscribeToSizeChanges([this]() {onRenderSizeChanged(); });
+	// Output window
 	glfwSetKeyCallback(m_outputWindow.get(), output_window_key_callback);
 	glfwSetWindowUserPointer(m_outputWindow.get(), reinterpret_cast<void*>(&m_outputWindow));
+	glfwSetWindowAttrib(m_outputWindow.get(), GLFW_AUTO_ICONIFY, GLFW_FALSE);
+	glfwSetWindowAttrib(m_outputWindow.get(), GLFW_FOCUS_ON_SHOW, GLFW_FALSE);
 	//
 	glEnable(GL_DEPTH_TEST);
 	// glEnable(GL_BLEND); // This is already handled by Alpha Trail Settings
