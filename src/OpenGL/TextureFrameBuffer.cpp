@@ -7,7 +7,7 @@ TextureFrameBuffer::~TextureFrameBuffer() {
 void TextureFrameBuffer::createAttachments(int width, int height) {
 	GLCall(glGenTextures(1, &m_colorTextureId));
 	GLCall(glBindTexture(GL_TEXTURE_2D, m_colorTextureId));
-	GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr));
+	GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr));
 	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
 	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
 	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));

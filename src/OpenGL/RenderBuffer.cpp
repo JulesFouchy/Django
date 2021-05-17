@@ -8,7 +8,7 @@ void RenderBuffer::createAttachments(int width, int height) {
 	// Color attachment
 	GLCall(glGenRenderbuffers(1, &m_colorRenderBufferId));
 	GLCall(glBindRenderbuffer(GL_RENDERBUFFER, m_colorRenderBufferId));
-	GLCall(glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, width, height));
+	GLCall(glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA16, width, height));
 	// Depth attachment
 	GLCall(glGenRenderbuffers(1, &m_depthRenderBufferId));
 	GLCall(glBindRenderbuffer(GL_RENDERBUFFER, m_depthRenderBufferId));
