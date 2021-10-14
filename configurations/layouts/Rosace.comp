@@ -25,7 +25,7 @@ vec2 getPosition(uint particleID) {
 	int id = int(floor(t * N));
 	t =          fract(t * N);
 
-	float a = 0.785398163 - id * 6.28 / N;
+	float a = 0.785398163 - id * 6.28 / N + u_wheel;
 	center = radius * vec2(cos(a), sin(a));
 
 	return shape(
