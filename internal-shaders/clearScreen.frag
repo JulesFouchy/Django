@@ -3,6 +3,6 @@
 uniform float alpha;
 uniform vec3 backgroundColor;
 
-void main(void){
-    gl_FragColor = vec4(backgroundColor, alpha);
-}
+out vec4 out_color;
+
+void main(void) { out_color = vec4(backgroundColor, alpha); }
